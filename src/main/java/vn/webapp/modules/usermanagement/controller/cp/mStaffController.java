@@ -1,0 +1,165 @@
+package vn.webapp.modules.usermanagement.controller.cp;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import vn.webapp.controller.BaseWeb;
+import vn.webapp.modules.usermanagement.model.mDepartment;
+import vn.webapp.modules.usermanagement.model.mFaculty;
+import vn.webapp.modules.usermanagement.model.mStaff;
+import vn.webapp.modules.usermanagement.service.mDepartmentService;
+import vn.webapp.modules.usermanagement.service.mFacultyService;
+import vn.webapp.modules.usermanagement.service.mStaffService;
+import vn.webapp.modules.usermanagement.service.mUserService;
+import vn.webapp.modules.usermanagement.validation.mStaffValidation;
+
+@Controller("cpmStaff")
+@RequestMapping(value = {"/cp"})
+public class mStaffController extends BaseWeb {
+	@Autowired
+    private mStaffService staffService;
+    
+    @Autowired
+    private mDepartmentService departmentService;
+    
+    @Autowired
+    private mFacultyService facultyService;
+    
+    @Autowired
+    private mUserService userService;
+    
+    static final String SUPER_ADMIN = "SUPER_ADMIN";
+
+    /**
+    *
+    * @param model
+    * @return
+    */
+   @RequestMapping(value = "/profile", method = RequestMethod.GET)
+   public String staffInfo(ModelMap model, HttpSession session) {
+	   String currentUserName = session.getAttribute("currentUserName").toString();
+	   String userRole = session.getAttribute("currentUserRole").toString();
+	   String userCode = session.getAttribute("currentUserCode").toString();
+	   mStaff staff = staffService.loadStaffByUserCode(userCode);
+	   
+	   String currentUserFacultyCode = session.getAttribute("currentUserFaculty").toString();
+	   // Add the saved validationForm to the model
+	   List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
+	   List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
+	   
+	   model.put("staffFormEdit", new mStaffValidation());
+	   if(staff != null){
+		   model.put("staffEmail", staff.getStaff_Email());
+		   model.put("staffName", staff.getStaff_Name());
+		   model.put("staffPhone", staff.getStaff_Phone());
+		   model.put("staffCategory", staff.getStaffCategory().getStaff_Category_Name());
+		   model.put("staffDepartementName", staff.getDepartment().getDepartment_Name());
+		   model.put("staffDepartementCode", staff.getDepartment().getDepartment_Code());
+		   model.put("staffFacultyCode", staff.getStaff_Faculty_Code());
+		   model.put("staffGender", staff.getStaff_Gender());
+		   model.put("staffDateOfBirth", staff.getStaff_DateOfBirth());
+		   
+	   }
+	   model.put("departmentList", departmentList);
+	   model.put("facultyList", facultyList);
+       return "cp.profile";
+   }
+   
+   /**
+   *
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "/edit-staff-detail", method = RequestMethod.POST)
+  public String saveStaffInfo(@Valid @ModelAttribute("staffFormEdit") mStaffValidation staffFormEdit, BindingResult result,  Map model, HttpSession session) {
+
+	  String userRole = session.getAttribute("currentUserRole").toString();
+	  String currentUserFacultyCode = session.getAttribute("currentUserFaculty").toString();
+	  // Add the saved validationForm to the model
+	  List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
+	  List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
+	  String staffEmail = staffFormEdit.getStaffEmail();
+	  String staffName = staffFormEdit.getStaffName();
+	  String staffPhone = staffFormEdit.getStaffPhone();
+	  String staffDepartment = staffFormEdit.getStaffDepartment();
+	  String staffFaculty = staffFormEdit.getStaffFaculty();
+	  String staffGender = staffFormEdit.getStaffGender();
+	  String staffDateOfBirth = staffFormEdit.getStaffDateOfBirth();
+	  String staffFacultyCode = staffFormEdit.getStaffFaculty();
+	 
+	  model.put("staffEmail", staffEmail);
+	  model.put("staffName", staffName);
+	  model.put("staffPhone", staffPhone);
+	  model.put("departmentList", departmentList);
+	  model.put("facultyList", facultyList);
+	  model.put("staffDateOfBirth", staffDateOfBirth);
+	  model.put("staffGender", staffGender);
+	  model.put("staffFacultyCode", staffFacultyCode);
+	  model.put("staffDepartementName", staffDepartment);
+	  if(result.hasErrors()) {
+		  model.put("error", 1);
+		  return "cp.profile";
+	  }else
+	  {
+		  	String userFacultyCode = (staffFaculty != null) ? staffFaculty : session.getAttribute("currentUserFaculty").toString();
+    	 	String userCode = session.getAttribute("currentUserCode").toString();
+    	 	mStaff staff = staffService.loadStaffByUserCode(userCode);
+    	 	if(staff != null){
+    	 		String staffCatCode = "LEC";
+    	 		int staffID = staff.getStaff_ID();
+	    	 
+    	 		staffService.editAStaff(staffID, staffName, staffEmail, staffPhone, staffDepartment, userCode, staffCatCode, userFacultyCode, staffGender, staffDateOfBirth);
+    	 		model.put("staffCategory", staff.getStaffCategory().getStaff_Category_Name());
+    	 		model.put("staffDepartementName", staff.getDepartment().getDepartment_Name());
+    	 		model.put("staffDepartementCode", staffDepartment);
+    	 	}
+    	 	return "cp.profile";
+	  }
+  }
+  
+  /**
+   * Get faculty List by user role
+   * @param userRole
+   * @param session
+   * @return
+   */
+  public List<mFaculty> getFacultyByUserRole(String userRole, String currentUserFacultyCode)
+  {
+	  List<mFaculty> facultyList = new ArrayList<mFaculty>();
+	  if(userRole.equals(this.SUPER_ADMIN) || currentUserFacultyCode.equals(null)){
+		   facultyList = facultyService.loadFacultyList();
+	   }else{
+		   facultyList = facultyService.loadAFacultyByCode(currentUserFacultyCode);
+	   }
+	  return facultyList;
+  }
+  
+  /**
+   * Get faculty List by user role
+   * @param userRole
+   * @param session
+   * @return
+   */
+  public List<mDepartment> getDepartmentByUserRole(String userRole, String currentUserFacultyCode)
+  {
+	  List<mDepartment> departmentList = new ArrayList<mDepartment>();
+	  if(userRole.equals(this.SUPER_ADMIN) || currentUserFacultyCode.equals(null)){
+		   departmentList = departmentService.loadDepartmentList();
+	   }else{
+		   departmentList = departmentService.loadDepartmentListByFaculty(currentUserFacultyCode);
+	   }
+	  return departmentList;
+  }
+}

@@ -1,0 +1,817 @@
+package vn.webapp.modules.researchmanagement.service;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import vn.webapp.modules.researchdeclarationmanagement.dao.mAcademicYearDAO;
+import vn.webapp.modules.researchdeclarationmanagement.dao.tProjectCategoryDAO;
+import vn.webapp.modules.researchdeclarationmanagement.dao.tProjectDAO;
+import vn.webapp.modules.researchdeclarationmanagement.model.mAcademicYear;
+import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
+import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
+import vn.webapp.modules.researchmanagement.dao.mProjectStaffsDAO;
+import vn.webapp.modules.researchmanagement.dao.mProjectStatusDAO;
+import vn.webapp.modules.researchmanagement.dao.nProjectDAO;
+import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
+import vn.webapp.modules.researchmanagement.model.mProjectStatus;
+import vn.webapp.modules.researchmanagement.model.mThreads;
+import vn.webapp.modules.usermanagement.dao.mDepartmentDAO;
+import vn.webapp.modules.usermanagement.dao.mFacultyDAO;
+import vn.webapp.modules.usermanagement.dao.mStaffDAO;
+import vn.webapp.modules.usermanagement.dao.mUserDAO;
+import vn.webapp.modules.usermanagement.model.mDepartment;
+import vn.webapp.modules.usermanagement.model.mFaculty;
+import vn.webapp.modules.usermanagement.model.mStaff;
+
+@Service("nProjectService")
+public class nProjectServiceImpl implements nProjectService {
+	@Autowired
+	private tProjectDAO tProjectDAO;
+
+	@Autowired
+	private tProjectCategoryDAO tProjectCategoryDAO;
+
+	@Autowired
+	private nProjectDAO threadDAO;
+
+	@Autowired
+	private mUserDAO userDAO;
+
+	@Autowired
+	private mProjectStaffsDAO projectStaffsDAO;
+
+	@Autowired
+	private mDepartmentDAO departmentDAO;
+
+	@Autowired
+	private mFacultyDAO facultyDAO;
+
+	@Autowired
+	private mProjectStatusDAO projectStatusDAO;
+
+	@Autowired
+	private mStaffDAO staffDAO;
+
+	@Autowired
+	private mAcademicYearDAO yearDAO;
+	
+	static private String PROJECT_LEADER = "PROJECT_LEADER";
+	
+	static private String ROLE_USER = "ROLE_USER";
+
+	/**
+	 * Get a list Threads by user code
+	 * 
+	 * @param String
+	 * @return object
+	 */
+	@Override
+	public List<mThreads> loadThreadsListByStaff(String userRole, String userCode) {
+		try {
+
+			return threadDAO.loadThreadsListByStaff(userRole, userCode);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+
+	/**
+	 * Get a list Topics by year and user
+	 * 
+	 * @param String
+	 * @return object
+	 * @throws UsernameNotFoundException
+	 */
+	@Override
+	public List<mTopics> loadTopicListByYear(String userRole, String userCode,
+			String reportingrYear) {
+		try {
+			if (userCode != null) {
+				return tProjectDAO.loadTopicListByYear(userRole, userCode,
+						reportingrYear);
+			}
+			return null;
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+
+	/**
+	 * Get a list Topics by year
+	 * 
+	 * @param String
+	 * @return object
+	 * @throws UsernameNotFoundException
+	 */
+	@Override
+	public List<mTopics> loadTopicSummaryListByYear(String reportingrYear) {
+		try {
+			if (reportingrYear != null) {
+				return tProjectDAO.loadTopicSummaryListByYear(reportingrYear);
+			}
+			return null;
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+
+	/**
+	 * Get a list products by user code
+	 * 
+	 * @param String
+	 * @return object
+	 */
+	@Override
+	public List<mThreads> filerThreadsListNoPagination(String userRole, String userCode,
+			String sThreadStatus,
+			String sThreadCategory, String sThreadYear, String sThreadFaculty,
+			String sThreadDepartment, String sThreadStaff) {
+
+		try {
+			List<mTopicCategory> projectCategories = tProjectCategoryDAO.getList();
+			HashSet<String> categories = new HashSet<String>();
+			if (sThreadCategory != null && !sThreadCategory.equals("")) {
+				categories.add(sThreadCategory);
+				System.out
+						.println("ThreadServiceImpl::filterThreadList, unique projectCategory "
+								+ sThreadCategory);
+			} else {
+				for (mTopicCategory tc : projectCategories) {
+					categories.add(tc.getPROJCAT_Code());
+				}
+				System.out
+						.println("ThreadServiceImpl::filterThreadList, categories = ");
+				for (String s : categories)
+					System.out.println(s);
+			}
+			List<mFaculty> faculties = facultyDAO.loadFacultyList();
+
+			List<mDepartment> dept = departmentDAO.loadDepartmentList();
+			for (mDepartment d : dept) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> "
+						+ d.getDepartment_Code() + "\t"
+						+ d.getDepartment_Faculty_Code());
+			}
+			List<mStaff> staffs = staffDAO.listStaffs();
+			for (mStaff st : staffs) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> "
+						+ st.getStaff_Code() + "\t"
+						+ st.getStaff_Department_Code());
+			}
+
+			HashSet<String> staffCodes = new HashSet<String>();
+			if (sThreadStaff != null && !sThreadStaff.equals("")) {
+				staffCodes.add(sThreadStaff);
+				System.out
+						.println("ThreadServiceImpl::filterThreadList, unique staffCode = "
+								+ sThreadStaff);
+			} else {
+				HashSet<String> deptCodes = new HashSet<String>();
+				if (sThreadDepartment != null && !sThreadDepartment.equals("")) {
+					deptCodes.add(sThreadDepartment);
+					System.out
+							.println("ThreadServiceImpl::filterThreadList, unique department = "
+									+ sThreadDepartment);
+				} else {
+					HashSet<String> facultyCodes = new HashSet<String>();
+					if (sThreadFaculty != null && !sThreadFaculty.equals("")) {
+						facultyCodes.add(sThreadFaculty);
+						System.out
+								.println("ThreadServiceImpl::filterThreadList, unique faculty = "
+										+ sThreadFaculty);
+					} else {
+						for (mFaculty f : faculties) {
+							facultyCodes.add(f.getFaculty_Code());
+						}
+
+						System.out
+								.print("ThreadServiceImpl::filterThreadList, multi departments = ");
+						for (String s : deptCodes)
+							System.out.print(s + "\t");
+						System.out.println();
+					}
+					
+					for(mDepartment d : dept){
+						if(facultyCodes.contains(d.getDepartment_Faculty_Code()))
+							deptCodes.add(d.getDepartment_Code());
+					}
+				}
+
+				for (mStaff st : staffs) {
+					if (deptCodes.contains(st.getStaff_Department_Code()))
+						staffCodes.add(st.getStaff_Code());
+				}
+				System.out
+						.println("ThreadServiceImpl::filterThreadList, multi staffs = ");
+				for (String s : staffCodes)
+					System.out.println(s);
+			}
+
+			List<mProjectStatus> statuses = projectStatusDAO.getList();
+			HashSet<String> statusCodes = new HashSet<String>();
+			if (sThreadStatus != null && !sThreadStatus.equals(""))
+				statusCodes.add(sThreadStatus);
+			else
+				for (mProjectStatus stat : statuses) {
+					System.out
+							.println("ThreadServiceImpl::filterThreadsList --> "
+									+ stat.getPROJSTAT_Code()
+									+ "\t"
+									+ stat.getPROJSTAT_Description());
+					statusCodes.add(stat.getPROJSTAT_Code());
+				}
+
+			List<mThreads> allThreads = threadDAO.filerThreadsList(userRole,
+					userCode, sThreadStatus,
+					sThreadCategory, sThreadYear, sThreadFaculty,
+					sThreadDepartment, sThreadStaff);
+			for (mThreads t : allThreads) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> "
+						+ t.getPROJ_Name() + "\t" + t.getPROJ_Status_Code());
+
+			}
+
+			List<mProjectStaffs> allProjectStaffs = projectStaffsDAO.listAll();
+			for (mProjectStaffs ps : allProjectStaffs) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> "
+						+ ps.getPROJSTAFF_Proj_Code() + "\t"
+						+ ps.getPROJSTAFF_Staff_Code());
+
+			}
+
+			List<mAcademicYear> years = yearDAO.getList();
+			HashSet<String> yearCodes = new HashSet<String>();
+			if (sThreadYear != null && !sThreadYear.equals(""))
+				yearCodes.add(sThreadYear);
+			else
+				for (mAcademicYear y : years) {
+					yearCodes.add(y.getACAYEAR_Code());
+				}
+
+			HashSet<String> threadCodes = new HashSet<String>();
+			for (mProjectStaffs ps : allProjectStaffs) {
+				if (staffCodes.contains(ps.getPROJSTAFF_Staff_Code()))
+					threadCodes.add(ps.getPROJSTAFF_Proj_Code());
+			}
+
+			System.out
+					.println("ThreadServiceImpl::filterThreads, prepare filtering, categories = ");
+			for (String ct : categories)
+				System.out.println(ct);
+			System.out.println();
+
+			List<mThreads> FL = new ArrayList<mThreads>();
+			for (mThreads t : allThreads) {
+				System.out
+						.println("ThreadServiceImpl::filterThreads, consider project "
+								+ t.getPROJ_Name()
+								+ ", category "
+								+ t.getPROJ_ProjCat_Code() + ", userCode = " + t.getPROJ_User_Code() + ", login UserCode = " + userCode);
+				if (threadCodes.contains(t.getPROJ_Code())
+						&& yearCodes.contains(t.getPROJ_AcaYear_Code())
+						&& statusCodes.contains(t.getPROJ_Status_Code())
+						&& categories.contains(t.getPROJ_ProjCat_Code())) {
+				
+					boolean ok = true;
+					if(!userRole.equals("ROLE_ADMIN"))
+						ok = t.getPROJ_User_Code().equals(userCode);
+					
+					if(ok){
+						FL.add(t);
+
+					System.out
+							.println("ThreadServiceImpl::filterThreads -> ACCEPT "
+									+ t.getPROJ_Name());
+					}
+				}
+			}
+
+			System.out
+					.println("ThreadServiceImpl::filterThreads -> TOTAL ACCEPT "
+							+ FL.size());
+
+			return FL;
+			// return threadDAO.filerThreadsList(userRole, userCode, iStartItem,
+			// iNumberOfItems, sThreadStatus, sThreadCategory, sThreadYear,
+			// sThreadFaculty, sThreadDepartment, sThreadStaff);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	@Override
+	public List<mThreads> filerThreadsList(String userRole, String userCode,
+			Integer iStartItem, Integer iNumberOfItems, String sThreadStatus,
+			String sThreadCategory, String sThreadYear, String sThreadFaculty,
+			String sThreadDepartment, String sThreadStaff) {
+
+		System.out.println("ThreadServiceImpl::filterThreadsList, userCode = "
+				+ userCode + "\n" + ", userRole = " + userRole + "\n"
+				+ ", sTheadStatus = " + sThreadStatus + "\n"
+				+ ", sThreadCategory = " + sThreadCategory + "\n"
+				+ ", sThreadYear = " + sThreadYear + "\n"
+				+ ", sThreadFaculty = " + sThreadFaculty + "\n"
+				+ ", sThreadDepartment = " + sThreadDepartment + "\n"
+				+ ", sThreadSatff = " + sThreadStaff);
+		try {
+			List<mThreads> FL = filerThreadsListNoPagination(userRole, userCode, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
+			ArrayList<mThreads> pFL = new ArrayList<mThreads>();// extract from iStartItem to iStartItems + iNumberItems - 1
+			int iEndItem = iStartItem + iNumberOfItems < FL.size() ? iStartItem + iNumberOfItems : FL.size();
+			for(int i = iStartItem; i < iEndItem; i++){
+				pFL.add(FL.get(i));
+			}
+			//return FL;
+			return pFL;
+			
+			/*
+			List<TopicCategory> projectCategories = projectCategory.getList();
+			HashSet<String> categories = new HashSet<String>();
+			if (sThreadCategory != null && !sThreadCategory.equals("")) {
+				categories.add(sThreadCategory);
+				System.out
+						.println("ThreadServiceImpl::filterThreadList, unique projectCategory "
+								+ sThreadCategory);
+			} else {
+				for (TopicCategory tc : projectCategories) {
+					categories.add(tc.getPROJCAT_Code());
+				}
+				System.out
+						.println("ThreadServiceImpl::filterThreadList, categories = ");
+				for (String s : categories)
+					System.out.println(s);
+			}
+			List<Faculty> faculties = facultyDAO.loadFacultyList();
+
+			List<Department> dept = departmentDAO.loadDepartmentList();
+			for (Department d : dept) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> "
+						+ d.getDepartment_Code() + "\t"
+						+ d.getDepartment_Faculty_Code());
+			}
+			List<Staff> staffs = staffDAO.listStaffs();
+			for (Staff st : staffs) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> "
+						+ st.getStaff_Code() + "\t"
+						+ st.getStaff_Department_Code());
+			}
+
+			HashSet<String> staffCodes = new HashSet<String>();
+			if (sThreadStaff != null && !sThreadStaff.equals("")) {
+				staffCodes.add(sThreadStaff);
+				System.out
+						.println("ThreadServiceImpl::filterThreadList, unique staffCode = "
+								+ sThreadStaff);
+			} else {
+				HashSet<String> deptCodes = new HashSet<String>();
+				if (sThreadDepartment != null && !sThreadDepartment.equals("")) {
+					deptCodes.add(sThreadDepartment);
+					System.out
+							.println("ThreadServiceImpl::filterThreadList, unique department = "
+									+ sThreadDepartment);
+				} else {
+					HashSet<String> facultyCodes = new HashSet<String>();
+					if (sThreadFaculty != null && !sThreadFaculty.equals("")) {
+						facultyCodes.add(sThreadFaculty);
+						System.out
+								.println("ThreadServiceImpl::filterThreadList, unique faculty = "
+										+ sThreadFaculty);
+						
+						
+					} else {
+						for (Faculty f : faculties) {
+							facultyCodes.add(f.getFaculty_Code());
+						}
+
+						System.out
+								.print("ThreadServiceImpl::filterThreadList, multi departments = ");
+						for (String s : deptCodes)
+							System.out.print(s + "\t");
+						System.out.println();
+					}
+					
+					for(Department d : dept){
+						if(facultyCodes.contains(d.getDepartment_Faculty_Code()))
+							deptCodes.add(d.getDepartment_Code());
+					}
+				}
+
+				for (Staff st : staffs) {
+					if (deptCodes.contains(st.getStaff_Department_Code()))
+						staffCodes.add(st.getStaff_Code());
+				}
+				System.out
+						.println("ThreadServiceImpl::filterThreadList, multi staffs = ");
+				for (String s : staffCodes)
+					System.out.println(s);
+			}
+
+			List<ProjectStatus> statuses = projectStatusDAO.getList();
+			HashSet<String> statusCodes = new HashSet<String>();
+			if (sThreadStatus != null && !sThreadStatus.equals(""))
+				statusCodes.add(sThreadStatus);
+			else
+				for (ProjectStatus stat : statuses) {
+					System.out
+							.println("ThreadServiceImpl::filterThreadsList --> "
+									+ stat.getPROJSTAT_Code()
+									+ "\t"
+									+ stat.getPROJSTAT_Description());
+					statusCodes.add(stat.getPROJSTAT_Code());
+				}
+
+			List<Threads> allThreads = threadDAO.filerThreadsList(userRole,
+					userCode, iStartItem, iNumberOfItems, sThreadStatus,
+					sThreadCategory, sThreadYear, sThreadFaculty,
+					sThreadDepartment, sThreadStaff);
+			for (Threads t : allThreads) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> "
+						+ t.getPROJ_Name() + "\t" + t.getPROJ_Status_Code());
+
+			}
+
+			List<ProjectStaffs> allProjectStaffs = projectStaffsDAO.listAll();
+			for (ProjectStaffs ps : allProjectStaffs) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> "
+						+ ps.getPROJSTAFF_Proj_Code() + "\t"
+						+ ps.getPROJSTAFF_Staff_Code());
+
+			}
+
+			List<AcademicYear> years = yearDAO.getList();
+			HashSet<String> yearCodes = new HashSet<String>();
+			if (sThreadYear != null && !sThreadYear.equals(""))
+				yearCodes.add(sThreadYear);
+			else
+				for (AcademicYear y : years) {
+					yearCodes.add(y.getACAYEAR_Code());
+				}
+
+			HashSet<String> threadCodes = new HashSet<String>();
+			for (ProjectStaffs ps : allProjectStaffs) {
+				if (staffCodes.contains(ps.getPROJSTAFF_Staff_Code()))
+					threadCodes.add(ps.getPROJSTAFF_Proj_Code());
+			}
+
+			System.out
+					.println("ThreadServiceImpl::filterThreads, prepare filtering, categories = ");
+			for (String ct : categories)
+				System.out.println(ct);
+			System.out.println();
+
+			List<Threads> FL = new ArrayList<Threads>();
+			for (Threads t : allThreads) {
+				System.out
+						.println("ThreadServiceImpl::filterThreads, consider project "
+								+ t.getPROJ_Name()
+								+ ", category "
+								+ t.getPROJ_ProjCat_Code() + ", userCode = " + t.getPROJ_User_Code() + ", login UserCode = " + userCode);
+				if (threadCodes.contains(t.getPROJ_Code())
+						&& yearCodes.contains(t.getPROJ_AcaYear_Code())
+						&& statusCodes.contains(t.getPROJ_Status_Code())
+						&& categories.contains(t.getPROJ_ProjCat_Code())) {
+				
+					boolean ok = true;
+					if(!userRole.equals("ROLE_ADMIN"))
+						ok = t.getPROJ_User_Code().equals(userCode);
+					
+					if(ok){
+						FL.add(t);
+
+					System.out
+							.println("ThreadServiceImpl::filterThreads -> ACCEPT "
+									+ t.getPROJ_Name());
+					}
+				}
+			}
+
+			System.out
+					.println("ThreadServiceImpl::filterThreads -> TOTAL ACCEPT "
+							+ FL.size());
+
+			ArrayList<Threads> pFL = new ArrayList<Threads>();// extract from iStartItem to iStartItems + iNumberItems - 1
+			int iEndItem = iStartItem + iNumberOfItems < FL.size() ? iStartItem + iNumberOfItems : FL.size();
+			for(int i = iStartItem; i < iEndItem; i++){
+				pFL.add(FL.get(i));
+			}
+			//return FL;
+			return pFL;
+			*/
+			
+			// return threadDAO.filerThreadsList(userRole, userCode, iStartItem,
+			// iNumberOfItems, sThreadStatus, sThreadCategory, sThreadYear,
+			// sThreadFaculty, sThreadDepartment, sThreadStaff);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+
+	/**
+	 * Count items
+	 * 
+	 * @param
+	 * @return int
+	 */
+	@Override
+	public int countItems(String userRole, String userCode,
+			String sThreadStatus, String sThreadCategory, String sThreadYear,
+			String sThreadFaculty, String sThreadDepartment, String sThreadStaff) {
+		try {
+			return threadDAO.countItems(userRole, userCode, sThreadStatus,
+					sThreadCategory, sThreadYear, sThreadFaculty,
+					sThreadDepartment, sThreadStaff);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return 0;
+		}
+	}
+
+	/**
+	 * Save a topic
+	 * 
+	 * @param String
+	 * @param String
+	 * @param String
+	 * @param String
+	 * @return int
+	 */
+	@Override
+	public int saveAThread(String userCode, String threadName,
+			String threadCategory, String threadContent,
+			String threadStartDate, String threadEndDate,
+			String threadMotivation, String threadReportingDate,
+			String threadResult, String threadStatus, int threadBudget,
+			String threadSourceUploadFileSrc, String threadCode,
+			List<String> listStaffs, List<String> listStaffRoles) {
+		if (userCode != null) {
+			mThreads thread = new mThreads();
+			thread.setPROJ_AcaYear_Code(threadReportingDate);
+			thread.setPROJ_Code(threadCode);
+			thread.setPROJ_Content(threadContent);
+			thread.setPROJ_EndDate(threadEndDate);
+			thread.setPROJ_Motivation(threadMotivation);
+			thread.setPROJ_Name(threadName);
+			thread.setPROJ_ProjCat_Code(threadCategory);
+			thread.setPROJ_Result(threadResult);
+			thread.setPROJ_SourceFile(threadSourceUploadFileSrc);
+			thread.setPROJ_StartDate(threadStartDate);
+			thread.setPROJ_Status_Code(threadStatus);
+			thread.setPROJ_TotalBudget(threadBudget);
+			thread.setPROJ_User_Code(userCode);
+			int i_SaveAThread = threadDAO.saveAThread(thread);
+
+			// Set project to staffs
+			mThreads insertedThread = threadDAO.loadAThreadByIdAndUserCode(nProjectServiceImpl.ROLE_USER,userCode, i_SaveAThread);
+			
+			// Save leader of a thread
+			if(insertedThread != null){
+				mProjectStaffs oExistedProjectLeader = projectStaffsDAO.loadProjectStaffByUserCode(insertedThread.getPROJ_Code(), userCode, nProjectServiceImpl.PROJECT_LEADER);
+				if(oExistedProjectLeader == null){
+					mProjectStaffs projectStaff = new mProjectStaffs();
+					String projectStaffCode = userCode + insertedThread.getPROJ_Code();
+					projectStaff.setPROJSTAFF_Code(projectStaffCode);
+					projectStaff.setPROJSTAFF_Proj_Code(insertedThread.getPROJ_Code());
+					projectStaff.setPROJSTAFF_Role_Code(this.PROJECT_LEADER);
+					projectStaff.setPROJSTAFF_Staff_Code(userCode);
+					projectStaffsDAO.saveAStaff(projectStaff);
+				}
+			}
+			
+			// Save members of a thread
+			if (listStaffs != null && listStaffRoles != null && insertedThread != null) {
+				for (int i = 0; i < listStaffs.size(); i++) {
+					if (!listStaffs.get(i).equals("")) {
+						mProjectStaffs projectStaff = new mProjectStaffs();
+						String projectStaffCode = listStaffs.get(i) + insertedThread.getPROJ_Code();
+						projectStaff.setPROJSTAFF_Code(projectStaffCode);
+						projectStaff.setPROJSTAFF_Proj_Code(insertedThread.getPROJ_Code());
+						projectStaff.setPROJSTAFF_Role_Code(listStaffRoles.get(i));
+						projectStaff.setPROJSTAFF_Staff_Code(listStaffs.get(i));
+						projectStaffsDAO.saveAStaff(projectStaff);
+					}
+				}
+			}
+			return i_SaveAThread;
+		}
+		return 0;
+	}
+
+	/**
+	 * load a paper by usercode and it's id
+	 * 
+	 * @param String
+	 * @param int
+	 * @return object
+	 */
+	@Override
+	public mThreads loadAThreadByIdAndUserCode(String userRole, String userCode, int threadId) {
+		try {
+			return threadDAO.loadAThreadByIdAndUserCode(userRole, userCode, threadId);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+
+	/**
+	 * Edit a thread
+	 * 
+	 * @param String
+	 * @param int
+	 * @return null
+	 */
+	@Override
+	public void editStatusThread(String userRole, String userCode, int threadId, String threadStatus){
+		mThreads thread = threadDAO.loadAThreadByIdAndUserCode(userRole, userCode, threadId);
+		if (thread != null) {
+			// tProjectDAO.editATopic(topic);
+			thread.setPROJ_ID(threadId);
+			thread.setPROJ_Status_Code(threadStatus);
+			//thread.setPROJ_User_Code(userCode);
+			threadDAO.editAThread(thread);
+
+		}
+		
+	}
+	
+	@Override
+	public void editAThread(String userRole, String userCode,
+			String threadName, String threadCategory, String threadContent,
+			String threadStartDate, String threadEndDate,
+			String threadMotivation, String threadReportingDate,
+			String threadResult, String threadStatus, int threadBudget,
+			String threadSourceUploadFileSrc, String threadCode, int threadId,
+			List<String> listStaffs, List<String> listStaffRoles) {
+		mThreads thread = threadDAO.loadAThreadByIdAndUserCode(userRole, userCode, threadId);
+		if (thread != null) {
+			// tProjectDAO.editATopic(topic);
+			thread.setPROJ_AcaYear_Code(threadReportingDate);
+			thread.setPROJ_Code(threadCode);
+			thread.setPROJ_Content(threadContent);
+			thread.setPROJ_EndDate(threadEndDate);
+			thread.setPROJ_ID(threadId);
+			thread.setPROJ_Motivation(threadMotivation);
+			thread.setPROJ_Name(threadName);
+			thread.setPROJ_ProjCat_Code(threadCategory);
+			thread.setPROJ_Result(threadResult);
+			thread.setPROJ_StartDate(threadStartDate);
+
+			thread.setPROJ_Status_Code(threadStatus);
+			thread.setPROJ_TotalBudget(threadBudget);
+			//thread.setPROJ_User_Code(userCode);
+			if (threadSourceUploadFileSrc.equals("")) {
+				thread.setPROJ_SourceFile(thread.getPROJ_SourceFile());
+			} else {
+
+				String sOldSourceFile = thread.getPROJ_SourceFile();
+				if ((sOldSourceFile != null)) {
+					File oldFile = new File(sOldSourceFile);
+					oldFile.delete();
+				}
+				thread.setPROJ_SourceFile(threadSourceUploadFileSrc);
+			}
+			threadDAO.editAThread(thread);
+
+			if (listStaffs != null && listStaffRoles != null) {
+				// Remove old project Staffs
+				List<mProjectStaffs> previousProjectStaffs = projectStaffsDAO.loadAProjectStaffByProjectCodeForEdit(thread.getPROJ_Code());
+				for (mProjectStaffs projectStaff : previousProjectStaffs) {
+					projectStaffsDAO.removeAProjectStaff(projectStaff.getPROJSTAFF_ID());
+				}
+
+				// Save new project Staffs
+				for (int i = 0; i < listStaffs.size(); i++) {
+					if (!listStaffs.get(i).equals("")) {
+						mProjectStaffs projectStaff = new mProjectStaffs();
+						String projectStaffCode = listStaffs.get(i)+ thread.getPROJ_Code();
+						projectStaff.setPROJSTAFF_Code(projectStaffCode);
+						projectStaff.setPROJSTAFF_Proj_Code(thread.getPROJ_Code());
+						projectStaff.setPROJSTAFF_Role_Code(listStaffRoles.get(i));
+						projectStaff.setPROJSTAFF_Staff_Code(listStaffs.get(i));
+						projectStaffsDAO.saveAStaff(projectStaff);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Remove a thread
+	 * 
+	 * @param int
+	 * @return int
+	 */
+	@Override
+	public int removeAThread(int threadId) {
+		return threadDAO.removeAThread(threadId);
+	}
+	
+	/**
+	 * Edit a thread
+	 * 
+	 * @param String
+	 * @param int
+	 * @return null
+	 */
+	@Override
+	public List<mThreads> loadThreadsListForReporting(String threadCategory, String threadStatus, String threadFaculty, String threadDepartment, String threadStaff, String yearForGenerating){
+		try {
+			List<mThreads> o_ReturnedThreadFilterList = new ArrayList<mThreads>();
+			if(threadStaff != "")
+			{
+				// Get List staff code by faculty and department
+				HashSet<String> staffCodeList = new HashSet<String>();
+				List<mStaff> listStaff = staffDAO.listStaffsByFalcutyAndDepartment(threadFaculty, threadDepartment);
+				for(mStaff oStaff : listStaff)
+				{
+					staffCodeList.add(oStaff.getStaff_Code());
+				}
+				List<mProjectStaffs> projectStaffLists = projectStaffsDAO.loadAProjectStaffInListStaffs(staffCodeList);
+				HashSet<String> projectCodeList = new HashSet<String>();
+				for(mProjectStaffs projectStaff : projectStaffLists)
+				{
+					projectCodeList.add(projectStaff.getPROJSTAFF_Proj_Code());
+				}
+				
+				List<mThreads> o_ThreadList = threadDAO.loadThreadsListForReporting(threadCategory, threadStatus, threadStaff, yearForGenerating);
+				
+				if(o_ThreadList.size()>0 && projectCodeList.size() > 0){
+					for (mThreads threads : o_ThreadList) {
+						if(projectCodeList.contains(threads.getPROJ_Code()))
+						{
+							o_ReturnedThreadFilterList.add(threads);
+						}
+					}
+				}else{
+					o_ReturnedThreadFilterList = o_ThreadList;
+				}
+			}
+			return o_ReturnedThreadFilterList;
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param facultyCode
+	 * @return
+	 */
+	@Override
+	public String getFacultyName(String facultyCode)
+	{
+		try{
+		List<mFaculty> FacultyList = facultyDAO.loadFacultyList();
+		if(FacultyList != null)
+		{
+			for(mFaculty aFaculty : FacultyList)
+			{
+				if(facultyCode.equals(aFaculty.getFaculty_Code())){
+					return aFaculty.getFaculty_Name();
+				}
+			}
+		}
+		}catch(Exception e)
+		{
+			System.out.println("Exception: " + e.getMessage());
+		}
+		return "";
+	}
+
+	/**
+	 * 
+	 * @param departmentCode
+	 * @return
+	 */
+	@Override
+	public String getDepartmentName(String departmentCode)
+	{
+		try{
+		List<mDepartment> DepartmenList = departmentDAO.loadDepartmentList();
+		if(DepartmenList != null)
+		{
+			for(mDepartment aDepartment : DepartmenList)
+			{
+				if(departmentCode.equals(aDepartment.getDepartment_Code())){
+					return aDepartment.getDepartment_Name();
+				}
+			}
+		}
+		}catch(Exception e)
+		{
+			System.out.println("Exception: " + e.getMessage());
+		}
+		return "";
+	}
+}
