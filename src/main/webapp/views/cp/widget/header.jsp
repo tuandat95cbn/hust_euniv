@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="home.html">Viện Công nghệ Thông tin và Truyền Thông - ĐHBK Hà Nội</a>
+        <a class="navbar-brand" href="home.html">ĐHBK Hà Nội</a>
     </div>
     <!-- /.navbar-header -->
 
@@ -283,10 +283,27 @@
                     <a href="#"><i class="fa fa-th-list fa-fw"></i> Quản lý thực hiện Đề tài<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
 		                <li>
+		                    <a href="<c:url value="${baseUrl}/cp/project-call-open.html"/>"><i class="fa fa-briefcase"></i> Mở đợt gọi Đề tài</a>
+		                </li>
+		                
+		                <li>
 		                    <a href="<c:url value="${baseUrl}/cp/threads-listadd.html"/>"><i class="fa fa-briefcase"></i> Đăng ký Đề tài</a>
 		                </li>
 		                <li>
 		                    <a href="<c:url value="${baseUrl}/cp/products.html"/>"><i class="fa fa-file-text"></i> Đăng ký Chuyên đề</a>
+		                </li>
+		                
+		                <li>
+		                    <a href="<c:url value="${baseUrl}/cp/add-jury-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Thành lập hội đồng xét đề tài</a>
+		                </li>
+		                <li>
+		                    <a href="<c:url value="${baseUrl}/cp/assign-jury-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Phân công phản biện đề tài</a>
+		                </li>
+		                <li>
+		                    <a href="<c:url value="${baseUrl}/cp/review-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Phản biện đề tài</a>
+		                </li>
+		                <li>
+		                    <a href="<c:url value="${baseUrl}/cp/modify-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Chỉnh sửa thuyết minh đề tài sau phản biện</a>
 		                </li>
 		                
 		                <c:if test="${currentUserRole eq 'ROLE_ADMIN' || currentUserRole eq 'SUPER_ADMIN'}">
