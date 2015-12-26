@@ -302,6 +302,11 @@
 		                <li>
 		                    <a href="<c:url value="${baseUrl}/cp/review-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Phản biện đề tài</a>
 		                </li>
+		                
+		                <li>
+		                    <a href="<c:url value="${baseUrl}/cp/summarize-review-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Tổng hợp Phản biện đề tài</a>
+		                </li>
+		                
 		                <li>
 		                    <a href="<c:url value="${baseUrl}/cp/modify-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Chỉnh sửa thuyết minh đề tài sau phản biện</a>
 		                </li>
