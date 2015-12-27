@@ -1,3 +1,8 @@
+/**
+ * @author : HaTN 
+ * @address : HUST K51
+ * @modified : December 27th, 2015
+ */
 package vn.webapp.modules.researchdeclarationmanagement.controller.cp;
 
 import java.io.BufferedOutputStream;

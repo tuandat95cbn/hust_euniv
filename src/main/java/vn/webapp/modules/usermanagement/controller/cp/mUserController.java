@@ -65,7 +65,7 @@ public class mUserController extends BaseWeb {
      * Set staff category code
      */
     static final String STAFF_CAT_CODE = "LEC";
-	
+    
 	/**
     *
     * @param model
@@ -80,8 +80,8 @@ public class mUserController extends BaseWeb {
    	if(userRole.equals(mUserController.SUPER_ADMIN)){
    		staffsList = staffService.listStaffs();
    	}else{
-	    	String currentUserFaculty = session.getAttribute("currentUserFaculty").toString();
-	    	staffsList = staffService.listStaffsByFalcuty(currentUserFaculty);
+    	String currentUserFaculty = session.getAttribute("currentUserFaculty").toString();
+    	staffsList = staffService.listStaffsByFalcuty(currentUserFaculty);
    	}
    	
    	//model.put("listUsers", usersList);
@@ -97,19 +97,19 @@ public class mUserController extends BaseWeb {
    */
   @RequestMapping(value = "/add-an-user", method = RequestMethod.GET)
   public String addAnUser(ModelMap model, HttpSession session) {
-	   String userRole = session.getAttribute("currentUserRole").toString();
 	   String currentUserFacultyCode = session.getAttribute("currentUserFaculty").toString();
 	   // Add the saved validationForm to the model
-	   List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
-	   List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
+	   List<mFaculty> facultyList = this.getFacultyByUserRole(BaseWeb.sUserRole, currentUserFacultyCode);
+	   List<mDepartment> departmentList = this.getDepartmentByUserRole(BaseWeb.sUserRole, currentUserFacultyCode);
 	   
+	   model.put("permissionList", BaseWeb.mFuncsPermissionList);
 	   model.put("facultyList", facultyList);
 	   model.put("departmentList", departmentList);
-	   model.put("currentUserName", session.getAttribute("currentUserName").toString());
-	   model.put("currentUserRole", session.getAttribute("currentUserRole").toString());
+	   model.put("currentUserName", BaseWeb.sUserName);
+	   model.put("currentUserRole", BaseWeb.sUserRole);
 	   model.put("userFormAdd", new mUserValidation());
   	   model.put("users", status);
-      return "cp.addAnUser";
+       return "cp.addAnUser";
   }
   
   @RequestMapping(value="save-an-user", method=RequestMethod.POST)
@@ -169,6 +169,8 @@ public class mUserController extends BaseWeb {
 	   List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
 	   List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
 	   
+	   model.put("permissionList", BaseWeb.mFuncsPermissionList);
+	   System.out.println("FFFF" + BaseWeb.mFuncsPermissionList.get(0).getUSERFUNC_CODE());
 	   model.put("facultyList", facultyList);
 	   model.put("departmentList", departmentList);
        model.put("userFormEdit", new mUserValidation());
