@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -26,11 +27,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import vn.webapp.controller.BaseWeb;
 import vn.webapp.modules.usermanagement.model.mDepartment;
 import vn.webapp.modules.usermanagement.model.mFaculty;
+import vn.webapp.modules.usermanagement.model.mFuncsPermission;
 import vn.webapp.modules.usermanagement.model.mStaff;
 import vn.webapp.modules.usermanagement.model.mUser;
 import vn.webapp.modules.usermanagement.model.mUsers;
 import vn.webapp.modules.usermanagement.service.mDepartmentService;
 import vn.webapp.modules.usermanagement.service.mFacultyService;
+import vn.webapp.modules.usermanagement.service.mFuncsPermissionService;
 import vn.webapp.modules.usermanagement.service.mStaffService;
 import vn.webapp.modules.usermanagement.service.mUserService;
 import vn.webapp.modules.usermanagement.validation.mUserValidation;
@@ -51,6 +54,9 @@ public class mUserController extends BaseWeb {
 	
 	@Autowired
     private mDepartmentService departmentService;
+	
+	@Autowired
+    private mFuncsPermissionService funcsPermissionService;
 	
 	/**
 	 * Set status flag
@@ -168,9 +174,11 @@ public class mUserController extends BaseWeb {
 	   // Add the saved validationForm to the model
 	   List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
 	   List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
+	   List<mFuncsPermission> mCurrentUserFuncsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(user.get("usercode"));
+	   HashMap<List<String>, Integer> listShowedPermission = this.getUserPermissionList(user.get("usercode"));
 	   
 	   model.put("permissionList", BaseWeb.mFuncsPermissionList);
-	   System.out.println("FFFF" + BaseWeb.mFuncsPermissionList.get(0).getUSERFUNC_CODE());
+	   model.put("listShowedPermission", listShowedPermission);
 	   model.put("facultyList", facultyList);
 	   model.put("departmentList", departmentList);
        model.put("userFormEdit", new mUserValidation());
@@ -181,6 +189,47 @@ public class mUserController extends BaseWeb {
       return "cp.editAnUser";
   }
   
+  /**
+   * 
+   * @param sUserCode
+   * @return
+   */
+  public HashMap<List<String>, Integer> getUserPermissionList(String sUserCode)
+  {
+	  	HashMap<List<String>, Integer> listShowedPermission = new HashMap<>();
+	  	List<mFuncsPermission> FuncsPermissionList = BaseWeb.mFuncsPermissionList;
+	  	List<mFuncsPermission> CurrentUserFuncsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(sUserCode);
+	  	
+	  	for (mFuncsPermission mFuncsPermission : FuncsPermissionList) {
+	  		if(CurrentUserFuncsPermissionList.size() > 0)
+	  		{
+		  		for (mFuncsPermission mCurrentUserFuncsPermission : CurrentUserFuncsPermissionList) {
+		  			List<String> PermissionInfo= new ArrayList<String>();
+					if(mCurrentUserFuncsPermission.getUSERFUNC_FUNCCODE() != null && mCurrentUserFuncsPermission.getUSERFUNC_FUNCCODE().equals(mFuncsPermission.getUSERFUNC_FUNCCODE()))
+					{
+						PermissionInfo.add(mFuncsPermission.getUSERFUNC_FUNCCODE());
+						PermissionInfo.add(mFuncsPermission.getoFunctions().getFUNC_NAME());
+						listShowedPermission.put(PermissionInfo, 1);
+					}else{
+						PermissionInfo.add(mFuncsPermission.getUSERFUNC_FUNCCODE());
+						PermissionInfo.add(mFuncsPermission.getoFunctions().getFUNC_NAME());
+						listShowedPermission.put(PermissionInfo, 0);
+					}
+				}
+	  		}else{
+	  			List<String> PermissionInfo= new ArrayList<String>();
+	  			PermissionInfo.add(mFuncsPermission.getUSERFUNC_FUNCCODE());
+				PermissionInfo.add(mFuncsPermission.getoFunctions().getFUNC_NAME());
+				listShowedPermission.put(PermissionInfo, 0);
+	  		}
+	  		System.out.println("FFFF " + listShowedPermission.get(0));
+		}
+	  	
+	  	for (Entry<List<String>, Integer> entry : listShowedPermission.entrySet()) {
+			System.out.println(entry.getKey().get(0) + " == " + entry.getKey().get(1) + " == " + entry.getValue());
+		}
+		return listShowedPermission;
+  }
   
   /**
   *

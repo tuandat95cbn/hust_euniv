@@ -144,6 +144,7 @@ public class mUserServiceImpl implements mUserService, UserDetailsService{
     			userInfo.put("staffFacultyCode", String.valueOf(staff.getStaff_Faculty_Code()));
     			userInfo.put("staffDepartmentCode", String.valueOf(staff.getStaff_Department_Code()));
     		}
+    		userInfo.put("usercode", user.getUser_Code());
     		return userInfo;
     	}
     	return null;

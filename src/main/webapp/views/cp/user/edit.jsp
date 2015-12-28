@@ -117,14 +117,12 @@
 							<div class="tree form-group">
 								<label>Chức năng</label>
 					            <ul>
-					            	<c:if test="${permissionList != null}">
-						            	<c:forEach items="${permissionList}" var="functionPermission">	
+						            	<c:forEach items="${listShowedPermission}" var="showedPermission">	
 							                <li class="checkbox">
-												<label><input type="checkbox" selected name="function1" value="" /> <span>${functionPermission.oFunctions.FUNC_NAME}</span></label>
+												<label><input type="checkbox" <c:if test="${showedPermission.value eq 1}">checked</c:if> name="function1" value="${showedPermission.key[0]}" /> <span>${showedPermission.key[1]}</span></label>
 							                </li>
 						                </c:forEach>
-					                </c:if>
-					                <!-- <li>
+						                <!-- <li>
 					                	<span><i class="icon-minus-sign"></i>Quản lý thực hiện đề tài</span>
 					                    <ul>
 					                        <li>
