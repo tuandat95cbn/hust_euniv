@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import vn.webapp.modules.usermanagement.dao.mDepartmentDAO;
 import vn.webapp.modules.usermanagement.dao.mFuncsPermissionDAO;
+import vn.webapp.modules.usermanagement.dao.mFunctionsDAO;
 import vn.webapp.modules.usermanagement.model.mDepartment;
 import vn.webapp.modules.usermanagement.model.mFuncsPermission;
+import vn.webapp.modules.usermanagement.model.mFunction;
 
 @Service("mFuncsPermissionService")
 public class mFuncsPermissionServiceImpl implements mFuncsPermissionService {
@@ -29,6 +31,9 @@ public class mFuncsPermissionServiceImpl implements mFuncsPermissionService {
 	
 	@Autowired
     private mFuncsPermissionDAO funcsPermissionDAO;
+	
+	@Autowired
+    private mFunctionsDAO functionsDAO;
 
     /**
      * Get permissions by user code
@@ -47,60 +52,19 @@ public class mFuncsPermissionServiceImpl implements mFuncsPermissionService {
     }
     
     /**
-     * Get an user by username
+     * Get function list
      * @param String
      * @return object
      * @throws UsernameNotFoundException
      */
     @Override
-    public List<mDepartment> loadDepartmentListByFaculty(String facultyCode){
+    public List<mFunction> loadFunctionsList(){
     	try {
-    		if(facultyCode != null)
-    		{
-    			return departmentDAO.loadDepartmentListByFaculty(facultyCode);
-    		}
-    		return null;
+    		return functionsDAO.loadFunctionsList();
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
             return null;
         }
     }
-    
-    /**
-     * Get a department by its code and falcuty code
-     * @param null
-     * @return object
-     */
-    @Override
-    public mDepartment loadADepartmentByCodes(String departmentCode, String falcutyCode){
-    	try {
-    		if(departmentCode.equals("") || falcutyCode.equals("")){
-    			return null;
-    		}
-            return departmentDAO.loadADepartmentByCodes(departmentCode, falcutyCode);
-            
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
-            return null;
-        }
-    }
-    
-    /**
-     * Get a department by its code and falcuty code
-     * @param null
-     * @return object
-     */
-    @Override
-    public List<mDepartment> loadADepartmentByFaculty(String falcutyCode){
-    	try {
-    		if(falcutyCode.equals("")){
-    			return null;
-    		}
-            return departmentDAO.loadADepartmentByFaculty(falcutyCode);
-            
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
-            return null;
-        }
-    }
+
 }

@@ -29,6 +29,7 @@ public class mUserValidation {
     private int userId;
     private int userRoleId;
     private int staffId;
+    private String userCode;
     
     @EditPass(min = 6, max = 15)
     private String epassword;
@@ -125,5 +126,13 @@ public class mUserValidation {
 
 	public void setStaffFaculty(String staffFaculty) {
 		this.staffFaculty = staffFaculty;
+	}
+
+	public String getUserCode() {
+		return userCode;
+	}
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
 	}
 }

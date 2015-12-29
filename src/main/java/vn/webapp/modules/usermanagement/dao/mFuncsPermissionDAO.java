@@ -19,23 +19,24 @@ public interface mFuncsPermissionDAO {
     
 	/**
 	 * 
-	 * @param facultyCode
+	 * @param sFunctionCode
+	 * @param sUserCode
 	 * @return
 	 */
-    public List<mDepartment> loadDepartmentListByFaculty(String facultyCode);
-    
-    /**
-     * 
-     * @param departmentCode
-     * @param falcutyCode
-     * @return
-     */
-    public mDepartment loadADepartmentByCodes(String departmentCode, String falcutyCode);
-    
-    /**
-     * 
-     * @param falcutyCode
-     * @return
-     */
-    public List<mDepartment> loadADepartmentByFaculty(String falcutyCode);
+	public mFuncsPermission loadFunctionsPermissionByCodeAndUser(String sFunctionCode, String sUserCode);
+	
+	/**
+	 * 
+	 * @param oFunctions
+	 * @return
+	 */
+	public int saveAFunction(mFuncsPermission oFunctions);
+	
+	/**
+	 * 
+	 * @param oFunctions
+	 * @return
+	 */
+	public int removeAFunction(mFuncsPermission oFunctions);
+	
 }

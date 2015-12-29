@@ -119,7 +119,7 @@
 					            <ul>
 						            	<c:forEach items="${listShowedPermission}" var="showedPermission">	
 							                <li class="checkbox">
-												<label><input type="checkbox" <c:if test="${showedPermission.value eq 1}">checked</c:if> name="function1" value="${showedPermission.key[0]}" /> <span>${showedPermission.key[1]}</span></label>
+												<label><input type="checkbox" <c:if test="${showedPermission.value eq 1}">checked</c:if> name="functions" value="${showedPermission.key[0]}" /> <span>${showedPermission.key[1]}</span></label>
 							                </li>
 						                </c:forEach>
 						                <!-- <li>
@@ -135,6 +135,7 @@
 							<!-- /.col-lg-4 -->
                             <form:hidden path="password" name="password" value="password"/>
                             <form:hidden path="userId" name="userId" value="${dataUser['userId']}"/>
+                            <form:hidden path="userCode" name="userCode" value="${dataUser['userCode']}"/>
                             <form:hidden path="userRoleId" name="userRoleId" value="${dataUser['userRoleId']}"/>
                             <form:hidden path="staffId" name="staffId" value="${dataUser['staffId']}"/>
                             <button type="submit" class="btn btn-primary">Lưu</button>

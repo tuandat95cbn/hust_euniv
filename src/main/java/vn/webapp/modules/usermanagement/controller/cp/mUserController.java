@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -28,6 +29,7 @@ import vn.webapp.controller.BaseWeb;
 import vn.webapp.modules.usermanagement.model.mDepartment;
 import vn.webapp.modules.usermanagement.model.mFaculty;
 import vn.webapp.modules.usermanagement.model.mFuncsPermission;
+import vn.webapp.modules.usermanagement.model.mFunction;
 import vn.webapp.modules.usermanagement.model.mStaff;
 import vn.webapp.modules.usermanagement.model.mUser;
 import vn.webapp.modules.usermanagement.model.mUsers;
@@ -107,7 +109,9 @@ public class mUserController extends BaseWeb {
 	   // Add the saved validationForm to the model
 	   List<mFaculty> facultyList = this.getFacultyByUserRole(BaseWeb.sUserRole, currentUserFacultyCode);
 	   List<mDepartment> departmentList = this.getDepartmentByUserRole(BaseWeb.sUserRole, currentUserFacultyCode);
+	   List<mFunction> funcsPermissionList = BaseWeb.mFuncsPermissionList;
 	   
+	   model.put("listShowedPermission", funcsPermissionList);
 	   model.put("permissionList", BaseWeb.mFuncsPermissionList);
 	   model.put("facultyList", facultyList);
 	   model.put("departmentList", departmentList);
@@ -119,13 +123,16 @@ public class mUserController extends BaseWeb {
   }
   
   @RequestMapping(value="save-an-user", method=RequestMethod.POST)
-  public String saveAnUser(@Valid @ModelAttribute("userFormAdd") mUserValidation userValid, BindingResult result,  Map model, HttpSession session) {
+  public String saveAnUser(HttpServletRequest request, @Valid @ModelAttribute("userFormAdd") mUserValidation userValid, BindingResult result,  Map model, HttpSession session) {
 	   String userRole = session.getAttribute("currentUserRole").toString();
 	   String currentUserFacultyCode = session.getAttribute("currentUserFaculty").toString();
 	   // Add the saved validationForm to the model
 	   List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
 	   List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
+	   List<mFunction> funcsPermissionList = BaseWeb.mFuncsPermissionList;
+	   String[] aFunctionsPermitted = request.getParameterValues("functions");
 	   
+	   model.put("listShowedPermission", funcsPermissionList);
 	   model.put("users", status);
 	   model.put("facultyList", facultyList);
 	   model.put("departmentList", departmentList);
@@ -150,7 +157,7 @@ public class mUserController extends BaseWeb {
               model.put("err", "The username is exists.");
               return "cp.addAnUser";
           }
-   	   int i_InsertUser = userService.saveAUser(username, password, salt, email, role, activated);
+   	   int i_InsertUser = userService.saveAUser(username, password, salt, email, role, activated, aFunctionsPermitted);
    	   // Save a staff followed by an user
    	   String staffName = username;
    	   String staffEmail = email;
@@ -174,10 +181,9 @@ public class mUserController extends BaseWeb {
 	   // Add the saved validationForm to the model
 	   List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
 	   List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
-	   List<mFuncsPermission> mCurrentUserFuncsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(user.get("usercode"));
-	   HashMap<List<String>, Integer> listShowedPermission = this.getUserPermissionList(user.get("usercode"));
+	   List<mFuncsPermission> mCurrentUserFuncsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(user.get("userCode"));
+	   HashMap<List<String>, Integer> listShowedPermission = this.getUserPermissionList(user.get("userCode"));
 	   
-	   model.put("permissionList", BaseWeb.mFuncsPermissionList);
 	   model.put("listShowedPermission", listShowedPermission);
 	   model.put("facultyList", facultyList);
 	   model.put("departmentList", departmentList);
@@ -197,37 +203,37 @@ public class mUserController extends BaseWeb {
   public HashMap<List<String>, Integer> getUserPermissionList(String sUserCode)
   {
 	  	HashMap<List<String>, Integer> listShowedPermission = new HashMap<>();
-	  	List<mFuncsPermission> FuncsPermissionList = BaseWeb.mFuncsPermissionList;
+	  	List<mFunction> FuncsPermissionList = BaseWeb.mFuncsPermissionList;
 	  	List<mFuncsPermission> CurrentUserFuncsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(sUserCode);
-	  	
-	  	for (mFuncsPermission mFuncsPermission : FuncsPermissionList) {
+	  	String sCurrentUserFunctionCode = "";
+	  	String sFunctionCode = "";
+	  	for (mFunction mFuncsPermission : FuncsPermissionList) {
 	  		if(CurrentUserFuncsPermissionList.size() > 0)
 	  		{
+	  			List<String> PermissionInfo= new ArrayList<String>();
+	  			PermissionInfo.add(mFuncsPermission.getFUNC_CODE());
+	  			PermissionInfo.add(mFuncsPermission.getFUNC_NAME());
+				listShowedPermission.put(PermissionInfo, 0);
+				
+	  			sFunctionCode = mFuncsPermission.getFUNC_CODE();
 		  		for (mFuncsPermission mCurrentUserFuncsPermission : CurrentUserFuncsPermissionList) {
-		  			List<String> PermissionInfo= new ArrayList<String>();
-					if(mCurrentUserFuncsPermission.getUSERFUNC_FUNCCODE() != null && mCurrentUserFuncsPermission.getUSERFUNC_FUNCCODE().equals(mFuncsPermission.getUSERFUNC_FUNCCODE()))
+					sCurrentUserFunctionCode = mCurrentUserFuncsPermission.getUSERFUNC_FUNCCODE();
+					if(sCurrentUserFunctionCode != "" && sCurrentUserFunctionCode.equals(sFunctionCode))
 					{
-						PermissionInfo.add(mFuncsPermission.getUSERFUNC_FUNCCODE());
-						PermissionInfo.add(mFuncsPermission.getoFunctions().getFUNC_NAME());
+						listShowedPermission.remove(PermissionInfo, 0);
+						PermissionInfo.add(mFuncsPermission.getFUNC_CODE());
+						PermissionInfo.add(mFuncsPermission.getFUNC_NAME());
 						listShowedPermission.put(PermissionInfo, 1);
-					}else{
-						PermissionInfo.add(mFuncsPermission.getUSERFUNC_FUNCCODE());
-						PermissionInfo.add(mFuncsPermission.getoFunctions().getFUNC_NAME());
-						listShowedPermission.put(PermissionInfo, 0);
 					}
 				}
 	  		}else{
 	  			List<String> PermissionInfo= new ArrayList<String>();
-	  			PermissionInfo.add(mFuncsPermission.getUSERFUNC_FUNCCODE());
-				PermissionInfo.add(mFuncsPermission.getoFunctions().getFUNC_NAME());
+	  			PermissionInfo.add(mFuncsPermission.getFUNC_CODE());
+				PermissionInfo.add(mFuncsPermission.getFUNC_NAME());
 				listShowedPermission.put(PermissionInfo, 0);
 	  		}
-	  		System.out.println("FFFF " + listShowedPermission.get(0));
 		}
-	  	
-	  	for (Entry<List<String>, Integer> entry : listShowedPermission.entrySet()) {
-			System.out.println(entry.getKey().get(0) + " == " + entry.getKey().get(1) + " == " + entry.getValue());
-		}
+
 		return listShowedPermission;
   }
   
@@ -239,18 +245,22 @@ public class mUserController extends BaseWeb {
   * @return
   */
  @RequestMapping(value = "/edit-user-detail", method = RequestMethod.POST)
- public String processValidationForm(@Valid @ModelAttribute("userFormEdit") mUserValidation userFormEdit, BindingResult result, Map model, HttpSession session) {
+ public String processValidationForm(HttpServletRequest request, @Valid @ModelAttribute("userFormEdit") mUserValidation userFormEdit, BindingResult result, Map model, HttpSession session) {
 	   String userRole = session.getAttribute("currentUserRole").toString();
 	   String currentUserFacultyCode = session.getAttribute("currentUserFaculty").toString();
+	   HashMap<List<String>, Integer> listShowedPermission = this.getUserPermissionList(userFormEdit.getUserCode());
+	   
 	   // Add the saved validationForm to the model
 	   List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
 	   List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
+	   String[] aFunctionsPermitted = request.getParameterValues("functions");
 	   
+	   model.put("listShowedPermission", listShowedPermission);
 	   model.put("facultyList", facultyList);
 	   model.put("departmentList", departmentList);
 	   model.put("users", status);
       if (result.hasErrors()) {
-   	   return "cp.editAnUser";
+   	   	return "cp.editAnUser";
       }else
       {
    	   String username = userFormEdit.getUsername();
@@ -269,7 +279,7 @@ public class mUserController extends BaseWeb {
    		   model.put("err", "The username is exists.");
    		   return "cp.editAnUser";
    	   }
-   	   userService.editAnUser(userId, username, password, email, role, activated, userRoleId, staffId, userDepartment);
+   	   userService.editAnUser(userId, username, password, email, role, activated, userRoleId, staffId, userDepartment, aFunctionsPermitted);
    	   model.put("status", "Successfully edited user: " + username);
    	   return "redirect:" + this.baseUrl + "/cp/users.html";
           //return "cp.editAnUser";

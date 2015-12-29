@@ -14,14 +14,12 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-/**
- * @author : HaTN 
- * @address : HUST K51
- * @modified : December 27th, 2015
- */
+
 import vn.webapp.dao.BaseDao;
 import vn.webapp.modules.usermanagement.model.mDepartment;
+import vn.webapp.modules.usermanagement.model.mFaculty;
 import vn.webapp.modules.usermanagement.model.mFuncsPermission;
+import vn.webapp.modules.usermanagement.model.mUsers;
 
 @Repository("mmFuncsPermissionDAO")
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -60,20 +58,20 @@ public class mFuncsPermissionDAOImpl extends BaseDao implements mFuncsPermission
     }
     
     /**
-     * Get department list
+     * Get permissions by user code and function code
      * @param null
-     * @return List
+     * @return object
      */
     @Override
-    public List<mDepartment> loadDepartmentListByFaculty(String facultyCode){
+    public mFuncsPermission loadFunctionsPermissionByCodeAndUser(String sFunctionCode, String sUserCode){
     	try {
             begin();
-            Criteria criteria = getSession().createCriteria(mDepartment.class);
-            criteria.add(Restrictions.eq("Department_Faculty_Code", facultyCode));
-            criteria.addOrder(Order.asc("Department_Name"));
-            List<mDepartment> department = criteria.list();
+            Criteria criteria = getSession().createCriteria(mFuncsPermission.class);
+            criteria.add(Restrictions.eq("USERFUNC_USERCODE", sUserCode));
+            criteria.add(Restrictions.eq("USERFUNC_FUNCCODE", sFunctionCode));
+            mFuncsPermission funcsPermission = (mFuncsPermission)criteria.uniqueResult();
             commit();
-            return department;
+            return funcsPermission;
         } catch (HibernateException e) {
             e.printStackTrace();
             rollback();
@@ -85,26 +83,26 @@ public class mFuncsPermissionDAOImpl extends BaseDao implements mFuncsPermission
         }
     }
     
+    
     /**
-     * Get a department by its code and falcuty code
-     * @param null
-     * @return object
+     * Save a function
+     * @param object
+     * @return int
      */
     @Override
-    public mDepartment loadADepartmentByCodes(String departmentCode, String falcutyCode){
-    	try {
-            begin();
-            Criteria criteria = getSession().createCriteria(mDepartment.class, "Department");
-            criteria.add(Restrictions.eq("Department.Department_Code", departmentCode));
-            criteria.add(Restrictions.eq("Department.Department_Faculty_Code", falcutyCode));
-            mDepartment department = (mDepartment) criteria.uniqueResult();
-            commit();
-            return department;
+    public int saveAFunction(mFuncsPermission oFunctions) 
+    {
+        try {
+           begin();
+           int id = 0; 
+           id = (int)getSession().save(oFunctions);
+           commit();
+           return id;           
         } catch (HibernateException e) {
             e.printStackTrace();
             rollback();
             close();
-            return null;
+            return 0;
         } finally {
             flush();
             close();
@@ -112,28 +110,24 @@ public class mFuncsPermissionDAOImpl extends BaseDao implements mFuncsPermission
     }
     
     /**
-     * Get a department by falcuty
-     * @param null
-     * @return object
-     */
-    @Override
-    public List<mDepartment> loadADepartmentByFaculty(String falcutyCode){
-    	try {
-            begin();
-            Criteria criteria = getSession().createCriteria(mDepartment.class, "Department");
-            criteria.add(Restrictions.eq("Department.Department_Faculty_Code", falcutyCode));
-            criteria.addOrder(Order.asc("Department.Department_Name"));
-            List<mDepartment> department = criteria.list();
-            commit();
-            return department;
-        } catch (HibernateException e) {
-            e.printStackTrace();
-            rollback();
-            close();
-            return null;
-        } finally {
-            flush();
-            close();
-        }
-    }
+	 * 
+	 */
+	@Override
+	public int removeAFunction(mFuncsPermission oFunctions) {
+		try {
+			begin();
+			getSession().delete(oFunctions);
+			commit();
+			return 1;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return 0;
+		} finally {
+			flush();
+			close();
+		}
+	}
+    
 }

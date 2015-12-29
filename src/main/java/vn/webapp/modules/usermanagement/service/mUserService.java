@@ -64,7 +64,7 @@ public interface mUserService {
      * @param activated
      * @return
      */
-    public int saveAUser(String username, String password, String salt, String email, String role, int activated);
+    public int saveAUser(String username, String password, String salt, String email, String role, int activated, String[] aFunctionsPermitted);
     
     /**
      * 
@@ -78,7 +78,7 @@ public interface mUserService {
      * @param staffId
      * @param userDepartment
      */
-    public void editAnUser(int userId, String username, String password, String email, String role, int activated, int userRoleId, int staffId, String userDepartment);
+    public void editAnUser(int userId, String username, String password, String email, String role, int activated, int userRoleId, int staffId, String userDepartment, String[] aFunctionsPermitted);
     
     /**
      * 

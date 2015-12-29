@@ -11,14 +11,17 @@
 package vn.webapp.controller;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import vn.webapp.modules.usermanagement.model.mFuncsPermission;
+import vn.webapp.modules.usermanagement.model.mFunction;
 import vn.webapp.modules.usermanagement.service.mFuncsPermissionService;
 
 public class BaseWeb {
@@ -30,7 +33,7 @@ public class BaseWeb {
     protected static String sUserCode;
     protected static String sUserName;
     protected static String sUserRole;
-    public static List<mFuncsPermission> mFuncsPermissionList;
+    public static List<mFunction> mFuncsPermissionList;
     
     @Autowired
     private mFuncsPermissionService funcsPermissionService;
@@ -52,7 +55,7 @@ public class BaseWeb {
     	// set User name
     	BaseWeb.sUserName = session.getAttribute("currentUserName").toString();
     	// set User permissions
-    	BaseWeb.mFuncsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(BaseWeb.sUserCode);
+    	BaseWeb.mFuncsPermissionList = funcsPermissionService.loadFunctionsList();
     }
     
     /**

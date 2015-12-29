@@ -8,7 +8,55 @@
 
 <!-- DataTables Responsive CSS -->
 <link href="<c:url value="/assets/libs/datatables-responsive/css/dataTables.responsive.css" />" rel="stylesheet">
-	   
+<style>
+
+.tree li {
+    list-style-type:none;
+    margin:0;
+    padding:10px 5px 0 5px;
+    position:relative
+}
+.tree li::before, .tree li::after {
+    content:'';
+    left:-30px;
+    position:absolute;
+    right:auto
+}
+.tree li::before {
+    border-left:1px solid #999;
+    bottom:50px;
+    height:100%;
+    top:0;
+    width:1px
+}
+.tree li::after {
+    border-top:1px solid #999;
+    height:20px;
+    top:25px;
+    width:25px
+}
+.tree li span {
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+
+
+    display:inline-block;
+    padding:3px 8px;
+    text-decoration:none
+}
+.tree li.parent_li>span {
+    cursor:pointer
+}
+
+.tree li:last-child::before {
+    height:30px
+}
+.tree li.parent_li>span:hover, .tree li.parent_li>span:hover+ul li span {
+    background:#eee;
+    border:1px solid #94a0b4;
+    color:#000
+}
+</style>	   
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
@@ -66,7 +114,24 @@
 			                    <div id="department"></div>
 			                    <form:errors path="staffDepartment" class="alert-danger"></form:errors>
 							</div>
-							<!-- /.col-lg-4 -->
+							<div class="tree form-group">
+								<label>Chức năng</label>
+					            <ul>
+						            	<c:forEach items="${listShowedPermission}" var="showedPermission">	
+							                <li class="checkbox">
+												<label><input type="checkbox" name="functions" value="${showedPermission.FUNC_CODE}" /> <span>${showedPermission.FUNC_NAME}</span></label>
+							                </li>
+						                </c:forEach>
+						                <!-- <li>
+					                	<span><i class="icon-minus-sign"></i>Quản lý thực hiện đề tài</span>
+					                    <ul>
+					                        <li>
+						                        <input type="checkbox" name="function1" value="" /> <span><i class="icon-leaf"></i> Quản lý chuyên đề</span> 
+					                        </li>
+					                    </ul>
+					                </li> -->
+					            </ul>
+							</div>
                             
                             <button type="submit" class="btn btn-primary">Lưu</button>
                             <!-- <button type="reset" class="btn btn-primary">Xóa</button> -->

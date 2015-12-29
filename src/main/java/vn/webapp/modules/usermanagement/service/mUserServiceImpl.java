@@ -13,8 +13,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import vn.webapp.modules.usermanagement.dao.mFuncsPermissionDAO;
 import vn.webapp.modules.usermanagement.dao.mStaffDAO;
 import vn.webapp.modules.usermanagement.dao.mUserDAO;
+import vn.webapp.modules.usermanagement.model.mFuncsPermission;
 import vn.webapp.modules.usermanagement.model.mStaff;
 import vn.webapp.modules.usermanagement.model.mUser;
 import vn.webapp.modules.usermanagement.model.mUserRoles;
@@ -28,6 +30,9 @@ public class mUserServiceImpl implements mUserService, UserDetailsService{
     
     @Autowired
     private mStaffDAO staffDAO;
+    
+    @Autowired
+    private mFuncsPermissionDAO funcsPermissionDAO;
 
     public void setUserDAO(mUserDAO userDAO) {
         this.userDAO = userDAO;
@@ -144,7 +149,7 @@ public class mUserServiceImpl implements mUserService, UserDetailsService{
     			userInfo.put("staffFacultyCode", String.valueOf(staff.getStaff_Faculty_Code()));
     			userInfo.put("staffDepartmentCode", String.valueOf(staff.getStaff_Department_Code()));
     		}
-    		userInfo.put("usercode", user.getUser_Code());
+    		userInfo.put("userCode", user.getUser_Code());
     		return userInfo;
     	}
     	return null;
@@ -169,7 +174,7 @@ public class mUserServiceImpl implements mUserService, UserDetailsService{
      * @return int
      */
     @Override
-    public int saveAUser(String username, String password, String salt, String email, String role, int enabled)
+    public int saveAUser(String username, String password, String salt, String email, String role, int enabled, String[] aFunctionsPermitted)
     {
         mUsers user = new mUsers();
         user.setEmail(email);
@@ -185,6 +190,18 @@ public class mUserServiceImpl implements mUserService, UserDetailsService{
         
         int i_SaveUser = userDAO.saveAUser(user);
         int i_SaveUserRole = userDAO.saveAUserRole(userRole);
+        if(aFunctionsPermitted != null)
+        {
+        	String sUserCode = user.getUser_Code();
+        	for (String sFunction : aFunctionsPermitted) {
+        		mFuncsPermission newFunction = new mFuncsPermission();
+    			String sCode = sUserCode+"_"+sFunction;
+    			newFunction.setUSERFUNC_FUNCCODE(sFunction);
+    			newFunction.setUSERFUNC_USERCODE(sUserCode);
+    			newFunction.setUSERFUNC_CODE(sCode);
+    			funcsPermissionDAO.saveAFunction(newFunction);
+			}
+        }
         return i_SaveUser & i_SaveUserRole;
     }
     
@@ -198,9 +215,10 @@ public class mUserServiceImpl implements mUserService, UserDetailsService{
      */
     @Override
     public void editAnUser(int userId, String username, String password, String email, 
-    						String role, int activated, int userRoleId, int staffId, String userDepartment){
+    						String role, int activated, int userRoleId, int staffId, String userDepartment, String[] aFunctionsPermitted){
     	// Set User to update
     	mUsers user = userDAO.loadUserById(userId);
+    	String sUserCode = user.getUser_Code();
         user.setEmail(email);
         user.setUsername(username);
         user.setEnabled(activated);
@@ -221,12 +239,37 @@ public class mUserServiceImpl implements mUserService, UserDetailsService{
         // Set Staff to update
         mStaff staff = staffDAO.getStaffById(staffId);
         staff.setStaff_Name(username);
-        staff.setStaff_User_Code(user.getUser_Code());
-        staff.setStaff_Code(user.getUser_Code());
-        staff.setStaff_AsciiName(user.getUser_Code());
+        staff.setStaff_User_Code(sUserCode);
+        staff.setStaff_Code(sUserCode);
+        staff.setStaff_AsciiName(sUserCode);
         staff.setStaff_Department_Code(userDepartment);
         
         staffDAO.editAStaff(staff);
+        
+        // TODO
+        // Set functions permission
+        if(aFunctionsPermitted  != null)
+        {
+        	// Removing old functions list
+        	List<mFuncsPermission> existingFunctionList = funcsPermissionDAO.loadFunctionsPermissionByUserList(sUserCode);
+        	if(existingFunctionList != null)
+        	{
+        		for (mFuncsPermission mFuncsPermission : existingFunctionList) {
+        			funcsPermissionDAO.removeAFunction(mFuncsPermission);
+				}
+        	}
+    		
+        	// Adding new Functions
+        	for (String sFunction : aFunctionsPermitted) {
+    			mFuncsPermission newFunction = new mFuncsPermission();
+    			String sCode = sUserCode+"_"+sFunction;
+    			newFunction.setUSERFUNC_FUNCCODE(sFunction);
+    			newFunction.setUSERFUNC_USERCODE(sUserCode);
+    			newFunction.setUSERFUNC_CODE(sCode);
+    			funcsPermissionDAO.saveAFunction(newFunction);
+			}
+        }
+        
     }
     
     /**
