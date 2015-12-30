@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50625
 File Encoding         : 65001
 
-Date: 2015-12-21 21:53:13
+Date: 2015-12-31 00:47:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -315,6 +315,28 @@ INSERT INTO `tblfaculty` VALUES ('161', 'NXBBK', 'Nhà xuất bản Bách Khoa H
 INSERT INTO `tblfaculty` VALUES ('162', 'TTPVBK', 'Trung tâm Phục vụ Bách khoa', 'trung-tam-phuc-vu-bach-khoa');
 
 -- ----------------------------
+-- Table structure for `tblfunctions`
+-- ----------------------------
+DROP TABLE IF EXISTS `tblfunctions`;
+CREATE TABLE `tblfunctions` (
+  `FUNC_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `FUNC_CODE` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã chức năng',
+  `FUNC_NAME` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Tên chức năng',
+  `FUNC_URL` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Url link to the page',
+  PRIMARY KEY (`FUNC_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of tblfunctions
+-- ----------------------------
+INSERT INTO `tblfunctions` VALUES ('1', 'MANAGE-USERS', 'Quản lý thông tin Users', '/users.html');
+INSERT INTO `tblfunctions` VALUES ('2', 'MANAGE-PAPERS', 'Quản lý Bài báo', '/papers.html');
+INSERT INTO `tblfunctions` VALUES ('3', 'MANAGE-TOPICS', 'Quản lý Đề tài', '/topics.html');
+INSERT INTO `tblfunctions` VALUES ('4', 'MANAGE-PATENTS', 'Quản lý Bằng sáng chế', '/patents.html');
+INSERT INTO `tblfunctions` VALUES ('5', 'MANAGE-SUMMARY', 'Tổng hợp kê khai', '/summary.html');
+INSERT INTO `tblfunctions` VALUES ('6', 'MANAGE-PRODUCTS', 'Quản lý thực hiện đề tài', '/products.html');
+
+-- ----------------------------
 -- Table structure for `tbljournalindex`
 -- ----------------------------
 DROP TABLE IF EXISTS `tbljournalindex`;
@@ -331,6 +353,37 @@ CREATE TABLE `tbljournalindex` (
 INSERT INTO `tbljournalindex` VALUES ('0', 'Other', 'Others');
 INSERT INTO `tbljournalindex` VALUES ('1', 'SCI', 'SCI Description');
 INSERT INTO `tbljournalindex` VALUES ('2', 'SCIE', 'SCIE Description');
+
+-- ----------------------------
+-- Table structure for `tbljurysubmittedprojectroles`
+-- ----------------------------
+DROP TABLE IF EXISTS `tbljurysubmittedprojectroles`;
+CREATE TABLE `tbljurysubmittedprojectroles` (
+  `JUPRJROL_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `JUPRJROL_CODE` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã vai trò',
+  `JUPRJROL_NAME` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Tên vai trò',
+  PRIMARY KEY (`JUPRJROL_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of tbljurysubmittedprojectroles
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `tbljurysubmittedprojects`
+-- ----------------------------
+DROP TABLE IF EXISTS `tbljurysubmittedprojects`;
+CREATE TABLE `tbljurysubmittedprojects` (
+  `JUSUPRJ_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `JUSUPRJ_STAFFCODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã thành viên (tham chiếu tblstaffs)',
+  `JUSUPRJ_PRJCALLCODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã đợt gọi đề tài (tham chiếu tblprojectcalls)',
+  `JUPSURJ_ROLECODE` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã vai trò của thành viên hội đồng xét (tham chiếu tbljurysubmittedprojectroles)',
+  PRIMARY KEY (`JUSUPRJ_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of tbljurysubmittedprojects
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `tblpapercategory`
@@ -377,7 +430,7 @@ CREATE TABLE `tblpapersdeclaration` (
   `PDECL_ReportingAcademicDate` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `PDECL_SourceFile` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`PDECL_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of tblpapersdeclaration
@@ -519,7 +572,7 @@ CREATE TABLE `tblpatentdeclaration` (
   `PAT_AuthorConvertedHours` int(11) DEFAULT NULL,
   `PAT_ReportingAcademicDate` varchar(20) NOT NULL,
   PRIMARY KEY (`PAT_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tblpatentdeclaration
@@ -541,7 +594,7 @@ CREATE TABLE `tblproducts` (
   `PROD_SourceFile` text NOT NULL,
   `PROD_User_Code` varchar(256) NOT NULL,
   PRIMARY KEY (`PROD_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tblproducts
@@ -555,6 +608,23 @@ INSERT INTO `tblproducts` VALUES ('6', 'producttrungnl03150429082015', 'threadtr
 INSERT INTO `tblproducts` VALUES ('7', 'producttrungnl03151029082015', 'threadtrungnl03115329082015', 'Chuyên đề 1', '09/01/2015', '09/10/2015', '30', 'SUBMIT', '', 'trungnl');
 INSERT INTO `tblproducts` VALUES ('8', 'producttrungnl03151129082015', 'threadtrungnl03115329082015', 'Chuyên đề 1', '09/01/2015', '09/10/2015', '30', 'SUBMIT', '', 'trungnl');
 INSERT INTO `tblproducts` VALUES ('9', 'productdungpq03570329082015', 'threadtrungnl03115329082015', 'Thêm chuyên đề sau khi phê duyệt', '09/01/2015', '09/24/2015', '500', 'SUBMIT', '', 'dungpq');
+
+-- ----------------------------
+-- Table structure for `tblprojectcalls`
+-- ----------------------------
+DROP TABLE IF EXISTS `tblprojectcalls`;
+CREATE TABLE `tblprojectcalls` (
+  `PROJCALL_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `PROJCALL_CODE` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã đợt gọi',
+  `PROJCALL_PROJCATCODE` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã loại đề tài (tham chiếu tblprojectcategory)',
+  `PROJCALL_NAME` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Tên đợt gọi đề tài',
+  `PROJCALL_DATE` datetime NOT NULL COMMENT 'Ngay',
+  PRIMARY KEY (`PROJCALL_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of tblprojectcalls
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `tblprojectcategory`
@@ -676,7 +746,7 @@ CREATE TABLE `tblprojectsdeclaration` (
   `PROJDECL_Year` int(5) NOT NULL,
   `PROJDECL_ReportingAcademicDate` varchar(20) NOT NULL,
   PRIMARY KEY (`PROJDECL_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tblprojectsdeclaration
@@ -814,6 +884,22 @@ CREATE TABLE `tblstaffcategory` (
 INSERT INTO `tblstaffcategory` VALUES ('1', 'LEC', 'Lecturer', 'lecturer');
 
 -- ----------------------------
+-- Table structure for `tblstaffjurysubmittedprojects`
+-- ----------------------------
+DROP TABLE IF EXISTS `tblstaffjurysubmittedprojects`;
+CREATE TABLE `tblstaffjurysubmittedprojects` (
+  `STFJUPRJ_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `STFJUPRJ_CODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã đợt gọi',
+  `STFJUPRJ_STAFFJURCODE` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã loại đề tài (tham chiếu tblprojectcategory)',
+  `STFJUPRJ_PRJCODE` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Tên đợt gọi đề tài',
+  PRIMARY KEY (`STFJUPRJ_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of tblstaffjurysubmittedprojects
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for `tblstaffs`
 -- ----------------------------
 DROP TABLE IF EXISTS `tblstaffs`;
@@ -831,7 +917,7 @@ CREATE TABLE `tblstaffs` (
   `Staff_DateOfBirth` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `Staff_Gender` enum('male','female') COLLATE utf8_unicode_ci DEFAULT 'male',
   PRIMARY KEY (`Staff_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=236 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of tblstaffs
@@ -1061,6 +1147,33 @@ INSERT INTO `tblstaffs` VALUES ('230', 'ha.ck', 'ha.ck', 'ha.ck', 'incredibletra
 INSERT INTO `tblstaffs` VALUES ('231', 'anthonytran', 'anthonytran', 'anthonytran', 'incredibletran@gmail.com', 'SOICT-BMKHMT', '0', 'LEC', 'anthonytran', 'SOICT', null, null);
 INSERT INTO `tblstaffs` VALUES ('232', 'anthony.tran', 'anthony.tran', 'anthony.tran', 'hello@yahoo.com', 'LLCT-VPKLLCT', '0', 'LEC', 'anthony.tran', 'LLCT', null, null);
 INSERT INTO `tblstaffs` VALUES ('233', 'xxxxxxx', 'xxxxxxx', 'xxxxxxx', 'xxxxx@yahoo.com', 'SOICT-BMCNPM', '0168 6714336', 'LEC', 'xxxxxxx', 'SOICT', '28/10/1988', 'male');
+INSERT INTO `tblstaffs` VALUES ('234', 'anthonyStark', 'anthonyStark', 'anthonyStark', 'anthonyStark@gmail.com', 'SOICT-BDHDAHTPTDTCNTT', '0', 'LEC', 'anthonyStark', 'SOICT', null, null);
+INSERT INTO `tblstaffs` VALUES ('235', 'benmark', 'benmark', 'benmark', 'benmark@yahoo.com', 'SOICT-BDHDAHTPTDTCNTT', '0', 'LEC', 'benmark', 'SOICT', null, null);
+
+-- ----------------------------
+-- Table structure for `tbluserfunctions`
+-- ----------------------------
+DROP TABLE IF EXISTS `tbluserfunctions`;
+CREATE TABLE `tbluserfunctions` (
+  `USERFUNC_ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `USERFUNC_CODE` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã user-chức năng',
+  `USERFUNC_USERCODE` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã user',
+  `USERFUNC_FUNCCODE` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Mã chức năng (tham chiếu bảng tblfunctions)',
+  PRIMARY KEY (`USERFUNC_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of tbluserfunctions
+-- ----------------------------
+INSERT INTO `tbluserfunctions` VALUES ('1', 'dungpq_MANAGE-USERS', 'dungpq', 'MANAGE-USERS');
+INSERT INTO `tbluserfunctions` VALUES ('2', 'dungpq_MANAGE-PAPERS', 'dungpq', 'MANAGE-PAPERS');
+INSERT INTO `tbluserfunctions` VALUES ('3', 'dungpq_MANAGE-TOPICS', 'dungpq', 'MANAGE-TOPICS');
+INSERT INTO `tbluserfunctions` VALUES ('4', 'dungpq_MANAGE-PATENTS', 'dungpq', 'MANAGE-PATENTS');
+INSERT INTO `tbluserfunctions` VALUES ('5', 'dungpq_MANAGE-SUMMARY', 'dungpq', 'MANAGE-SUMMARY');
+INSERT INTO `tbluserfunctions` VALUES ('13', 'anthonyStark_MANAGE-PATENTS', 'anthonyStark', 'MANAGE-PATENTS');
+INSERT INTO `tbluserfunctions` VALUES ('16', 'benmark_MANAGE-PAPERS', 'benmark', 'MANAGE-PAPERS');
+INSERT INTO `tbluserfunctions` VALUES ('17', 'benmark_MANAGE-TOPICS', 'benmark', 'MANAGE-TOPICS');
+INSERT INTO `tbluserfunctions` VALUES ('18', 'benmark_MANAGE-SUMMARY', 'benmark', 'MANAGE-SUMMARY');
 
 -- ----------------------------
 -- Table structure for `tbluserroles`
@@ -1073,7 +1186,7 @@ CREATE TABLE `tbluserroles` (
   PRIMARY KEY (`UserRole_ID`),
   UNIQUE KEY `uni_username_role` (`Role`,`Username`),
   KEY `fk_username_idx` (`Username`)
-) ENGINE=InnoDB AUTO_INCREMENT=248 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=250 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tbluserroles
@@ -1105,9 +1218,11 @@ INSERT INTO `tbluserroles` VALUES ('80', 'anhbq', 'ROLE_USER');
 INSERT INTO `tbluserroles` VALUES ('32', 'anhdt', 'ROLE_USER');
 INSERT INTO `tbluserroles` VALUES ('103', 'anhpt', 'ROLE_USER');
 INSERT INTO `tbluserroles` VALUES ('47', 'anhth', 'ROLE_USER');
+INSERT INTO `tbluserroles` VALUES ('248', 'anthonyStark', 'ROLE_USER');
 INSERT INTO `tbluserroles` VALUES ('238', 'bac.luonghuu', 'ROLE_USER');
 INSERT INTO `tbluserroles` VALUES ('203', 'bac.nguyenquang', 'ROLE_USER');
 INSERT INTO `tbluserroles` VALUES ('31', 'bangbh', 'ROLE_USER');
+INSERT INTO `tbluserroles` VALUES ('249', 'benmark', 'ROLE_USER');
 INSERT INTO `tbluserroles` VALUES ('218', 'binh.nguyenmy', 'ROLE_USER');
 INSERT INTO `tbluserroles` VALUES ('81', 'binhdt', 'ROLE_USER');
 INSERT INTO `tbluserroles` VALUES ('187', 'chuong.tavan', 'ROLE_USER');
@@ -1325,7 +1440,7 @@ CREATE TABLE `tblusers` (
   `User_Code` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Set an unique code for an user that will be mapped with a staff',
   PRIMARY KEY (`User_ID`),
   UNIQUE KEY `username` (`Username`)
-) ENGINE=InnoDB AUTO_INCREMENT=250 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=252 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of tblusers
@@ -1556,3 +1671,5 @@ INSERT INTO `tblusers` VALUES ('246', 'ha.ck', 'e10adc3949ba59abbe56e057f20f883e
 INSERT INTO `tblusers` VALUES ('247', 'anthonytran', 'e10adc3949ba59abbe56e057f20f883e', 'salt-sequence', 'incredibletran@gmail.com', '1', 'anthonytran');
 INSERT INTO `tblusers` VALUES ('248', 'anthony.tran', '25f9e794323b453885f5181f1b624d0b', 'salt-sequence', 'hello@yahoo.com', '0', 'anthony.tran');
 INSERT INTO `tblusers` VALUES ('249', 'xxxxxxx', 'e10adc3949ba59abbe56e057f20f883e', 'salt-sequence', 'xxxx@gmail.com', '1', 'xxxxxxx');
+INSERT INTO `tblusers` VALUES ('250', 'anthonyStark', '35c7c28ff64710aaa3dfe0106912025e', 'salt-sequence', 'anthonyStark@gmail.com', '1', 'anthonyStark');
+INSERT INTO `tblusers` VALUES ('251', 'benmark', '4ba6cb13e221b38efc22aa5b853f6089', 'salt-sequence', 'benmark@yahoo.com', '1', 'benmark');

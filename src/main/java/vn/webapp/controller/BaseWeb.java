@@ -35,6 +35,13 @@ public class BaseWeb {
     protected static String sUserRole;
     public static List<mFunction> mFuncsPermissionList;
     
+    public static int iMANAGEUSERS = 0;
+    public static int iMANAGEPAPERS = 0;
+    public static int iMANAGETOPICS = 0;
+    public static int iMANAGEPATENTS = 0;
+    public static int iMANAGESUMMARY = 0;
+    public static int iMANAGEPRODUCTS = 0;
+    
     @Autowired
     private mFuncsPermissionService funcsPermissionService;
     
@@ -56,7 +63,16 @@ public class BaseWeb {
     	BaseWeb.sUserName = session.getAttribute("currentUserName").toString();
     	// set User permissions
     	BaseWeb.mFuncsPermissionList = funcsPermissionService.loadFunctionsList();
+    	
+    	BaseWeb.iMANAGEUSERS = (session.getAttribute("iMANAGEUSERS") != null) ? (int) session.getAttribute("iMANAGEUSERS") : 0;
+    	BaseWeb.iMANAGEPAPERS = (session.getAttribute("iMANAGEPAPERS") != null) ? (int) session.getAttribute("iMANAGEPAPERS") : 0;
+    	BaseWeb.iMANAGETOPICS = (session.getAttribute("iMANAGETOPICS") != null) ? (int) session.getAttribute("iMANAGETOPICS") : 0;
+    	BaseWeb.iMANAGEPATENTS = (session.getAttribute("iMANAGEPATENTS") != null) ? (int) session.getAttribute("iMANAGEPATENTS") : 0;
+    	BaseWeb.iMANAGESUMMARY = (session.getAttribute("iMANAGESUMMARY") != null) ? (int) session.getAttribute("iMANAGESUMMARY") : 0;
+    	BaseWeb.iMANAGEPRODUCTS = (session.getAttribute("iMANAGEPRODUCTS") != null) ? (int) session.getAttribute("iMANAGEPRODUCTS") : 0;
     }
+    
+    
     
     /**
      * 
@@ -87,5 +103,12 @@ public class BaseWeb {
         assetsUrl = baseUrl + "/assets";
         map.put("baseUrl", baseUrl);
         map.put("assetsUrl", assetsUrl);
+        
+        map.put("iMANAGEUSERS", BaseWeb.iMANAGEUSERS);
+        map.put("iMANAGEPAPERS", BaseWeb.iMANAGEPAPERS);
+        map.put("iMANAGETOPICS", BaseWeb.iMANAGETOPICS);
+        map.put("iMANAGEPATENTS", BaseWeb.iMANAGEPATENTS);
+        map.put("iMANAGESUMMARY", BaseWeb.iMANAGESUMMARY);
+        map.put("iMANAGEPRODUCTS", BaseWeb.iMANAGEPRODUCTS);
     }
 }
