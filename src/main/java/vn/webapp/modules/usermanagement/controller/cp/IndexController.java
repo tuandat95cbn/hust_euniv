@@ -56,7 +56,7 @@ public class IndexController {
     * @return
     */
    @RequestMapping(value = "/home", method = RequestMethod.GET)
-   public String home(ModelMap model, HttpSession session) {
+   public String home(ModelMap map, HttpSession session) {
 	   String username = SecurityContextHolder.getContext().getAuthentication().getName();
 	   session.setAttribute("currentUserName", username);
 	   mUser user = userService.loadUserByUsername(username);
@@ -83,34 +83,35 @@ public class IndexController {
    				sFuncsCode = mFuncsPermission.getUSERFUNC_FUNCCODE();
 	   			if("MANAGE-USERS".equals(sFuncsCode))
 	   			{
-	   				this.iMANAGEUSERS = 1;
 	   				session.setAttribute("iMANAGEUSERS", 1);
 	   			}else if("MANAGE-PAPERS".equals(sFuncsCode)){
-	   				this.iMANAGEPAPERS = 1;
 	   				session.setAttribute("iMANAGEPAPERS", 1);
 	   			}else if("MANAGE-TOPICS".equals(sFuncsCode)){
-	   				this.iMANAGETOPICS = 1;
 	   				session.setAttribute("iMANAGETOPICS", 1);
 	   			}else if("MANAGE-PATENTS".equals(sFuncsCode)){
-	   				this.iMANAGEPATENTS = 1;
 	   				session.setAttribute("iMANAGEPATENTS", 1);
 	   			}else if("MANAGE-SUMMARY".equals(sFuncsCode)){
-	   				this.iMANAGESUMMARY = 1;
 	   				session.setAttribute("iMANAGESUMMARY", 1);
 	   			}else if("MANAGE-PRODUCTS".equals(sFuncsCode)){
-	   				this.iMANAGEPRODUCTS = 1;
 	   				session.setAttribute("iMANAGEPRODUCTS", 1);
 	   			}
 			}
 	   }
-	   model.put("iMANAGEUSERS", this.iMANAGEUSERS);
-	   model.put("iMANAGEPAPERS", this.iMANAGEPAPERS);
-	   model.put("iMANAGETOPICS", this.iMANAGETOPICS);
-	   model.put("iMANAGEPATENTS", this.iMANAGEPATENTS);
-	   model.put("iMANAGESUMMARY", this.iMANAGESUMMARY);
-	   model.put("iMANAGEPRODUCTS", this.iMANAGEPRODUCTS);
+	    this.iMANAGEUSERS = (session.getAttribute("iMANAGEUSERS") != null) ? (int) session.getAttribute("iMANAGEUSERS") : 0;
+	   	this.iMANAGEPAPERS = (session.getAttribute("iMANAGEPAPERS") != null) ? (int) session.getAttribute("iMANAGEPAPERS") : 0;
+	   	this.iMANAGETOPICS = (session.getAttribute("iMANAGETOPICS") != null) ? (int) session.getAttribute("iMANAGETOPICS") : 0;
+	   	this.iMANAGEPATENTS = (session.getAttribute("iMANAGEPATENTS") != null) ? (int) session.getAttribute("iMANAGEPATENTS") : 0;
+	   	this.iMANAGESUMMARY = (session.getAttribute("iMANAGESUMMARY") != null) ? (int) session.getAttribute("iMANAGESUMMARY") : 0;
+	   	this.iMANAGEPRODUCTS = (session.getAttribute("iMANAGEPRODUCTS") != null) ? (int) session.getAttribute("iMANAGEPRODUCTS") : 0;
+   	
+	    map.put("iMANAGEUSERS", this.iMANAGEUSERS);
+        map.put("iMANAGEPAPERS", this.iMANAGEPAPERS);
+        map.put("iMANAGETOPICS", this.iMANAGETOPICS);
+        map.put("iMANAGEPATENTS", this.iMANAGEPATENTS);
+        map.put("iMANAGESUMMARY", this.iMANAGESUMMARY);
+        map.put("iMANAGEPRODUCTS", this.iMANAGEPRODUCTS);
 	   
-       return "cp.home";
+        return "cp.home";
    }
    
    
