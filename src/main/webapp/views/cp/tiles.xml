@@ -234,4 +234,20 @@
         <put-attribute name="content" value="/views/cp/products/edit.jsp" />
     </definition>
     
+    <!-- ProjectCalls Module -->
+    <definition name="cp.projectcalls" extends="layout.base">
+        <put-attribute name="title" value="Show list products" />                                 
+        <put-attribute name="content" value="/views/cp/projectcalls/list.jsp" />
+    </definition>
+    
+    <definition name="cp.addAProjectCall" extends="layout.base">
+        <put-attribute name="title" value="Create a project call" />                                 
+        <put-attribute name="content" value="/views/cp/projectcalls/add.jsp" />
+    </definition>
+    
+    <definition name="cp.editAProjectCall" extends="layout.base">
+        <put-attribute name="title" value="Edit a project call" />                                 
+        <put-attribute name="content" value="/views/cp/projectcalls/edit.jsp" />
+    </definition>
+    
 </tiles-definitions>
