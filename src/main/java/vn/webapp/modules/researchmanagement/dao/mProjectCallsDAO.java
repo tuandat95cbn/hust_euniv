@@ -51,4 +51,12 @@ public interface mProjectCallsDAO {
 	 * @return
 	 */
 	public mProjectCalls loadAProjectCallByName(String sPROJCALL_NAME);
+	
+	/**
+	 * 
+	 * @param projectCallId
+	 * @param sPROJCALL_NAME
+	 * @return
+	 */
+	public int checkingExistProjectCallByName(int projectCallId, String sPROJCALL_NAME);
 }

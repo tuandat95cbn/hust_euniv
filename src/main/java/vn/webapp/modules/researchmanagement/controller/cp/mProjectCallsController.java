@@ -141,13 +141,20 @@ public class mProjectCallsController extends BaseWeb {
 			return "cp.addAProjectCall";
 		} else {
 			// Prepare data for inserting DB
-			String PROJCALL_PROJCATCODE = projectCallValid.getProjectCallCatCode();
 			String PROJCALL_NAME 		= projectCallValid.getProjectCallName();
-			String PROJCALL_DATE 		= DateUtil.s_fConvertDateFormatType1(projectCallValid.getProjectCallDate());
-			String sPROJCALL_CODE 		= "T"+DateUtil.s_fGetCurrentDate();
-			int i_InsertAProjectCall = projectCallsService.saveAProjectCall(sPROJCALL_CODE, PROJCALL_PROJCATCODE, PROJCALL_NAME, PROJCALL_DATE);
-			if (i_InsertAProjectCall > 0) {
-				model.put("status", "Lưu thành công");
+			mProjectCalls projectCalls = projectCallsService.loadAProjectCallByName(PROJCALL_NAME);
+			if(projectCalls == null){
+				String PROJCALL_PROJCATCODE = projectCallValid.getProjectCallCatCode();
+				String PROJCALL_DATE 		= DateUtil.s_fConvertDateFormatType1(projectCallValid.getProjectCallDate());
+				String sPROJCALL_CODE 		= "T"+DateUtil.s_fGetCurrentDate();
+				int i_InsertAProjectCall 	= projectCallsService.saveAProjectCall(sPROJCALL_CODE, PROJCALL_PROJCATCODE, PROJCALL_NAME, PROJCALL_DATE);
+				if (i_InsertAProjectCall > 0) {
+					model.put("status", "Lưu thành công");
+				}else{
+					model.put("err", "Lưu không thành công. Hãy thử lại.");
+				}
+			}else{
+				model.put("err", "Đợt gọi đề tài đã tồn tại");
 			}
 			return "cp.addAProjectCall";
 		}
@@ -155,30 +162,21 @@ public class mProjectCallsController extends BaseWeb {
 
 
 	@RequestMapping("/projectcalldetail/{id}")
-	public String editAProjectCall(ModelMap model, @PathVariable("id") int productId, HttpSession session) {
-
-		String userRole = session.getAttribute("currentUserRole").toString();
-		String userCode = session.getAttribute("currentUserCode").toString();
-		mProducts product = productService.loadAProductByIdAndUserCode(userRole, userCode, productId);
-		// Get list statues
-		List<mProjectStatus> projectStatuses = projectStatusService.list();
+	public String editAProjectCall(ModelMap model, @PathVariable("id") int iProjectCallId, HttpSession session) {
+		// Get topic's category
+		List<mTopicCategory> topicCategory = tProjectCategoryService.list();
+		mProjectCalls projectCalls = projectCallsService.loadAProjectCallById(iProjectCallId);
+		
 		// Put data back to view
-		model.put("projectStatuses", projectStatuses);
-		model.put("thread", status);
-		if (product != null) {
-			// Get topic's category
-			List<mThreads> threadsList = threadService.loadThreadsListByStaff(userRole, userCode);
+		model.put("topicCategory", topicCategory);
+		model.put("projectcalls", status);
+		if (projectCalls != null) {
+			String sProjectCallDate = DateUtil.s_fConvertDateFormatType2(projectCalls.getPROJCALL_DATE());
 			// Put journal list and topic category to view
-			model.put("threadsList", threadsList);
-			model.put("productFormEdit", new mProductValidation());
-			model.put("productId", productId);
-			model.put("productThreadCode", product.getThread().getPROJ_Code());
-			model.put("productCode", product.getPROD_Code());
-			model.put("productName", product.getPROD_Name());
-			model.put("productEndDate", product.getPROD_EndDate());
-			model.put("productStartDate", product.getPROD_StartDate());
-			model.put("productStatus", product.getPROD_Status_Code());
-			model.put("productBudget", product.getPROD_Budget());
+			model.put("projectCallFormEdit", new mProjectCallsValidation());
+			model.put("projectCallId", iProjectCallId);
+			model.put("projectCalls", projectCalls);
+			model.put("sProjectCallDate", sProjectCallDate);
 			return "cp.editAProjectCall";
 		}
 		return "cp.notFound404";
@@ -190,79 +188,36 @@ public class mProjectCallsController extends BaseWeb {
 	 * @return
 	 */
 	 @RequestMapping(value = "/edit-a-projectcall", method = RequestMethod.POST)
-	 public String updateAProjectCall(HttpServletRequest request, @Valid @ModelAttribute("productFormEdit") mProductValidation productValid, BindingResult result, Map model, HttpSession session) {
-	
-		 // Get current user name and role
-		 String userCode = session.getAttribute("currentUserCode").toString();
-		 String userRole = session.getAttribute("currentUserRole").toString();
+	 public String updateAProjectCall(HttpServletRequest request, @Valid @ModelAttribute("projectCallFormEdit") mProjectCallsValidation projectCallValid, BindingResult result, Map model, HttpSession session) {
 		
-		 // Get topic's category
-		 List<mThreads> threadsList = threadService.loadThreadsListByStaff(userRole, userCode);
-		 // Get list project statuses
-		 List<mProjectStatus> projectStatuses = projectStatusService.list();
+		// Get topic's category
+			List<mTopicCategory> topicCategory = tProjectCategoryService.list();
 
 		 // Put data back to view
-		 model.put("threadsList", threadsList);
-		 model.put("projectStatuses", projectStatuses);
-		 model.put("product", status);
+		 model.put("topicCategory", topicCategory);
+		 model.put("projectcalls", status);
 		 if (result.hasErrors()) {
 			 return "cp.editAProjectCall";
 		 }else
 		 {
 			 // Prepare data for inserting DB
-			 // Prepare data for inserting DB
-			 String productName 		= productValid.getproductName();
-			 String productStartDate 	= productValid.getproductStartDate();
-			 String productEndDate 		= productValid.getproductEndDate();
-			 String productProject 		= productValid.getproductCatCode();
-			 String productStatus 		= productValid.getproductStatus();
-			 int productBudget 			= productValid.getproductBudget();
-			 String productCode 		= productValid.getproductCode();
-			 int productId				= productValid.getproductId();
-			 String productSourceUploadFileSrc = "";
-			 /**
-			 * Uploading file
-			 */
-			 
-			 /*
-			 MultipartFile productSourceUploadFile = productValid.getproductSourceFile();
-			 String fileName = productSourceUploadFile.getOriginalFilename();
-			 try {
-				 // Creating Date in java with today's date.
-				 Date currentDate = new Date();
-				 // change date into string yyyyMMdd format example "20110914"
-				 SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
-				 String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+			 int iPROJCALL_ID				= projectCallValid.getProjectCallId();
+			 String sPROJCALL_NAME 			= projectCallValid.getProjectCallName();
+			 int iIsExisting = projectCallsService.checkingExistProjectCallByName(iPROJCALL_ID, sPROJCALL_NAME);
+			 if(iIsExisting == 0)
+			 {
+				 String sPROJCALL_DATE 			= DateUtil.s_fConvertDateFormatType1(projectCallValid.getProjectCallDate());
+				 String sPROJCALL_PROJCATCODE 	= projectCallValid.getProjectCallCatCode();
 				 
-				 byte[] bytes = productSourceUploadFile.getBytes();
-				 String path = request.getServletContext().getRealPath("uploads");
-				 File dir = new File(path + "/products");
-				 if (!dir.exists()) {
-					dir.mkdirs();
-				 }
-				 if (!fileName.equals("")) {
-					// Create a file
-					String currentUserName = session.getAttribute("currentUserName").toString();
-					fileName = currentUserName + "_" + sCurrentDate + "_" + fileName;
-					System.out.println("file name :" + fileName);
-					File serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
-					// Save data into file
-					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-					stream.write(bytes);
-					stream.close();
-					
-					if(serverFile.exists()){
-						productSourceUploadFileSrc = dir.getAbsolutePath()+ File.separator + fileName;
-					}
-				 }
-			 } catch (Exception e) {
-				model.put("status", "You failed to upload " + fileName);
+				 LocalDate o_fFormatDateByFormat = DateUtil.o_fFormatDateByFormatType1(projectCallValid.getProjectCallDate());
+				 String sPROJCALL_CODE = "T"+o_fFormatDateByFormat.getYear()+iPROJCALL_ID;
+
+				 projectCallsService.editAProjectCall(iPROJCALL_ID, sPROJCALL_CODE, sPROJCALL_PROJCATCODE, sPROJCALL_NAME, sPROJCALL_DATE);
+				 model.put("status", "Chỉnh sửa thành công.");
+			 }else{
+				 model.put("err", "Đợt gọi đề tài đã tồn tại");
 			 }
-			 */
 			 
-			 productService.editAProduct(userRole, userCode, productName, productProject, productStartDate, productEndDate,
-											productStatus, productBudget, productCode, productSourceUploadFileSrc, productId);
-			 model.put("status", "Successfully edited product");
 			 return "cp.editAProjectCall";
 		 }
 	 }
@@ -273,24 +228,19 @@ public class mProjectCallsController extends BaseWeb {
 	 * @return
 	 */
 	 @RequestMapping(value = "/remove-a-projectcall/{id}", method = RequestMethod.GET)
-	 public String removeAProjectCall(ModelMap model, @PathVariable("id") int productId, HttpSession session) {
-		 String userCode = session.getAttribute("currentUserCode").toString();
-		 String userRole = session.getAttribute("currentUserRole").toString();
-		 mProducts product = productService.loadAProductByIdAndUserCode(userRole, userCode, productId);
-		 // Get topic's category
-		 List<mThreads> threadsList = threadService.loadThreadsListByStaff(userRole, userCode);
-		 // Get list project statuses
-		 List<mProjectStatus> projectStatuses = projectStatusService.list();
+	 public String removeAProjectCall(ModelMap model, @PathVariable("id") int iProjectCallId, HttpSession session) {
 		 
+		 mProjectCalls projectCalls = projectCallsService.loadAProjectCallById(iProjectCallId);
 		 // Return value to view
-		 model.put("threadsList", threadsList);
-		 model.put("projectStatuses", projectStatuses);
-		 model.put("product", status);
-		 if(product != null){
-			 productService.removeAProduct(productId);
-			 List<mProducts> productsList = productService.loadProductsListByStaff(userRole, userCode);
-			 model.put("productsList", productsList);
-			 return "cp.products";
+		 model.put("projectcalls", status);
+		 if(projectCalls != null){
+			 projectCallsService.removeAProjectCall(iProjectCallId);
+			// Get topic's category
+			List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+			
+			// Put data back to view
+			model.put("projectCallsList", projectCallsList);
+			return "cp.projectcalls";
 		 }
 		 return "cp.notFound404";
 	 }

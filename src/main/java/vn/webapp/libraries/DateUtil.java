@@ -55,7 +55,7 @@ public class DateUtil {
 			LocalDate oFormatedDate = LocalDate.parse(sDate, oFormatter);
 			String sYear = Integer.toString(oFormatedDate.getYear());
 			String sMonth = oFormatedDate.getMonthValue() > 9 ? Integer.toString(oFormatedDate.getMonthValue()) : "0"+oFormatedDate.getMonthValue();
-			String sDay = Integer.toString(oFormatedDate.getDayOfMonth());
+			String sDay = oFormatedDate.getDayOfMonth() > 9 ? Integer.toString(oFormatedDate.getDayOfMonth()) : "0"+oFormatedDate.getDayOfMonth();
 			
 			return sYear+"-"+sMonth+"-"+sDay;
 		}catch (Exception e)
@@ -65,7 +65,26 @@ public class DateUtil {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * @param sDate
+	 * @return
+	 */
+	public static String s_fConvertDateFormatType2(String sDate){
+		try{
+			DateTimeFormatter oFormatter = DateTimeFormatter.ofPattern(DateUtil._dateFormatType2, Locale.ENGLISH);
+			LocalDate oFormatedDate = LocalDate.parse(sDate, oFormatter);
+			String sYear = Integer.toString(oFormatedDate.getYear());
+			String sMonth = oFormatedDate.getMonthValue() > 9 ? Integer.toString(oFormatedDate.getMonthValue()) : "0"+oFormatedDate.getMonthValue();
+			String sDay = oFormatedDate.getDayOfMonth() > 9 ? Integer.toString(oFormatedDate.getDayOfMonth()) : "0"+oFormatedDate.getDayOfMonth();
+			
+			return sDay+"/"+sMonth+"/"+sYear;
+		}catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
 	
 	/**
 	 * 

@@ -12,8 +12,6 @@
 <!-- Jquery UI CSS -->
 <link href="<c:url value="/assets/css/jquery-ui.css" />" rel="stylesheet">
 
-<style>.ui-datepicker-calendar {display: none;}​</style>
-
 <!-- jQuery UI -->
 <script src="<c:url value="/assets/js/jquery-ui.js"/>"></script>	   
 <div id="page-wrapper">
@@ -39,59 +37,35 @@
                     <c:if test="${err != null}">
 	                	<div class="alert alert-warning">${err}</div>
                     </c:if>
-                    <form:form action="${baseUrl}/cp/edit-a-topic.html" method="POST" commandName="topicFormEdit" role="form">
+                    <form:form action="${baseUrl}/cp/edit-a-projectcall.html" method="POST" commandName="projectCallFormEdit" role="form">
 	                    <div class="row">
 	                        <div class="col-lg-6">
 	                                <div class="form-group">
+	                                    <label for="topicName">Tên*</label>
+	                                    <form:input path="projectCallName" class="form-control" name="projectCallName" value="${projectCalls.PROJCALL_NAME}" placeholder="Project Call Name"></form:input>
+	    								<form:errors path="projectCallName" class="alert-danger"></form:errors>
+	                                </div>
+	                                <div class="form-group">
 	                                    <label>Nhóm*</label>
-	                                    <form:select path="topicCatCode" class="form-control" name="topicCatCode">
+	                                    <form:select path="projectCallCatCode" class="form-control" name="projectCallCatCode">
 	                                    	<c:forEach items="${topicCategory}" var="topicCat">
-		                                        <option value="${topicCat.PROJCAT_Code}" <c:if test="${topicCat.PROJCAT_Code == topicCatCode}">selected</c:if> >${topicCat.PROJCAT_Name}</option>
+		                                        <option value="${topicCat.PROJCAT_Code}" <c:if test="${topicCat.PROJCAT_Code == projectCalls.PROJCALL_PROJCATCODE}">selected</c:if>  >${topicCat.PROJCAT_Name}</option>
 	                                       	</c:forEach>
 	                                    </form:select>
-	                                    <form:errors path="topicCatCode" class="alert-danger"></form:errors>
+	                                    <form:errors path="projectCallCatCode" class="alert-danger"></form:errors>
 	                                </div>
-	                                <div class="form-group">
-	                                    <label for="topicName">Tên*</label>
-	                                    <form:input path="topicName" class="form-control" value="${topic.PROJDECL_Name}" name="topicName" placeholder="Project Name"></form:input>
-	    								<form:errors path="topicName" class="alert-danger"></form:errors>
-	                                </div>
-	                                <div class="form-group">
-	                                    <label for="topicConHours">Giờ quy đổi*</label>
-	                                    <form:input path="topicConHours" class="form-control" value="${topic.PROJDECL_ConvertedHours}" name="topicConHours" placeholder="Publilcation Converted Hours"></form:input>
-	    								<form:errors path="topicConHours" class="alert-danger"></form:errors>
-	                                </div>
-	                                <div class="form-group">
-	                                	<label for="topicReportingAcademicDate">Năm kê khai*</label>
-		                                <form:select path="topicReportingAcademicDate" class="form-control" name="topicReportingAcademicDate" >
-		                                	<c:forEach items="${topicReportingAcademicDate}" var="topicDate">
-		                                     <option value="${topicDate.ACAYEAR_Code}" <c:if test="${topicDate.ACAYEAR_Code == reportingDate}">selected</c:if> >${topicDate.ACAYEAR_Code}</option>
-		                                   	</c:forEach>
-		                                </form:select>
-		                                <form:errors path="topicReportingAcademicDate" class="alert-danger"></form:errors>
-	                            	</div>
-	                                <form:hidden path="topicId" name="topicId" value="${topicId}"/>
+	                                <form:hidden path="projectCallId" name="projectCallId" value="${projectCallId}"/>
 	                                <button type="submit" class="btn btn-primary">Lưu</button>
 	                                <button type="reset" class="btn btn-primary cancel">Hủy</button>
 	                        </div>
 	                        <div class="col-lg-6">
-                        		<div class="form-group">
-                                    <label for="topicAutConHours">Giờ quy đổi của người kê khai</label>
-                                    <form:input path="topicAutConHours" class="form-control" value="${topic.PROJDECL_AuthorConvertedHours}" name="topicAutConHours" placeholder="Author Converted Hours"></form:input>
-    								<form:errors path="topicAutConHours" class="alert-danger"></form:errors>
-                                </div>
-                                <div class="form-group">
-                                    <label for="topicYear">Năm bắt đầu*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;">(format : YYYY)</i></label>
-                                    <form:input path="topicYear" class="form-control year" value="${topic.PROJDECL_Year}" readonly="true" name="topicYear" placeholder="YYYY"></form:input>
-    								<form:errors path="topicYear" class="alert-danger"></form:errors>
-                                </div>
-                                <div class="form-group">
-                                    <label for="budget">Kinh phí (triệu VNĐ)</label>
-                                    <form:input path="budget" class="form-control" value="${topic.PROJDECL_Budget}" name="budget" placeholder="Budget"></form:input>
-    								<form:errors path="budget" class="alert-danger"></form:errors>
+                            	<div class="form-group">
+                                    <label for="projectCallDate">Ngày gọi*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;"></i></label>
+                                    <form:input path="projectCallDate" class="form-control year" name="projectCallDate" value="${sProjectCallDate}" readonly="true" placeholder="Project Call Date"></form:input>
+    								<form:errors path="projectCallDate" class="alert-danger"></form:errors>
                                 </div>
 	                        </div>
-	                        	<!-- /.col-lg-6 (nested) -->
+	                        <!-- /.col-lg-6 (nested) -->
 	                    </div>
 	                    <!-- /.row (nested) -->
                     </form:form>
@@ -111,37 +85,15 @@
 //-->
 $(document).ready(function(){
 	$('button.cancel').click(function(){
-		window.location = baseUrl+"/cp/topics.html";
+		window.location = baseUrl+"/cp/project-call-open.html";
 	});
 	
-	$('.year').datepicker({
-		changeMonth: false,
+	$('#projectCallDate').datepicker({
+		changeMonth: true,
         changeYear: true,
         showButtonPanel: true,
-        dateFormat : 'yy',
-        stepMonths: 12,
-		onClose: function() {
-	        var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-	        $(this).datepicker('setDate', new Date(iYear, 1));
-     	},
-     	beforeShow: function() {
-     		if ((selDate = $(this).val()).length > 0)
- 	        {
- 	          iYear = selDate.substring(selDate.length - 4, selDate.length);
- 	          $(this).datepicker('option', 'defaultDate', new Date(iYear, 1));
- 	          $(this).datepicker('setDate', new Date(iYear, 1));
- 	        }
-  	    }
-  	});
-	// Hide month when choose a year
-	$("#topicYear").click(function () {
-		$(".ui-datepicker-month").hide();
-	});
-	
-	$("#topicYear").focus(function () {
-        $(".ui-datepicker-calendar").hide();
-        $(".ui-datepicker-month").hide();
-    });
+        dateFormat : 'dd/mm/yy',
+        stepMonths: 12});
 });
 </script>
 

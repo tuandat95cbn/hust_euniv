@@ -117,6 +117,32 @@ public class mProjectCallsServiceImpl implements mProjectCallsService {
 			return null;
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public mProjectCalls loadAProjectCallByName(String sProjectCallName){
+		try {
+			return projectCallsDAO.loadAProjectCallByName(sProjectCallName);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public int checkingExistProjectCallByName(int projectCallId, String sPROJCALL_NAME){
+		try {
+			return projectCallsDAO.checkingExistProjectCallByName(projectCallId, sPROJCALL_NAME);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return 0;
+		}
+	}
 
 	/**
 	 * Edit a project call

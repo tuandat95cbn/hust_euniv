@@ -85,7 +85,7 @@
 //-->
 $(document).ready(function(){
 	$('button.cancel').click(function(){
-		window.location = baseUrl+"/cp/topics.html";
+		window.location = baseUrl+"/cp/project-call-open.html";
 	});
 	
 	$('#projectCallDate').datepicker({

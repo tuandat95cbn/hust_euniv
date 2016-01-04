@@ -173,6 +173,7 @@ public class mProjectCallsDAOImpl extends BaseDao implements mProjectCallsDAO {
 	/**
 	 * 
 	 */
+	@Override
 	public mProjectCalls loadAProjectCallByName(String sPROJCALL_NAME){
 		try {
 			begin();
@@ -186,6 +187,30 @@ public class mProjectCallsDAOImpl extends BaseDao implements mProjectCallsDAO {
 			rollback();
 			close();
 			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public int checkingExistProjectCallByName(int projectCallId, String sPROJCALL_NAME){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(mProjectCalls.class);
+			criteria.add(Restrictions.ne("PROJCALL_ID", projectCallId));
+			criteria.add(Restrictions.eq("PROJCALL_NAME", sPROJCALL_NAME));
+			mProjectCalls projectCalls = (mProjectCalls) criteria.uniqueResult();
+			commit();
+			return (projectCalls != null) ? 1 : 0;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return 0;
 		} finally {
 			flush();
 			close();

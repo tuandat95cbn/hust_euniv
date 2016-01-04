@@ -48,9 +48,9 @@
 										<td><c:out value="${projectCall.PROJCALL_PROJCATCODE}"/></td>
 										<td><c:out value="${projectCall.PROJCALL_DATE}"/></td>
 										<td class="center">
-											<button type="button" onclick="v_fViewDetailATopic(${projectCall.PROJCALL_ID});" class="btn btn-info btn-xs" title="Edit">Info</button>
+											<button type="button" onclick="v_fViewDetailAProjectCall(${projectCall.PROJCALL_ID});" class="btn btn-info btn-xs" title="Edit">Info</button>
 											<br/>
-											<button type="button" id="removeTopic" onclick="v_fRemoveATopic(${projectCall.PROJCALL_ID});" class="btn btn-danger btn-xs" title="Remove">Remove</button>
+											<button type="button" id="removeTopic" onclick="v_fRemoveAProjectCall(${projectCall.PROJCALL_ID});" class="btn btn-danger btn-xs" title="Remove">Remove</button>
 										</td>
 									</tr>
 								</c:forEach>
@@ -96,7 +96,7 @@ function v_fViewDetailAProjectCall(iProjectCallId){
 
 
 function v_fRemoveAProjectCall(iProjectCallId){
-	var r = confirm("Do you really want to remove this ?");
+	var r = confirm("Bạn có muốn xóa bản ghi này ?");
 	if (r == true) {
 		var sRemoveUrl = baseUrl + "/cp/remove-a-projectcall/"+iProjectCallId+".html";
 		window.location = sRemoveUrl;

@@ -1,6 +1,7 @@
 package vn.webapp.modules.researchmanagement.service;
 
 import java.util.List;
+
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 
 public interface mProjectCallsService {
@@ -33,6 +34,20 @@ public interface mProjectCallsService {
 	 * @return
 	 */
 	public mProjectCalls loadAProjectCallByCode(String sProjectCallCode);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public mProjectCalls loadAProjectCallByName(String sProjectCallName);
+	
+	/**
+	 * 
+	 * @param projectCallId
+	 * @param sPROJCALL_NAME
+	 * @return
+	 */
+	public int checkingExistProjectCallByName(int projectCallId, String sPROJCALL_NAME);
 
 	/**
 	 * 
