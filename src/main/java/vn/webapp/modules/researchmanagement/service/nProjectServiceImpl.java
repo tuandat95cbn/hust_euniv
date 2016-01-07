@@ -18,6 +18,7 @@ import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
 import vn.webapp.modules.researchmanagement.dao.mProjectStaffsDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStatusDAO;
 import vn.webapp.modules.researchmanagement.dao.nProjectDAO;
+import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mThreads;
@@ -76,6 +77,23 @@ public class nProjectServiceImpl implements nProjectService {
 		try {
 
 			return threadDAO.loadThreadsListByStaff(userRole, userCode);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * Get a list Projects by user code
+	 * 
+	 * @param String
+	 * @return object
+	 */
+	@Override
+	public List<Projects> loadProjectsListByStaff(String userRole, String userCode) {
+		try {
+
+			return threadDAO.loadProjectsListByStaff(userRole, userCode);
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 			return null;
@@ -607,7 +625,7 @@ public class nProjectServiceImpl implements nProjectService {
 	}
 
 	/**
-	 * load a paper by usercode and it's id
+	 * load a thread by usercode and it's id
 	 * 
 	 * @param String
 	 * @param int
@@ -617,6 +635,22 @@ public class nProjectServiceImpl implements nProjectService {
 	public mThreads loadAThreadByIdAndUserCode(String userRole, String userCode, int threadId) {
 		try {
 			return threadDAO.loadAThreadByIdAndUserCode(userRole, userCode, threadId);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * load a project by usercode and it's id
+	 * 
+	 * @param String
+	 * @param int
+	 * @return object
+	 */
+	public Projects loadAProjectByIdAndUserCode(String userRole, String userCode, int projectId){
+		try {
+			return threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 			return null;
@@ -714,6 +748,17 @@ public class nProjectServiceImpl implements nProjectService {
 	@Override
 	public int removeAThread(int threadId) {
 		return threadDAO.removeAThread(threadId);
+	}
+	
+	/**
+	 * Remove a thread
+	 * 
+	 * @param int
+	 * @return int
+	 */
+	@Override
+	public int removeAProject(int projectId) {
+		return threadDAO.removeAProject(projectId);
 	}
 	
 	/**

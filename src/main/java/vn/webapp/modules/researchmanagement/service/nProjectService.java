@@ -1,7 +1,9 @@
 package vn.webapp.modules.researchmanagement.service;
 
 import java.util.List;
+
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
+import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 
 public interface nProjectService {
@@ -12,6 +14,14 @@ public interface nProjectService {
 	 * @return
 	 */
 	public List<mThreads> loadThreadsListByStaff(String userRole, String userCode);
+	
+	/**
+	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @return
+	 */
+	public List<Projects> loadProjectsListByStaff(String userRole, String userCode);
 
 	/**
 	 * 
@@ -108,6 +118,15 @@ public interface nProjectService {
 	 * @return
 	 */
 	public mThreads loadAThreadByIdAndUserCode(String userRole, String userCode, int threadId);
+	
+	/**
+	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @param threadId
+	 * @return
+	 */
+	public Projects loadAProjectByIdAndUserCode(String userRole, String userCode, int projectId);
 
 	/**
 	 * 
@@ -148,6 +167,13 @@ public interface nProjectService {
 	 * @return
 	 */
 	public int removeAThread(int threadId);
+	
+	/**
+	 * 
+	 * @param projectId
+	 * @return
+	 */
+	public int removeAProject(int projectId);
 	
 	/**
 	 * 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import vn.webapp.dao.BaseDao;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
+import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 
 @Repository("nProjectDAO")
@@ -42,6 +43,35 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			List<mThreads> threads = criteria.list();
 			commit();
 			return threads;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * Get project list by user
+	 * 
+	 * @param null
+	 * @return List
+	 */
+	@Override
+	public List<Projects> loadProjectsListByStaff(String userRole, String userCode) {
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
+			if (!userRole.equals("ROLE_ADMIN")) {
+				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
+			}
+			criteria.addOrder(Order.desc("projects.PROJ_ID"));
+			List<Projects> projects = criteria.list();
+			commit();
+			return projects;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			rollback();
@@ -324,6 +354,35 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			close();
 		}
 	}
+	
+	/**
+	 * Load A Project by id and User code
+	 * 
+	 * @param object
+	 * @return int
+	 */
+	@Override
+	public Projects loadAProjectByIdAndUserCode(String userRole, String userCode, int projectId){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class);
+			criteria.add(Restrictions.eq("PROJ_ID", projectId));
+			if (!userRole.equals("ROLE_ADMIN")) {
+				criteria.add(Restrictions.eq("PROJ_User_Code", userCode));
+			}
+			Projects project = (Projects) criteria.uniqueResult();
+			commit();
+			return project;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
 
 	/**
 	 * Edit a thread
@@ -348,19 +407,44 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 	}
 
 	/**
-	 * Remove a paper
+	 * Remove a thread
 	 * 
-	 * @param paperId
+	 * @param threadId
 	 * @return
 	 */
 	@Override
 	public int removeAThread(int threadId) {
 		mThreads thread = new mThreads();
 		thread.setPROJ_ID(threadId);
-		System.out.println("aa = " + threadId);
 		try {
 			begin();
 			getSession().delete(thread);
+			commit();
+			return 1;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return 0;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * Remove a project
+	 * 
+	 * @param projectId
+	 * @return
+	 */
+	@Override
+	public int removeAProject(int projectId){
+		Projects project = new Projects();
+		project.setPROJ_ID(projectId);
+		try {
+			begin();
+			getSession().delete(project);
 			commit();
 			return 1;
 		} catch (HibernateException e) {

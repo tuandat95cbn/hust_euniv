@@ -250,4 +250,20 @@
         <put-attribute name="content" value="/views/cp/projectcalls/edit.jsp" />
     </definition>
     
+    <!-- Projects Module -->
+    <definition name="cp.projectsList" extends="layout.base">
+        <put-attribute name="title" value="Show list projects" />                                 
+        <put-attribute name="content" value="/views/cp/projects/list.jsp" />
+    </definition>
+    
+    <definition name="cp.addAProject" extends="layout.base">
+        <put-attribute name="title" value="Create a project" />                                 
+        <put-attribute name="content" value="/views/cp/projects/add.jsp" />
+    </definition>
+    
+    <definition name="cp.editAProject" extends="layout.base">
+        <put-attribute name="title" value="Edit a project" />                                 
+        <put-attribute name="content" value="/views/cp/projects/edit.jsp" />
+    </definition>
+    
 </tiles-definitions>

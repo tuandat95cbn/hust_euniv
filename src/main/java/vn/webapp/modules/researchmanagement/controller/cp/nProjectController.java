@@ -37,12 +37,14 @@ import vn.webapp.modules.researchdeclarationmanagement.service.mJournalService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mPatentService;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectCategoryService;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectService;
+import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 import vn.webapp.modules.researchmanagement.service.mProjectStaffsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStatusService;
 import vn.webapp.modules.researchmanagement.service.nProjectService;
+import vn.webapp.modules.researchmanagement.validation.ProjectsValidation;
 import vn.webapp.modules.researchmanagement.validation.mThreadApproveValidation;
 import vn.webapp.modules.researchmanagement.validation.mThreadExcellValidation;
 import vn.webapp.modules.researchmanagement.validation.mThreadValidation;
@@ -96,6 +98,23 @@ public class nProjectController extends BaseWeb {
      */
     private static final int BUFFER_SIZE = 4096;
 
+    /**
+	 * Show list all threads
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/list-projects", method = RequestMethod.GET)
+	public String getListProjects(ModelMap model, HttpSession session) {
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		List<Projects> projectsList = threadService.loadProjectsListByStaff(userRole, userCode);
+
+		model.put("projectsList", projectsList);
+		model.put("projects", status);
+		return "cp.projectsList";
+	}
+	
 	/**
 	 * Show list all threads
 	 * 
@@ -266,6 +285,20 @@ public class nProjectController extends BaseWeb {
 		model.put("thread", status);
 		return "cp.addAThread";
 	}
+	
+	/**
+	 * Adding a project
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/add-a-newproject", method = RequestMethod.GET)
+	public String addAProject(ModelMap model, HttpSession session) {
+		// Put data back to view
+		model.put("projectsAddForm", new ProjectsValidation());
+		model.put("projects", status);
+		return "cp.addAProject";
+	}
 
 	/**
 	 * Save a thread
@@ -363,6 +396,13 @@ public class nProjectController extends BaseWeb {
 		}
 	}
 
+	/**
+	 * 
+	 * @param model
+	 * @param threadId
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping("/threaddetail/{id}")
 	public String editAThread(ModelMap model, @PathVariable("id") int threadId, HttpSession session) {
 
@@ -417,6 +457,38 @@ public class nProjectController extends BaseWeb {
 		return "cp.notFound404";
 	}
 	
+	/**
+	 * 
+	 * @param model
+	 * @param threadId
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/aprojectdetail/{id}")
+	public String editAProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+
+		String userRole = session.getAttribute("currentUserRole").toString();
+		String userCode = session.getAttribute("currentUserCode").toString();
+		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
+		
+		// Put data back to view
+		model.put("projects", status);
+		if (project != null) {
+			// Put journal list and topic category to view
+			model.put("projectFormEdit", new ProjectsValidation());
+			model.put("projectId", projectId);
+			return "cp.editAProject";
+		}
+		return "cp.notFound404";
+	}
+	
+	/**
+	 * 
+	 * @param model
+	 * @param threadId
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping("/threadshow/{id}")
 	public String showAThread(ModelMap model, @PathVariable("id") int threadId, HttpSession session) {
 
@@ -832,6 +904,26 @@ public class nProjectController extends BaseWeb {
 		 }
 		 return "cp.notFound404";
 	 }
+	 
+	 /**
+		 * Remove a project
+		 * @param model
+		 * @return
+		 */
+		 @RequestMapping(value = "/remove-a-project/{id}", method = RequestMethod.GET)
+		 public String removeAProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+			 String userCode = session.getAttribute("currentUserCode").toString();
+			 String userRole = session.getAttribute("currentUserRole").toString();
+			 Projects project = threadService.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
+			 model.put("projects", status);
+			 if(project != null){
+				 threadService.removeAProject(projectId);
+				 List<Projects> projectsList = threadService.loadProjectsListByStaff(userRole, userCode);
+				 model.put("projectsList", projectsList);
+				 return "cp.projectsList";
+			 }
+			 return "cp.notFound404";
+		 }
 	 
 	 /**
 	    * Download a file source
