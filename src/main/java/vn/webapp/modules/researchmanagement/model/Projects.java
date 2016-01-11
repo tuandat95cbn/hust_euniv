@@ -37,6 +37,7 @@ public class Projects implements Serializable{
     private String PROJ_ResultChanged;
     private int PROJ_BudgetChanged;
     private int PROJ_Locked2;
+    private String PROJ_PRJCall_Code;
     
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "PROJ_User_Code", referencedColumnName = "Staff_User_Code", insertable=false, updatable=false)
@@ -218,5 +219,11 @@ public class Projects implements Serializable{
 		this.staff = staff;
 	}
 
-	
+	public String getPROJ_PRJCall_Code() {
+		return PROJ_PRJCall_Code;
+	}
+
+	public void setPROJ_PRJCall_Code(String pROJ_PRJCall_Code) {
+		PROJ_PRJCall_Code = pROJ_PRJCall_Code;
+	}
 }

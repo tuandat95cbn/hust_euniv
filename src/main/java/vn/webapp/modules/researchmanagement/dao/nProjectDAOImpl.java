@@ -302,7 +302,7 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 	}
 	
 	/**
-	 * Save a topic
+	 * Save a thread
 	 * 
 	 * @param object
 	 * @return int
@@ -313,6 +313,31 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			begin();
 			int id = 0;
 			id = (int) getSession().save(thread);
+			commit();
+			return id;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return 0;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * Save a project
+	 * 
+	 * @param object
+	 * @return int
+	 */
+	@Override
+	public int saveAProject(Projects project) {
+		try {
+			begin();
+			int id = 0;
+			id = (int) getSession().save(project);
 			commit();
 			return id;
 		} catch (HibernateException e) {
@@ -395,6 +420,28 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 		try {
 			begin();
 			getSession().update(thread);
+			commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * Edit a project
+	 * 
+	 * @param object
+	 * @return int
+	 */
+	@Override
+	public void editAProject(Projects project){
+		try {
+			begin();
+			getSession().update(project);
 			commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();

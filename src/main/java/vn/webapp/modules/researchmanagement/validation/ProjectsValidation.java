@@ -21,6 +21,9 @@ public class ProjectsValidation{
 	private String projectResult;
 	
 	private int projectBudget;
+	
+	@NotEmpty
+	private String projectCallCode;
 
 	public int getProjectId() {
 		return projectId;
@@ -68,6 +71,14 @@ public class ProjectsValidation{
 
 	public void setProjectBudget(int projectBudget) {
 		this.projectBudget = projectBudget;
+	}
+
+	public String getProjectCallCode() {
+		return projectCallCode;
+	}
+
+	public void setProjectCallCode(String projectCallCode) {
+		this.projectCallCode = projectCallCode;
 	}
 
 }

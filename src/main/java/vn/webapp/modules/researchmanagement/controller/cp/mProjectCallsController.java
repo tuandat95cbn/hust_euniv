@@ -92,7 +92,7 @@ public class mProjectCallsController extends BaseWeb {
 	 */
 	@RequestMapping(value = "/project-call-open", method = RequestMethod.GET)
 	public String projectCallsList(ModelMap model, HttpSession session) {
-		// Get topic's category
+		// Get list of project calls
 		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
 		
 		// Put data back to view

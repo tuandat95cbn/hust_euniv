@@ -89,6 +89,14 @@ public interface nProjectDAO {
 	 * @return
 	 */
 	public int saveAThread(mThreads thread); 
+	
+	
+	/**
+	 * 
+	 * @param project
+	 * @return
+	 */
+	public int saveAProject(Projects project); 
 
 	/**
 	 * 
@@ -113,6 +121,12 @@ public interface nProjectDAO {
 	 * @param thread
 	 */
 	public void editAThread(mThreads thread);
+	
+	/**
+	 * 
+	 * @param project
+	 */
+	public void editAProject(Projects project);
 
 	/**
 	 * 

@@ -39,9 +39,18 @@
                     <c:if test="${err != null}">
 	                	<div class="alert alert-warning">${err}</div>
                     </c:if>
-                    <form:form action="${baseUrl}/cp/save-a-thread.html" method="POST" commandName="projectsAddForm" role="form" enctype="multipart/form-data">
+                    <form:form action="${baseUrl}/cp/save-a-project.html" method="POST" commandName="projectsAddForm" role="form" enctype="multipart/form-data">
 	                    <div class="row">
 	                        <div class="col-lg-6">
+	                        	<div class="form-group">
+                                    <label>Chọn đợt đề tài*</label>
+                                    <form:select path="projectCallCode" class="form-control" name="projectCallCode">
+                                    	<c:forEach items="${projectCallsList}" var="projectCall">
+	                                        <option value="${projectCall.PROJCALL_CODE}">${projectCall.PROJCALL_NAME}</option>
+                                       	</c:forEach>
+                                    </form:select>
+                                    <form:errors path="projectCallCode" class="alert-danger"></form:errors>
+                                </div>
                                 <div class="form-group">
                                     <label for="projectName">Tên đề tài*</label>
                                     <form:input path="projectName" class="form-control" name="projectName" placeholder="Project Name"></form:input>

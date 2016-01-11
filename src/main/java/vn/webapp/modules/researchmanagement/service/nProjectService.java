@@ -109,6 +109,20 @@ public interface nProjectService {
 	public int saveAThread(String userCode, String threadName, String threadCategory, String threadContent, String threadStartDate, 
 							String threadEndDate, String threadMotivation, String threadReportingDate, String threadResult, String threadStatus, 
 							int threadBudget, String threadSourceUploadFileSrc, String threadCode, List<String> listStaffs, List<String> listStaffRoles);
+	
+	
+	/**
+	 * 
+	 * @param userCode
+	 * @param projectCallCode
+	 * @param projectName
+	 * @param projectContent
+	 * @param projectMotivation
+	 * @param projectResult
+	 * @param projectBudget
+	 * @return
+	 */
+	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int projectBudget, String projectCode);
 
 	/**
 	 * 
@@ -152,6 +166,21 @@ public interface nProjectService {
 							String threadStartDate, String threadEndDate, String threadMotivation, String threadReportingDate, String threadResult, 
 							String threadStatus, int threadBudget, String threadSourceUploadFileSrc, String threadCode, int threadId, List<String> listStaffs, List<String> listStaffRoles);
 
+	/**
+	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @param projectCallCode
+	 * @param projectName
+	 * @param projectContent
+	 * @param projectMotivation
+	 * @param projectResult
+	 * @param projectBudget
+	 * @param projectCode
+	 */
+	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, 
+								String projectMotivation, String projectResult, int projectBudget, String projectCode);
+	
 	/**
 	 * 
 	 * @param userRole

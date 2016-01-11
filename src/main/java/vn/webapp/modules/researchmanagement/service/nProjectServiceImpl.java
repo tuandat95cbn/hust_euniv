@@ -623,6 +623,37 @@ public class nProjectServiceImpl implements nProjectService {
 		}
 		return 0;
 	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int projectBudget, String projectCode){
+		if(userCode != "" && projectCode != "" && projectName != "" && projectCallCode != "")
+		{
+			Projects beInsertedProject = new Projects();
+			beInsertedProject.setPROJ_User_Code(userCode);
+			beInsertedProject.setPROJ_PRJCall_Code(projectCallCode);
+			beInsertedProject.setPROJ_Name(projectName);
+			beInsertedProject.setPROJ_Content(projectContent);
+			beInsertedProject.setPROJ_Motivation(projectMotivation);
+			beInsertedProject.setPROJ_Result(projectResult);
+			beInsertedProject.setPROJ_TotalBudget(projectBudget);
+			beInsertedProject.setPROJ_Code(projectCode);
+			
+			int iInsertedProjectId = threadDAO.saveAProject(beInsertedProject);
+			if(iInsertedProjectId > 0 )
+			{
+				Projects beUpdatedProject = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, iInsertedProjectId);
+				projectCode = projectCallCode+iInsertedProjectId;
+				beUpdatedProject.setPROJ_Code(projectCode);
+				threadDAO.editAProject(beUpdatedProject);
+				
+				return 1;
+			}
+		}
+		return 0;
+	}
 
 	/**
 	 * load a thread by usercode and it's id
@@ -675,7 +706,6 @@ public class nProjectServiceImpl implements nProjectService {
 			threadDAO.editAThread(thread);
 
 		}
-		
 	}
 	
 	@Override
@@ -736,6 +766,26 @@ public class nProjectServiceImpl implements nProjectService {
 					}
 				}
 			}
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, String projectMotivation, String projectResult, int projectBudget, String projectCode){
+		Projects project = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
+		if (project != null) {
+			// tProjectDAO.editATopic(topic);
+			project.setPROJ_Code(projectCode);
+			project.setPROJ_Content(projectContent);
+			project.setPROJ_Motivation(projectMotivation);
+			project.setPROJ_Name(projectName);
+			project.setPROJ_Result(projectResult);
+			project.setPROJ_TotalBudget(projectBudget);
+			project.setPROJ_PRJCall_Code(projectCallCode);
+			
+			threadDAO.editAProject(project);
 		}
 	}
 
