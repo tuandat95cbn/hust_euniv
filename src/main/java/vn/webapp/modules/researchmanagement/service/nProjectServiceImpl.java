@@ -34,6 +34,9 @@ import vn.webapp.modules.usermanagement.model.mStaff;
 public class nProjectServiceImpl implements nProjectService {
 	@Autowired
 	private tProjectDAO tProjectDAO;
+	
+	@Autowired
+	private nProjectDAO projectDAO;
 
 	@Autowired
 	private tProjectCategoryDAO tProjectCategoryDAO;
@@ -83,6 +86,15 @@ public class nProjectServiceImpl implements nProjectService {
 		}
 	}
 	
+	@Override
+	public List<Projects> loadListProjectsByCode(String PROJ_Code){
+		try {
+			return projectDAO.loadListProjectsByCode(PROJ_Code);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
 	/**
 	 * Get a list Projects by user code
 	 * 
@@ -94,6 +106,19 @@ public class nProjectServiceImpl implements nProjectService {
 		try {
 
 			return threadDAO.loadProjectsListByStaff(userRole, userCode);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public Projects loadProjectsById(int projectId){
+		try {
+			return projectDAO.loadProjectById(projectId);
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 			return null;
@@ -908,5 +933,16 @@ public class nProjectServiceImpl implements nProjectService {
 			System.out.println("Exception: " + e.getMessage());
 		}
 		return "";
+	}
+	
+	
+	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code){
+		try {
+
+			return threadDAO.loadProjectByProjectCallId(PROJ_PRJCall_Code);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}		
 	}
 }

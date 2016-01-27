@@ -22,6 +22,20 @@ public interface nProjectService {
 	 * @return
 	 */
 	public List<Projects> loadProjectsListByStaff(String userRole, String userCode);
+	
+	/**
+	 * 
+	 * @param projectId
+	 * @return
+	 */
+	public Projects loadProjectsById(int projectId);
+	
+	/**
+	 * 
+	 * @param PROJ_Code
+	 * @return
+	 */
+	public List<Projects> loadListProjectsByCode(String PROJ_Code);
 
 	/**
 	 * 
@@ -229,4 +243,11 @@ public interface nProjectService {
 	 * @return
 	 */
 	public String getDepartmentName(String departmentCode);
+	
+	/**
+	 * Listing all projects by its project call code
+	 * @param PROJ_PRJCall_Code
+	 * @return
+	 */
+	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code);
 }

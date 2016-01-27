@@ -266,4 +266,27 @@
         <put-attribute name="content" value="/views/cp/projects/edit.jsp" />
     </definition>
     
+    <!-- Jury of announced project call -->    
+    <definition name="cp.addJuryOfAnnouncedProjectCall" extends="layout.base">
+        <put-attribute name="title" value="List juries of announced project calls " />                                 
+        <put-attribute name="content" value="/views/cp/JuryOfAnnouncedProjectCall/manage.jsp" />
+    </definition>
+    
+    <!-- Staff jury of submitted project -->    
+    <definition name="cp.addStaffJuryOfSubmittedProject" extends="layout.base">
+        <put-attribute name="title" value="List staff juries of submitted projects " />                                 
+        <put-attribute name="content" value="/views/cp/StaffJuryOfSubmittedProject/manage.jsp" />
+    </definition>
+    
+     <!-- Comments of submitted project -->    
+    <definition name="cp.listProjectsToBeReviewed" extends="layout.base">
+        <put-attribute name="title" value="List of projects to be reviewed " />                                 
+        <put-attribute name="content" value="/views/cp/CommentsOfSubmittedProjects/list.jsp" />
+    </definition>
+    
+    <definition name="cp.addCommentsOfSubmittedProjects" extends="layout.base">
+        <put-attribute name="title" value="Add comments for submitted projects " />                                 
+        <put-attribute name="content" value="/views/cp/CommentsOfSubmittedProjects/addComment.jsp" />
+    </definition> 
+            
 </tiles-definitions>

@@ -48,9 +48,8 @@
 										<td><c:out value="${count}"/></td>
 										<td><c:out value="${project.PROJ_Name}"/></td>
 										<td class="center">
-											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn btn-info btn-xs" title="Edit">Info</button>
-											<br/>
-											<button type="button" id="removeTopic" onclick="v_fRemoveAProject(${project.PROJ_ID});" class="btn btn-danger btn-xs" title="Remove">Remove</button>
+											<button type="button" onclick="v_fViewDetailACommentsOfSubmittedProjects(${project.PROJ_ID});" class="btn btn-info btn-xs" title="Edit"> Xem </button>
+											<br>
 										</td>
 									</tr>
 								</c:forEach>
@@ -89,19 +88,9 @@ $(document).ready(function() {
     });
 });
 
-function v_fViewDetailAProject(iProjectId){
-	var sViewDetailUrl = baseUrl + "/cp/aprojectdetail/"+iProjectId+".html";
+function v_fViewDetailACommentsOfSubmittedProjects(iProjectId){
+	var sViewDetailUrl = baseUrl + "/cp/add-comments-of-submitted-projects/"+iProjectId+".html";
 	window.location = sViewDetailUrl;
 }
 
-
-function v_fRemoveAProject(iProjectId){
-	var r = confirm("Bạn có muốn xóa bản ghi này ?");
-	if (r == true) {
-		var sRemoveUrl = baseUrl + "/cp/remove-a-project/"+iProjectId+".html";
-		window.location = sRemoveUrl;
-	} else {
-	    return false;
-	}
-}
 </script>

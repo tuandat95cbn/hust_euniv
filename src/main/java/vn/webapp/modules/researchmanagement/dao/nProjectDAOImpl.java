@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import vn.webapp.dao.BaseDao;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
 import vn.webapp.modules.researchmanagement.model.Projects;
+import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 
 @Repository("nProjectDAO")
@@ -23,6 +24,28 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+	
+	/**
+	 * 
+	 */
+	public List<Projects> loadListProjectsByCode(String PROJ_Code){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
+			criteria.add(Restrictions.eq("PROJ_Code", PROJ_Code));
+			List<Projects> projectList = criteria.list();
+			commit();
+			return projectList;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
 	}
 
 	/**
@@ -43,6 +66,28 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			List<mThreads> threads = criteria.list();
 			commit();
 			return threads;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public Projects loadProjectById(int projectId){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
+			criteria.add(Restrictions.eq("Projects.PROJ_ID", projectId));
+			Projects project = (Projects) criteria.uniqueResult();
+			commit();
+			return project;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			rollback();
@@ -532,6 +577,30 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			List<mThreads> threads = criteria.list();
 			commit();
 			return threads;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class);
+			criteria.add(Restrictions.eq("PROJ_PRJCall_Code", PROJ_PRJCall_Code));
+			
+			List<Projects> projectList = criteria.list();
+			commit();
+			return projectList;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			rollback();
