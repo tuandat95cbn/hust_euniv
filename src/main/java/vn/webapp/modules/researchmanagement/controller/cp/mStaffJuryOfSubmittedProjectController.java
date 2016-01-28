@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -85,11 +86,14 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		String userRole = session.getAttribute("currentUserRole").toString();
 
 		System.out.println("User code : " + userCode);
-		
+		String projectCallCode = "";
 		//Get list of projected calls whose already-assigned present is the current logged-in user
 		List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCall.loadListJuryOfAnnouncedProjectCallByPresentCode(userCode);
 		
-		System.out.println("Size of juryOfAnnouncedProjectCallList : " + juryOfAnnouncedProjectCallList.size());
+		
+		if(juryOfAnnouncedProjectCallList.size() > 0)
+			projectCallCode = juryOfAnnouncedProjectCallList.get(0).getJUSUPRJ_PRJCALLCODE();
+		System.out.println("Size of juryOfAnnouncedProjectCallList : " + juryOfAnnouncedProjectCallList.size() + ", projectCallCode = " + projectCallCode);
 		
 		// Get all projects in project calls whose present is the current present
 		List<Projects> projectList = new ArrayList<Projects>();
@@ -105,7 +109,7 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		System.out.println("Size of projectList : " + projectList.size());
 		
 		// Get staff list
-		List<mStaff> staffList = staffService.listStaffs();
+		List<mStaff> staffList = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAProjecCall(projectCallCode);//staffService.listStaffs();
 		
 		HashMap<String, String> staffHashMap = new HashMap<String, String>();
 		for(int i = 0; i < staffList.size(); i++){
@@ -157,8 +161,12 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 			String userCode = session.getAttribute("currentUserCode").toString();
 			String userRole = session.getAttribute("currentUserRole").toString();
 
+			
 			//Get list of projected calls whose already-assigned present is the current logged-in user
 			List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCall.loadListJuryOfAnnouncedProjectCallByPresentCode(userCode);
+			String projectCallCode = "";
+			if(juryOfAnnouncedProjectCallList.size() > 0)
+				projectCallCode = juryOfAnnouncedProjectCallList.get(0).getJUSUPRJ_PRJCALLCODE();
 			
 			// Get all projects in project calls whose present is the current present
 			List<Projects> projectList = new ArrayList<Projects>();
@@ -172,7 +180,7 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 			}
 			
 			// Get staff list
-			List<mStaff> staffList = staffService.listStaffs();
+			List<mStaff> staffList = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAProjecCall(projectCallCode);//staffService.listStaffs();
 			
 			HashMap<String, String> staffHashMap = new HashMap<String, String>();
 			for(int i = 0; i < staffList.size(); i++){

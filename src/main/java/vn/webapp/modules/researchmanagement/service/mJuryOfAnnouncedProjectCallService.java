@@ -1,8 +1,10 @@
 package vn.webapp.modules.researchmanagement.service;
 
 import java.util.List;
+
 import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
-import vn.webapp.modules.researchmanagement.model.mProjectCalls;;
+import vn.webapp.modules.researchmanagement.model.mProjectCalls;
+import vn.webapp.modules.usermanagement.model.mStaff;
 
 public interface mJuryOfAnnouncedProjectCallService {
 	
@@ -48,4 +50,12 @@ public interface mJuryOfAnnouncedProjectCallService {
 	 * @return
 	 */
 	public int deleteJuryOfAnnouncedProjectCall(int JUSUPRJ_ID);
+	
+	/**
+	 * list all staffs of the jury of a specified project call
+	 * @param projectCallCode
+	 * @return
+	 */
+	public List<mStaff> loadStaffsOfJuryOfAProjecCall(String projectCallCode);
+	
 }

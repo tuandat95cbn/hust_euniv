@@ -1,12 +1,18 @@
 package vn.webapp.modules.researchmanagement.service;
 
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import vn.webapp.modules.researchmanagement.dao.mJuryOfAnnouncedProjectCallDAO;
 import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
+import vn.webapp.modules.usermanagement.dao.mStaffDAO;
+import vn.webapp.modules.usermanagement.model.mStaff;
 
 
 
@@ -16,6 +22,9 @@ public class mJuryOfAnnouncedProjectCallServiceImpl implements mJuryOfAnnouncedP
 	@Autowired
 	private mJuryOfAnnouncedProjectCallDAO juryOfAnnouncedProjectCallDAO;
 
+	@Autowired
+	private mStaffDAO staffDAO;
+	
 	/**
 	 * 
 	 */
@@ -103,4 +112,17 @@ public class mJuryOfAnnouncedProjectCallServiceImpl implements mJuryOfAnnouncedP
 		return juryOfAnnouncedProjectCallDAO.deleteJuryOfAnnouncedProjectCall(juryOfAnnouncedProjectCall);
 	}
 	
+	public List<mStaff> loadStaffsOfJuryOfAProjecCall(String projectCallCode){
+		List<mStaff> staffs = new ArrayList<mStaff>();
+		List<mStaff> allStaffs = staffDAO.listStaffs();
+		List<mJuryOfAnnouncedProjectCall> allJuryOfAnnouncedProjectCallList = loadAllJuryOfAnnouncedProjectCall();
+		HashSet<String> S = new HashSet<String>();
+		for(mJuryOfAnnouncedProjectCall J: allJuryOfAnnouncedProjectCallList)
+			if(J.getJUSUPRJ_PRJCALLCODE().equals(projectCallCode))
+				S.add(J.getJUSUPRJ_STAFFCODE());
+		for(mStaff st: allStaffs)
+			if(S.contains(st.getStaff_Code()))
+				staffs.add(st);
+		return staffs;
+	}
 }

@@ -106,7 +106,8 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 	public String addAProjectCall(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-		Projects project = projectService.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
+		System.out.println("mCommentOfSubmittedProjectController::addAProjectCall, userCode = " + userCode + ", userRole = " + userRole + ", projectId = " + projectId);
+		Projects project = projectService.loadAProjectByIdAndUserCode("ROLE_ADMIN", userCode, projectId);
 		
 		String sComment ="";
 		mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, project.getPROJ_Code());
