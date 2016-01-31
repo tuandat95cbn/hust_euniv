@@ -70,6 +70,7 @@
                                  <button type="submit" class="btn btn-primary">Lưu</button>
                                  <input type="hidden" value="${projectEdit.PROJ_ID}" name="projectId" id="projectId" />
                                  <button type="reset" class="btn btn-primary cancel">Hủy</button>
+                                 <button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">Xuất PDF</button>
 	                        </div>
 	                        <div class="col-lg-6">
                                	<div class="form-group">
@@ -111,5 +112,9 @@ $(document).ready(function(){
 	});
 });
 
+function v_fGeneratePDF(iProjectId){
+	var sGeneratePdfUrl = baseUrl + "/cp/generatepdf/"+iProjectId+".html";
+	window.location = sGeneratePdfUrl;
+}
 </script>
 
