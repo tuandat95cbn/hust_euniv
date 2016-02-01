@@ -104,13 +104,26 @@ public class nProjectServiceImpl implements nProjectService {
 	@Override
 	public List<Projects> loadProjectsListByStaff(String userRole, String userCode) {
 		try {
-
 			return threadDAO.loadProjectsListByStaff(userRole, userCode);
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 			return null;
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode) {
+		try {
+			return threadDAO.loadSubmittedProjectsListByStaff(userRole, userCode);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
 	
 	/**
 	 * 
@@ -707,6 +720,22 @@ public class nProjectServiceImpl implements nProjectService {
 	public Projects loadAProjectByIdAndUserCode(String userRole, String userCode, int projectId){
 		try {
 			return threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * Loading a sumitted project by id
+	 * @param userRole
+	 * @param userCode
+	 * @param projectId
+	 * @return
+	 */
+	public Projects loadASumittedProjectByIdAndUserCode(String userRole, String userCode, int projectId){
+		try {
+			return threadDAO.loadASumittedProjectByIdAndUserCode(userRole, userCode, projectId);
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 			return null;

@@ -127,6 +127,33 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			close();
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode) {
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
+			if (!userRole.equals("ROLE_ADMIN")) {
+				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
+			}
+			criteria.add(Restrictions.eq("projects.PROJ_Locked1", 1));
+			criteria.addOrder(Order.desc("projects.PROJ_ID"));
+			List<Projects> projects = criteria.list();
+			commit();
+			return projects;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
 
 	/**
 	 * Get topic list by user and year
@@ -440,6 +467,37 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			if (!userRole.equals("ROLE_ADMIN")) {
 				criteria.add(Restrictions.eq("PROJ_User_Code", userCode));
 			}
+			Projects project = (Projects) criteria.uniqueResult();
+			commit();
+			return project;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * Loading a sumitted project by id
+	 * @param userRole
+	 * @param userCode
+	 * @param projectId
+	 * @return
+	 */
+	@Override
+	public Projects loadASumittedProjectByIdAndUserCode(String userRole, String userCode, int projectId){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class);
+			criteria.add(Restrictions.eq("PROJ_ID", projectId));
+			if (!userRole.equals("ROLE_ADMIN")) {
+				criteria.add(Restrictions.eq("PROJ_User_Code", userCode));
+			}
+			criteria.add(Restrictions.eq("PROJ_Locked1", 1));
 			Projects project = (Projects) criteria.uniqueResult();
 			commit();
 			return project;

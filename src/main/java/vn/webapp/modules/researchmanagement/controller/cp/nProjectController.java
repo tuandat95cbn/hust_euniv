@@ -132,6 +132,23 @@ public class nProjectController extends BaseWeb {
 	}
 	
 	/**
+	 * 
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/modify-submitted-projects", method = RequestMethod.GET)
+	public String getListSubmittedProjects(ModelMap model, HttpSession session) {
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+
+		model.put("projectsList", projectsList);
+		model.put("projects", status);
+		return "cp.submittedProjectsList";
+	}
+	
+	/**
 	 * Show list all threads
 	 * 
 	 * @param model
@@ -515,6 +532,36 @@ public class nProjectController extends BaseWeb {
 	 * @param session
 	 * @return
 	 */
+	@RequestMapping("/submitedprojectdetail/{id}")
+	public String editASubmittedProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+
+		String userRole = session.getAttribute("currentUserRole").toString();
+		String userCode = session.getAttribute("currentUserCode").toString();
+		Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
+		
+		// Get list of project calls
+	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+							
+     	// Put data back to view
+		model.put("projectCallsList", projectCallsList);
+		model.put("projects", status);
+		if (project != null) {
+			// Put journal list and topic category to view
+			model.put("projectEdit", project);
+			model.put("projectFormEdit", new ProjectsValidation());
+			model.put("projectId", projectId);
+			return "cp.editASumittedProject";
+		}
+		return "cp.notFound404";
+	}
+	
+	/**
+	 * 
+	 * @param model
+	 * @param projectId
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping("/aprojectdetail/{id}")
 	public String editAProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
 
@@ -569,7 +616,7 @@ public class nProjectController extends BaseWeb {
 	    	if (!o_FontFile.exists()) {
 	    		o_FontFile.createNewFile();
 			}
-	    	
+
 			this.prepareContent(project);
 			PDFGenerator.v_fGenerator(o_FontFile.getPath());
 		}
