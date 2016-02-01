@@ -795,6 +795,18 @@ public class nProjectServiceImpl implements nProjectService {
 	}
 	
 	/**
+	 * Sending a project to council , after this action project can not be changed.
+	 * @param project
+	 */
+	public void sendAProject(Projects project){
+		if(project != null)
+		{
+			project.setPROJ_Locked1(1);
+			threadDAO.editAProject(project);
+		}
+	}
+	
+	/**
 	 * 
 	 */
 	@Override

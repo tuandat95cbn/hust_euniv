@@ -72,7 +72,7 @@
 	                            	</div>
 	                                <button type="submit" class="btn btn-primary" id="addANewTopic">Lưu</button>
 	                                <!-- <button type="reset" class="btn btn-primary">Clear</button> -->
-	                                <button type="reset" class="btn btn-primary cancel">Hủy</button>
+	                                <button type="reset" class="btn btn-info cancel">Hủy</button>
 	                        </div>
 	                        <div class="col-lg-6">
                         		<div class="form-group">

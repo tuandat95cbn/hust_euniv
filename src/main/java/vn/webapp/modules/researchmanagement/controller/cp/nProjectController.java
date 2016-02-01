@@ -538,7 +538,6 @@ public class nProjectController extends BaseWeb {
 		return "cp.notFound404";
 	}
 	
-	
 	/**
 	 * Generating PDF
 	 * @param model
@@ -658,6 +657,23 @@ public class nProjectController extends BaseWeb {
 		}
 	}
 
+	@RequestMapping("/sendproject/{id}")
+	public String sendAProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+
+		String userRole = session.getAttribute("currentUserRole").toString();
+		String userCode = session.getAttribute("currentUserCode").toString();
+		Projects project = threadService.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
+							
+     	// Put data back to view
+		model.put("projects", status);
+		if (project != null) {
+			threadService.sendAProject(project);
+			model.put("status", "Gửi đề tài thành công!");
+			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
+		}
+		return "cp.notFound404";
+	}
+	
 	/**
 	 * 
 	 * @param model

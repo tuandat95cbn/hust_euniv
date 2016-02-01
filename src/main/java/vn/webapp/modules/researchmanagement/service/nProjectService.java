@@ -179,6 +179,12 @@ public interface nProjectService {
 	public void editAThread(String userRole, String userCode, String threadName, String threadCategory, String threadContent, 
 							String threadStartDate, String threadEndDate, String threadMotivation, String threadReportingDate, String threadResult, 
 							String threadStatus, int threadBudget, String threadSourceUploadFileSrc, String threadCode, int threadId, List<String> listStaffs, List<String> listStaffRoles);
+	
+	/**
+	 * Sending a project to council , after this action project can not be changed.
+	 * @param project
+	 */
+	public void sendAProject(Projects project);
 
 	/**
 	 * 
