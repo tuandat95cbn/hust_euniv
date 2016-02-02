@@ -45,7 +45,7 @@
 										<td><c:out value="${count}"/></td>
 										<td><c:out value="${project.PROJ_Name}"/></td>
 										<td class="center">
-											<button type="button" onclick="v_fViewDetailASumittedProject(${project.PROJ_ID});" class="btn btn-primary btn-xs" title="'Chỉnh sửa">Info</button>
+											<button type="button" onclick="v_fViewDetailASumittedProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked2 == 1 ? "btn-warning" : "btn-info"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã nộp' : 'Chỉnh sửa'}">Info</button>
 										</td>
 									</tr>
 								</c:forEach>

@@ -827,10 +827,15 @@ public class nProjectServiceImpl implements nProjectService {
 	 * Sending a project to council , after this action project can not be changed.
 	 * @param project
 	 */
-	public void sendAProject(Projects project){
+	public void sendAProject(Projects project, boolean editSumitted){
 		if(project != null)
 		{
-			project.setPROJ_Locked1(1);
+			if(editSumitted == true)
+			{
+				project.setPROJ_Locked2(1);
+			}else{
+				project.setPROJ_Locked1(1);
+			}
 			threadDAO.editAProject(project);
 		}
 	}
@@ -839,18 +844,26 @@ public class nProjectServiceImpl implements nProjectService {
 	 * 
 	 */
 	@Override
-	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, String projectMotivation, String projectResult, int projectBudget, String projectCode){
+	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, 
+								String projectMotivation, String projectResult, int projectBudget, String projectCode, boolean bEditSumittedProject){
 		Projects project = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
 		if (project != null) {
-			// tProjectDAO.editATopic(topic);
-			project.setPROJ_Code(projectCode);
-			project.setPROJ_Content(projectContent);
-			project.setPROJ_Motivation(projectMotivation);
-			project.setPROJ_Name(projectName);
-			project.setPROJ_Result(projectResult);
-			project.setPROJ_TotalBudget(projectBudget);
-			project.setPROJ_PRJCall_Code(projectCallCode);
-			
+			if(bEditSumittedProject == true)
+			{
+				project.setPROJ_Code(projectCode);
+				project.setPROJ_ContentChanged(projectContent);
+				project.setPROJ_MotivationChanged(projectMotivation);
+				project.setPROJ_ResultChanged(projectResult);
+				project.setPROJ_BudgetChanged(projectBudget);
+			}else{
+				project.setPROJ_Code(projectCode);
+				project.setPROJ_Content(projectContent);
+				project.setPROJ_Motivation(projectMotivation);
+				project.setPROJ_Name(projectName);
+				project.setPROJ_Result(projectResult);
+				project.setPROJ_TotalBudget(projectBudget);
+				project.setPROJ_PRJCall_Code(projectCallCode);
+			}
 			threadDAO.editAProject(project);
 		}
 	}
