@@ -113,6 +113,7 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			if (!userRole.equals("ROLE_ADMIN")) {
 				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
 			}
+			criteria.add(Restrictions.eq("projects.PROJ_Locked2", 0));
 			criteria.addOrder(Order.desc("projects.PROJ_ID"));
 			List<Projects> projects = criteria.list();
 			commit();
@@ -221,10 +222,6 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			String sThreadStatus, String sThreadCategory, String sThreadYear, String sThreadFaculty, 
 			String sThreadDepartment, String sThreadStaff)
 	{
-		System.out.println("ThreadDAOImpl::filterThreadsList, userRole = " + userRole + ", userCode = " + userCode + 
-				", iStartItem = " + iStartItem + ", iNumberOfItems = " + iNumberOfItems + ", sThreadStatus = " + sThreadStatus + 
-				", sThreadCategory = " + sThreadCategory + ", sThreadYear = " + sThreadYear + ", sThreadFaculty = " + sThreadFaculty + 
-				", sThreadDepartment = " + sThreadDepartment + ", sThreadStaff = " + sThreadStaff);
 		try {
 			begin();
 			Criteria criteria = getSession().createCriteria(mThreads.class);

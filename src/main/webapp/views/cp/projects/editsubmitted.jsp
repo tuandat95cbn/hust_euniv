@@ -173,6 +173,9 @@
 	                                 <input type="hidden" value="${projectEdit.PROJ_Name}" name="projectName" id="projectName" />
                                  </c:if>
                                  <button type="reset" class="btn btn-info cancel">Hủy</button>
+                                 <c:if test="${projectEdit.PROJ_Locked2 == 1}">
+                                 	<%-- <button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">Xuất PDF</button> --%>
+                                 </c:if>
                                  <c:if test="${projectEdit.PROJ_Locked2 != 1}">
                                  	<button type="reset" class="btn btn-danger" onclick="v_fSubmitProject(${projectEdit.PROJ_ID})">Nộp đề tài</button>
                                  </c:if>
