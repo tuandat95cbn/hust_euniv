@@ -582,6 +582,7 @@ public class nProjectController extends BaseWeb {
 		{
 			try{
 				mStaff oStaffInfo = staffService.loadStaffByUserCode(project.getPROJ_User_Code());
+				List<mProjectCalls> projectCalls = projectCallsService.loadProjectCallsList();
 				String sLeaderName = oStaffInfo.getStaff_Name();
 				String sLeaderEmail = oStaffInfo.getStaff_Email();
 				String sLeaderDepartment = oStaffInfo.getDepartment().getDepartment_Name();
@@ -591,6 +592,16 @@ public class nProjectController extends BaseWeb {
 				String sLeaderRole = "Giảng viên";
 				String sProjectApplicability = "IN REAL LIFE...";
 				
+				String date = "";
+				for(mProjectCalls pc: projectCalls){
+					if(pc.getPROJCALL_CODE().equals(project.getPROJ_PRJCall_Code())){
+						date = pc.getPROJCALL_DATE(); break;
+					}
+				}
+				String year = "";
+				if(date.length() > 4) year = date.substring(0,4);// get only year
+				System.out.println("nProjectController::prepareContent, date = " + date + ", year = " + year);
+				
 				ClassLoader classLoader = getClass().getClassLoader();
 				// Getting content from template file
 		    	File o_FontFile = new File(classLoader.getResource(nProjectController._sHTMLTemplate).getFile());
@@ -598,7 +609,7 @@ public class nProjectController extends BaseWeb {
 		    	StringBuilder sTemplateContent = FileUtil.sGetFileContent(sFilePath);
 		    	
 		    	// Replace year
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___YEAR___", project.getPROJ_AcaYear_Code());
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___YEAR___", year);//project.getPROJ_AcaYear_Code());
 		    	
 		    	// Replace project name
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_NAME___", project.getPROJ_Name());
