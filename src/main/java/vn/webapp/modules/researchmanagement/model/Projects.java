@@ -10,6 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+/**
+ * @author incre
+ *
+ */
 @Entity
 @Table(name = "tblprojects")
 public class Projects implements Serializable{
@@ -22,22 +26,25 @@ public class Projects implements Serializable{
     private String PROJ_ProjCat_Code;
     private String PROJ_StartDate;
     private String PROJ_EndDate;
-    private String PROJ_Motivation;
+    private String PROJ_Survey; // Tổng quan tình hình đề tài
+    private String PROJ_Motivation; // Tính cấp thiết
+    private String PROJ_Objective; // Mục tiêu của đề tài
     private String PROJ_Content;
     private String PROJ_Result;
     private String PROJ_SourceFile;
     private String PROJ_Status_Code;
     private int PROJ_TotalBudget;
     private String PROJ_User_Code;
-    
-    private String PROJ_FacultyCode;
-    private int PROJ_Locked1;
-    private String PROJ_MotivationChanged;
-    private String PROJ_ContentChanged;
-    private String PROJ_ResultChanged;
-    private int PROJ_BudgetChanged;
-    private int PROJ_Locked2;
-    private String PROJ_PRJCall_Code;
+    private String PROJ_FacultyCode; // Khoa/viện
+    private int PROJ_Locked1; // Khóa khi gửi lần 1
+    private String PROJ_SurveyChanged; // Thay đổi tổng quan
+    private String PROJ_MotivationChanged; // Thay đổi tính cấp thiết
+    private String PROJ_ObjectiveChanged; // Thay đổi mục tiêu 
+    private String PROJ_ContentChanged; // Thay đổi nội dung
+    private String PROJ_ResultChanged; // Thay đổi kết quả
+    private int PROJ_BudgetChanged; // Thay đổi tiền dự án
+    private int PROJ_Locked2; // Khóa khi nộp lần cuối
+    private String PROJ_PRJCall_Code; // Mã đợt gọi đề tài
     
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "PROJ_User_Code", referencedColumnName = "Staff_User_Code", insertable=false, updatable=false)
@@ -225,5 +232,37 @@ public class Projects implements Serializable{
 
 	public void setPROJ_PRJCall_Code(String pROJ_PRJCall_Code) {
 		PROJ_PRJCall_Code = pROJ_PRJCall_Code;
+	}
+
+	public String getPROJ_Survey() {
+		return PROJ_Survey;
+	}
+
+	public void setPROJ_Survey(String pROJ_Survey) {
+		PROJ_Survey = pROJ_Survey;
+	}
+
+	public String getPROJ_Objective() {
+		return PROJ_Objective;
+	}
+
+	public void setPROJ_Objective(String pROJ_Objective) {
+		PROJ_Objective = pROJ_Objective;
+	}
+
+	public String getPROJ_SurveyChanged() {
+		return PROJ_SurveyChanged;
+	}
+
+	public void setPROJ_SurveyChanged(String pROJ_SurveyChanged) {
+		PROJ_SurveyChanged = pROJ_SurveyChanged;
+	}
+
+	public String getPROJ_ObjectiveChanged() {
+		return PROJ_ObjectiveChanged;
+	}
+
+	public void setPROJ_ObjectiveChanged(String pROJ_ObjectiveChanged) {
+		PROJ_ObjectiveChanged = pROJ_ObjectiveChanged;
 	}
 }

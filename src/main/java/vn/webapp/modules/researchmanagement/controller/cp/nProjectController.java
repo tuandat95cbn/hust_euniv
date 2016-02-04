@@ -1,3 +1,8 @@
+/**
+ * @author : HaTN 
+ * @address : HUST K51
+ * @modified : February 04th, 2016
+ */
 package vn.webapp.modules.researchmanagement.controller.cp;
 
 import java.io.BufferedOutputStream;
@@ -44,11 +49,14 @@ import vn.webapp.modules.researchdeclarationmanagement.service.mJournalService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mPatentService;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectCategoryService;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectService;
+import vn.webapp.modules.researchmanagement.model.ProjectParticipationRoles;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mThreads;
+import vn.webapp.modules.researchmanagement.service.ProjectParticipationRolesService;
+import vn.webapp.modules.researchmanagement.service.ProjectTasksService;
 import vn.webapp.modules.researchmanagement.service.mProjectCallsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStaffsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStatusService;
@@ -102,6 +110,12 @@ public class nProjectController extends BaseWeb {
 	
 	@Autowired
 	private mProjectCallsService projectCallsService;
+	
+	@Autowired
+	private ProjectParticipationRolesService projectParticipationRolesService;
+	
+	@Autowired
+	private ProjectTasksService projectTasksService;
 
 	static final String status = "active";
 	
@@ -329,8 +343,19 @@ public class nProjectController extends BaseWeb {
 	public String addAProject(ModelMap model, HttpSession session) {		
 		// Get list of project calls
 		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
-			
+		
+		// Get list faculty
+		List<mFaculty> listFaculty = facultyService.loadFacultyList();
+		// Get list staffs
+		List<mStaff> staffList = staffService.listStaffs();
+		// Get list member roles
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
+		
 		// Put data back to view
+		model.put("staffList", staffList);
+		model.put("currentUserName", session.getAttribute("currentUserName").toString());
+		model.put("memberRolesList", memberRolesList);
+		model.put("listFaculty", listFaculty);
 		model.put("projectCallsList", projectCallsList);
 		model.put("projectsAddForm", new ProjectsValidation());
 		model.put("projects", status);
@@ -364,7 +389,7 @@ public class nProjectController extends BaseWeb {
 				model.put("status", "Thêm mới thành công!");
 			}
 			//return "cp.addAThread";
-			return "redirect:" + this.baseUrl + "/cp/threads-listadd.html";
+			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
 		}
 	}
 
