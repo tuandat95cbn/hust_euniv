@@ -25,6 +25,14 @@ public interface nProjectDAO {
 	
 	/**
 	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @return
+	 */
+	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode);
+	
+	/**
+	 * 
 	 * @param PROJ_Code
 	 * @return
 	 */
@@ -122,6 +130,15 @@ public interface nProjectDAO {
 	 * @return
 	 */
 	public Projects loadAProjectByIdAndUserCode(String userRole, String userCode, int projectId);
+	
+	/**
+	 * Loading a sumitted project by id
+	 * @param userRole
+	 * @param userCode
+	 * @param projectId
+	 * @return
+	 */
+	public Projects loadASumittedProjectByIdAndUserCode(String userRole, String userCode, int projectId);
 	
 	/**
 	 * 

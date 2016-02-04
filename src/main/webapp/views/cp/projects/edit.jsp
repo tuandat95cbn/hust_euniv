@@ -44,7 +44,7 @@
 	                        <div class="col-lg-6">
 	                       		<div class="form-group">
                                     <label>Chọn đợt đề tài*</label>
-                                    <form:select path="projectCallCode" class="form-control" name="projectCallCode">
+                                    <form:select path="projectCallCode" class="form-control" name="projectCallCode" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}">
                                     	<c:forEach items="${projectCallsList}" var="projectCall">
 	                                        <option value="${projectCall.PROJCALL_CODE}">${projectCall.PROJCALL_NAME}</option>
                                        	</c:forEach>
@@ -53,37 +53,86 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="projectName">Tên đề tài*</label>
-                                    <form:input path="projectName" class="form-control" name="projectName" value="${projectEdit.PROJ_Name}" placeholder="Project Name"></form:input>
+                                    <form:input path="projectName" class="form-control" name="projectName" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_Name}" placeholder="Project Name"></form:input>
     								<form:errors path="projectName" class="alert-danger"></form:errors>
                                 </div>
-                               <div class="form-group">
-                                	<label for="projectResult">Nội dung</label>
-	                                <textarea path="projectContent"  name="projectContent" id="projectContent" class="form-control">${projectEdit.PROJ_Content}</textarea>
-	                                <form:errors path="projectContent" class="alert-danger"></form:errors>
-                            	</div>
+                                <c:choose>
+									<c:when test="${projectEdit.PROJ_Locked1 != 1}">
+		                               	<div class="form-group">
+		                                	<label for="projectResult">Nội dung</label>
+			                                <textarea path="projectContent"  name="projectContent" id="projectContent" class="form-control">${projectEdit.PROJ_Content}</textarea>
+			                                <form:errors path="projectContent" class="alert-danger"></form:errors>
+		                            	</div>
+		                                <div class="form-group">
+		                                    <label for="projectResult">Kết quả đánh giá</label>
+		                                    <textarea path="projectResult"  name="projectResult" id="projectResult" class="form-control">${projectEdit.PROJ_Result}</textarea>
+		   									<form:errors path="projectResult" class="alert-danger"></form:errors>
+		                               	</div>
+								    </c:when>    
+								    <c:otherwise>
+								        <div class="panel panel-default">
+					                        <div class="panel-heading">
+					                            <label for="projectResult">Nội dung</label>
+					                        </div>
+					                        <div class="panel-body">
+					                            <div class="tab-content">
+					                                <div class="tab-pane fade in active" id="home">${projectEdit.PROJ_Content}</div>
+					                            </div>
+					                        </div>
+					                    </div>
+					                    <div class="panel panel-default">
+					                        <div class="panel-heading">
+					                            <label for="projectResult">Kết quả đánh giá</label>
+					                        </div>
+					                        <div class="panel-body">
+					                            <div class="tab-content">
+					                                <div class="tab-pane fade in active" id="home">${projectEdit.PROJ_Result}</div>
+					                            </div>
+					                        </div>
+					                    </div>
+								    </c:otherwise>
+								</c:choose>
                                	
-                                <div class="form-group">
-                                    <label for="projectResult">Kết quả đánh giá</label>
-                                    <textarea path="projectResult" name="projectResult" id="projectResult" class="form-control">${projectEdit.PROJ_Result}</textarea>
-   									<form:errors path="projectResult" class="alert-danger"></form:errors>
-                               	</div>
-                                 <button type="submit" class="btn btn-primary">Lưu</button>
+                               	<!-- Buttons -->
+                               	 <c:if test="${projectEdit.PROJ_Locked1 != 1}">
+                                 	<button type="submit" class="btn btn-primary">Lưu</button>
+                                 </c:if>
                                  <input type="hidden" value="${projectEdit.PROJ_ID}" name="projectId" id="projectId" />
-                                 <button type="reset" class="btn btn-primary cancel">Hủy</button>
-                                 <button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">Xuất PDF</button>
+                                 <button type="reset" class="btn btn-info cancel">Hủy</button>
+                                 <c:if test="${projectEdit.PROJ_Locked1 == 1}">
+                                 	<button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">Xuất PDF</button>
+                                 </c:if>
+                                 <c:if test="${projectEdit.PROJ_Locked1 != 1}">
+                                 	<button type="reset" class="btn btn-danger" onclick="v_fSendProject(${projectEdit.PROJ_ID})">Gửi đề tài</button>
+                                 </c:if>
 	                        </div>
 	                        <div class="col-lg-6">
                                	<div class="form-group">
                                     <label for="projectBudget">Kinh phí (triệu VNĐ)</label>
-                                    <form:input path="projectBudget" class="form-control" name="projectBudget" value="${projectEdit.PROJ_TotalBudget}" placeholder="Budget"></form:input>
+                                    <form:input path="projectBudget" class="form-control" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" name="projectBudget" value="${projectEdit.PROJ_TotalBudget}" placeholder="Budget" ></form:input>
     								<form:errors path="projectBudget" class="alert-danger"></form:errors>
                                 </div>
-                                
-                                <div class="form-group">
-                                    <label for="projectMotivation">Lý do thực hiện đề tài</label>
-                                    <textarea path="projectMotivation" name="projectMotivation" id="projectMotivation" class="form-control">${projectEdit.PROJ_Motivation}</textarea>
-    								<form:errors path="projectMotivation" class="alert-danger"></form:errors>
-                                </div>
+                                <c:choose>
+									<c:when test="${projectEdit.PROJ_Locked1 != 1}">
+								        <div class="form-group">
+		                                    <label for="projectMotivation">Lý do thực hiện đề tài</label>
+		                                    <textarea path="projectMotivation" name="projectMotivation" id="projectMotivation" class="form-control">${projectEdit.PROJ_Motivation}</textarea>
+		    								<form:errors path="projectMotivation" class="alert-danger"></form:errors>
+		                                </div>
+								    </c:when>    
+								    <c:otherwise>
+								        <div class="panel panel-default">
+					                        <div class="panel-heading">
+					                            <label for="projectResult">Lý do thực hiện đề tài</label>
+					                        </div>
+					                        <div class="panel-body">
+					                            <div class="tab-content">
+					                                <div class="tab-pane fade in active" id="home">${projectEdit.PROJ_Motivation}</div>
+					                            </div>
+					                        </div>
+					                    </div>
+								    </c:otherwise>
+								</c:choose>
 	                        </div>
 	                        <!-- /.col-lg-6 (nested) -->
 	                    </div>
@@ -115,6 +164,16 @@ $(document).ready(function(){
 function v_fGeneratePDF(iProjectId){
 	var sGeneratePdfUrl = baseUrl + "/cp/generatepdf/"+iProjectId+".html";
 	window.location = sGeneratePdfUrl;
+}
+
+function v_fSendProject(iProjectId){
+	if(confirm("Chú ý ! Đề tài sau khi gửi sẽ không thể chỉnh sửa được.")){
+		var sSubmitProjectUrl = baseUrl + "/cp/sendproject/"+iProjectId+".html";
+		window.location = sSubmitProjectUrl;
+    }
+    else{
+        return false;
+    }
 }
 </script>
 

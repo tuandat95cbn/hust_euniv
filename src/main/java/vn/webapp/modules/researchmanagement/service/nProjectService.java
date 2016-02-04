@@ -25,6 +25,14 @@ public interface nProjectService {
 	
 	/**
 	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @return
+	 */
+	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode);
+	
+	/**
+	 * 
 	 * @param projectId
 	 * @return
 	 */
@@ -155,6 +163,15 @@ public interface nProjectService {
 	 * @return
 	 */
 	public Projects loadAProjectByIdAndUserCode(String userRole, String userCode, int projectId);
+	
+	/**
+	 * Loading a sumitted project by id
+	 * @param userRole
+	 * @param userCode
+	 * @param projectId
+	 * @return
+	 */
+	public Projects loadASumittedProjectByIdAndUserCode(String userRole, String userCode, int projectId);
 
 	/**
 	 * 
@@ -179,6 +196,12 @@ public interface nProjectService {
 	public void editAThread(String userRole, String userCode, String threadName, String threadCategory, String threadContent, 
 							String threadStartDate, String threadEndDate, String threadMotivation, String threadReportingDate, String threadResult, 
 							String threadStatus, int threadBudget, String threadSourceUploadFileSrc, String threadCode, int threadId, List<String> listStaffs, List<String> listStaffRoles);
+	
+	/**
+	 * Sending a project to council , after this action project can not be changed.
+	 * @param project
+	 */
+	public void sendAProject(Projects project, boolean editSumitted);
 
 	/**
 	 * 
@@ -191,9 +214,10 @@ public interface nProjectService {
 	 * @param projectResult
 	 * @param projectBudget
 	 * @param projectCode
+	 * @param bEditSumittedProject
 	 */
 	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, 
-								String projectMotivation, String projectResult, int projectBudget, String projectCode);
+								String projectMotivation, String projectResult, int projectBudget, String projectCode, boolean bEditSumittedProject);
 	
 	/**
 	 * 

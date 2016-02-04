@@ -113,6 +113,34 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			if (!userRole.equals("ROLE_ADMIN")) {
 				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
 			}
+			criteria.add(Restrictions.eq("projects.PROJ_Locked2", 0));
+			criteria.addOrder(Order.desc("projects.PROJ_ID"));
+			List<Projects> projects = criteria.list();
+			commit();
+			return projects;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode) {
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
+			if (!userRole.equals("ROLE_ADMIN")) {
+				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
+			}
+			criteria.add(Restrictions.eq("projects.PROJ_Locked1", 1));
 			criteria.addOrder(Order.desc("projects.PROJ_ID"));
 			List<Projects> projects = criteria.list();
 			commit();
@@ -194,10 +222,6 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			String sThreadStatus, String sThreadCategory, String sThreadYear, String sThreadFaculty, 
 			String sThreadDepartment, String sThreadStaff)
 	{
-		System.out.println("ThreadDAOImpl::filterThreadsList, userRole = " + userRole + ", userCode = " + userCode + 
-				", iStartItem = " + iStartItem + ", iNumberOfItems = " + iNumberOfItems + ", sThreadStatus = " + sThreadStatus + 
-				", sThreadCategory = " + sThreadCategory + ", sThreadYear = " + sThreadYear + ", sThreadFaculty = " + sThreadFaculty + 
-				", sThreadDepartment = " + sThreadDepartment + ", sThreadStaff = " + sThreadStaff);
 		try {
 			begin();
 			Criteria criteria = getSession().createCriteria(mThreads.class);
@@ -440,6 +464,37 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			if (!userRole.equals("ROLE_ADMIN")) {
 				criteria.add(Restrictions.eq("PROJ_User_Code", userCode));
 			}
+			Projects project = (Projects) criteria.uniqueResult();
+			commit();
+			return project;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * Loading a sumitted project by id
+	 * @param userRole
+	 * @param userCode
+	 * @param projectId
+	 * @return
+	 */
+	@Override
+	public Projects loadASumittedProjectByIdAndUserCode(String userRole, String userCode, int projectId){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class);
+			criteria.add(Restrictions.eq("PROJ_ID", projectId));
+			if (!userRole.equals("ROLE_ADMIN")) {
+				criteria.add(Restrictions.eq("PROJ_User_Code", userCode));
+			}
+			criteria.add(Restrictions.eq("PROJ_Locked1", 1));
 			Projects project = (Projects) criteria.uniqueResult();
 			commit();
 			return project;

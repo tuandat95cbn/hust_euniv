@@ -104,13 +104,26 @@ public class nProjectServiceImpl implements nProjectService {
 	@Override
 	public List<Projects> loadProjectsListByStaff(String userRole, String userCode) {
 		try {
-
 			return threadDAO.loadProjectsListByStaff(userRole, userCode);
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 			return null;
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode) {
+		try {
+			return threadDAO.loadSubmittedProjectsListByStaff(userRole, userCode);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
 	
 	/**
 	 * 
@@ -712,6 +725,22 @@ public class nProjectServiceImpl implements nProjectService {
 			return null;
 		}
 	}
+	
+	/**
+	 * Loading a sumitted project by id
+	 * @param userRole
+	 * @param userCode
+	 * @param projectId
+	 * @return
+	 */
+	public Projects loadASumittedProjectByIdAndUserCode(String userRole, String userCode, int projectId){
+		try {
+			return threadDAO.loadASumittedProjectByIdAndUserCode(userRole, userCode, projectId);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
 
 	/**
 	 * Edit a thread
@@ -795,21 +824,46 @@ public class nProjectServiceImpl implements nProjectService {
 	}
 	
 	/**
+	 * Sending a project to council , after this action project can not be changed.
+	 * @param project
+	 */
+	public void sendAProject(Projects project, boolean editSumitted){
+		if(project != null)
+		{
+			if(editSumitted == true)
+			{
+				project.setPROJ_Locked2(1);
+			}else{
+				project.setPROJ_Locked1(1);
+			}
+			threadDAO.editAProject(project);
+		}
+	}
+	
+	/**
 	 * 
 	 */
 	@Override
-	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, String projectMotivation, String projectResult, int projectBudget, String projectCode){
+	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, 
+								String projectMotivation, String projectResult, int projectBudget, String projectCode, boolean bEditSumittedProject){
 		Projects project = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
 		if (project != null) {
-			// tProjectDAO.editATopic(topic);
-			project.setPROJ_Code(projectCode);
-			project.setPROJ_Content(projectContent);
-			project.setPROJ_Motivation(projectMotivation);
-			project.setPROJ_Name(projectName);
-			project.setPROJ_Result(projectResult);
-			project.setPROJ_TotalBudget(projectBudget);
-			project.setPROJ_PRJCall_Code(projectCallCode);
-			
+			if(bEditSumittedProject == true)
+			{
+				project.setPROJ_Code(projectCode);
+				project.setPROJ_ContentChanged(projectContent);
+				project.setPROJ_MotivationChanged(projectMotivation);
+				project.setPROJ_ResultChanged(projectResult);
+				project.setPROJ_BudgetChanged(projectBudget);
+			}else{
+				project.setPROJ_Code(projectCode);
+				project.setPROJ_Content(projectContent);
+				project.setPROJ_Motivation(projectMotivation);
+				project.setPROJ_Name(projectName);
+				project.setPROJ_Result(projectResult);
+				project.setPROJ_TotalBudget(projectBudget);
+				project.setPROJ_PRJCall_Code(projectCallCode);
+			}
 			threadDAO.editAProject(project);
 		}
 	}
