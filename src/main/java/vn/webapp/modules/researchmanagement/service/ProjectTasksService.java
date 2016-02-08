@@ -18,4 +18,11 @@ public interface ProjectTasksService {
 	 */
     public ProjectTasks loadAProjectTaskByCode(String sCode);
     
+    /**
+     * 
+     * @param sProjectCode
+     * @return
+     */
+    public List<ProjectTasks> loadAProjectTaskByProjectCode(String sProjectCode);
+    
 }

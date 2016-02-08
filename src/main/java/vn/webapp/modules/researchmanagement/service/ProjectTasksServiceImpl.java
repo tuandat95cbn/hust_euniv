@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import vn.webapp.modules.researchmanagement.dao.ProjectTasksDAO;
 import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 
@@ -31,6 +32,23 @@ public class ProjectTasksServiceImpl implements ProjectTasksService {
     	try {
 			if (sCode != null) {
 				return projectTasksDAO.loadAProjectTaskByCode(sCode);
+			}
+			return null;
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public List<ProjectTasks> loadAProjectTaskByProjectCode(String sProjectCode)
+    {
+    	try {
+			if (sProjectCode != null) {
+				return projectTasksDAO.loadAProjectTaskByProjectCode(sProjectCode);
 			}
 			return null;
 		} catch (Exception e) {

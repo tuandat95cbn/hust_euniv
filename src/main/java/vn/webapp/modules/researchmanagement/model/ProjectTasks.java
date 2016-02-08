@@ -29,9 +29,13 @@ public class ProjectTasks implements Serializable{
     private int PRJTSK_NRBDay;
     private int PRJTSK_Cost;
     
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRJTSK_RoleCode", referencedColumnName = "PROJPARTIROLE_Code", insertable=false, updatable=false)
     private ProjectParticipationRoles participationRoles;
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRJTSK_StaffCode", referencedColumnName = "Staff_Code", insertable=false, updatable=false)
+    private mStaffThread staffProject;
     
 	public int getPRJTSK_ID() {
 		return PRJTSK_ID;
@@ -86,5 +90,11 @@ public class ProjectTasks implements Serializable{
 	}
 	public void setParticipationRoles(ProjectParticipationRoles participationRoles) {
 		this.participationRoles = participationRoles;
+	}
+	public mStaffThread getStaffProject() {
+		return staffProject;
+	}
+	public void setStaffProject(mStaffThread staffProject) {
+		this.staffProject = staffProject;
 	}
 }

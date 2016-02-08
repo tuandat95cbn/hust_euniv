@@ -15,9 +15,11 @@ import vn.webapp.modules.researchdeclarationmanagement.dao.tProjectDAO;
 import vn.webapp.modules.researchdeclarationmanagement.model.mAcademicYear;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
+import vn.webapp.modules.researchmanagement.dao.ProjectTasksDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStaffsDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStatusDAO;
 import vn.webapp.modules.researchmanagement.dao.nProjectDAO;
+import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
@@ -61,6 +63,9 @@ public class nProjectServiceImpl implements nProjectService {
 
 	@Autowired
 	private mStaffDAO staffDAO;
+	
+	@Autowired
+	private ProjectTasksDAO projectTasksDAO;
 
 	@Autowired
 	private mAcademicYearDAO yearDAO;
@@ -663,10 +668,10 @@ public class nProjectServiceImpl implements nProjectService {
 	}
 	
 	/**
-	 * 
+	 * Adding new project
 	 */
 	@Override
-	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int projectBudget, String projectCode){
+	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int projectBudget, String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate){
 		if(userCode != "" && projectCode != "" && projectName != "" && projectCallCode != "")
 		{
 			Projects beInsertedProject = new Projects();
@@ -678,6 +683,11 @@ public class nProjectServiceImpl implements nProjectService {
 			beInsertedProject.setPROJ_Result(projectResult);
 			beInsertedProject.setPROJ_TotalBudget(projectBudget);
 			beInsertedProject.setPROJ_Code(projectCode);
+			beInsertedProject.setPROJ_FacultyCode(facultyAdd);
+			beInsertedProject.setPROJ_Survey(projectSurvey);
+			beInsertedProject.setPROJ_StartDate(startDate);
+			beInsertedProject.setPROJ_EndDate(endDate);
+			beInsertedProject.setPROJ_Objective(projectObjective);
 			
 			int iInsertedProjectId = threadDAO.saveAProject(beInsertedProject);
 			if(iInsertedProjectId > 0 )
@@ -687,6 +697,44 @@ public class nProjectServiceImpl implements nProjectService {
 				beUpdatedProject.setPROJ_Code(projectCode);
 				threadDAO.editAProject(beUpdatedProject);
 				
+				return iInsertedProjectId;
+			}
+		}
+		return 0;
+	}
+	
+	/**
+	 * Adding tasks for each member who's working for a project
+	 */
+	public int saveMemberTasks(String projectCode, String[] projectMembers,String[] projectMemberRole,String[] projectMemberTasks,String[] projectMemberWorkingDays,String[] projectMemberBudget){
+		int iTotalTasks = projectMembers.length;
+		if(projectCode != "")
+		{
+			// Removing old tasks
+			List<ProjectTasks> currentProjectTasks = projectTasksDAO.loadAProjectTaskByProjectCode(projectCode);
+			if(currentProjectTasks != null)
+			{
+				for (ProjectTasks aProjectTask : currentProjectTasks) {
+					projectTasksDAO.removeAProjectTask(aProjectTask);
+				}
+			}
+			if(iTotalTasks > 0)
+			{
+				
+				// Adding new tasks
+				ProjectTasks aProjectTask = new ProjectTasks();
+				for(int iIterator = 0; iIterator < iTotalTasks; iIterator++)
+				{
+					String sTaskCode = "PRJTSK_" + projectCode + "_" + iIterator;
+					aProjectTask.setPRJTSK_Code(sTaskCode);
+					aProjectTask.setPRJTSK_Cost(Integer.parseInt(projectMemberBudget[iIterator]));
+					aProjectTask.setPRJTSK_NRBDay(Integer.parseInt(projectMemberWorkingDays[iIterator]));
+					aProjectTask.setPRJTSK_Proj_Code(projectCode);
+					aProjectTask.setPRJTSK_RoleCode(projectMemberRole[iIterator]);
+					aProjectTask.setPRJTSK_StaffCode(projectMembers[iIterator]);
+					aProjectTask.setPRJTSK_Task(projectMemberTasks[iIterator]);
+					projectTasksDAO.saveAProjectTask(aProjectTask);
+				}
 				return 1;
 			}
 		}
@@ -845,7 +893,7 @@ public class nProjectServiceImpl implements nProjectService {
 	 */
 	@Override
 	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, 
-								String projectMotivation, String projectResult, int projectBudget, String projectCode, boolean bEditSumittedProject){
+								String projectMotivation, String projectResult, int projectBudget, String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject){
 		Projects project = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
 		if (project != null) {
 			if(bEditSumittedProject == true)
@@ -855,6 +903,8 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_MotivationChanged(projectMotivation);
 				project.setPROJ_ResultChanged(projectResult);
 				project.setPROJ_BudgetChanged(projectBudget);
+				project.setPROJ_ObjectiveChanged(projectObjective);
+				project.setPROJ_SurveyChanged(projectSurvey);
 			}else{
 				project.setPROJ_Code(projectCode);
 				project.setPROJ_Content(projectContent);
@@ -863,6 +913,11 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_Result(projectResult);
 				project.setPROJ_TotalBudget(projectBudget);
 				project.setPROJ_PRJCall_Code(projectCallCode);
+				project.setPROJ_StartDate(startDate);
+				project.setPROJ_EndDate(endDate);
+				project.setPROJ_FacultyCode(facultyAdd);
+				project.setPROJ_Objective(projectObjective);
+				project.setPROJ_Survey(projectSurvey);
 			}
 			threadDAO.editAProject(project);
 		}

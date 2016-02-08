@@ -50,6 +50,7 @@ import vn.webapp.modules.researchdeclarationmanagement.service.mPatentService;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectCategoryService;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectService;
 import vn.webapp.modules.researchmanagement.model.ProjectParticipationRoles;
+import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
@@ -343,7 +344,6 @@ public class nProjectController extends BaseWeb {
 	public String addAProject(ModelMap model, HttpSession session) {		
 		// Get list of project calls
 		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
-		
 		// Get list faculty
 		List<mFaculty> listFaculty = facultyService.loadFacultyList();
 		// Get list staffs
@@ -366,8 +366,18 @@ public class nProjectController extends BaseWeb {
 	public String saveAProject( HttpServletRequest request, @Valid @ModelAttribute("projectsAddForm") ProjectsValidation projectValid, BindingResult result, Map model, HttpSession session) {
 		// Get list of project calls
 		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+		// Get list faculty
+		List<mFaculty> listFaculty = facultyService.loadFacultyList();
+		// Get list staffs
+		List<mStaff> staffList = staffService.listStaffs();
+		// Get list member roles
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
 					
 		// Put data back to view
+		model.put("staffList", staffList);
+		model.put("currentUserName", session.getAttribute("currentUserName").toString());
+		model.put("memberRolesList", memberRolesList);
+		model.put("listFaculty", listFaculty);
 		model.put("projectCallsList", projectCallsList);
 		model.put("projects", status);
 		if (result.hasErrors()) {
@@ -376,17 +386,31 @@ public class nProjectController extends BaseWeb {
 			// Prepare data for inserting DB
 			String userRole 			= session.getAttribute("currentUserRole").toString();
 			String userCode 			= session.getAttribute("currentUserCode").toString();
-			String projectName 			= projectValid.getProjectName();
 			String projectCallCode 		= projectValid.getProjectCallCode();
-			String projectContent 		= projectValid.getProjectContent();
-			String projectMotivation 	= projectValid.getProjectMotivation();
-			String projectResult 		= projectValid.getProjectResult();
+			String projectName 			= projectValid.getProjectName();
+			String startDate 			= projectValid.getProjectStartDate();
+			String endDate				= projectValid.getProjectEndDate();
 			int projectBudget 			= projectValid.getProjectBudget();
+			String facultyAdd			= projectValid.getFalcutyAddress();
+			String projectContent 		= projectValid.getProjectContent();
+			String projectResult 		= projectValid.getProjectResult();
+			String projectSurvey 		= projectValid.getProjectSurvey();
+			String projectMotivation 	= projectValid.getProjectMotivation();
+			String projectObjective		= projectValid.getProjectObjective();
 			String projectCode 			= "PROJECT-CODE-" + projectCallCode;
-
-			int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode);
+			
+			//Members 
+			String[] projectMembers = request.getParameterValues("projectMembers");
+			String[] projectMemberRole = request.getParameterValues("projectMemberRole");
+			String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
+			String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
+			String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
+			
+			int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, facultyAdd, projectSurvey, projectObjective, startDate, endDate);
 			if (i_InsertAProject > 0) {
 				model.put("status", "Thêm mới thành công!");
+				projectCode = projectCallCode + i_InsertAProject;
+				threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget);
 			}
 			//return "cp.addAThread";
 			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
@@ -595,16 +619,30 @@ public class nProjectController extends BaseWeb {
 		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
 		
 		// Get list of project calls
-	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
-							
-     	 // Put data back to view
-		 model.put("projectCallsList", projectCallsList);
+		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+		// Get list faculty
+		List<mFaculty> listFaculty = facultyService.loadFacultyList();
+		// Get list staffs
+		List<mStaff> staffList = staffService.listStaffs();
+		// Get list member roles
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
+
+					
+		// Put data back to view
+		model.put("staffList", staffList);
+		model.put("currentUserName", session.getAttribute("currentUserName").toString());
+		model.put("memberRolesList", memberRolesList);
+		model.put("listFaculty", listFaculty);
+		model.put("projectCallsList", projectCallsList);
 		model.put("projects", status);
 		if (project != null) {
 			// Put journal list and topic category to view
 			model.put("projectEdit", project);
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId);
+			
+			List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
+			model.put("projectTasks", projectTasks);
 			return "cp.editAProject";
 		}
 		return "cp.notFound404";
@@ -1008,21 +1046,37 @@ public class nProjectController extends BaseWeb {
 			 return "cp.editAProject";
 		 }else
 		 {
-				// Prepare data for inserting DB
-				String userRole 			= session.getAttribute("currentUserRole").toString();
-				String userCode 			= session.getAttribute("currentUserCode").toString();
-				String projectName 			= projectFormEdit.getProjectName();
-				String projectCallCode 		= projectFormEdit.getProjectCallCode();
-				String projectContent 		= projectFormEdit.getProjectContent();
-				String projectMotivation 	= projectFormEdit.getProjectMotivation();
-				String projectResult 		= projectFormEdit.getProjectResult();
-				int projectBudget 			= projectFormEdit.getProjectBudget();
-				int projectEditId 			= projectFormEdit.getProjectId();
-				String projectCode 			= projectCallCode + projectEditId;
-				boolean bEditSumittedProject= false;
+			// Prepare data for inserting DB
+			String userRole 			= session.getAttribute("currentUserRole").toString();
+			String userCode 			= session.getAttribute("currentUserCode").toString();
+			String projectName 			= projectFormEdit.getProjectName();
+			String projectCallCode 		= projectFormEdit.getProjectCallCode();
+			String projectContent 		= projectFormEdit.getProjectContent();
+			String projectMotivation 	= projectFormEdit.getProjectMotivation();
+			String projectResult 		= projectFormEdit.getProjectResult();
+			int projectBudget 			= projectFormEdit.getProjectBudget();
+			int projectEditId 			= projectFormEdit.getProjectId();
+			String projectCode 			= projectCallCode + projectEditId;
+			String startDate 			= projectFormEdit.getProjectStartDate();
+			String endDate				= projectFormEdit.getProjectEndDate();
+			String facultyAdd			= projectFormEdit.getFalcutyAddress();
+			String projectSurvey 		= projectFormEdit.getProjectSurvey();
+			String projectObjective		= projectFormEdit.getProjectObjective();
+			boolean bEditSumittedProject= false;
+			
+			//Members 
+			String[] projectMembers = request.getParameterValues("projectMembers");
+			String[] projectMemberRole = request.getParameterValues("projectMemberRole");
+			String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
+			String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
+			String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
 
-			 threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, bEditSumittedProject);
-			 return "redirect:" + this.baseUrl + "/cp/list-projects.html";
+			// Editing project info
+			threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject);
+			// Editting tasks info
+			threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget);
+			 
+			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
 		 }
 	 }
 	 
@@ -1050,9 +1104,14 @@ public class nProjectController extends BaseWeb {
 				int projectBudget 			= projectFormEdit.getProjectBudget();
 				int projectEditId 			= projectFormEdit.getProjectId();
 				String projectCode 			= projectCallCode + projectEditId;
+				String startDate 			= projectFormEdit.getProjectStartDate();
+				String endDate				= projectFormEdit.getProjectEndDate();
+				String facultyAdd			= projectFormEdit.getFalcutyAddress();
+				String projectSurvey 		= projectFormEdit.getProjectSurvey();
+				String projectObjective		= projectFormEdit.getProjectObjective();
 				boolean bEditSumittedProject= true;
 
-			 threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, bEditSumittedProject);
+			 threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective,  bEditSumittedProject);
 			 return "redirect:" + this.baseUrl + "/cp/modify-submitted-projects.html";
 		 }
 	 }

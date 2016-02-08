@@ -73,12 +73,12 @@
 	                                </div>
 	                                <div class="form-group">
 	                                    <label>Đơn vị*</label>
-	                                    <form:select path="projectCallCode" class="form-control" name="projectCallCode">
+	                                    <form:select path="falcutyAddress" class="form-control" name="falcutyAddress">
 	                                    	<c:forEach items="${listFaculty}" var="faculty">
 	                                        	<option value="${faculty.faculty_Code}">${faculty.faculty_Name}</option>
                                        		</c:forEach>
 	                                    </form:select>
-	                                    <form:errors path="projectCallCode" class="alert-danger"></form:errors>
+	                                    <form:errors path="falcutyAddress" class="alert-danger"></form:errors>
 	                                </div>
 	                                <div class="form-group">
 	                                	<label for="projectResult">Nội dung</label>
@@ -137,8 +137,7 @@
 	                            </div>
 	                            <div class="form-group">
 	                               	<label for="taskContent">Nội dung công việc</label>
-	                                <textarea id="taskContent" class="form-control">
-	                                </textarea>
+	                                <textarea id="taskContent" class="form-control"></textarea>
 	                           	 </div>
 	                             <button type="button" class="btn btn-primary btn-xs" onclick="v_fAddMember();">Thêm</button>
 	                        </div>
@@ -157,7 +156,7 @@
 	                             </div>
 	                             <div class="form-group">
 	                                <label for="taskBudget">Thành tiền</label>
-	                                <input class="form-control" id="taskBudget" placeholder="Budget" />
+	                                <input class="form-control" id="taskBudget" placeholder="Fee" />
 	                             </div>
 	                        </div>
 	                        <!-- /.col-lg-6 (nested) -->
@@ -234,9 +233,12 @@ function v_fAddMember(){
 	{
 		// Remove no records found column
 		$("table#projectMemberList tbody tr.no-records-found").remove();
+		$("#taskContent").val("");
+		$("#memberWorkingDays").val("");
+		$("#taskBudget").val("");
 		
 		sAddedMember 	+= "<tr>";
-		sAddedMember 	+= "<td><span>"+sMemberName+"</span><input name='projectMemberName' type='hidden' value='"+sMemberCode+"'/></td>";
+		sAddedMember 	+= "<td><span>"+sMemberName+"</span><input name='projectMembers' type='hidden' value='"+sMemberCode+"'/></td>";
 		sAddedMember 	+= "<td><span>"+sMemberRoleDescription+"</span><input name='projectMemberRole' type='hidden' value='"+sMemberRoleCode+"'/></td>";
 		sAddedMember 	+= "<td><span>"+sTask+"</span><input name='projectMemberTasks' type='hidden' value='"+sTask+"'/></td>";
 		sAddedMember 	+= "<td><span>"+iMemberWorkingDays+"</span><input name='projectMemberWorkingDays' type='hidden' value='"+iMemberWorkingDays+"'/></td>";

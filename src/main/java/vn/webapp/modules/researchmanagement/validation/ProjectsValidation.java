@@ -40,6 +40,8 @@ public class ProjectsValidation{
 	
 	private String projectMemberRole;
 	
+	private String falcutyAddress;
+	
 	private int projectOtherFees;
 	
 	private int projectMemberWorkingDays;
@@ -189,6 +191,14 @@ public class ProjectsValidation{
 
 	public void setProjectMemberWorkingDays(int projectMemberWorkingDays) {
 		this.projectMemberWorkingDays = projectMemberWorkingDays;
+	}
+
+	public String getFalcutyAddress() {
+		return falcutyAddress;
+	}
+
+	public void setFalcutyAddress(String falcutyAddress) {
+		this.falcutyAddress = falcutyAddress;
 	}
 
 }
