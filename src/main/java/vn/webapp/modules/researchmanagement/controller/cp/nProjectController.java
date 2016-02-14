@@ -121,8 +121,8 @@ public class nProjectController extends BaseWeb {
 	static final String status = "active";
 	
 	public static final String _sHTMLTemplate = "html/template.html";
-	public static final String _sHTMLCompletedContent = "html/completed_content.html";
-    public static final String _sOutPutFile = "results/completed_content.pdf";
+	public static final String _sHTMLCompletedContent = "html/completed.html";
+    public static final String _sOutPutFile = "results/content.pdf";
     
 	/**
      * Size of a byte buffer to read/write file
@@ -681,23 +681,61 @@ public class nProjectController extends BaseWeb {
 			}
 
 			this.prepareContent(project);
-			PDFGenerator.v_fGenerator(o_FontFile.getPath());
+			PDFGenerator.v_fGenerator("");
 		}
 		return "cp.editAProject";
 	}
 	
+	/**
+	 * 
+	 * @param project
+	 * @throws IOException
+	 */
 	private void prepareContent(Projects project) throws IOException{
 		if(project != null)
 		{
 			try{
-				mStaff oStaffInfo = staffService.loadStaffByUserCode(project.getPROJ_User_Code());
-				String sLeaderName = oStaffInfo.getStaff_Name();
-				String sLeaderEmail = oStaffInfo.getStaff_Email();
-				String sLeaderDepartment = oStaffInfo.getDepartment().getDepartment_Name();
-				String sLeaderFaculty = oStaffInfo.getDepartment().getFaculty().getFaculty_Name();
-				String sLeaderPhoneNo = oStaffInfo.getStaff_Phone();
-				String sLeaderDegree = "PHD";
-				String sLeaderRole = "Giảng viên";
+				mStaff oStaffInfo 			= staffService.loadStaffByUserCode(project.getPROJ_User_Code());
+				String sLeaderName 			= (oStaffInfo.getStaff_Name() != null) ? oStaffInfo.getStaff_Name() : "LEADER'S NAME";
+				String sLeaderEmail 		= (oStaffInfo.getStaff_Email() != null) ? oStaffInfo.getStaff_Email() : "LEADER'S EMAIL";
+				String sLeaderDepartment 	= (oStaffInfo.getDepartment().getDepartment_Name() != null) ? oStaffInfo.getDepartment().getDepartment_Name() : "DEPARTMENT";
+				String sLeaderFaculty 		= (oStaffInfo.getDepartment().getFaculty().getFaculty_Name() != null) ? oStaffInfo.getDepartment().getFaculty().getFaculty_Name() : "FACULTY";
+				String sLeaderPhoneNo 		= (oStaffInfo.getStaff_Phone() != null) ? oStaffInfo.getStaff_Phone() : "PHONE NUMBER";
+				String sYear 				= (project.getPROJ_AcaYear_Code() != null) ? project.getPROJ_AcaYear_Code() : "YYYY";
+				String sProjectName			= (project.getPROJ_Name() != null) ? project.getPROJ_Name() : "PROJECT'S NAME";
+				String sStartDate			= (project.getPROJ_StartDate() != null) ? project.getPROJ_StartDate() : "DD/MM/YYYY";
+				String sEndDate				= (project.getPROJ_EndDate() != null) ? project.getPROJ_EndDate() : "DD/MM/YYYY";
+				String sProjectCode			= (project.getPROJ_Code() != null) ? project.getPROJ_Code() : "PROJECT'S CODE";
+				String sProjectMotivation 	= (project.getPROJ_Motivation() != null) ? project.getPROJ_Motivation() : "PROJECT'S MOTIVATION";
+				String sProjectContent 		= (project.getPROJ_Content() != null) ? project.getPROJ_Content() : "PROJECT'S CONTENT";
+				String sProjectProducts		= "";
+				String sProjectResult		= (project.getPROJ_Result() != null) ? project.getPROJ_Result() : "PROJECT'S RESULT";;
+				
+				String sProjectMembersList 	= "<tr>";
+				sProjectMembersList 		+= "<td><div class='content'>1.</div></td>";
+				sProjectMembersList 		+= "<td colspan='2'><div class='content'>Hà Trần</div></td>";
+				sProjectMembersList 		+= "<td><div class='content'>Viện CNTTTT</div></td>";
+				sProjectMembersList 		+= "<td><div class='content'>Hà Trần</div></td>";
+				sProjectMembersList 		+= "</tr>";
+				
+				String sProjectObjective	= (project.getPROJ_Objective() != null) ? project.getPROJ_Objective() : "PROJECT'S OBJECTIVE";
+				
+				String sProjectTasksList 	= "<tr>";
+				sProjectTasksList 			+= "<td><div class='content'></div></td>";
+				sProjectTasksList 			+= "<td><div class='content'>Chủ nhiệm</div></td>";
+				sProjectTasksList 			+= "<td><div class='content'>Nội dung NC1 </div></td>";
+				sProjectTasksList 			+= "<td><div class='content'></div></td>";
+				sProjectTasksList 			+= "<td><div class='content'></div></td>";
+				sProjectTasksList 			+= "<td><div class='content'></div></td>";
+				sProjectTasksList 			+= "</tr>";
+				
+				String sTasksBudget 		= "100.000.000";
+				String sTasksBudgetWords	= "Một trăm triệu đồng chẵn";
+			
+				int iProjectBudget			= (project.getPROJ_TotalBudget() > 0) ? project.getPROJ_TotalBudget() : 0;
+				
+				String sLeaderDegree 		= "PHD";
+				String sLeaderRole 			= "Giảng viên";
 				String sProjectApplicability = "IN REAL LIFE...";
 				
 				ClassLoader classLoader = getClass().getClassLoader();
@@ -707,13 +745,19 @@ public class nProjectController extends BaseWeb {
 		    	StringBuilder sTemplateContent = FileUtil.sGetFileContent(sFilePath);
 		    	
 		    	// Replace year
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___YEAR___", project.getPROJ_AcaYear_Code());
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___YEAR___", sYear);
 		    	
 		    	// Replace project name
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_NAME___", project.getPROJ_Name());
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_NAME___", sProjectName);
+		    	
+		    	// Replace project start date
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___START_DATE___", sStartDate);
+		    	
+		    	// Replace project end date
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___END_DATE___", sEndDate);
 		    	
 		    	// Replace project code
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_CODE___", project.getPROJ_Code());
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_CODE___", sProjectCode);
 		    	
 		    	// Replace project leader's name
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___LEAD_NAME___", sLeaderName);
@@ -742,19 +786,40 @@ public class nProjectController extends BaseWeb {
 		    	// Replace project leader's mobile phone
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___MOBILE___", sLeaderPhoneNo);
 		    	
+		    	// Replace project members list
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_MEMBERS_LIST___", sProjectMembersList);
+		    	
 		    	// Replace project motivation
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_MOTIVATION___", project.getPROJ_Motivation());
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_MOTIVATION___", sProjectMotivation);
+		    	
+		    	// Replace project objective
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_OBJECTIVE___", sProjectObjective);
 		    	
 		    	// Replace project content
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_CONTENT___", project.getPROJ_Content());
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_CONTENT___", sProjectContent);
+
+		    	// Replace project products
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_PRODUCTS___", sProjectProducts);
 		    	
-		    	// Replace project applicabilty
+		    	// Replace project result
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_RESULT___", sProjectResult);
+		    	
+		    	// Replace project applicability
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_APPLICABILITY___", sProjectApplicability);
 		    	
-		    	// Replace project applicabilty
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET___", Integer.toString(project.getPROJ_TotalBudget()));
+		    	// Replace project total budget
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET___", Integer.toString(iProjectBudget));
 		    	
-		    	// Replace project applicabilty
+		    	// Replace project tasks list
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TASKS_LIST___", sProjectTasksList);
+		    	
+		    	// Replace project tasks budget
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET___", sTasksBudget);
+		    	
+		    	// Replace project tasks budget
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET_WORDS___", sTasksBudgetWords);
+		    	
+		    	// Replace project signature
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___SIGNATURE___", sLeaderName);
 		    	
 		    	// Write completed content into file
@@ -763,6 +828,7 @@ public class nProjectController extends BaseWeb {
 		    	FileUtil.v_fWriteContentIntoAFile(o_CompletedContentFile, sTemplateContent);
 			}catch (IOException e){
 				e.printStackTrace();
+				System.out.println(e.getMessage());
 			}
 		}
 	}

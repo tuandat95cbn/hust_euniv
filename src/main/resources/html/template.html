@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <head>
 </head>
 <style type="text/css">
@@ -59,8 +59,8 @@ span.project-code{
     
 table#wrapper, #wrapper td {
     border: 1px solid green;
-        border-spacing: 0px;
-        padding: 0px;
+	border-spacing: 0px;
+	padding: 0px;
 }
 
 table#wrapper {
@@ -69,7 +69,8 @@ table#wrapper {
 }
 
 .content{
-font-size: 9pt;
+	font-size: 9pt;
+	padding : 5px 0px;
 }
 
 </style>
@@ -77,14 +78,14 @@ font-size: 9pt;
 	<div id="wrapper-head">
 		<!-- Header -->
 		<div id="header">
-			<h2 class="viet">BỘ GIÁO DỤC VÀ ĐÀO TẠO</h2>
-			<h3 class="viet">TRƯỜNG ĐH BÁCH KHOA HN</h3>
+			<h3>BỘ GIÁO DỤC VÀ ĐÀO TẠO</h3>
+			<h3 class="part-title">TRƯỜNG ĐẠI HỌC BÁCH KHOA HÀ NỘI</h3>
 			<span>---------------------------------</span>
 		</div>
 		<!-- End Header -->
 		
 		<div id="title">
-			<h1>THUYẾT MINH ĐỀ TÀI</h1>
+			<h2>THUYẾT MINH ĐỀ TÀI</h2>
 			<h4>NGHIÊN CỨU KHOA HỌC VÀ CÔNG NGHỆ CẤP TRƯỜNG NĂM ___YEAR___</h4>
 		</div>
 		<table id="wrapper">
@@ -99,14 +100,17 @@ font-size: 9pt;
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<span class="project-code part-title">2.MÃ SỐ : ___PROJECT_CODE___</span>
-						<p>___PROJECT_NAME___</p>
+						<p class="content">___PROJECT_NAME___</p>
 					</div>
 				</td>
 			</tr>
 			<tr>
+				<td colspan='5'><div class="part-title">3. THỜI GIAN THỰC HIỆN: Từ ___START_DATE___ đến ___END_DATE___ </div></td>
+			</tr>
+			<tr>
 				<td colspan='5'>
 					<div class="section" id="project-leader">
-						<span class="part-title">2. CHỦ NHIỆM ĐỀ TÀI</span>
+						<span class="part-title">4. CHỦ NHIỆM ĐỀ TÀI</span>
 						<div class="content">
 							<ul class="template">
 								<li>
@@ -136,8 +140,36 @@ font-size: 9pt;
 			</tr>
 			<tr>
 				<td colspan='5'>
+					<div class="part-title">5. DANH SÁCH THÀNH VIÊN CHÍNH THỰC HIỆN ĐỀ TÀI</div>
+				</td>
+			</tr>
+			<tr>
+				<td><div class="part-title content">STT</div></td>
+				<td colspan='2'><div class="part-title content">Họ và tên</div></td>
+				<td><div class="part-title content">Đơn vị</div></td>
+				<td><div class="part-title content">Chữ ký</div></td>
+			</tr>
+			
+			___PROJECT_MEMBERS_LIST___
+			
+			<tr>
+				<td colspan='5'>
 					<div class="session" id="project-reason">
-						<span class="part-title">3. LÍ DO CỦA ĐỀ TÀI</span>
+						<span class="part-title">6. TỔNG QUAN TÌNH HÌNH NGHIÊN CỨU THUỘC LĨNH VỰC CỦA ĐỀ TÀI Ở TRONG VÀ NGOÀI NƯỚC</span>
+						<div class="content">
+							<ul>
+								<li>6.1. Ngoài nước:</li>
+								<li>6.2. Ngoài nước:</li>
+								<li>6.3. Danh mục các công trình đã công bố (của chủ nhiệm, thành viên tham gia và những tài liệu liên quan đến đề tài).</li>
+							</ul>
+						</div>			
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='5'>
+					<div class="session" id="project-reason">
+						<span class="part-title">7. TÍNH CẤP THIẾT CỦA ĐỀ TÀI</span>
 						<div class="content">
 							<p> ___PROJECT_MOTIVATION___ </p>
 						</div>			
@@ -146,8 +178,18 @@ font-size: 9pt;
 			</tr>
 			<tr>
 				<td colspan='5'>
+					<div class="session" id="project-reason">
+						<span class="part-title">8. MỤC TIÊU CỦA ĐỀ TÀI</span>
+						<div class="content">
+							<p> ___PROJECT_OBJECTIVE___ </p>
+						</div>			
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='5'>
 					<div class="session" id="project-content">
-						<span class="part-title">4. NỘI DUNG NGHIÊN CỨU(ghi rõ nội dung cụ thể):</span>
+						<span class="part-title">9. NỘI DUNG NGHIÊN CỨU:</span>
 						<div class="content">
 							<p> ___PROJECT_CONTENT___ </p>		
 						</div>
@@ -157,8 +199,17 @@ font-size: 9pt;
 			<tr>
 				<td colspan='5'>
 					<div class="" id="productive-project">
-						<span class="part-title">5. DỰ KIẾN SẢN PHẨM VÀ ĐỊA CHỈ ỨNG DỤNG</span>
+						<span class="part-title">10. SẢN PHẨM, CHUYỂN GIAO KẾT QUẢ NGHIÊN CỨU VÀ ĐỊA CHỈ ỨNG DỤNG </span>
 						<div class="content">
+							<span class="part-title">10.1 Sản phẩm: (ghi cụ thể nếu có)</span>
+							<p> ___PROJECT_PRODUCTS___ </p>
+						</div>
+						<div class="content">
+							<span class="part-title">10.2 Phương thức chuyển giao kết quả nghiên cứu :(ghi cụ thể nếu có)</span>
+							<p> ___PROJECT_RESULT___ </p>
+						</div>
+						<div class="content">
+							<span class="part-title">10.3 Địa chỉ có thể ứng dụng :(ghi cụ thể nếu có)</span>
 							<p> ___PROJECT_APPLICABILITY___ </p>
 						</div>
 					</div>
@@ -167,10 +218,37 @@ font-size: 9pt;
 			<tr>
 				<td colspan='5'>
 					<div class="session" id="project-budget">
-						<span class="part-title">6. KINH PHÍ THỰC HIỆN ĐỀ TÀI</span>
-						<div>
-							<span>Tổng kinh phí:&nbsp;&nbsp;&nbsp;&nbsp; ___TOTAL_BUDGET___ VNĐ</span>
+						<span class="part-title">11. KINH PHÍ THỰC HIỆN ĐỀ TÀI</span>
+						<div class="content">
+							<span class="part-title">Kinh phí:&nbsp;&nbsp;&nbsp;&nbsp; ___TOTAL_BUDGET___ 000.000 VNĐ</span> <span>(Bằng chữ: ...đồng chẵn)</span>
 						</div>
+						<div class="content">
+							<span class="content">11.1. Nội dung nghiên cứu và dự trù kinh phí theo các mục chi:</span>
+						</div>
+						<table cellpadding='0' cellspacing='0' width='97%' height='98%' align='center'>
+							<tr>
+								<td><div class="part-title content">Người thực hiện</div></td>
+								<td><div class="part-title content">Chức danh</div></td>
+								<td><div class="part-title content">Khoản chi, nội dung chi</div></td>
+								<td><div class="part-title content">Số ngày công</div></td>
+								<td><div class="part-title content">Thành tiền</div></td>
+								<td><div class="part-title content">Ghi chú</div></td>
+							</tr>
+							
+							___TASKS_LIST___
+							
+							<tr>
+								<td colspan="3"><div class="content">Tổng cộng:</div></td>
+								<td><div class="content"></div></td>
+								<td><div class="content"></div></td>
+								<td><div class="content"></div></td>
+							</tr>
+						</table>
+						<div class="content">
+							<span class="part-title">11.2. Chi mua vật tư, nguyên, nhiên, vật liệu, tài liệu, tư liệu, ….</span>
+						</div>
+						<div class="content">Tổng cộng (mục 11.1 + 11.2) : ___TOTAL_TASKS_BUDGET___</div>
+						<div class="content">Tổng số tiền bằng chữ: ___TOTAL_TASKS_BUDGET_WORDS___</div>
 					</div>
 				</td>
 			</tr>
@@ -184,7 +262,7 @@ font-size: 9pt;
 						</div>
 						
 						<div id="conclusion-right" style="float: right; clear: both;">
-							<span class="content">Ngày.......tháng.......năm 2016</span>
+							<span class="content">Hà Nội, Ngày.......tháng.......năm 2016</span>
 							<br />
 							<span class="part-title">Chủ nhiệm đề tài</span>
 						</div>
