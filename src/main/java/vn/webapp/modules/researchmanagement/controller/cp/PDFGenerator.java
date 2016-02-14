@@ -28,7 +28,7 @@ public class PDFGenerator {
 	 * /fonts/times.ttf
 	 */
 	private static final String _sPathToNormalTypeFontSource = "fonts/vi-fonts/times.ttf";
-	public static final String _sHTMLTemplate = "html/completed_content.html";
+	public static final String _sHTMLTemplate = "html/completed.html";
 	public static final String _sOutPutFile = "/results/content.pdf";
 	
     /**
