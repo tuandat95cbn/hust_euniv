@@ -711,24 +711,43 @@ public class nProjectController extends BaseWeb {
 				String sProjectProducts		= "";
 				String sProjectResult		= (project.getPROJ_Result() != null) ? project.getPROJ_Result() : "PROJECT'S RESULT";;
 				
-				String sProjectMembersList 	= "<tr>";
-				sProjectMembersList 		+= "<td><div class='content'>1.</div></td>";
-				sProjectMembersList 		+= "<td colspan='2'><div class='content'>Hà Trần</div></td>";
-				sProjectMembersList 		+= "<td><div class='content'>Viện CNTTTT</div></td>";
-				sProjectMembersList 		+= "<td><div class='content'>Hà Trần</div></td>";
-				sProjectMembersList 		+= "</tr>";
+				String sProjectMembersList	= "";
+				String sProjectTasksList	= "";
+				int iTotalWorkingDays 		= 0;
+				int iTotalFee 				= 0;
+				List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(sProjectCode);
+				if(projectTasks != null)
+				{
+					
+					int iNo = 1;
+					for (ProjectTasks projectTask : projectTasks) {
+						// Showing project members
+						sProjectMembersList 		+= "<tr>";
+						sProjectMembersList 		+= "<td width='5%'><div class='content'>"+iNo+".</div></td>";
+						sProjectMembersList 		+= "<td colspan='2'><div class='content'>"+projectTask.getStaffProject().getStaff_Name()+"</div></td>";
+						sProjectMembersList 		+= "<td width='45%'><div class='content'>"+projectTask.getStaffProject().getStaff_Department_Code()+"</div></td>";
+						sProjectMembersList 		+= "<td width='15%'><div class='content'></div></td>";
+						sProjectMembersList 		+= "</tr>";
+						
+						
+						// Showing tasks
+						sProjectTasksList 			+= "<tr>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getStaffProject().getStaff_Name()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getParticipationRoles().getPROJPARTIROLE_Description()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getPRJTSK_Task()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getPRJTSK_NRBDay()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getPRJTSK_Cost()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'></div></td>";
+						sProjectTasksList 			+= "</tr>";
+						
+						iNo++;
+						iTotalWorkingDays			+= projectTask.getPRJTSK_NRBDay();
+						iTotalFee					+= projectTask.getPRJTSK_Cost();
+					}
+				}
 				
 				String sProjectObjective	= (project.getPROJ_Objective() != null) ? project.getPROJ_Objective() : "PROJECT'S OBJECTIVE";
-				
-				String sProjectTasksList 	= "<tr>";
-				sProjectTasksList 			+= "<td><div class='content'></div></td>";
-				sProjectTasksList 			+= "<td><div class='content'>Chủ nhiệm</div></td>";
-				sProjectTasksList 			+= "<td><div class='content'>Nội dung NC1 </div></td>";
-				sProjectTasksList 			+= "<td><div class='content'></div></td>";
-				sProjectTasksList 			+= "<td><div class='content'></div></td>";
-				sProjectTasksList 			+= "<td><div class='content'></div></td>";
-				sProjectTasksList 			+= "</tr>";
-				
+								
 				String sTasksBudget 		= "100.000.000";
 				String sTasksBudgetWords	= "Một trăm triệu đồng chẵn";
 			
@@ -812,6 +831,12 @@ public class nProjectController extends BaseWeb {
 		    	
 		    	// Replace project tasks list
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TASKS_LIST___", sProjectTasksList);
+		    	
+		    	// Replace project members working days
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_MEMBERS_WORKINGDAYS___", Integer.toString(iTotalWorkingDays));
+		    	
+		    	// Replace project members fees
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_MEMBERS_FEE___", Integer.toString(iTotalFee));
 		    	
 		    	// Replace project tasks budget
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET___", sTasksBudget);
