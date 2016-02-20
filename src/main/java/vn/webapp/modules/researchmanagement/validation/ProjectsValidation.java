@@ -22,6 +22,30 @@ public class ProjectsValidation{
 	
 	private int projectBudget;
 	
+	private String projectStartDate;
+	
+	private String projectEndDate;
+	
+	private String projectLeader;
+	
+	private String projectSurvey;
+	
+	private String projectObjective;
+	
+	private String projectMemberTasks;
+	
+	private String projectMemberBudget;
+	
+	private String projectMemberName;
+	
+	private String projectMemberRole;
+	
+	private String falcutyAddress;
+	
+	private int projectOtherFees;
+	
+	private int projectMemberWorkingDays;
+	
 	@NotEmpty
 	private String projectCallCode;
 
@@ -79,6 +103,102 @@ public class ProjectsValidation{
 
 	public void setProjectCallCode(String projectCallCode) {
 		this.projectCallCode = projectCallCode;
+	}
+
+	public String getProjectStartDate() {
+		return projectStartDate;
+	}
+
+	public void setProjectStartDate(String projectStartDate) {
+		this.projectStartDate = projectStartDate;
+	}
+
+	public String getProjectEndDate() {
+		return projectEndDate;
+	}
+
+	public void setProjectEndDate(String projectEndDate) {
+		this.projectEndDate = projectEndDate;
+	}
+
+	public String getProjectLeader() {
+		return projectLeader;
+	}
+
+	public void setProjectLeader(String projectLeader) {
+		this.projectLeader = projectLeader;
+	}
+
+	public String getProjectSurvey() {
+		return projectSurvey;
+	}
+
+	public void setProjectSurvey(String projectSurvey) {
+		this.projectSurvey = projectSurvey;
+	}
+
+	public String getProjectObjective() {
+		return projectObjective;
+	}
+
+	public void setProjectObjective(String projectObjective) {
+		this.projectObjective = projectObjective;
+	}
+
+	public String getProjectMemberTasks() {
+		return projectMemberTasks;
+	}
+
+	public void setProjectMemberTasks(String projectMemberTasks) {
+		this.projectMemberTasks = projectMemberTasks;
+	}
+
+	public String getProjectMemberBudget() {
+		return projectMemberBudget;
+	}
+
+	public void setProjectMemberBudget(String projectMemberBudget) {
+		this.projectMemberBudget = projectMemberBudget;
+	}
+
+	public String getProjectMemberName() {
+		return projectMemberName;
+	}
+
+	public void setProjectMemberName(String projectMemberName) {
+		this.projectMemberName = projectMemberName;
+	}
+
+	public String getProjectMemberRole() {
+		return projectMemberRole;
+	}
+
+	public void setProjectMemberRole(String projectMemberRole) {
+		this.projectMemberRole = projectMemberRole;
+	}
+
+	public int getProjectOtherFees() {
+		return projectOtherFees;
+	}
+
+	public void setProjectOtherFees(int projectOtherFees) {
+		this.projectOtherFees = projectOtherFees;
+	}
+
+	public int getProjectMemberWorkingDays() {
+		return projectMemberWorkingDays;
+	}
+
+	public void setProjectMemberWorkingDays(int projectMemberWorkingDays) {
+		this.projectMemberWorkingDays = projectMemberWorkingDays;
+	}
+
+	public String getFalcutyAddress() {
+		return falcutyAddress;
+	}
+
+	public void setFalcutyAddress(String falcutyAddress) {
+		this.falcutyAddress = falcutyAddress;
 	}
 
 }
