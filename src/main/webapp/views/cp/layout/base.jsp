@@ -59,13 +59,14 @@
 	    <script src="<c:url value="/assets/libs/bootstrap/dist/js/bootstrap.js"/>"></script>
 	
 	    <!-- Morris Charts JavaScript -->
-	    <%-- <script src="<c:url value="/assets/libs/raphael/raphael.js"/>"></script>
+	    <script src="<c:url value="/assets/libs/raphael/raphael.js"/>"></script>
 	    <script src="<c:url value="/assets/libs/morrisjs/morris.js"/>"></script>
-	    <script src="<c:url value="/assets/js/morris-data.js"/>"></script> --%>
+	    <script src="<c:url value="/assets/js/morris-data.js"/>"></script>
 	
 	    <!-- Custom Theme JavaScript -->
 	    <script src="<c:url value="/assets/js/sb-admin-2.js"/>"></script>
-  		
+	    
+		 		
   		<!-- Set base url -->     
         <script>
             var baseUrl = '${baseUrl}';

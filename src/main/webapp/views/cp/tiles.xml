@@ -266,4 +266,122 @@
         <put-attribute name="content" value="/views/cp/projects/edit.jsp" />
     </definition>
     
+    <!-- Master Management module -->
+    <!-- Professors Module -->
+	<definition name="mm.professors" extends="layout.base">
+		<put-attribute name="title" value="List professors" />
+		<put-attribute name="content" value="/views/cp/professor/list.jsp" />
+	</definition>
+
+	<definition name="mm.addAProfessor" extends="layout.base">
+		<put-attribute name="title" value="Create a professor" />
+		<put-attribute name="content" value="/views/cp/professor/add.jsp" />
+	</definition>
+
+	<definition name="mm.editAProfessor" extends="layout.base">
+		<put-attribute name="title" value="Edit a professor" />
+		<put-attribute name="content" value="/views/cp/professor/edit.jsp" />
+	</definition>
+	
+    <!-- Students Module -->
+	<definition name="mm.students" extends="layout.base">
+		<put-attribute name="title" value="List students" />
+		<put-attribute name="content" value="/views/cp/student/list.jsp" />
+	</definition>
+
+	<definition name="mm.addAStudent" extends="layout.base">
+		<put-attribute name="title" value="Create a student" />
+		<put-attribute name="content" value="/views/cp/student/add.jsp" />
+	</definition>
+
+	<definition name="mm.editAStudent" extends="layout.base">
+		<put-attribute name="title" value="Edit a student" />
+		<put-attribute name="content" value="/views/cp/student/edit.jsp" />
+	</definition>
+	
+	<!-- Thesis Module -->
+	<definition name="mm.listToAssignThesis" extends="layout.base">
+		<put-attribute name="title" value="List students to assign thesis" />
+		<put-attribute name="content"
+			value="/views/cp/masterthesis/listToAssign.jsp" />
+	</definition>
+
+	<definition name="mm.assignThesis" extends="layout.base">
+		<put-attribute name="title" value="Assign thesis to student" />
+		<put-attribute name="content" value="/views/cp/masterthesis/assign.jsp" />
+	</definition>
+
+	<definition name="mm.listThesis" extends="layout.base">
+		<put-attribute name="title" value="List thesis" />
+		<put-attribute name="content" value="/views/cp/masterthesis/list.jsp" />
+	</definition>
+
+	<definition name="mm.editThesis" extends="layout.base">
+		<put-attribute name="title" value="Edit thesis" />
+		<put-attribute name="content" value="/views/cp/masterthesis/edit.jsp" />
+	</definition>
+	
+	<definition name="mm.scheduling" extends="layout.base">
+		<put-attribute name="title" value="Scheduling" />
+		<put-attribute name="content" value="/views/cp/schedule/scheduling.jsp" />
+	</definition>
+
+	<definition name="mm.settingjuries" extends="layout.base">
+		<put-attribute name="title" value="Setting juries" />
+		<put-attribute name="content"
+			value="/views/cp/schedule/settingjuries.jsp" />
+	</definition>
+
+	<!-- DefenseSession Module -->
+	<definition name="mm.defensesession" extends="layout.base">
+		<put-attribute name="title" value="List defensesession" />
+		<put-attribute name="content" value="/views/cp/defensesessions/list.jsp" />
+	</definition>
+
+	<definition name="mm.addADefenseSession" extends="layout.base">
+		<put-attribute name="title" value="Create a defensesession" />
+		<put-attribute name="content" value="/views/cp/defensesessions/add.jsp" />
+	</definition>
+
+	<definition name="mm.editADefenseSession" extends="layout.base">
+		<put-attribute name="title" value="Edit a defensesession" />
+		<put-attribute name="content" value="/views/cp/defensesessions/edit.jsp" />
+	</definition>
+
+	<!-- Classes Module -->
+	<definition name="mm.classes" extends="layout.base">
+		<put-attribute name="title" value="List classes" />
+		<put-attribute name="content" value="/views/cp/classes/list.jsp" />
+	</definition>
+	<definition name="mm.addAClass" extends="layout.base">
+		<put-attribute name="title" value="add a class" />
+		<put-attribute name="content" value="/views/cp/classes/add.jsp" />
+	</definition>
+	<definition name="mm.editAClass" extends="layout.base">
+		<put-attribute name="title" value="edit a class" />
+		<put-attribute name="content" value="/views/cp/classes/edit.jsp" />
+	</definition>
+
+	<!-- JuryMember Module -->
+	<definition name="mm.juryMembers" extends="layout.base">
+		<put-attribute name="title" value="list jurymembers" />
+		<put-attribute name="content"
+			value="/views/cp/schedule/listjurymembers.jsp" />
+	</definition>
+
+	<!-- JuryRooms Module -->
+	<definition name="mm.juryRooms" extends="layout.base">
+		<put-attribute name="title" value="list juryrooms" />
+		<put-attribute name="content"
+			value="/views/cp/schedule/listjuryrooms.jsp" />
+	</definition>
+
+	<!-- JurySlots Module -->
+	<definition name="mm.jurySlots" extends="layout.base">
+		<put-attribute name="title" value="list juryslots" />
+		<put-attribute name="content"
+			value="/views/cp/schedule/listjuryslots.jsp" />
+	</definition>
+	<!-- Master Management module end -->
+    
 </tiles-definitions>
