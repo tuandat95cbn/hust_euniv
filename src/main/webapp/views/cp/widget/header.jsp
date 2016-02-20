@@ -36,7 +36,8 @@
     </ul>
     <!-- /.navbar-top-links -->
 
-    <div class="navbar-default sidebar" role="navigation">
+	<c:if test="${disableHeader == null}">
+	<div class="navbar-default sidebar" id="sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
             	<!-- 
@@ -151,6 +152,34 @@
                     </ul>
                     
                 </li>
+                
+                <li>
+                    <a href="#"><i class="fa fa-graduation-cap fa-fw"></i> Quản lý đào tạo cao học<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+		                    <a class="${professor}" href="<c:url value="${baseUrl}/mm/professors.html"/>"><i class="fa fa-dashboard fa-fw"></i> Quản lý giảng viên</a>
+		                </li>
+		                 <li>
+		                    <a class="${student}" href="<c:url value="${baseUrl}/mm/students.html"/>"><i class="fa fa-list fa-fw"></i> Quản lý học viên</a>
+		                </li>
+						<li>
+		                    <a class="${classes}" href="<c:url value="${baseUrl}/mm/classes.html"/>"><i class="fa fa-dashboard fa-fw"></i> Quản lý lớp học</a>
+		                </li>
+		                <li>
+		                    <a class="${thesis}" href="<c:url value="${baseUrl}/mm/listStudentToAssignThesis.html"/>"><i class="fa fa-credit-card fa-fw"></i> Phân đề tài cao học</a>
+		                </li>
+		                
+		                <li>
+		                    <a class="${thesis}" href="<c:url value="${baseUrl}/mm/listThesis.html"/>"><i class="fa fa-book fa-fw"></i> Danh sách đề tài cao học</a>
+		                </li>
+		                
+			            <li>
+		                    <a class="${scheduling}" href="<c:url value="${baseUrl}/mm/defensesession.html"/>"><i class="fa fa-calendar-o fa-fw"></i> Quản lý đợt bảo vệ cao học</a>		                  
+		                </li>
+                      
+                    </ul>
+                    
+                </li>
                
 	                 
 	                <%-- <li>
@@ -199,4 +228,5 @@
         <!-- /.sidebar-collapse -->
     </div>
     <!-- /.navbar-static-side -->
+    </c:if>
 </nav>
