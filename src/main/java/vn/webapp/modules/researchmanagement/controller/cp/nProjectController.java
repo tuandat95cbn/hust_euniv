@@ -7,8 +7,10 @@ package vn.webapp.modules.researchmanagement.controller.cp;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -39,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.codec.Base64.InputStream;
 
 import vn.webapp.controller.BaseWeb;
 import vn.webapp.libraries.FileUtil;
@@ -658,11 +661,16 @@ public class nProjectController extends BaseWeb {
 	 * @throws IOException 
 	 */
 	@RequestMapping("/generatepdf/{id}")
-	public String generatePDFProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) throws IOException, DocumentException {
+	public String generatePDFProject(HttpServletRequest request, HttpServletResponse response, ModelMap model, @PathVariable("id") int projectId, HttpSession session) throws IOException, DocumentException {
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
 		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
 		
+		final ServletContext servletContext = request.getSession().getServletContext();
+	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
+	    String sProjectPDFFileName = project.getPROJ_ID()+"_"+project.getPROJ_User_Code()+".pdf";
+	    
 		// Get list of project calls
 	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
      	// Put data back to view
@@ -673,17 +681,59 @@ public class nProjectController extends BaseWeb {
 			model.put("projectEdit", project);
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId);
-			
-			ClassLoader classLoader = getClass().getClassLoader();
-	    	File o_FontFile = new File(classLoader.getResource(nProjectController._sOutPutFile).getFile());
-	    	if (!o_FontFile.exists()) {
-	    		o_FontFile.createNewFile();
-			}
 
 			this.prepareContent(project);
-			PDFGenerator.v_fGenerator("");
+			PDFGenerator.v_fGenerator(temperotyFilePath+"\\"+sProjectPDFFileName);
+			try{
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+sProjectPDFFileName);
+		        //response.setContentType("application/pdf");
+		        //response.setHeader("Content-Disposition", "attachment:filename=report.pdf");
+		        OutputStream os = response.getOutputStream();
+		        baos.writeTo(os);
+		        os.flush();
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 		return "cp.editAProject";
+	}
+	
+	/**
+	 * 
+	 * @param fileName
+	 * @return
+	 */
+	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName) {
+		 
+		FileInputStream inputStream = null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+ 
+			inputStream = new FileInputStream(fileName);
+			byte[] buffer = new byte[1024];
+			baos = new ByteArrayOutputStream();
+ 
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+ 
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return baos;
 	}
 	
 	/**
@@ -711,24 +761,42 @@ public class nProjectController extends BaseWeb {
 				String sProjectProducts		= "";
 				String sProjectResult		= (project.getPROJ_Result() != null) ? project.getPROJ_Result() : "PROJECT'S RESULT";;
 				
-				String sProjectMembersList 	= "<tr>";
-				sProjectMembersList 		+= "<td><div class='content'>1.</div></td>";
-				sProjectMembersList 		+= "<td colspan='2'><div class='content'>Hà Trần</div></td>";
-				sProjectMembersList 		+= "<td><div class='content'>Viện CNTTTT</div></td>";
-				sProjectMembersList 		+= "<td><div class='content'>Hà Trần</div></td>";
-				sProjectMembersList 		+= "</tr>";
+				String sProjectMembersList	= "";
+				String sProjectTasksList	= "";
+				int iTotalWorkingDays 		= 0;
+				int iTotalFee 				= 0;
+				List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(sProjectCode);
+				if(projectTasks != null)
+				{
+					
+					int iNo = 1;
+					for (ProjectTasks projectTask : projectTasks) {
+						// Showing project members
+						sProjectMembersList 		+= "<tr>";
+						sProjectMembersList 		+= "<td width='5%'><div class='content'>"+iNo+".</div></td>";
+						sProjectMembersList 		+= "<td colspan='2'><div class='content'>"+projectTask.getStaffProject().getStaff_Name()+"</div></td>";
+						sProjectMembersList 		+= "<td width='45%'><div class='content'>"+projectTask.getStaffProject().getStaff_Department_Code()+"</div></td>";
+						sProjectMembersList 		+= "<td width='15%'><div class='content'></div></td>";
+						sProjectMembersList 		+= "</tr>";
+						
+						// Showing tasks
+						sProjectTasksList 			+= "<tr>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getStaffProject().getStaff_Name()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getParticipationRoles().getPROJPARTIROLE_Description()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getPRJTSK_Task()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getPRJTSK_NRBDay()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getPRJTSK_Cost()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'></div></td>";
+						sProjectTasksList 			+= "</tr>";
+						
+						iNo++;
+						iTotalWorkingDays			+= projectTask.getPRJTSK_NRBDay();
+						iTotalFee					+= projectTask.getPRJTSK_Cost();
+					}
+				}
 				
 				String sProjectObjective	= (project.getPROJ_Objective() != null) ? project.getPROJ_Objective() : "PROJECT'S OBJECTIVE";
-				
-				String sProjectTasksList 	= "<tr>";
-				sProjectTasksList 			+= "<td><div class='content'></div></td>";
-				sProjectTasksList 			+= "<td><div class='content'>Chủ nhiệm</div></td>";
-				sProjectTasksList 			+= "<td><div class='content'>Nội dung NC1 </div></td>";
-				sProjectTasksList 			+= "<td><div class='content'></div></td>";
-				sProjectTasksList 			+= "<td><div class='content'></div></td>";
-				sProjectTasksList 			+= "<td><div class='content'></div></td>";
-				sProjectTasksList 			+= "</tr>";
-				
+								
 				String sTasksBudget 		= "100.000.000";
 				String sTasksBudgetWords	= "Một trăm triệu đồng chẵn";
 			
@@ -812,6 +880,12 @@ public class nProjectController extends BaseWeb {
 		    	
 		    	// Replace project tasks list
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TASKS_LIST___", sProjectTasksList);
+		    	
+		    	// Replace project members working days
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_MEMBERS_WORKINGDAYS___", Integer.toString(iTotalWorkingDays));
+		    	
+		    	// Replace project members fees
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_MEMBERS_FEE___", Integer.toString(iTotalFee));
 		    	
 		    	// Replace project tasks budget
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET___", sTasksBudget);

@@ -96,8 +96,12 @@ public class PDFGenerator {
      * @throws DocumentException
      */
     public static void v_fGenerator(String sOutPutFile) throws IOException, DocumentException {
-        File file = new File(_sOutPutFile);
+    	//Creating empty pdf file
+    	Document document = new Document();
+		PdfWriter.getInstance(document, new FileOutputStream(sOutPutFile));
+		
+        File file = new File(sOutPutFile);
         file.getParentFile().mkdirs();
-        new PDFGenerator().v_fCreatePdf(_sOutPutFile);
+        new PDFGenerator().v_fCreatePdf(sOutPutFile);
     }
 }
