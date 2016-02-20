@@ -102,10 +102,11 @@
 			                    <%-- <a href="<c:url value="${baseUrl}/cp/threads-listadd.html"/>"><i class="fa fa-briefcase"></i> Đăng ký Đề tài</a> --%>
 			                    <a href="<c:url value="${baseUrl}/cp/list-projects.html"/>"><i class="fa fa-briefcase"></i> Đăng ký Đề tài</a>
 			                </li>
+			                <!-- 
 			                <li>
 			                    <a href="<c:url value="${baseUrl}/cp/products.html"/>"><i class="fa fa-file-text"></i> Đăng ký Chuyên đề</a>
 			                </li>
-			                
+			                 -->
 			                <li>
 			                    <a href="<c:url value="${baseUrl}/cp/add-jury-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Thành lập hội đồng xét đề tài</a>
 			                </li>

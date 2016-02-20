@@ -22,6 +22,21 @@ public interface nProjectDAO {
 	 * @return
 	 */
 	public List<Projects> loadProjectsListByStaff(String userRole, String userCode);
+	
+	/**
+	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @return
+	 */
+	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode);
+	
+	/**
+	 * 
+	 * @param PROJ_Code
+	 * @return
+	 */
+	public List<Projects> loadListProjectsByCode(String PROJ_Code);
 
 	/**
 	 * 
@@ -115,6 +130,22 @@ public interface nProjectDAO {
 	 * @return
 	 */
 	public Projects loadAProjectByIdAndUserCode(String userRole, String userCode, int projectId);
+	
+	/**
+	 * Loading a sumitted project by id
+	 * @param userRole
+	 * @param userCode
+	 * @param projectId
+	 * @return
+	 */
+	public Projects loadASumittedProjectByIdAndUserCode(String userRole, String userCode, int projectId);
+	
+	/**
+	 * 
+	 * @param projectId
+	 * @return
+	 */
+	public Projects loadProjectById(int projectId);
 
 	/**
 	 * 
@@ -151,5 +182,12 @@ public interface nProjectDAO {
 	 * @return
 	 */
 	public List<mThreads> loadThreadsListForReporting(String threadCategory, String threadStatus, String threadStaff, String yearForGenerating);
+	
+	/**
+	 * 
+	 * @param PROJ_PRJCall_Code
+	 * @return
+	 */
+	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code);
 
 }

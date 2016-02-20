@@ -1,11 +1,20 @@
+/**
+ * @author : HaTN 
+ * @address : HUST K51
+ * @modified : February 04th, 2016
+ */
 package vn.webapp.modules.researchmanagement.controller.cp;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +38,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.itextpdf.text.DocumentException;
+
 import vn.webapp.controller.BaseWeb;
+import vn.webapp.libraries.FileUtil;
 import vn.webapp.modules.researchdeclarationmanagement.model.mAcademicYear;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 import vn.webapp.modules.researchdeclarationmanagement.service.mAcademicYearService;
@@ -37,11 +49,15 @@ import vn.webapp.modules.researchdeclarationmanagement.service.mJournalService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mPatentService;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectCategoryService;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectService;
+import vn.webapp.modules.researchmanagement.model.ProjectParticipationRoles;
+import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mThreads;
+import vn.webapp.modules.researchmanagement.service.ProjectParticipationRolesService;
+import vn.webapp.modules.researchmanagement.service.ProjectTasksService;
 import vn.webapp.modules.researchmanagement.service.mProjectCallsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStaffsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStatusService;
@@ -95,9 +111,19 @@ public class nProjectController extends BaseWeb {
 	
 	@Autowired
 	private mProjectCallsService projectCallsService;
+	
+	@Autowired
+	private ProjectParticipationRolesService projectParticipationRolesService;
+	
+	@Autowired
+	private ProjectTasksService projectTasksService;
 
 	static final String status = "active";
 	
+	public static final String _sHTMLTemplate = "html/template.html";
+	public static final String _sHTMLCompletedContent = "html/completed.html";
+    public static final String _sOutPutFile = "results/content.pdf";
+    
 	/**
      * Size of a byte buffer to read/write file
      */
@@ -118,6 +144,23 @@ public class nProjectController extends BaseWeb {
 		model.put("projectsList", projectsList);
 		model.put("projects", status);
 		return "cp.projectsList";
+	}
+	
+	/**
+	 * 
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/modify-submitted-projects", method = RequestMethod.GET)
+	public String getListSubmittedProjects(ModelMap model, HttpSession session) {
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+
+		model.put("projectsList", projectsList);
+		model.put("projects", status);
+		return "cp.submittedProjectsList";
 	}
 	
 	/**
@@ -301,8 +344,18 @@ public class nProjectController extends BaseWeb {
 	public String addAProject(ModelMap model, HttpSession session) {		
 		// Get list of project calls
 		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
-			
+		// Get list faculty
+		List<mFaculty> listFaculty = facultyService.loadFacultyList();
+		// Get list staffs
+		List<mStaff> staffList = staffService.listStaffs();
+		// Get list member roles
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
+		
 		// Put data back to view
+		model.put("staffList", staffList);
+		model.put("currentUserName", session.getAttribute("currentUserName").toString());
+		model.put("memberRolesList", memberRolesList);
+		model.put("listFaculty", listFaculty);
 		model.put("projectCallsList", projectCallsList);
 		model.put("projectsAddForm", new ProjectsValidation());
 		model.put("projects", status);
@@ -313,8 +366,18 @@ public class nProjectController extends BaseWeb {
 	public String saveAProject( HttpServletRequest request, @Valid @ModelAttribute("projectsAddForm") ProjectsValidation projectValid, BindingResult result, Map model, HttpSession session) {
 		// Get list of project calls
 		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+		// Get list faculty
+		List<mFaculty> listFaculty = facultyService.loadFacultyList();
+		// Get list staffs
+		List<mStaff> staffList = staffService.listStaffs();
+		// Get list member roles
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
 					
 		// Put data back to view
+		model.put("staffList", staffList);
+		model.put("currentUserName", session.getAttribute("currentUserName").toString());
+		model.put("memberRolesList", memberRolesList);
+		model.put("listFaculty", listFaculty);
 		model.put("projectCallsList", projectCallsList);
 		model.put("projects", status);
 		if (result.hasErrors()) {
@@ -323,20 +386,34 @@ public class nProjectController extends BaseWeb {
 			// Prepare data for inserting DB
 			String userRole 			= session.getAttribute("currentUserRole").toString();
 			String userCode 			= session.getAttribute("currentUserCode").toString();
-			String projectName 			= projectValid.getProjectName();
 			String projectCallCode 		= projectValid.getProjectCallCode();
-			String projectContent 		= projectValid.getProjectContent();
-			String projectMotivation 	= projectValid.getProjectMotivation();
-			String projectResult 		= projectValid.getProjectResult();
+			String projectName 			= projectValid.getProjectName();
+			String startDate 			= projectValid.getProjectStartDate();
+			String endDate				= projectValid.getProjectEndDate();
 			int projectBudget 			= projectValid.getProjectBudget();
+			String facultyAdd			= projectValid.getFalcutyAddress();
+			String projectContent 		= projectValid.getProjectContent();
+			String projectResult 		= projectValid.getProjectResult();
+			String projectSurvey 		= projectValid.getProjectSurvey();
+			String projectMotivation 	= projectValid.getProjectMotivation();
+			String projectObjective		= projectValid.getProjectObjective();
 			String projectCode 			= "PROJECT-CODE-" + projectCallCode;
-
-			int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode);
+			
+			//Members 
+			String[] projectMembers = request.getParameterValues("projectMembers");
+			String[] projectMemberRole = request.getParameterValues("projectMemberRole");
+			String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
+			String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
+			String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
+			
+			int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, facultyAdd, projectSurvey, projectObjective, startDate, endDate);
 			if (i_InsertAProject > 0) {
 				model.put("status", "Thêm mới thành công!");
+				projectCode = projectCallCode + i_InsertAProject;
+				threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget);
 			}
 			//return "cp.addAThread";
-			return "redirect:" + this.baseUrl + "/cp/threads-listadd.html";
+			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
 		}
 	}
 
@@ -500,7 +577,37 @@ public class nProjectController extends BaseWeb {
 	/**
 	 * 
 	 * @param model
-	 * @param threadId
+	 * @param projectId
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/submitedprojectdetail/{id}")
+	public String editASubmittedProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+
+		String userRole = session.getAttribute("currentUserRole").toString();
+		String userCode = session.getAttribute("currentUserCode").toString();
+		Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
+		
+		// Get list of project calls
+	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+							
+     	// Put data back to view
+		model.put("projectCallsList", projectCallsList);
+		model.put("projects", status);
+		if (project != null) {
+			// Put journal list and topic category to view
+			model.put("projectEdit", project);
+			model.put("projectFormEdit", new ProjectsValidation());
+			model.put("projectId", projectId);
+			return "cp.editASumittedProject";
+		}
+		return "cp.notFound404";
+	}
+	
+	/**
+	 * 
+	 * @param model
+	 * @param projectId
 	 * @param session
 	 * @return
 	 */
@@ -512,17 +619,264 @@ public class nProjectController extends BaseWeb {
 		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
 		
 		// Get list of project calls
-	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
-							
-     	 // Put data back to view
-		 model.put("projectCallsList", projectCallsList);
+		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+		// Get list faculty
+		List<mFaculty> listFaculty = facultyService.loadFacultyList();
+		// Get list staffs
+		List<mStaff> staffList = staffService.listStaffs();
+		// Get list member roles
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
+
+					
+		// Put data back to view
+		model.put("staffList", staffList);
+		model.put("currentUserName", session.getAttribute("currentUserName").toString());
+		model.put("memberRolesList", memberRolesList);
+		model.put("listFaculty", listFaculty);
+		model.put("projectCallsList", projectCallsList);
 		model.put("projects", status);
 		if (project != null) {
 			// Put journal list and topic category to view
 			model.put("projectEdit", project);
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId);
+			
+			List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
+			model.put("projectTasks", projectTasks);
 			return "cp.editAProject";
+		}
+		return "cp.notFound404";
+	}
+	
+	/**
+	 * Generating PDF
+	 * @param model
+	 * @param threadId
+	 * @param session
+	 * @return
+	 * @throws DocumentException 
+	 * @throws IOException 
+	 */
+	@RequestMapping("/generatepdf/{id}")
+	public String generatePDFProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) throws IOException, DocumentException {
+		String userRole = session.getAttribute("currentUserRole").toString();
+		String userCode = session.getAttribute("currentUserCode").toString();
+		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
+		
+		// Get list of project calls
+	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+     	// Put data back to view
+		model.put("projectCallsList", projectCallsList);
+		model.put("projects", status);
+		if (project != null) {
+			// Put journal list and topic category to view
+			model.put("projectEdit", project);
+			model.put("projectFormEdit", new ProjectsValidation());
+			model.put("projectId", projectId);
+			
+			ClassLoader classLoader = getClass().getClassLoader();
+	    	File o_FontFile = new File(classLoader.getResource(nProjectController._sOutPutFile).getFile());
+	    	if (!o_FontFile.exists()) {
+	    		o_FontFile.createNewFile();
+			}
+
+			this.prepareContent(project);
+			PDFGenerator.v_fGenerator("");
+		}
+		return "cp.editAProject";
+	}
+	
+	/**
+	 * 
+	 * @param project
+	 * @throws IOException
+	 */
+	private void prepareContent(Projects project) throws IOException{
+		if(project != null)
+		{
+			try{
+				mStaff oStaffInfo 			= staffService.loadStaffByUserCode(project.getPROJ_User_Code());
+				String sLeaderName 			= (oStaffInfo.getStaff_Name() != null) ? oStaffInfo.getStaff_Name() : "LEADER'S NAME";
+				String sLeaderEmail 		= (oStaffInfo.getStaff_Email() != null) ? oStaffInfo.getStaff_Email() : "LEADER'S EMAIL";
+				String sLeaderDepartment 	= (oStaffInfo.getDepartment().getDepartment_Name() != null) ? oStaffInfo.getDepartment().getDepartment_Name() : "DEPARTMENT";
+				String sLeaderFaculty 		= (oStaffInfo.getDepartment().getFaculty().getFaculty_Name() != null) ? oStaffInfo.getDepartment().getFaculty().getFaculty_Name() : "FACULTY";
+				String sLeaderPhoneNo 		= (oStaffInfo.getStaff_Phone() != null) ? oStaffInfo.getStaff_Phone() : "PHONE NUMBER";
+				String sYear 				= (project.getPROJ_AcaYear_Code() != null) ? project.getPROJ_AcaYear_Code() : "YYYY";
+				String sProjectName			= (project.getPROJ_Name() != null) ? project.getPROJ_Name() : "PROJECT'S NAME";
+				String sStartDate			= (project.getPROJ_StartDate() != null) ? project.getPROJ_StartDate() : "DD/MM/YYYY";
+				String sEndDate				= (project.getPROJ_EndDate() != null) ? project.getPROJ_EndDate() : "DD/MM/YYYY";
+				String sProjectCode			= (project.getPROJ_Code() != null) ? project.getPROJ_Code() : "PROJECT'S CODE";
+				String sProjectMotivation 	= (project.getPROJ_Motivation() != null) ? project.getPROJ_Motivation() : "PROJECT'S MOTIVATION";
+				String sProjectContent 		= (project.getPROJ_Content() != null) ? project.getPROJ_Content() : "PROJECT'S CONTENT";
+				String sProjectProducts		= "";
+				String sProjectResult		= (project.getPROJ_Result() != null) ? project.getPROJ_Result() : "PROJECT'S RESULT";;
+				
+				String sProjectMembersList 	= "<tr>";
+				sProjectMembersList 		+= "<td><div class='content'>1.</div></td>";
+				sProjectMembersList 		+= "<td colspan='2'><div class='content'>Hà Trần</div></td>";
+				sProjectMembersList 		+= "<td><div class='content'>Viện CNTTTT</div></td>";
+				sProjectMembersList 		+= "<td><div class='content'>Hà Trần</div></td>";
+				sProjectMembersList 		+= "</tr>";
+				
+				String sProjectObjective	= (project.getPROJ_Objective() != null) ? project.getPROJ_Objective() : "PROJECT'S OBJECTIVE";
+				
+				String sProjectTasksList 	= "<tr>";
+				sProjectTasksList 			+= "<td><div class='content'></div></td>";
+				sProjectTasksList 			+= "<td><div class='content'>Chủ nhiệm</div></td>";
+				sProjectTasksList 			+= "<td><div class='content'>Nội dung NC1 </div></td>";
+				sProjectTasksList 			+= "<td><div class='content'></div></td>";
+				sProjectTasksList 			+= "<td><div class='content'></div></td>";
+				sProjectTasksList 			+= "<td><div class='content'></div></td>";
+				sProjectTasksList 			+= "</tr>";
+				
+				String sTasksBudget 		= "100.000.000";
+				String sTasksBudgetWords	= "Một trăm triệu đồng chẵn";
+			
+				int iProjectBudget			= (project.getPROJ_TotalBudget() > 0) ? project.getPROJ_TotalBudget() : 0;
+				
+				String sLeaderDegree 		= "PHD";
+				String sLeaderRole 			= "Giảng viên";
+				String sProjectApplicability = "IN REAL LIFE...";
+				
+				ClassLoader classLoader = getClass().getClassLoader();
+				// Getting content from template file
+		    	File o_FontFile = new File(classLoader.getResource(nProjectController._sHTMLTemplate).getFile());
+		    	String sFilePath = o_FontFile.getAbsolutePath();
+		    	StringBuilder sTemplateContent = FileUtil.sGetFileContent(sFilePath);
+		    	
+		    	// Replace year
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___YEAR___", sYear);
+		    	
+		    	// Replace project name
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_NAME___", sProjectName);
+		    	
+		    	// Replace project start date
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___START_DATE___", sStartDate);
+		    	
+		    	// Replace project end date
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___END_DATE___", sEndDate);
+		    	
+		    	// Replace project code
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_CODE___", sProjectCode);
+		    	
+		    	// Replace project leader's name
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___LEAD_NAME___", sLeaderName);
+		    	
+		    	// Replace project leader's degree
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___DEGREE___", sLeaderDegree);
+		    	
+		    	// Replace project leader's role
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___ROLE___", sLeaderRole);
+		    	
+		    	// Replace project leader's department
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___DEPARTMENT_ADDRESS___", sLeaderDepartment);
+		    	
+		    	// Replace project leader's faculty
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___FALCUTLY_ADDRESS___", sLeaderFaculty);
+		    	
+		    	// Replace project leader's office phone no
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___OFFICE_PHONENO___", "");
+		    	
+		    	// Replace project leader's email
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___EMAIL___", sLeaderEmail);
+		    	
+		    	// Replace project leader's private phone no
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PRIVATE_PHONENO___", sLeaderPhoneNo);
+		    	
+		    	// Replace project leader's mobile phone
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___MOBILE___", sLeaderPhoneNo);
+		    	
+		    	// Replace project members list
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_MEMBERS_LIST___", sProjectMembersList);
+		    	
+		    	// Replace project motivation
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_MOTIVATION___", sProjectMotivation);
+		    	
+		    	// Replace project objective
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_OBJECTIVE___", sProjectObjective);
+		    	
+		    	// Replace project content
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_CONTENT___", sProjectContent);
+
+		    	// Replace project products
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_PRODUCTS___", sProjectProducts);
+		    	
+		    	// Replace project result
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_RESULT___", sProjectResult);
+		    	
+		    	// Replace project applicability
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_APPLICABILITY___", sProjectApplicability);
+		    	
+		    	// Replace project total budget
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET___", Integer.toString(iProjectBudget));
+		    	
+		    	// Replace project tasks list
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TASKS_LIST___", sProjectTasksList);
+		    	
+		    	// Replace project tasks budget
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET___", sTasksBudget);
+		    	
+		    	// Replace project tasks budget
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET_WORDS___", sTasksBudgetWords);
+		    	
+		    	// Replace project signature
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___SIGNATURE___", sLeaderName);
+		    	
+		    	// Write completed content into file
+		    	File o_CompletedContentFile = new File(classLoader.getResource(nProjectController._sHTMLCompletedContent).getFile());
+		    	
+		    	FileUtil.v_fWriteContentIntoAFile(o_CompletedContentFile, sTemplateContent);
+			}catch (IOException e){
+				e.printStackTrace();
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * Sending project - lock for 1st time
+	 * @param model
+	 * @param projectId
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/sendproject/{id}")
+	public String sendAProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+
+		String userRole = session.getAttribute("currentUserRole").toString();
+		String userCode = session.getAttribute("currentUserCode").toString();
+		Projects project = threadService.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
+							
+     	// Put data back to view
+		model.put("projects", status);
+		if (project != null) {
+			threadService.sendAProject(project, false);
+			model.put("status", "Gửi đề tài thành công!");
+			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
+		}
+		return "cp.notFound404";
+	}
+	
+	/**
+	 * Submitting project - lock for 2nd time
+	 * @param model
+	 * @param projectId
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/submitproject/{id}")
+	public String submitAProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+
+		String userRole = session.getAttribute("currentUserRole").toString();
+		String userCode = session.getAttribute("currentUserCode").toString();
+		Projects project = threadService.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
+							
+     	// Put data back to view
+		model.put("projects", status);
+		if (project != null) {
+			threadService.sendAProject(project, true);
+			model.put("status", "Nộp đề tài thành công!");
+			return "redirect:" + this.baseUrl + "/cp/modify-submitted-projects.html";
 		}
 		return "cp.notFound404";
 	}
@@ -758,6 +1112,53 @@ public class nProjectController extends BaseWeb {
 			 return "cp.editAProject";
 		 }else
 		 {
+			// Prepare data for inserting DB
+			String userRole 			= session.getAttribute("currentUserRole").toString();
+			String userCode 			= session.getAttribute("currentUserCode").toString();
+			String projectName 			= projectFormEdit.getProjectName();
+			String projectCallCode 		= projectFormEdit.getProjectCallCode();
+			String projectContent 		= projectFormEdit.getProjectContent();
+			String projectMotivation 	= projectFormEdit.getProjectMotivation();
+			String projectResult 		= projectFormEdit.getProjectResult();
+			int projectBudget 			= projectFormEdit.getProjectBudget();
+			int projectEditId 			= projectFormEdit.getProjectId();
+			String projectCode 			= projectCallCode + projectEditId;
+			String startDate 			= projectFormEdit.getProjectStartDate();
+			String endDate				= projectFormEdit.getProjectEndDate();
+			String facultyAdd			= projectFormEdit.getFalcutyAddress();
+			String projectSurvey 		= projectFormEdit.getProjectSurvey();
+			String projectObjective		= projectFormEdit.getProjectObjective();
+			boolean bEditSumittedProject= false;
+			
+			//Members 
+			String[] projectMembers = request.getParameterValues("projectMembers");
+			String[] projectMemberRole = request.getParameterValues("projectMemberRole");
+			String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
+			String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
+			String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
+
+			// Editing project info
+			threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject);
+			// Editting tasks info
+			threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget);
+			 
+			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
+		 }
+	 }
+	 
+	 /**
+	 * Editing a submitted project
+	 * @param model
+	 * @return
+	 */
+	 @RequestMapping(value = "/edit-a-submittedproject", method = RequestMethod.POST)
+	 public String updateASubmittedProject(HttpServletRequest request, @Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit, BindingResult result, Map model, HttpSession session) {
+
+		 model.put("projects", status);
+		 if (result.hasErrors()) {
+			 return "cp.editAProject";
+		 }else
+		 {
 				// Prepare data for inserting DB
 				String userRole 			= session.getAttribute("currentUserRole").toString();
 				String userCode 			= session.getAttribute("currentUserCode").toString();
@@ -769,118 +1170,123 @@ public class nProjectController extends BaseWeb {
 				int projectBudget 			= projectFormEdit.getProjectBudget();
 				int projectEditId 			= projectFormEdit.getProjectId();
 				String projectCode 			= projectCallCode + projectEditId;
+				String startDate 			= projectFormEdit.getProjectStartDate();
+				String endDate				= projectFormEdit.getProjectEndDate();
+				String facultyAdd			= projectFormEdit.getFalcutyAddress();
+				String projectSurvey 		= projectFormEdit.getProjectSurvey();
+				String projectObjective		= projectFormEdit.getProjectObjective();
+				boolean bEditSumittedProject= true;
 
-			 threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode);
-			 model.put("status", "Chỉnh sửa thành công!");
-			 return "redirect:" + this.baseUrl + "/cp/list-projects.html";
+			 threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective,  bEditSumittedProject);
+			 return "redirect:" + this.baseUrl + "/cp/modify-submitted-projects.html";
 		 }
 	 }
 
-	 	/**
-		 * Editing a thread
-		 * @param model
-		 * @return
-		 */
-		 @RequestMapping(value = "/edit-a-thread", method = RequestMethod.POST)
-		 public String updateAThead(HttpServletRequest request, @Valid @ModelAttribute("projectFormEdit") mThreadValidation threadFormEdit, BindingResult result, Map model, HttpSession session) {
-		
-			 // Get topic's category
-			 List<mTopicCategory> topicCategoryList = tProjectCategoryService.list();
-			 // Get list reportingYear
-			 List<mAcademicYear> threadReportingAcademicDateList = academicYearService.list();
-			 // Get list statues
-			 List<mProjectStatus> projectStatuses = projectStatusService.list();
-			 // Get list faculty
-			 List<mFaculty> listFaculty = facultyService.loadFacultyList();
-			 
-			 if(!threadFormEdit.getThreadCode().equals("")){
-				 List<mProjectStaffs> listProjectStaffs = projectStaffsService.loadAProjectStaffByProjectCode(threadFormEdit.getThreadCode());
-				 List<mStaff> listStaffs = new ArrayList<mStaff>();
-				 if(listProjectStaffs != null){
-					for(mProjectStaffs projectStaff : listProjectStaffs)
-					{
-						mStaff staff = staffService.loadStaffByUserCode(projectStaff.getPROJSTAFF_Staff_Code());
-						listStaffs.add(staff);
-					}
-				 }
-				 model.put("listStaffs", listStaffs);
+ 	/**
+	 * Editing a thread
+	 * @param model
+	 * @return
+	 */
+	 @RequestMapping(value = "/edit-a-thread", method = RequestMethod.POST)
+	 public String updateAThead(HttpServletRequest request, @Valid @ModelAttribute("projectFormEdit") mThreadValidation threadFormEdit, BindingResult result, Map model, HttpSession session) {
+	
+		 // Get topic's category
+		 List<mTopicCategory> topicCategoryList = tProjectCategoryService.list();
+		 // Get list reportingYear
+		 List<mAcademicYear> threadReportingAcademicDateList = academicYearService.list();
+		 // Get list statues
+		 List<mProjectStatus> projectStatuses = projectStatusService.list();
+		 // Get list faculty
+		 List<mFaculty> listFaculty = facultyService.loadFacultyList();
+		 
+		 if(!threadFormEdit.getThreadCode().equals("")){
+			 List<mProjectStaffs> listProjectStaffs = projectStaffsService.loadAProjectStaffByProjectCode(threadFormEdit.getThreadCode());
+			 List<mStaff> listStaffs = new ArrayList<mStaff>();
+			 if(listProjectStaffs != null){
+				for(mProjectStaffs projectStaff : listProjectStaffs)
+				{
+					mStaff staff = staffService.loadStaffByUserCode(projectStaff.getPROJSTAFF_Staff_Code());
+					listStaffs.add(staff);
+				}
 			 }
-				
-			 // Put data back to view
-			 model.put("threadReportingAcademicDate", threadReportingAcademicDateList);
-			 model.put("listFaculty", listFaculty);
-			 model.put("threadCategory", topicCategoryList);
-			 model.put("projectStatuses", projectStatuses);
-			 model.put("thread", status);
-			 if (result.hasErrors()) {
-				 return "cp.editAThread";
-			 }else
-			 {
-				 String userRole = session.getAttribute("currentUserRole").toString();
-				 String userCode = session.getAttribute("currentUserCode").toString();
-				
-				 // Prepare data for inserting DB
-				 String threadName 					= threadFormEdit.getThreadName();
-				 String threadCatCode 				= threadFormEdit.getThreadCatCode();
-				 String threadEndDate 				= threadFormEdit.getThreadEndDate();
-				 String threadMotivation 			= threadFormEdit.getThreadMotivation();
-				 String threadReportingDate 		= threadFormEdit.getThreadReportingAcademicDate();
-				 String threadResult 				= threadFormEdit.getThreadResult();
-				 String threadStartDate 			= threadFormEdit.getThreadStartDate();
-				 String threadStatus 				= threadFormEdit.getThreadStatus();
-				 int threadBudget 					= threadFormEdit.getThreadBudget();
-				 String threadCode 					= threadFormEdit.getThreadCode();
-				 String threadContent				= threadFormEdit.getThreadContent();
-				 List<String> listStaffs 			= threadFormEdit.getStaffsRole();
-				 List<String> listStaffRoles 		= threadFormEdit.getRoleList();
-				 String joiningStaffs 				= threadFormEdit.getStaff();
-				 String threadSourceUploadFileSrc 	= "";
-				 int threadId						= threadFormEdit.getThreadId();
-
-				 /**
-				 * Uploading file
-				 */
-				 MultipartFile threadSourceUploadFile = threadFormEdit.getThreadSourceFile();
-				 String fileName = threadSourceUploadFile.getOriginalFilename();
-				 if (fileName != "") {
-					try {
-						// Creating Date in java with today's date.
-						Date currentDate = new Date();
-						// change date into string yyyyMMdd format example "20110914"
-						SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
-						String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
-						 
-						byte[] bytes = threadSourceUploadFile.getBytes();
-						String path = request.getServletContext().getRealPath("uploads");
-						File dir = new File(path + "/threads");
-						if (!dir.exists()) {
-							dir.mkdirs();
-						}
-
-						// Create a file
-						String currentUserName = session.getAttribute("currentUserName").toString();
-						fileName = currentUserName + "_" + sCurrentDate + "_" + fileName;
-						File serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
-						if (serverFile != null) {
-							threadSourceUploadFileSrc = dir.getAbsolutePath() + File.separator + fileName;
-						}
-						// Save data into file
-						BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-						stream.write(bytes);
-						stream.close();
-					} catch (Exception e) {
-						model.put("status", "You failed to upload " + fileName);
-					}
-				 }
-					
-				 threadService.editAThread(userRole, userCode, threadName, threadCatCode, threadContent, 
-						 					threadStartDate, threadEndDate, threadMotivation, threadReportingDate, threadResult, 
-						 					threadStatus, threadBudget, threadSourceUploadFileSrc, threadCode, threadId, listStaffs, listStaffRoles);
-				 model.put("status", "Successfully edited project");
-				 //return "cp.editAThread";
-				 return "redirect:" + this.baseUrl + "/cp/threads-listadd.html";
-			 }
+			 model.put("listStaffs", listStaffs);
 		 }
+			
+		 // Put data back to view
+		 model.put("threadReportingAcademicDate", threadReportingAcademicDateList);
+		 model.put("listFaculty", listFaculty);
+		 model.put("threadCategory", topicCategoryList);
+		 model.put("projectStatuses", projectStatuses);
+		 model.put("thread", status);
+		 if (result.hasErrors()) {
+			 return "cp.editAThread";
+		 }else
+		 {
+			 String userRole = session.getAttribute("currentUserRole").toString();
+			 String userCode = session.getAttribute("currentUserCode").toString();
+			
+			 // Prepare data for inserting DB
+			 String threadName 					= threadFormEdit.getThreadName();
+			 String threadCatCode 				= threadFormEdit.getThreadCatCode();
+			 String threadEndDate 				= threadFormEdit.getThreadEndDate();
+			 String threadMotivation 			= threadFormEdit.getThreadMotivation();
+			 String threadReportingDate 		= threadFormEdit.getThreadReportingAcademicDate();
+			 String threadResult 				= threadFormEdit.getThreadResult();
+			 String threadStartDate 			= threadFormEdit.getThreadStartDate();
+			 String threadStatus 				= threadFormEdit.getThreadStatus();
+			 int threadBudget 					= threadFormEdit.getThreadBudget();
+			 String threadCode 					= threadFormEdit.getThreadCode();
+			 String threadContent				= threadFormEdit.getThreadContent();
+			 List<String> listStaffs 			= threadFormEdit.getStaffsRole();
+			 List<String> listStaffRoles 		= threadFormEdit.getRoleList();
+			 String joiningStaffs 				= threadFormEdit.getStaff();
+			 String threadSourceUploadFileSrc 	= "";
+			 int threadId						= threadFormEdit.getThreadId();
+
+			 /**
+			 * Uploading file
+			 */
+			 MultipartFile threadSourceUploadFile = threadFormEdit.getThreadSourceFile();
+			 String fileName = threadSourceUploadFile.getOriginalFilename();
+			 if (fileName != "") {
+				try {
+					// Creating Date in java with today's date.
+					Date currentDate = new Date();
+					// change date into string yyyyMMdd format example "20110914"
+					SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
+					String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+					 
+					byte[] bytes = threadSourceUploadFile.getBytes();
+					String path = request.getServletContext().getRealPath("uploads");
+					File dir = new File(path + "/threads");
+					if (!dir.exists()) {
+						dir.mkdirs();
+					}
+
+					// Create a file
+					String currentUserName = session.getAttribute("currentUserName").toString();
+					fileName = currentUserName + "_" + sCurrentDate + "_" + fileName;
+					File serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
+					if (serverFile != null) {
+						threadSourceUploadFileSrc = dir.getAbsolutePath() + File.separator + fileName;
+					}
+					// Save data into file
+					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+					stream.write(bytes);
+					stream.close();
+				} catch (Exception e) {
+					model.put("status", "You failed to upload " + fileName);
+				}
+			 }
+				
+			 threadService.editAThread(userRole, userCode, threadName, threadCatCode, threadContent, 
+					 					threadStartDate, threadEndDate, threadMotivation, threadReportingDate, threadResult, 
+					 					threadStatus, threadBudget, threadSourceUploadFileSrc, threadCode, threadId, listStaffs, listStaffRoles);
+			 model.put("status", "Successfully edited project");
+			 //return "cp.editAThread";
+			 return "redirect:" + this.baseUrl + "/cp/threads-listadd.html";
+		 }
+	 }
 		 
 	 /**
 	  * 

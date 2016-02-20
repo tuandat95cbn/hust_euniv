@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import vn.webapp.dao.BaseDao;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
 import vn.webapp.modules.researchmanagement.model.Projects;
+import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 
 @Repository("nProjectDAO")
@@ -23,6 +24,28 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+	
+	/**
+	 * 
+	 */
+	public List<Projects> loadListProjectsByCode(String PROJ_Code){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
+			criteria.add(Restrictions.eq("PROJ_Code", PROJ_Code));
+			List<Projects> projectList = criteria.list();
+			commit();
+			return projectList;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
 	}
 
 	/**
@@ -55,6 +78,28 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 	}
 	
 	/**
+	 * 
+	 */
+	public Projects loadProjectById(int projectId){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
+			criteria.add(Restrictions.eq("Projects.PROJ_ID", projectId));
+			Projects project = (Projects) criteria.uniqueResult();
+			commit();
+			return project;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
 	 * Get project list by user
 	 * 
 	 * @param null
@@ -68,6 +113,34 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			if (!userRole.equals("ROLE_ADMIN")) {
 				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
 			}
+			criteria.add(Restrictions.eq("projects.PROJ_Locked2", 0));
+			criteria.addOrder(Order.desc("projects.PROJ_ID"));
+			List<Projects> projects = criteria.list();
+			commit();
+			return projects;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode) {
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
+			if (!userRole.equals("ROLE_ADMIN")) {
+				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
+			}
+			criteria.add(Restrictions.eq("projects.PROJ_Locked1", 1));
 			criteria.addOrder(Order.desc("projects.PROJ_ID"));
 			List<Projects> projects = criteria.list();
 			commit();
@@ -149,10 +222,6 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			String sThreadStatus, String sThreadCategory, String sThreadYear, String sThreadFaculty, 
 			String sThreadDepartment, String sThreadStaff)
 	{
-		System.out.println("ThreadDAOImpl::filterThreadsList, userRole = " + userRole + ", userCode = " + userCode + 
-				", iStartItem = " + iStartItem + ", iNumberOfItems = " + iNumberOfItems + ", sThreadStatus = " + sThreadStatus + 
-				", sThreadCategory = " + sThreadCategory + ", sThreadYear = " + sThreadYear + ", sThreadFaculty = " + sThreadFaculty + 
-				", sThreadDepartment = " + sThreadDepartment + ", sThreadStaff = " + sThreadStaff);
 		try {
 			begin();
 			Criteria criteria = getSession().createCriteria(mThreads.class);
@@ -408,6 +477,37 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			close();
 		}
 	}
+	
+	/**
+	 * Loading a sumitted project by id
+	 * @param userRole
+	 * @param userCode
+	 * @param projectId
+	 * @return
+	 */
+	@Override
+	public Projects loadASumittedProjectByIdAndUserCode(String userRole, String userCode, int projectId){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class);
+			criteria.add(Restrictions.eq("PROJ_ID", projectId));
+			if (!userRole.equals("ROLE_ADMIN")) {
+				criteria.add(Restrictions.eq("PROJ_User_Code", userCode));
+			}
+			criteria.add(Restrictions.eq("PROJ_Locked1", 1));
+			Projects project = (Projects) criteria.uniqueResult();
+			commit();
+			return project;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
 
 	/**
 	 * Edit a thread
@@ -532,6 +632,30 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			List<mThreads> threads = criteria.list();
 			commit();
 			return threads;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class);
+			criteria.add(Restrictions.eq("PROJ_PRJCall_Code", PROJ_PRJCall_Code));
+			
+			List<Projects> projectList = criteria.list();
+			commit();
+			return projectList;
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			rollback();

@@ -22,6 +22,28 @@ public interface nProjectService {
 	 * @return
 	 */
 	public List<Projects> loadProjectsListByStaff(String userRole, String userCode);
+	
+	/**
+	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @return
+	 */
+	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode);
+	
+	/**
+	 * 
+	 * @param projectId
+	 * @return
+	 */
+	public Projects loadProjectsById(int projectId);
+	
+	/**
+	 * 
+	 * @param PROJ_Code
+	 * @return
+	 */
+	public List<Projects> loadListProjectsByCode(String PROJ_Code);
 
 	/**
 	 * 
@@ -122,7 +144,19 @@ public interface nProjectService {
 	 * @param projectBudget
 	 * @return
 	 */
-	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int projectBudget, String projectCode);
+	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int projectBudget, String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate);
+	
+	/**
+	 * Saving member tasks for each project
+	 * @param projectCode
+	 * @param projectMembers
+	 * @param projectMemberRole
+	 * @param projectMemberTasks
+	 * @param projectMemberWorkingDays
+	 * @param projectMemberBudget
+	 * @return
+	 */
+	public int saveMemberTasks(String projectCode, String[] projectMembers,String[] projectMemberRole,String[] projectMemberTasks,String[] projectMemberWorkingDays,String[] projectMemberBudget);
 
 	/**
 	 * 
@@ -141,6 +175,15 @@ public interface nProjectService {
 	 * @return
 	 */
 	public Projects loadAProjectByIdAndUserCode(String userRole, String userCode, int projectId);
+	
+	/**
+	 * Loading a sumitted project by id
+	 * @param userRole
+	 * @param userCode
+	 * @param projectId
+	 * @return
+	 */
+	public Projects loadASumittedProjectByIdAndUserCode(String userRole, String userCode, int projectId);
 
 	/**
 	 * 
@@ -165,6 +208,12 @@ public interface nProjectService {
 	public void editAThread(String userRole, String userCode, String threadName, String threadCategory, String threadContent, 
 							String threadStartDate, String threadEndDate, String threadMotivation, String threadReportingDate, String threadResult, 
 							String threadStatus, int threadBudget, String threadSourceUploadFileSrc, String threadCode, int threadId, List<String> listStaffs, List<String> listStaffRoles);
+	
+	/**
+	 * Sending a project to council , after this action project can not be changed.
+	 * @param project
+	 */
+	public void sendAProject(Projects project, boolean editSumitted);
 
 	/**
 	 * 
@@ -177,9 +226,10 @@ public interface nProjectService {
 	 * @param projectResult
 	 * @param projectBudget
 	 * @param projectCode
+	 * @param bEditSumittedProject
 	 */
-	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, 
-								String projectMotivation, String projectResult, int projectBudget, String projectCode);
+	public void editAProject(int projectId,String userRole,String userCode,String projectCallCode,String projectName,String projectContent, 
+								String projectMotivation,String projectResult,int projectBudget,String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject);
 	
 	/**
 	 * 
@@ -229,4 +279,11 @@ public interface nProjectService {
 	 * @return
 	 */
 	public String getDepartmentName(String departmentCode);
+	
+	/**
+	 * Listing all projects by its project call code
+	 * @param PROJ_PRJCall_Code
+	 * @return
+	 */
+	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code);
 }

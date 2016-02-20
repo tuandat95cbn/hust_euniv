@@ -8,7 +8,7 @@ import vn.webapp.validation.EditPass;
 public class mUserEditValidation {
 	/** Set rules for fields*/
     @NotEmpty
-    @Size(min = 6, max = 15)
+    @Size(min = 6, max = 100)
     private String username;
 
     @NotEmpty
