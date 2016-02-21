@@ -144,7 +144,7 @@ public interface nProjectService {
 	 * @param projectBudget
 	 * @return
 	 */
-	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int projectBudget, String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate);
+	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int budgetMaterial, String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate);
 	
 	/**
 	 * Saving member tasks for each project
@@ -156,7 +156,7 @@ public interface nProjectService {
 	 * @param projectMemberBudget
 	 * @return
 	 */
-	public int saveMemberTasks(String projectCode, String[] projectMembers,String[] projectMemberRole,String[] projectMemberTasks,String[] projectMemberWorkingDays,String[] projectMemberBudget);
+	public int saveMemberTasks(String projectCode, String[] projectMembers,String[] projectMemberRole,String[] projectMemberTasks,String[] projectMemberWorkingDays,String[] projectMemberBudget, String currentProjectCode);
 
 	/**
 	 * 
@@ -228,8 +228,8 @@ public interface nProjectService {
 	 * @param projectCode
 	 * @param bEditSumittedProject
 	 */
-	public void editAProject(int projectId,String userRole,String userCode,String projectCallCode,String projectName,String projectContent, 
-								String projectMotivation,String projectResult,int projectBudget,String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject);
+	public void editAProject(int projectId,String userRole,String userCode,String projectCallCode,String projectName,String projectContent, String projectMotivation,String projectResult,
+								int budgetMaterial,String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject);
 	
 	/**
 	 * 

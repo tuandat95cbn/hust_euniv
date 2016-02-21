@@ -25,4 +25,11 @@ public interface ProjectTasksService {
      */
     public List<ProjectTasks> loadAProjectTaskByProjectCode(String sProjectCode);
     
+    /**
+     * 
+     * @param sProjectCode
+     * @return
+     */
+    public List<List<String>> getProjectTaskByProjectCode(String sProjectCode);
+    
 }

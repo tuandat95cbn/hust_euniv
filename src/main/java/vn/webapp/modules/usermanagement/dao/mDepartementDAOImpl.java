@@ -129,4 +129,30 @@ public class mDepartementDAOImpl extends BaseDao implements mDepartmentDAO{
             close();
         }
     }
+    
+    
+    /**
+     * Get a department by their code
+     * @param null
+     * @return object
+     */
+    @Override
+    public List<mDepartment> loadADepartmentBySetOfCode(String[] sCodes){
+    	try {
+            begin();
+            Criteria criteria = getSession().createCriteria(mDepartment.class, "Department");
+            criteria.add(Restrictions.in("Department.Department_Code", sCodes));
+            List<mDepartment> department = criteria.list();
+            commit();
+            return department;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+    }
 }

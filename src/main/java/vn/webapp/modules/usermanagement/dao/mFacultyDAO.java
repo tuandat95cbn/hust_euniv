@@ -6,6 +6,7 @@
 package vn.webapp.modules.usermanagement.dao;
 
 import java.util.List;
+
 import vn.webapp.modules.usermanagement.model.mFaculty;
 
 public interface mFacultyDAO {
@@ -48,4 +49,11 @@ public interface mFacultyDAO {
 	 * @return
 	 */
 	public int removeAFaculty(int facultyId);
+	
+	/**
+	 * 
+	 * @param sfacultyCodes
+	 * @return
+	 */
+	public List<mFaculty> getListFacultyBySetOfCode(String[] sfacultyCodes);
 }

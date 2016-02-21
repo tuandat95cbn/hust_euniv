@@ -162,4 +162,27 @@ public class mFacultyDAOImpl extends BaseDao implements mFacultyDAO {
 			close();
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<mFaculty> getListFacultyBySetOfCode(String[] sfacultyCodes) {
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(mFaculty.class,"Faculty");
+			criteria.add(Restrictions.in("Faculty.Faculty_Code", sfacultyCodes));
+			List<mFaculty> faculty = criteria.list();
+			commit();
+			return faculty;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
 }
