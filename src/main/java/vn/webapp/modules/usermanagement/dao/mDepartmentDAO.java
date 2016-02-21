@@ -6,6 +6,7 @@
 package vn.webapp.modules.usermanagement.dao;
 
 import java.util.List;
+
 import vn.webapp.modules.usermanagement.model.mDepartment;
 
 public interface mDepartmentDAO {
@@ -36,4 +37,11 @@ public interface mDepartmentDAO {
      * @return
      */
     public List<mDepartment> loadADepartmentByFaculty(String falcutyCode);
+    
+    /**
+     * 
+     * @param sCodes
+     * @return
+     */
+    public List<mDepartment> loadADepartmentBySetOfCode(String[] sCodes);
 }

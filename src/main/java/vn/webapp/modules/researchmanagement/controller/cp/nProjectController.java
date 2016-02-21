@@ -44,6 +44,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.codec.Base64.InputStream;
 
 import vn.webapp.controller.BaseWeb;
+import vn.webapp.libraries.DateUtil;
 import vn.webapp.libraries.FileUtil;
 import vn.webapp.modules.researchdeclarationmanagement.model.mAcademicYear;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
@@ -393,7 +394,7 @@ public class nProjectController extends BaseWeb {
 			String projectName 			= projectValid.getProjectName();
 			String startDate 			= projectValid.getProjectStartDate();
 			String endDate				= projectValid.getProjectEndDate();
-			int projectBudget 			= projectValid.getProjectBudget();
+			int budgetMaterial 			= projectValid.getBudgetMaterial();
 			String facultyAdd			= projectValid.getFalcutyAddress();
 			String projectContent 		= projectValid.getProjectContent();
 			String projectResult 		= projectValid.getProjectResult();
@@ -401,7 +402,7 @@ public class nProjectController extends BaseWeb {
 			String projectMotivation 	= projectValid.getProjectMotivation();
 			String projectObjective		= projectValid.getProjectObjective();
 			String projectCode 			= "PROJECT-CODE-" + projectCallCode;
-			
+			String currentProjectCode 	= projectCode;
 			//Members 
 			String[] projectMembers = request.getParameterValues("projectMembers");
 			String[] projectMemberRole = request.getParameterValues("projectMemberRole");
@@ -409,11 +410,11 @@ public class nProjectController extends BaseWeb {
 			String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
 			String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
 			
-			int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, facultyAdd, projectSurvey, projectObjective, startDate, endDate);
+			int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, facultyAdd, projectSurvey, projectObjective, startDate, endDate);
 			if (i_InsertAProject > 0) {
 				model.put("status", "Thêm mới thành công!");
 				projectCode = projectCallCode + i_InsertAProject;
-				threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget);
+				threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget, currentProjectCode);
 			}
 			//return "cp.addAThread";
 			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
@@ -745,66 +746,67 @@ public class nProjectController extends BaseWeb {
 		if(project != null)
 		{
 			try{
+				String sCurrentYear			= DateUtil.s_fGetCurrentDateTimeByTemplate("yyyy");
+				String sProjectYear			= DateUtil.s_fExtractYearFromAcademicYear(project.getPROJ_AcaYear_Code());
 				mStaff oStaffInfo 			= staffService.loadStaffByUserCode(project.getPROJ_User_Code());
 				String sLeaderName 			= (oStaffInfo.getStaff_Name() != null) ? oStaffInfo.getStaff_Name() : "LEADER'S NAME";
 				String sLeaderEmail 		= (oStaffInfo.getStaff_Email() != null) ? oStaffInfo.getStaff_Email() : "LEADER'S EMAIL";
 				String sLeaderDepartment 	= (oStaffInfo.getDepartment().getDepartment_Name() != null) ? oStaffInfo.getDepartment().getDepartment_Name() : "DEPARTMENT";
 				String sLeaderFaculty 		= (oStaffInfo.getDepartment().getFaculty().getFaculty_Name() != null) ? oStaffInfo.getDepartment().getFaculty().getFaculty_Name() : "FACULTY";
 				String sLeaderPhoneNo 		= (oStaffInfo.getStaff_Phone() != null) ? oStaffInfo.getStaff_Phone() : "PHONE NUMBER";
-				String sYear 				= (project.getPROJ_AcaYear_Code() != null) ? project.getPROJ_AcaYear_Code() : "YYYY";
+				String sYear 				= (sProjectYear != null) ? sProjectYear : sCurrentYear;
 				String sProjectName			= (project.getPROJ_Name() != null) ? project.getPROJ_Name() : "PROJECT'S NAME";
 				String sStartDate			= (project.getPROJ_StartDate() != null) ? project.getPROJ_StartDate() : "DD/MM/YYYY";
 				String sEndDate				= (project.getPROJ_EndDate() != null) ? project.getPROJ_EndDate() : "DD/MM/YYYY";
 				String sProjectCode			= (project.getPROJ_Code() != null) ? project.getPROJ_Code() : "PROJECT'S CODE";
 				String sProjectMotivation 	= (project.getPROJ_Motivation() != null) ? project.getPROJ_Motivation() : "PROJECT'S MOTIVATION";
 				String sProjectContent 		= (project.getPROJ_Content() != null) ? project.getPROJ_Content() : "PROJECT'S CONTENT";
-				String sProjectProducts		= "";
 				String sProjectResult		= (project.getPROJ_Result() != null) ? project.getPROJ_Result() : "PROJECT'S RESULT";;
-				
+				String sProjectSurvey		= (project.getPROJ_Survey() != null) ? project.getPROJ_Survey() : "PROJECT'S SURVEY";
+				int iBudgetMaterial			= (project.getPROJ_BudgetMaterial() > 0) ? project.getPROJ_BudgetMaterial() : 0;
+						
 				String sProjectMembersList	= "";
 				String sProjectTasksList	= "";
 				int iTotalWorkingDays 		= 0;
-				int iTotalFee 				= 0;
-				List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(sProjectCode);
+				int iTotalTaskFees 			= 0;
+				int iTotalFee				= iBudgetMaterial;
+				//List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(sProjectCode);
+				List<List<String>> projectTasks = projectTasksService.getProjectTaskByProjectCode(sProjectCode);
 				if(projectTasks != null)
 				{
 					
 					int iNo = 1;
-					for (ProjectTasks projectTask : projectTasks) {
+					for (List<String> projectTask : projectTasks) {
 						// Showing project members
 						sProjectMembersList 		+= "<tr>";
 						sProjectMembersList 		+= "<td width='5%'><div class='content'>"+iNo+".</div></td>";
-						sProjectMembersList 		+= "<td colspan='2'><div class='content'>"+projectTask.getStaffProject().getStaff_Name()+"</div></td>";
-						sProjectMembersList 		+= "<td width='45%'><div class='content'>"+projectTask.getStaffProject().getStaff_Department_Code()+"</div></td>";
+						sProjectMembersList 		+= "<td colspan='2'><div class='content'>"+projectTask.get(0)+"</div></td>";
+						sProjectMembersList 		+= "<td width='45%'><div class='content'>"+projectTask.get(1)+"</div></td>";
 						sProjectMembersList 		+= "<td width='15%'><div class='content'></div></td>";
 						sProjectMembersList 		+= "</tr>";
 						
 						// Showing tasks
 						sProjectTasksList 			+= "<tr>";
-						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getStaffProject().getStaff_Name()+"</div></td>";
-						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getParticipationRoles().getPROJPARTIROLE_Description()+"</div></td>";
-						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getPRJTSK_Task()+"</div></td>";
-						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getPRJTSK_NRBDay()+"</div></td>";
-						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.getPRJTSK_Cost()+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(0)+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(3)+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(4)+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(5)+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(6)+"</div></td>";
 						sProjectTasksList 			+= "<td><div class='content'></div></td>";
 						sProjectTasksList 			+= "</tr>";
 						
 						iNo++;
-						iTotalWorkingDays			+= projectTask.getPRJTSK_NRBDay();
-						iTotalFee					+= projectTask.getPRJTSK_Cost();
+						iTotalWorkingDays			+= Integer.parseInt(projectTask.get(5));
+						iTotalTaskFees				+= Integer.parseInt(projectTask.get(6));
 					}
+					// Calculating total fee
+					iTotalFee						+= iTotalTaskFees;
 				}
 				
 				String sProjectObjective	= (project.getPROJ_Objective() != null) ? project.getPROJ_Objective() : "PROJECT'S OBJECTIVE";
-								
-				String sTasksBudget 		= "100.000.000";
-				String sTasksBudgetWords	= "Một trăm triệu đồng chẵn";
-			
-				int iProjectBudget			= (project.getPROJ_TotalBudget() > 0) ? project.getPROJ_TotalBudget() : 0;
-				
-				String sLeaderDegree 		= "PHD";
+				String sTasksBudgetWords	= "";
+				String sLeaderDegree 		= "";
 				String sLeaderRole 			= "Giảng viên";
-				String sProjectApplicability = "IN REAL LIFE...";
 				
 				ClassLoader classLoader = getClass().getClassLoader();
 				// Getting content from template file
@@ -857,6 +859,9 @@ public class nProjectController extends BaseWeb {
 		    	// Replace project members list
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_MEMBERS_LIST___", sProjectMembersList);
 		    	
+		    	// Replace project survey
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_SURVEY___", sProjectSurvey);
+		    	
 		    	// Replace project motivation
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_MOTIVATION___", sProjectMotivation);
 		    	
@@ -865,18 +870,12 @@ public class nProjectController extends BaseWeb {
 		    	
 		    	// Replace project content
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_CONTENT___", sProjectContent);
-
-		    	// Replace project products
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_PRODUCTS___", sProjectProducts);
 		    	
 		    	// Replace project result
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_RESULT___", sProjectResult);
 		    	
-		    	// Replace project applicability
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_APPLICABILITY___", sProjectApplicability);
-		    	
 		    	// Replace project total budget
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET___", Integer.toString(iProjectBudget));
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET___", Integer.toString(iTotalFee));
 		    	
 		    	// Replace project tasks list
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TASKS_LIST___", sProjectTasksList);
@@ -885,13 +884,19 @@ public class nProjectController extends BaseWeb {
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_MEMBERS_WORKINGDAYS___", Integer.toString(iTotalWorkingDays));
 		    	
 		    	// Replace project members fees
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_MEMBERS_FEE___", Integer.toString(iTotalFee));
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_MEMBERS_FEE___", Integer.toString(iTotalTaskFees));
+
+		    	// Replace project material fee
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___MATERIAL_FEE___", Integer.toString(iBudgetMaterial));
 		    	
 		    	// Replace project tasks budget
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET___", sTasksBudget);
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET___", Integer.toString(iTotalFee));
 		    	
 		    	// Replace project tasks budget
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET_WORDS___", sTasksBudgetWords);
+		    	
+		    	// Replace year sign
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___YEAR_SIGN___", sCurrentYear);
 		    	
 		    	// Replace project signature
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___SIGNATURE___", sLeaderName);
@@ -1194,7 +1199,7 @@ public class nProjectController extends BaseWeb {
 			String projectContent 		= projectFormEdit.getProjectContent();
 			String projectMotivation 	= projectFormEdit.getProjectMotivation();
 			String projectResult 		= projectFormEdit.getProjectResult();
-			int projectBudget 			= projectFormEdit.getProjectBudget();
+			int budgetMaterial 			= projectFormEdit.getBudgetMaterial();
 			int projectEditId 			= projectFormEdit.getProjectId();
 			String projectCode 			= projectCallCode + projectEditId;
 			String startDate 			= projectFormEdit.getProjectStartDate();
@@ -1202,6 +1207,7 @@ public class nProjectController extends BaseWeb {
 			String facultyAdd			= projectFormEdit.getFalcutyAddress();
 			String projectSurvey 		= projectFormEdit.getProjectSurvey();
 			String projectObjective		= projectFormEdit.getProjectObjective();
+			String currentProjectCode	= projectFormEdit.getCurrentProjectCode();
 			boolean bEditSumittedProject= false;
 			
 			//Members 
@@ -1212,9 +1218,9 @@ public class nProjectController extends BaseWeb {
 			String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
 
 			// Editing project info
-			threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject);
+			threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject);
 			// Editting tasks info
-			threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget);
+			threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget, currentProjectCode);
 			 
 			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
 		 }
@@ -1489,6 +1495,7 @@ public class nProjectController extends BaseWeb {
 			 model.put("projects", status);
 			 if(project != null){
 				 threadService.removeAProject(projectId);
+				 threadService.removeProjectTasks(project.getPROJ_Code());
 				 List<Projects> projectsList = threadService.loadProjectsListByStaff(userRole, userCode);
 				 model.put("projectsList", projectsList);
 				 return "cp.projectsList";

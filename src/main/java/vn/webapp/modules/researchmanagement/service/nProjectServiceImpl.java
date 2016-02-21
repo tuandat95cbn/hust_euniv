@@ -671,7 +671,7 @@ public class nProjectServiceImpl implements nProjectService {
 	 * Adding new project
 	 */
 	@Override
-	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int projectBudget, String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate){
+	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int budgetMaterial, String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate){
 		if(userCode != "" && projectCode != "" && projectName != "" && projectCallCode != "")
 		{
 			Projects beInsertedProject = new Projects();
@@ -681,7 +681,7 @@ public class nProjectServiceImpl implements nProjectService {
 			beInsertedProject.setPROJ_Content(projectContent);
 			beInsertedProject.setPROJ_Motivation(projectMotivation);
 			beInsertedProject.setPROJ_Result(projectResult);
-			beInsertedProject.setPROJ_TotalBudget(projectBudget);
+			beInsertedProject.setPROJ_BudgetMaterial(budgetMaterial);
 			beInsertedProject.setPROJ_Code(projectCode);
 			beInsertedProject.setPROJ_FacultyCode(facultyAdd);
 			beInsertedProject.setPROJ_Survey(projectSurvey);
@@ -706,12 +706,13 @@ public class nProjectServiceImpl implements nProjectService {
 	/**
 	 * Adding tasks for each member who's working for a project
 	 */
-	public int saveMemberTasks(String projectCode, String[] projectMembers,String[] projectMemberRole,String[] projectMemberTasks,String[] projectMemberWorkingDays,String[] projectMemberBudget){
+	public int saveMemberTasks(String projectCode, String[] projectMembers,String[] projectMemberRole,String[] projectMemberTasks,String[] projectMemberWorkingDays,String[] projectMemberBudget, String currentProjectCode){
 		int iTotalTasks = projectMembers.length;
 		if(projectCode != "")
 		{
 			// Removing old tasks
-			List<ProjectTasks> currentProjectTasks = projectTasksDAO.loadAProjectTaskByProjectCode(projectCode);
+			String sProjectCode = (currentProjectCode != "") ? currentProjectCode : projectCode;
+			List<ProjectTasks> currentProjectTasks = projectTasksDAO.loadAProjectTaskByProjectCode(sProjectCode);
 			if(currentProjectTasks != null)
 			{
 				for (ProjectTasks aProjectTask : currentProjectTasks) {
@@ -739,6 +740,29 @@ public class nProjectServiceImpl implements nProjectService {
 			}
 		}
 		return 0;
+	}
+	
+	
+	/**
+	 * 
+	 * @param projectCode
+	 * @return
+	 */
+	public void removeProjectTasks(String sProjectCode){
+		try{
+			if(!("".equals(sProjectCode))){
+				List<ProjectTasks> currentProjectTasks = projectTasksDAO.loadAProjectTaskByProjectCode(sProjectCode);
+				if(currentProjectTasks != null)
+				{
+					for (ProjectTasks aProjectTask : currentProjectTasks) {
+						projectTasksDAO.removeAProjectTask(aProjectTask);
+					}
+				}
+			}
+		}catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
 	}
 
 	/**
@@ -892,8 +916,8 @@ public class nProjectServiceImpl implements nProjectService {
 	 * 
 	 */
 	@Override
-	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, 
-								String projectMotivation, String projectResult, int projectBudget, String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject){
+	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, String projectMotivation, String projectResult, 
+								int budgetMaterial, String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject){
 		Projects project = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
 		if (project != null) {
 			if(bEditSumittedProject == true)
@@ -902,7 +926,7 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_ContentChanged(projectContent);
 				project.setPROJ_MotivationChanged(projectMotivation);
 				project.setPROJ_ResultChanged(projectResult);
-				project.setPROJ_BudgetChanged(projectBudget);
+				project.setPROJ_BudgetMaterialChanged(budgetMaterial);
 				project.setPROJ_ObjectiveChanged(projectObjective);
 				project.setPROJ_SurveyChanged(projectSurvey);
 			}else{
@@ -911,7 +935,7 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_Motivation(projectMotivation);
 				project.setPROJ_Name(projectName);
 				project.setPROJ_Result(projectResult);
-				project.setPROJ_TotalBudget(projectBudget);
+				project.setPROJ_BudgetMaterial(budgetMaterial);
 				project.setPROJ_PRJCall_Code(projectCallCode);
 				project.setPROJ_StartDate(startDate);
 				project.setPROJ_EndDate(endDate);

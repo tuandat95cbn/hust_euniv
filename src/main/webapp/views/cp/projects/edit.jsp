@@ -58,19 +58,19 @@
                                </div>
                               <div class="form-group">
                                    <label for="projectStartDate">Thời gian bắt đầu</label>
-                                   <form:input path="projectStartDate" class="form-control" name="projectStartDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_StartDate}" placeholder="Project Start Date"></form:input>
+                                   <form:input path="projectStartDate" class="form-control" readonly="true" name="projectStartDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_StartDate}" placeholder="Project Start Date"></form:input>
    								<form:errors path="projectStartDate" class="alert-danger"></form:errors>
                                </div>
                                <div class="form-group">
                                    <label for="projectEndDate">Thời gian hoàn thành</label>
-                                   <form:input path="projectEndDate" class="form-control" name="projectEndDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_EndDate}" placeholder="Project End Date"></form:input>
+                                   <form:input path="projectEndDate" class="form-control" readonly="true" name="projectEndDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_EndDate}" placeholder="Project End Date"></form:input>
    								<form:errors path="projectEndDate" class="alert-danger"></form:errors>
                                </div>
-                               <div class="form-group">
+                               <%-- <div class="form-group">
                                    <label for="projectBudget">Kinh phí (triệu VNĐ)</label>
                                    <form:input path="projectBudget" class="form-control" name="projectBudget" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_TotalBudget}" placeholder="Budget"></form:input>
    								<form:errors path="projectBudget" class="alert-danger"></form:errors>
-                               </div>
+                               </div> --%>
                                <div class="form-group">
                                    <label>Đơn vị*</label>
                                    <form:select path="falcutyAddress" class="form-control" name="falcutyAddress">
@@ -94,8 +94,8 @@
 	                               	</div>
 	                               	<div class="form-group">
 	                                    <label for="projectOtherFees">Kinh phí vật tư, vật liệu,…</label>
-	                                    <form:input path="projectOtherFees" class="form-control" name="projectOtherFees" placeholder="Other Fees"></form:input>
-	   									<form:errors path="projectOtherFees" class="alert-danger"></form:errors>
+	                                    <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_BudgetMaterial}" placeholder="Other Fees"></form:input>
+	   									<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
 	                               	</div>
 							    </c:when>    
 							    <c:otherwise>
@@ -125,7 +125,7 @@
 				                        </div>
 				                        <div class="panel-body">
 				                            <div class="tab-content">
-				                                <div class="tab-pane fade in active"></div>
+				                                <div class="tab-pane fade in active">${projectEdit.PROJ_BudgetMaterial}</div>
 				                            </div>
 				                        </div>
 				                    </div>
@@ -196,42 +196,44 @@
                 <!-- /.panel-body -->
                 
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                        	<div class="form-group">
-                                <label for="projectMembers">Thành viên</label>
-                                <select class="form-control" id="projectMembers">
-                                	<c:forEach items="${staffList}" var="aStaff">
-                                    	<option value="${aStaff.staff_Code}">${aStaff.staff_Name}</option>
-                                   	</c:forEach>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                               	<label for="taskContent">Nội dung công việc</label>
-                                <textarea id="taskContent" class="form-control"></textarea>
-                           	 </div>
-                             <button type="button" class="btn btn-primary btn-xs" onclick="v_fAddMember();">Thêm</button>
-                        </div>
-                        <div class="col-lg-6">
-                        	<div class="form-group">
-                                <label for="memberRole">Vai trò</label>
-                                <select class="form-control" id="memberRole">
-                                	<c:forEach items="${memberRolesList}" var="memberRole">
-                                     <option value="${memberRole.PROJPARTIROLE_Code}">${memberRole.PROJPARTIROLE_Description}</option>
-                                   	</c:forEach>
-                                </select>
-                            </div>
-                           	 <div class="form-group">
-                                <label for="memberWorkingDays">Số ngày công</label>
-                                <input class="form-control" id="memberWorkingDays" placeholder="Working days" />
-                             </div>
-                             <div class="form-group">
-                                <label for="taskBudget">Thành tiền</label>
-                                <input class="form-control" id="taskBudget" placeholder="Fee" />
-                             </div>
-                        </div>
-                        <!-- /.col-lg-6 (nested) -->
-                    </div>
+                	<c:if test="${projectEdit.PROJ_Locked1 != 1}">
+	                    <div class="row">
+	                        <div class="col-lg-6">
+	                        	<div class="form-group">
+	                                <label for="projectMembers">Thành viên</label>
+	                                <select class="form-control" id="projectMembers">
+	                                	<c:forEach items="${staffList}" var="aStaff">
+	                                    	<option value="${aStaff.staff_Code}">${aStaff.staff_Name}</option>
+	                                   	</c:forEach>
+	                                </select>
+	                            </div>
+	                            <div class="form-group">
+	                               	<label for="taskContent">Nội dung công việc</label>
+	                                <textarea id="taskContent" class="form-control"></textarea>
+	                           	 </div>
+	                             <button type="button" class="btn btn-primary btn-xs" onclick="v_fAddMember();">Thêm</button>
+	                        </div>
+	                        <div class="col-lg-6">
+	                        	<div class="form-group">
+	                                <label for="memberRole">Vai trò</label>
+	                                <select class="form-control" id="memberRole">
+	                                	<c:forEach items="${memberRolesList}" var="memberRole">
+	                                     <option value="${memberRole.PROJPARTIROLE_Code}">${memberRole.PROJPARTIROLE_Description}</option>
+	                                   	</c:forEach>
+	                                </select>
+	                            </div>
+	                           	 <div class="form-group">
+	                                <label for="memberWorkingDays">Số ngày công</label>
+	                                <input class="form-control" id="memberWorkingDays" placeholder="Working days" />
+	                             </div>
+	                             <div class="form-group">
+	                                <label for="taskBudget">Thành tiền</label>
+	                                <input class="form-control" id="taskBudget" placeholder="Fee" />
+	                             </div>
+	                        </div>
+	                        <!-- /.col-lg-6 (nested) -->
+	                    </div>
+                    </c:if>
                     <!-- /.row (nested) -->
                     <div class="panel-body">
                     	<div class="panel panel-default">
@@ -249,7 +251,9 @@
 	                                            <th>Nội dung</th>
 	                                            <th>Số ngày công</th>
 	                                            <th>Thành tiền</th>
+	                                            <c:if test="${projectEdit.PROJ_Locked1 != 1}">
 	                                            <th>Hủy</th>
+	                                            </c:if>
 	                                        </tr>
 	                                    </thead>
 	                                    <tbody>
@@ -277,7 +281,9 @@
 				                                            	<c:out value="${task.PRJTSK_Cost}"/>
 				                                            	<input name='projectMemberBudget' type='hidden' value="${task.PRJTSK_Cost}" />
 				                                            </td>
+				                                            <c:if test="${projectEdit.PROJ_Locked1 != 1}">
 				                                            <td><button type='button' onclick='v_fClearMember(this);' class='btn btn-warning btn-xs' title='Hủy' >Clear</button></td>
+				                                            </c:if>
 				                                        </tr>
 			                                    	</c:forEach>
 		                                    	</c:when>    
@@ -300,6 +306,7 @@
                     	<button type="submit" class="btn btn-primary">Lưu</button>
                     </c:if>
                     <input type="hidden" value="${projectEdit.PROJ_ID}" name="projectId" id="projectId" />
+                    <input type="hidden" value="${projectEdit.PROJ_Code}" name="currentProjectCode" id="currentProjectCode" />
                     <button type="reset" class="btn btn-info cancel">Hủy</button>
                     <c:if test="${projectEdit.PROJ_Locked1 == 1}">
                     	<button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">Xuất PDF</button>
@@ -329,6 +336,20 @@ $(document).ready(function(){
 	$('button.cancel').click(function(){
 		window.location = baseUrl+"/cp/list-projects.html";
 	});
+	
+	$('#projectStartDate').datepicker({
+		changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat : 'dd/mm/yy',
+        stepMonths: 12});
+	
+	$('#projectEndDate').datepicker({
+		changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat : 'dd/mm/yy',
+        stepMonths: 12});
 });
 
 function v_fGeneratePDF(iProjectId){
