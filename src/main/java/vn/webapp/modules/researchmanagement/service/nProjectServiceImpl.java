@@ -707,6 +707,7 @@ public class nProjectServiceImpl implements nProjectService {
 	 * Adding tasks for each member who's working for a project
 	 */
 	public int saveMemberTasks(String projectCode, String[] projectMembers,String[] projectMemberRole,String[] projectMemberTasks,String[] projectMemberWorkingDays,String[] projectMemberBudget, String currentProjectCode){
+		if(projectMembers == null) return 0;
 		int iTotalTasks = projectMembers.length;
 		if(projectCode != "")
 		{

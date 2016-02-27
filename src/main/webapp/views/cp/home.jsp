@@ -4,7 +4,7 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12 center">
-            <h1 class="page-header">Hanoi University of Science and Technology</h1>
+            <h1 class="page-header">HUST Under Construction</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>

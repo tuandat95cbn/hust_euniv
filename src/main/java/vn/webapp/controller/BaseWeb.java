@@ -47,7 +47,7 @@ public class BaseWeb {
 	public int iASSIGNJURYSUBMITTEDPROJECTS = 0;
 	public int iMODIFYSUBMITTEDPROJECTS = 0;
 	public int iREVIEWSUBMITTEDPROJECTS = 0;
-    
+                            
     @Autowired
     private mFuncsPermissionService funcsPermissionService;
     
