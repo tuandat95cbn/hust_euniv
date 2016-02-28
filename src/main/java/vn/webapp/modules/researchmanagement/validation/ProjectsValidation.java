@@ -48,6 +48,12 @@ public class ProjectsValidation{
 	
 	private String currentProjectCode;
 	
+	private String projectStatusCode;
+	
+	private String projectComment1;
+	
+	private String projectComment2;
+	
 	@NotEmpty
 	private String projectCallCode;
 
@@ -217,6 +223,30 @@ public class ProjectsValidation{
 
 	public void setCurrentProjectCode(String currentProjectCode) {
 		this.currentProjectCode = currentProjectCode;
+	}
+
+	public String getProjectStatusCode() {
+		return projectStatusCode;
+	}
+
+	public void setProjectStatusCode(String projectStatusCode) {
+		this.projectStatusCode = projectStatusCode;
+	}
+
+	public String getProjectComment1() {
+		return projectComment1;
+	}
+
+	public void setProjectComment1(String projectComment1) {
+		this.projectComment1 = projectComment1;
+	}
+
+	public String getProjectComment2() {
+		return projectComment2;
+	}
+
+	public void setProjectComment2(String projectComment2) {
+		this.projectComment2 = projectComment2;
 	}
 
 }

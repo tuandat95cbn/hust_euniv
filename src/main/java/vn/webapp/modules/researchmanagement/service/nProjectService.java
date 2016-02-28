@@ -29,7 +29,23 @@ public interface nProjectService {
 	 * @param userCode
 	 * @return
 	 */
+	public List<Projects> loadProjectsListByStaffAndStatus(String userRole, String userCode, String status);
+	
+	/**
+	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @return
+	 */
 	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode);
+	
+	/**
+	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @return
+	 */
+	public List<Projects> loadApproveProjectsList(String userRole, String userCode);
 	
 	/**
 	 * 
@@ -236,6 +252,12 @@ public interface nProjectService {
 	 */
 	public void editAProject(int projectId,String userRole,String userCode,String projectCallCode,String projectName,String projectContent, String projectMotivation,String projectResult,
 								int budgetMaterial,String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject);
+	
+	/**
+	 * 
+	 * @param project
+	 */
+	public void editAnApproveProject(Projects project);
 	
 	/**
 	 * 

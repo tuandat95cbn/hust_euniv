@@ -134,10 +134,12 @@
 				                    <a href="<c:url value="${baseUrl}/cp/modify-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Chỉnh sửa thuyết minh đề tài sau phản biện</a>
 				                </li>
 			                </c:if>
-			                
+			                <li>
+			                    <a href="<c:url value="${baseUrl}/cp/collect-comments.html"/>"><i class="fa fa-briefcase"></i> Tổng hợp comments</a>
+			                </li>
 			                <c:if test="${currentUserRole eq 'ROLE_ADMIN' || currentUserRole eq 'SUPER_ADMIN'}">
 				                <li>
-				                    <a href="<c:url value="${baseUrl}/cp/threads-approve.html"/>"><i class="fa fa-briefcase"></i> Phê duyệt đề tài</a>
+				                    <a href="<c:url value="${baseUrl}/cp/approve-projects.html"/>"><i class="fa fa-briefcase"></i> Phê duyệt đề tài</a>
 				                </li>
 				                
 				                <li>
