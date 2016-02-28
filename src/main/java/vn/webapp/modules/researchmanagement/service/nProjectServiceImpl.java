@@ -117,6 +117,40 @@ public class nProjectServiceImpl implements nProjectService {
 	}
 	
 	/**
+	 * Get a list Threads by user code and status
+	 * 
+	 * @param String
+	 * @return object
+	 */
+	@Override
+	public List<Projects> loadProjectsListByStaffAndStatus(String userRole, String userCode, String status)
+	{
+		try {
+			return projectDAO.loadProjectsListByStaffAndStatus(userRole, userCode, status);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * Get a list Threads by user code and status
+	 * 
+	 * @param String
+	 * @return object
+	 */
+	@Override
+	public List<Projects> loadApproveProjectsList(String userRole, String userCode)
+	{
+		try {
+			return projectDAO.loadApproveProjectsList(userRole, userCode);
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
 	 * 
 	 */
 	@Override
@@ -946,6 +980,11 @@ public class nProjectServiceImpl implements nProjectService {
 			}
 			threadDAO.editAProject(project);
 		}
+	}
+	
+	@Override
+	public void editAnApproveProject(Projects project){
+		threadDAO.editAProject(project);
 	}
 
 	/**

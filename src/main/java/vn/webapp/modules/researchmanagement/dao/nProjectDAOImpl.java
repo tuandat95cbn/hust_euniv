@@ -1,5 +1,7 @@
 package vn.webapp.modules.researchmanagement.dao;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -114,6 +116,67 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
 			}
 			criteria.add(Restrictions.eq("projects.PROJ_Locked2", 0));
+			criteria.addOrder(Order.desc("projects.PROJ_ID"));
+			List<Projects> projects = criteria.list();
+			commit();
+			return projects;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * Get project list by user
+	 * 
+	 * @param null
+	 * @return List
+	 */
+	@Override
+	public List<Projects> loadProjectsListByStaffAndStatus(String userRole, String userCode, String status) {
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
+			if (!userRole.equals("ROLE_ADMIN")) {
+				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
+			}
+			criteria.add(Restrictions.eq("projects.PROJ_Status_Code", status));
+			criteria.addOrder(Order.desc("projects.PROJ_ID"));
+			List<Projects> projects = criteria.list();
+			commit();
+			return projects;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * Get project list by user
+	 * 
+	 * @param null
+	 * @return List
+	 */
+	@Override
+	public List<Projects> loadApproveProjectsList(String userRole, String userCode) {
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
+			if (!userRole.equals("ROLE_ADMIN")) {
+				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
+			}
+			criteria.add(Restrictions.eq("projects.PROJ_Locked2", 1));
+			criteria.add(Restrictions.in("projects.PROJ_Status_Code", new String[] { "REJECT", "APPROVED", "ACCEPT_REVISION" }));
 			criteria.addOrder(Order.desc("projects.PROJ_ID"));
 			List<Projects> projects = criteria.list();
 			commit();

@@ -137,7 +137,7 @@
 			                
 			                <c:if test="${currentUserRole eq 'ROLE_ADMIN' || currentUserRole eq 'SUPER_ADMIN'}">
 				                <li>
-				                    <a href="<c:url value="${baseUrl}/cp/threads-approve.html"/>"><i class="fa fa-briefcase"></i> Phê duyệt đề tài</a>
+				                    <a href="<c:url value="${baseUrl}/cp/approve-projects.html"/>"><i class="fa fa-briefcase"></i> Phê duyệt đề tài</a>
 				                </li>
 				                
 				                <li>

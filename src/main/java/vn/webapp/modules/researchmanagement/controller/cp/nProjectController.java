@@ -6,17 +6,13 @@
 package vn.webapp.modules.researchmanagement.controller.cp;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,7 +37,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.codec.Base64.InputStream;
 
 import vn.webapp.controller.BaseWeb;
 import vn.webapp.libraries.DateUtil;
@@ -57,12 +52,14 @@ import vn.webapp.modules.researchmanagement.model.ProjectParticipationRoles;
 import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
+import vn.webapp.modules.researchmanagement.model.mProjectComments;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 import vn.webapp.modules.researchmanagement.service.ProjectParticipationRolesService;
 import vn.webapp.modules.researchmanagement.service.ProjectTasksService;
 import vn.webapp.modules.researchmanagement.service.mProjectCallsService;
+import vn.webapp.modules.researchmanagement.service.mProjectCommentsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStaffsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStatusService;
 import vn.webapp.modules.researchmanagement.service.nProjectService;
@@ -121,6 +118,9 @@ public class nProjectController extends BaseWeb {
 	
 	@Autowired
 	private ProjectTasksService projectTasksService;
+	
+	@Autowired
+	private mProjectCommentsService projectCommentsService;
 
 	static final String status = "active";
 	
@@ -165,6 +165,23 @@ public class nProjectController extends BaseWeb {
 		model.put("projectsList", projectsList);
 		model.put("projects", status);
 		return "cp.submittedProjectsList";
+	}
+	
+	/**
+	 * Show list all projects need to be approved
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/approve-projects", method = RequestMethod.GET)
+	public String getListApprovingProjects(ModelMap model, HttpSession session) {
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		List<Projects> projectsList = threadService.loadApproveProjectsList(userRole, userCode);
+
+		model.put("projectsList", projectsList);
+		model.put("projects", status);
+		return "cp.projectsapprove";
 	}
 	
 	/**
@@ -240,7 +257,7 @@ public class nProjectController extends BaseWeb {
 	
 		List<mThreads> submittedThread = new ArrayList<mThreads>();
 		for(mThreads t : threadsList){
-			if(t.getPROJ_Status_Code().equals("SUBMIT"))
+			if("SUBMIT".equals(t.getPROJ_Status_Code()))
 				submittedThread.add(t);
 		}
 		for(mThreads t : submittedThread){
@@ -249,7 +266,7 @@ public class nProjectController extends BaseWeb {
 		
 		List<mProjectStatus> submittedThreadStatuses = new ArrayList<mProjectStatus>();
 		for(mProjectStatus ps : threadStatuses){
-			if(ps.getPROJSTAT_Code().equals("SUBMIT"))
+			if("SUBMIT".equals(ps.getPROJSTAT_Code()))
 				submittedThreadStatuses.add(ps);
 		}
 		//model.put("threadsList", threadsList);
@@ -281,7 +298,7 @@ public class nProjectController extends BaseWeb {
 	
 		List<mThreads> submittedThread = new ArrayList<mThreads>();
 		for(mThreads t : threadsList){
-			if(t.getPROJ_Status_Code().equals("APPROVED"))
+			if("APPROVED".equals(t.getPROJ_Status_Code()))
 				submittedThread.add(t);
 		}
 		for(mThreads t : submittedThread){
@@ -290,7 +307,7 @@ public class nProjectController extends BaseWeb {
 		
 		List<mProjectStatus> submittedThreadStatuses = new ArrayList<mProjectStatus>();
 		for(mProjectStatus ps : threadStatuses){
-			if(ps.getPROJSTAT_Code().equals("APPROVED"))
+			if("APPROVED".equals(ps.getPROJSTAT_Code()))
 				submittedThreadStatuses.add(ps);
 		}
 		//model.put("threadsList", threadsList);
@@ -604,6 +621,46 @@ public class nProjectController extends BaseWeb {
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId);
 			return "cp.editASumittedProject";
+		}
+		return "cp.notFound404";
+	}
+	
+	/**
+	 * 
+	 * @param model
+	 * @param projectId
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/approveprojectdetail/{id}")
+	public String editApproveProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+
+		String userRole = session.getAttribute("currentUserRole").toString();
+		String userCode = session.getAttribute("currentUserCode").toString();
+		Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
+		
+		// Get list of project calls
+	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+							
+     	// Put data back to view
+		model.put("projectCallsList", projectCallsList);
+		model.put("projects", status);
+		if (project != null) {
+			List<mProjectComments> projectComments = projectCommentsService.loadAProjectCommentByProjectCode(project.getPROJ_Code());
+			mProjectComments projectComment1 = null;
+			mProjectComments projectComment2 = null;
+			if(projectComments != null && projectComments.size() > 1)
+			{
+				projectComment1 =  projectComments.get(0);
+				projectComment2 =  projectComments.get(1);
+			}
+			model.put("projectComment1", projectComment1);
+			model.put("projectComment2", projectComment2);
+			// Put journal list and topic category to view
+			model.put("projectEdit", project);
+			model.put("projectFormEdit", new ProjectsValidation());
+			model.put("projectId", projectId);
+			return "cp.approveaproject";
 		}
 		return "cp.notFound404";
 	}
@@ -1261,6 +1318,33 @@ public class nProjectController extends BaseWeb {
 
 			 threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective,  bEditSumittedProject);
 			 return "redirect:" + this.baseUrl + "/cp/modify-submitted-projects.html";
+		 }
+	 }
+	 
+	 /**
+	 * Editing a approve project
+	 * @param model
+	 * @return
+	 */
+	 @RequestMapping(value = "/edit-a-approveproject", method = RequestMethod.POST)
+	 public String updateAnApproveProject(HttpServletRequest request, @Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit, BindingResult result, Map model, HttpSession session) {
+
+		 model.put("projects", status);
+		 if (result.hasErrors()) {
+			 return "cp.editAProject";
+		 }else
+		 {
+			String userRole 			 = session.getAttribute("currentUserRole").toString();
+			String userCode 			 = session.getAttribute("currentUserCode").toString();
+			int projectEditId 			 = projectFormEdit.getProjectId();
+			Projects projectBeingEditted = threadService.loadASumittedProjectByIdAndUserCode(userRole, userCode, projectEditId);
+			// Prepare data for inserting DB
+			if(projectBeingEditted != null){
+				projectBeingEditted.setPROJ_Status_Code(projectFormEdit.getProjectStatusCode());
+				threadService.editAnApproveProject(projectBeingEditted);
+				return "redirect:" + this.baseUrl + "/cp/approve-projects.html";
+			}
+			return "cp.editAProject";
 		 }
 	 }
 
