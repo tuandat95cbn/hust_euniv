@@ -45,7 +45,7 @@
 										<td><c:out value="${count}"/></td>
 										<td><c:out value="${project.PROJ_Name}"/></td>
 										<td class="center">
-											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn btn-primary btn-xs" title="${(project.PROJ_Status_Code == 'APPROVED') ? 'Đã chấp nhận' : (project.PROJ_Status_Code == 'REJECT' ? 'Đã bị loại' : 'Chỉnh sửa')}">Info</button>
+											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn ${(project.PROJ_Status_Code == 'APPROVED') ? 'btn-warning' : (project.PROJ_Status_Code == 'REJECT' ? 'btn-danger' : 'btn-primary')} btn-xs" title="${(project.PROJ_Status_Code == 'APPROVED') ? 'Đã chấp nhận' : (project.PROJ_Status_Code == 'REJECT' ? 'Đã bị loại' : 'Chỉnh sửa')}">Info</button>
 										</td>
 									</tr>
 								</c:forEach>

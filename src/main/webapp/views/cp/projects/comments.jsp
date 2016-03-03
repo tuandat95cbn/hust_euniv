@@ -26,8 +26,7 @@
     <!-- /.row -->
     <div class="row">
         <div class="col-lg-12">
-        	<c:if test="${projectEdit.PROJ_Locked2 == 1}">
-        	<form:form action="${baseUrl}/cp/edit-a-approveproject.html" method="POST" commandName="projectFormEdit" role="form" enctype="multipart/form-data">
+        	<form:form action="${baseUrl}/cp/edit-a-projectcomment.html" method="POST" commandName="projectFormEdit" role="form" id="confirm-comment" enctype="multipart/form-data">
 	            <div class="panel panel-default">
 	                <div class="panel-heading">
 	                    Tổng hợp comments phản biện đề tài
@@ -35,37 +34,78 @@
 	                <div class="panel-body">
 	                    <div class="row">
 	                        <div class="col-lg-6">
-						       	<div class="form-group">
-                                	<label for="projectComment1">Ý kiến phản biện 1</label>
-	                                <textarea path="projectComment1"  name="projectComment1" id="projectComment1" class="form-control"></textarea>
-	                                <form:errors path="projectComment1" class="alert-danger"></form:errors>
-                            	</div>
-			                    <div class="form-group">
-                                   <label>Chọn trạng thái phê duyệt</label>
-                                   <form:select path="projectStatusCode" class="form-control" name="projectStatusCode">
-                                        <option value="ACCEPT_REVISION">Phê duyệt nhưng cần chỉnh sửa</option>
-                                        <option value="APPROVED">Phê duyệt</option>
-                                        <option value="REJECT">Từ chối</option>
-                                   </form:select>
-                                   <form:errors path="projectStatusCode" class="alert-danger"></form:errors>
-                                </div>
-			                    <!-- Buttons -->
-                               	 <c:if test="${projectEdit.PROJ_Locked2 == 1}">
-	                                 <button type="submit" class="btn btn-primary">Lưu</button>
-	                                 <input type="hidden" value="${projectEdit.PROJ_ID}" name="projectId" id="projectId" />
-	                                 <input type="hidden" value="${projectEdit.PROJ_Name}" name="projectName" id="projectName" />
-                                 </c:if>
+	                        	<div class="panel panel-default">
+			                        <div class="panel-heading">
+			                            <label for="projectResult">Tên đề tài</label>
+			                        </div>
+			                        <div class="panel-body">
+			                            <div class="tab-content">
+			                                <div class="tab-pane fade in active" >${projectEdit.PROJ_Name}</div>
+			                            </div>
+			                        </div>
+			                    </div>
+	                        </div>
+	                    </div>
+	                    <!-- /.row (nested) -->
+	                    
+	                    <div class="row">
+	                        <div class="col-lg-6">
+			                    <div class="panel panel-default">
+			                        <div class="panel-heading">
+			                            <label for="projectResult">Ý kiến phản biện 1</label>
+			                        </div>
+			                        <div class="panel-body">
+			                            <div class="tab-content">
+			                                <div class="tab-pane fade in active" >${(projectComment1 != null) ? projectComment1.COMPROJ_COMMENT : ""}</div>
+			                            </div>
+			                        </div>
+			                    </div>
+	                        	<c:choose>
+									<c:when test="${projectEdit.PROJ_Status_Code != 'APPROVED' && projectEdit.PROJ_Status_Code != 'REJECT'}">
+					                    <div class="form-group">
+		                                   <label>Chọn trạng thái phê duyệt</label>
+		                                   <form:select path="projectStatusCode" class="form-control" name="projectStatusCode" id="projectStatusCode">
+		                                        <option value="ACCEPT_REVISION">Phê duyệt nhưng cần chỉnh sửa</option>
+		                                        <option value="APPROVED">Phê duyệt</option>
+		                                        <option value="REJECT">Từ chối</option>
+		                                   </form:select>
+		                                   <form:errors path="projectStatusCode" class="alert-danger"></form:errors>
+		                                </div>
+                                	</c:when>    
+								    <c:otherwise>
+					                    <div class="panel panel-default">
+					                        <div class="panel-heading">
+					                            <label for="projectResult">Trạng thái</label>
+					                        </div>
+					                        <div class="panel-body">
+					                            <div class="tab-content">
+					                                <div class="tab-pane fade in active">${(projectEdit.PROJ_Status_Code == 'APPROVED') ? 'Phê duyệt' : ((projectEdit.PROJ_Status_Code == 'REJECT') ? 'Từ chối' : ((projectEdit.PROJ_Status_Code == 'ACCEPT_REVISION') ? 'Phê duyệt nhưng cần chỉnh sửa' : ''))}</div>
+					                            </div>
+					                        </div>
+					                    </div>
+								    </c:otherwise>
+								</c:choose>
+						       	
+			                     <!-- Buttons -->
+			                     <input type="hidden" value="0" name="confirmed" id="confirmed" />
+                                 <button type="submit" class="btn btn-primary">Lưu</button>
+                                 <input type="hidden" value="${projectEdit.PROJ_ID}" name="projectId" id="projectId" />
+                                 <input type="hidden" value="${projectEdit.PROJ_PRJCall_Code}" name="projectCallCode" id="projectCallCode" />
+                                 <input type="hidden" value="${projectEdit.PROJ_Name}" name="projectName" id="projectName" />
                                  <button type="reset" class="btn btn-info cancel">Hủy</button>
-                                 <c:if test="${projectEdit.PROJ_Locked2 != 1}">
-                                 	<button type="reset" class="btn btn-danger" onclick="v_fConfirmProject(${projectEdit.PROJ_ID})">Xác nhận</button>
-                                 </c:if>
+                                 <button type="reset" class="btn btn-danger" onclick="v_fConfirmCommentProject(${projectEdit.PROJ_ID})">Xác nhận</button>
 	                        </div>
 	                        <div class="col-lg-6">
-	                            <div class="form-group">
-                                	<label for="projectComment2">Ý kiến phản biện 2</label>
-	                                <textarea path="projectComment2"  name="projectComment2" id="projectComment2" class="form-control"></textarea>
-	                                <form:errors path="projectComment2" class="alert-danger"></form:errors>
-                            	</div>
+						    	<div class="panel panel-default">
+			                        <div class="panel-heading">
+			                            <label for="projectResult">Ý kiến phản biện 2</label>
+			                        </div>
+			                        <div class="panel-body">
+			                            <div class="tab-content">
+			                                <div class="tab-pane fade in active" id="home">${(projectComment2 != null) ? projectComment2.COMPROJ_COMMENT : ""}</div>
+			                            </div>
+			                        </div>
+			                    </div>
 	                        </div>
 	                        <!-- /.col-lg-6 (nested) -->
 	                    </div>
@@ -75,7 +115,6 @@
 	            </div>
 	            </form:form>
 	            <!-- /.panel -->
-            </c:if>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -95,10 +134,10 @@ $(document).ready(function(){
 	});
 });
 
-function v_fConfirmProject(iProjectId){
-	if(confirm("Chú ý ! Đề tài sau khi phê duyệt sẽ không thể chỉnh sửa được.")){
-		var sSubmitProjectUrl = baseUrl + "/cp/confirmproject/"+iProjectId+".html";
-		window.location = sSubmitProjectUrl;
+function v_fConfirmCommentProject(iProjectId){
+	if(confirm("Chú ý ! Sau khi gửi comments thì không thể chỉnh sửa được.")){
+		$("input#confirmed").val(1);
+		$("form#confirm-comment").submit();
     }
     else{
         return false;

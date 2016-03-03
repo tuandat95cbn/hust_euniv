@@ -10,6 +10,7 @@ public class DateUtil {
 	public static String _dateFormatType1 = "dd/MM/yyyy";
 	public static String _dateFormatType2 = "yyyy-MM-dd";
 	public static String _dateTimeFormat  = "dd-MM-yyyy";
+	public static String _fullDateTimeFormat = "dd/MM/yyyy H:m:s";
 	/**
 	 * Get Format input dd/MM/yyyy : 01/02/2016 
 	 * @param sDate
@@ -95,6 +96,18 @@ public class DateUtil {
 		Date currentDate = new Date();
 		SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
 		return dateformatyyyyMMdd.format(currentDate);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static String s_fGetCurrentDateByFormat(String sFormant)
+	{
+		Date currentDate = new Date();
+		sFormant = (!("".equals(sFormant))) ? sFormant : DateUtil._fullDateTimeFormat; 
+		SimpleDateFormat dateFormat = new SimpleDateFormat(sFormant);
+		return dateFormat.format(currentDate);
 	}
 	
 	/**

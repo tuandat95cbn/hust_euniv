@@ -32,7 +32,7 @@ public class mProjectCommentsServiceImpl implements mProjectCommentsService {
 	 * 
 	 */
 	@Override
-	public int saveAProjectComment(String sCommentCode, String sUserCode, String sCommentContent, String sProjectCode, String sCommentUpdatedDate, String iLock){
+	public int saveAProjectComment(String sCommentCode, String sUserCode, String sCommentContent, String sProjectCode, String sCommentUpdatedDate, int iLock){
 		try {
 			if (sCommentContent != null) {
 				mProjectComments projectComment = new mProjectComments();
@@ -41,6 +41,7 @@ public class mProjectCommentsServiceImpl implements mProjectCommentsService {
 				projectComment.setCOMPROJ_Lock(iLock);
 				projectComment.setCOMPROJ_PRJCODE(sProjectCode);
 				projectComment.setCOMPROJ_STAFFCODE(sUserCode);
+				projectComment.setCOMPROJ_UpdateDate(sCommentUpdatedDate);
 				projectCommentsDAO.saveAProjectComment(projectComment);
 				return 1;
 			}
@@ -89,17 +90,17 @@ public class mProjectCommentsServiceImpl implements mProjectCommentsService {
 	 * @return null
 	 */
 	@Override
-	public void editAProjectComment(int iProjectCommentId, String sCommentCode, String sUserCode, String sCommentContent, String sProjectCode, String sCommentUpdatedDate, String iLock){
+	public void editAProjectComment(int iProjectCommentId, String sCommentCode, String sUserCode, String sCommentContent, String sProjectCode, String sCommentUpdatedDate, int iLock){
 		try {
-			mProjectComments mProjectComments = projectCommentsDAO.loadAProjectCommentById(iProjectCommentId);
-			if (mProjectComments != null) {
-				mProjectComments projectComment = new mProjectComments();
-				projectComment.setCOMPROJ_CODE(sCommentCode);
-				projectComment.setCOMPROJ_COMMENT(sCommentContent);
-				projectComment.setCOMPROJ_Lock(iLock);
-				projectComment.setCOMPROJ_PRJCODE(sProjectCode);
-				projectComment.setCOMPROJ_STAFFCODE(sUserCode);
-				projectCommentsDAO.editAProjectComment(projectComment);
+			mProjectComments mProjectComment = projectCommentsDAO.loadAProjectCommentById(iProjectCommentId);
+			if (mProjectComment != null) {
+				mProjectComment.setCOMPROJ_CODE(sCommentCode);
+				mProjectComment.setCOMPROJ_COMMENT(sCommentContent);
+				mProjectComment.setCOMPROJ_Lock(iLock);
+				mProjectComment.setCOMPROJ_PRJCODE(sProjectCode);
+				mProjectComment.setCOMPROJ_STAFFCODE(sUserCode);
+				mProjectComment.setCOMPROJ_UpdateDate(sCommentUpdatedDate);
+				projectCommentsDAO.editAProjectComment(mProjectComment);
 			}
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());

@@ -17,7 +17,7 @@ public class mProjectComments implements Serializable{
     private String COMPROJ_PRJCODE;
     private String COMPROJ_COMMENT;
     private String COMPROJ_UpdateDate;
-    private String COMPROJ_Lock;
+    private int COMPROJ_Lock;
     
 	public int getCOMPROJ_ID() {
 		return COMPROJ_ID;
@@ -55,10 +55,10 @@ public class mProjectComments implements Serializable{
 	public void setCOMPROJ_UpdateDate(String cOMPROJ_UpdateDate) {
 		COMPROJ_UpdateDate = cOMPROJ_UpdateDate;
 	}
-	public String getCOMPROJ_Lock() {
+	public int getCOMPROJ_Lock() {
 		return COMPROJ_Lock;
 	}
-	public void setCOMPROJ_Lock(String cOMPROJ_Lock) {
+	public void setCOMPROJ_Lock(int cOMPROJ_Lock) {
 		COMPROJ_Lock = cOMPROJ_Lock;
 	}
 }

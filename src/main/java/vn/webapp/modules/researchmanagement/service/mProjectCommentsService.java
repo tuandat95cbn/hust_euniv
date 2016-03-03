@@ -22,7 +22,7 @@ public interface mProjectCommentsService {
 	 * @param PROJCALL_DATE
 	 * @return
 	 */
-	public int saveAProjectComment(String sCommentCode, String sUserCode, String sCommentContent, String sProjectCode, String sCommentUpdatedDate, String iLock);
+	public int saveAProjectComment(String sCommentCode, String sUserCode, String sCommentContent, String sProjectCode, String sCommentUpdatedDate, int iLock);
 
 	/**
 	 * 
@@ -44,7 +44,7 @@ public interface mProjectCommentsService {
 	 * @param PROJCALL_NAME
 	 * @param PROJCALL_DATE
 	 */
-	public void editAProjectComment(int iProjectCommentId, String sCommentCode, String sUserCode, String sCommentContent, String sProjectCode, String sCommentUpdatedDate, String iLock);
+	public void editAProjectComment(int iProjectCommentId, String sCommentCode, String sUserCode, String sCommentContent, String sProjectCode, String sCommentUpdatedDate, int iLock);
 	
 	/**
 	 * 

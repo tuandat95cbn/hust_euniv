@@ -194,7 +194,7 @@ public class nProjectController extends BaseWeb {
 	public String getProjectsForShowingComments(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-		List<Projects> projectsList = threadService.loadApproveProjectsList(userRole, userCode);
+		List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
 
 		model.put("projectsList", projectsList);
 		model.put("projects", status);
@@ -706,14 +706,14 @@ public class nProjectController extends BaseWeb {
 			List<mProjectComments> projectComments = projectCommentsService.loadAProjectCommentByProjectCode(project.getPROJ_Code());
 			mProjectComments projectComment1 = null;
 			mProjectComments projectComment2 = null;
-			if(projectComments != null && projectComments.size() > 1)
+			if(projectComments != null && projectComments.size() > 0)
 			{
 				projectComment1 =  projectComments.get(0);
 				projectComment2 =  projectComments.get(1);
 			}
+			// Put journal list and topic category to view
 			model.put("projectComment1", projectComment1);
 			model.put("projectComment2", projectComment2);
-			// Put journal list and topic category to view
 			model.put("projectEdit", project);
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId);
@@ -1406,31 +1406,29 @@ public class nProjectController extends BaseWeb {
 	 }
 	 
 	 /**
-	 * Editing a approve project
+	 * Editing a project comment
 	 * @param model
 	 * @return
 	 */
-	 @RequestMapping(value = "/edit-commentsproject", method = RequestMethod.POST)
-	 public String updateCommentsProject(HttpServletRequest request, @Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit, BindingResult result, Map model, HttpSession session) {
-
+	 @RequestMapping(value = "/edit-a-projectcomment", method = RequestMethod.POST)
+	 public String updateAProjectComment(HttpServletRequest request, @Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit, BindingResult result, Map model, HttpSession session) {
+		 String userRole 			 = session.getAttribute("currentUserRole").toString();
+		 String userCode 			 = session.getAttribute("currentUserCode").toString();
+		 int projectEditId 			 = projectFormEdit.getProjectId();
+		 Projects projectBeingEditted = threadService.loadASumittedProjectByIdAndUserCode(userRole, userCode, projectEditId);
+		 model.put("projectEdit", projectBeingEditted);
 		 model.put("projects", status);
 		 if (result.hasErrors()) {
-			 return "cp.editAProject";
+			 return "cp.projectcomments";
 		 }else
 		 {
-			String userRole 			 = session.getAttribute("currentUserRole").toString();
-			String userCode 			 = session.getAttribute("currentUserCode").toString();
-			int projectEditId 			 = projectFormEdit.getProjectId();
-			String comment1 			 = projectFormEdit.getProjectComment1();
-			String comment2 			 = projectFormEdit.getProjectComment2();
-			Projects projectBeingEditted = threadService.loadASumittedProjectByIdAndUserCode(userRole, userCode, projectEditId);
-			// Prepare data for inserting DB
 			if(projectBeingEditted != null){
+				String isConfirmed = request.getParameter("confirmed");
 				projectBeingEditted.setPROJ_Status_Code(projectFormEdit.getProjectStatusCode());
 				threadService.editAnApproveProject(projectBeingEditted);
 				return "redirect:" + this.baseUrl + "/cp/collect-comments.html";
 			}
-			return "cp.editAProject";
+			return "cp.projectcomments";
 		 }
 	 }
 
