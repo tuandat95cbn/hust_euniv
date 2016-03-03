@@ -248,5 +248,4 @@ public class ProjectsValidation{
 	public void setProjectComment2(String projectComment2) {
 		this.projectComment2 = projectComment2;
 	}
-
 }
