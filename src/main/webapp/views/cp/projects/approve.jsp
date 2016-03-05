@@ -87,7 +87,7 @@
                                  </c:if>
                                  <button type="reset" class="btn btn-info cancel">Hủy</button>
                                  <c:if test="${projectEdit.PROJ_Locked2 != 1}">
-                                 	<button type="reset" class="btn btn-danger" onclick="v_fConfirmProject(${projectEdit.PROJ_ID})">Xác nhận</button>
+                                 	<%-- <button type="reset" class="btn btn-danger" onclick="v_fConfirmProject(${projectEdit.PROJ_ID})">Xác nhận</button> --%>
                                  </c:if>
 	                        </div>
 	                        <div class="col-lg-6">

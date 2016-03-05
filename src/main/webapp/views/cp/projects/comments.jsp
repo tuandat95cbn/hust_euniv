@@ -60,8 +60,8 @@
 			                            </div>
 			                        </div>
 			                    </div>
-	                        	<c:choose>
-									<c:when test="${projectEdit.PROJ_Status_Code != 'APPROVED' && projectEdit.PROJ_Status_Code != 'REJECT'}">
+	                        	<%-- <c:choose>
+									<c:when test="${projectEdit.PROJ_Status_Code != 'APPROVED' && projectEdit.PROJ_Status_Code != 'REJECT'}"> --%>
 					                    <div class="form-group">
 		                                   <label>Chọn trạng thái phê duyệt</label>
 		                                   <form:select path="projectStatusCode" class="form-control" name="projectStatusCode" id="projectStatusCode">
@@ -71,7 +71,7 @@
 		                                   </form:select>
 		                                   <form:errors path="projectStatusCode" class="alert-danger"></form:errors>
 		                                </div>
-                                	</c:when>    
+                                	<%-- </c:when>    
 								    <c:otherwise>
 					                    <div class="panel panel-default">
 					                        <div class="panel-heading">
@@ -84,7 +84,7 @@
 					                        </div>
 					                    </div>
 								    </c:otherwise>
-								</c:choose>
+								</c:choose> --%>
 						       	
 			                     <!-- Buttons -->
 			                     <input type="hidden" value="0" name="confirmed" id="confirmed" />
@@ -93,7 +93,7 @@
                                  <input type="hidden" value="${projectEdit.PROJ_PRJCall_Code}" name="projectCallCode" id="projectCallCode" />
                                  <input type="hidden" value="${projectEdit.PROJ_Name}" name="projectName" id="projectName" />
                                  <button type="reset" class="btn btn-info cancel">Hủy</button>
-                                 <button type="reset" class="btn btn-danger" onclick="v_fConfirmCommentProject(${projectEdit.PROJ_ID})">Xác nhận</button>
+                                 <%-- <button type="reset" class="btn btn-danger" onclick="v_fConfirmCommentProject(${projectEdit.PROJ_ID})">Xác nhận</button> --%>
 	                        </div>
 	                        <div class="col-lg-6">
 						    	<div class="panel panel-default">
