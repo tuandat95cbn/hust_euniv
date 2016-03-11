@@ -88,6 +88,25 @@ public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO 
         }
     }
     
+    public mmMasterThesis getMasterThesisByCode(String MasterThesis_Code){
+    	try {
+            begin();
+            Criteria criteria = getSession().createCriteria(mmMasterThesis.class);
+            criteria.add(Restrictions.eq("Thesis_Code", MasterThesis_Code));
+            
+            mmMasterThesis masterThesis = (mmMasterThesis) criteria.uniqueResult();
+            commit();
+            return masterThesis;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+    }
     
     
     /**

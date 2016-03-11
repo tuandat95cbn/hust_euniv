@@ -15,8 +15,10 @@
 		<div class="col-lg-12">
 			<h1 class="page-header">Tạo danh sách thành viên hội đồng</h1>
 		</div>
+		
 		<!-- /.col-lg-12 -->
 	</div>
+	
 	<!-- /.row -->
 	<form:form id="form-add" action="${baseUrl}/mm/save-a-jury-members.html" method="POST" role="form" accept-charset="UTF-8">
 		<div class="row">

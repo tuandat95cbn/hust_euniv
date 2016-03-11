@@ -14,6 +14,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<h1 class="page-header">Tạo danh sách thành viên hội đồng</h1>
+			<button type="button" class='form btn btn-primary' id="cancel" style="margin-top:-5px; margin-bottom:10px;" >Quay về</button>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
@@ -168,12 +169,12 @@
 			</div>
 			-->
 		
-		<div class="row" style="padding-bottom:20px;">
+		<!-- <div class="row" style="padding-bottom:20px;">
 			<div class="col-lg-4">
 				<button type="button" class='form btn btn-primary' id="cancel" >Quay về</button>				
 			</div>
-			<!-- /.col-lg-4 -->
-		</div>
+			
+		</div>-->
 		
 		<!-- /.row -->
 	</form:form>

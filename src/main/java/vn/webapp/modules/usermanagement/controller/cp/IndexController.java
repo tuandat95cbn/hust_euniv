@@ -63,6 +63,7 @@ public class IndexController {
 	   if(user != null){
 		   String sUserCode = user.getUser_Code();
 		   mStaff staff = staffService.loadStaffByUserCode(sUserCode);
+		   //System.out.println(staff.getStaff_Name());
 		   String userFaculty = staff.getDepartment().getDepartment_Faculty_Code();
 		   String userDepartment = staff.getDepartment().getDepartment_Code();
 		   if(!userFaculty.equals(""))

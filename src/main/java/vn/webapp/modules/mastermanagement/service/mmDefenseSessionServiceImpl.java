@@ -101,4 +101,8 @@ public class mmDefenseSessionServiceImpl implements mmDefenseSessionService {
 	{
 		return mmdefenseSessionsDAO.getDefenseSessionById(iDefenseSessionID);
 	}
+	
+	public mmDefenseSession getDefenseSessionByCode(String iDefenseSessionCode){		
+		return mmdefenseSessionsDAO.getDefenseSessionByCode(iDefenseSessionCode);		
+	}
 }

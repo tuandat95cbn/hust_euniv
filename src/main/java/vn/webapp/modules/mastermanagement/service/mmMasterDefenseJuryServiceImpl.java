@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 
 
+
 import vn.webapp.modules.mastermanagement.dao.mmListMasterThesisDAO;
 import vn.webapp.modules.mastermanagement.dao.mmMasterDefenseJuryDAO;
 import vn.webapp.modules.mastermanagement.model.mmListMasterThesis;
@@ -49,6 +50,33 @@ public class mmMasterDefenseJuryServiceImpl implements mmMasterDefenseJuryServic
         }
     }
     
+    public mmMasterDefenseJuryThesis getMasterDefenseJuryThesisByThesisCode(String ThesisCode){
+    	
+    	try {
+    	
+    		mmMasterDefenseJuryThesis masterDefenseJuryThesis = mmmasterDefenseJuryDAO.getMasterDefenseJuryThesisByThesisCode(ThesisCode);
+    		
+    		return masterDefenseJuryThesis;
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    public mmMasterDefenseJuryThesis getMasterDefenseJuryThesisById(int Id){
+    	
+    	try {
+        	
+    		mmMasterDefenseJuryThesis masterDefenseJuryThesis = mmmasterDefenseJuryDAO.getMasterDefenseJuryThesisById(Id);
+    		
+    		return masterDefenseJuryThesis;
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            return null;
+        }
+    	
+    }
+    
     /**
      * 
      */
@@ -58,7 +86,6 @@ public class mmMasterDefenseJuryServiceImpl implements mmMasterDefenseJuryServic
     		List<mmMasterDefenseJuryThesis> masterDefenseJuryList = mmmasterDefenseJuryDAO.getListMasterDefenseJuryThesisByOwner(ownerCode);
     		List<mmListMasterThesis> listMasterThesis =  mmlistMasterThesisDAO.getListMasterThesis();
     		//System.out.println(masterDefenseJuryList.size());
-    		
     		return getListShowedViewMasterDefenseThesis(masterDefenseJuryList, listMasterThesis);
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());

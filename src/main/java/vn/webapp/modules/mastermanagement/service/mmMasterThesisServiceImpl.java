@@ -76,6 +76,18 @@ public class mmMasterThesisServiceImpl implements mmMasterThesisService {
         }
     }
     
+    public mmMasterThesis loadMasterThesisByCode(String MasterThesis_Code){
+    	
+    	try {
+            return mmmasterThesisDAO.getMasterThesisByCode(MasterThesis_Code);
+            
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    
     /**
      * Edit a MasterThesis
      * @param String

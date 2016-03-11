@@ -8,12 +8,17 @@ package vn.webapp.modules.mastermanagement.service;
 import java.util.HashSet;
 import java.util.List;
 
+import vn.webapp.modules.mastermanagement.model.mmMasterDefenseJuryThesis;
 import vn.webapp.modules.mastermanagement.model.mmShowedViewMasterDefenseThesis;
 
 
 public interface mmMasterDefenseJuryService {
     
     public List<mmShowedViewMasterDefenseThesis> getListMasterDefenseJuryThesis();
+    
+    public mmMasterDefenseJuryThesis getMasterDefenseJuryThesisByThesisCode(String ThesisCode);
+    
+    public mmMasterDefenseJuryThesis getMasterDefenseJuryThesisById(int Id);
     
     public List<mmShowedViewMasterDefenseThesis> getListMasterDefenseJuryThesisByOwner(String ownerCode);
     

@@ -158,4 +158,24 @@ public class mmDefenseSessionsDAOImpl extends BaseDao implements mmDefenseSessio
             close();
         }
     }
+    
+    @Override
+    public mmDefenseSession getDefenseSessionByCode(String iDefenseSessionCode){
+    	try {
+            begin();
+            Criteria criteria = getSession().createCriteria(mmDefenseSession.class);
+            criteria.add(Restrictions.eq("DEFSESS_Code", iDefenseSessionCode));
+            mmDefenseSession professor = (mmDefenseSession) criteria.uniqueResult();
+            commit();
+            return professor;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+    }
 }

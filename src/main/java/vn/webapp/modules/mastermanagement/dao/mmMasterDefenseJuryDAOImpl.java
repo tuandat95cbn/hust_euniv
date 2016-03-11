@@ -15,6 +15,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import vn.webapp.modules.mastermanagement.model.mmMasterClass;
 import vn.webapp.modules.mastermanagement.model.mmMasterDefenseJuryThesis;
 import vn.webapp.modules.mastermanagement.model.mmRawMasterDefenseJuryThesis;
 
@@ -54,6 +55,46 @@ public class mmMasterDefenseJuryDAOImpl extends BaseDao implements mmMasterDefen
             close();
         }
     }
+    
+    public mmMasterDefenseJuryThesis getMasterDefenseJuryThesisById(int Id){
+    	
+    	try {
+    		begin();
+            Criteria criteria = getSession().createCriteria(mmMasterDefenseJuryThesis.class);
+            criteria.add(Restrictions.eq("MASDEFJury_ID", Id));
+            mmMasterDefenseJuryThesis masterDefenseJuryThesis = (mmMasterDefenseJuryThesis) criteria.uniqueResult();
+            commit();
+            return masterDefenseJuryThesis;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+    	
+    }
+    
+    public mmMasterDefenseJuryThesis getMasterDefenseJuryThesisByThesisCode(String ThesisCode){
+    	try {
+    		begin();
+            Criteria criteria = getSession().createCriteria(mmMasterDefenseJuryThesis.class);
+            criteria.add(Restrictions.eq("MASDEFJury_ThesisCode", ThesisCode));
+            mmMasterDefenseJuryThesis masterDefenseJuryThesis = (mmMasterDefenseJuryThesis) criteria.uniqueResult();
+            commit();
+            return masterDefenseJuryThesis;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+    }    
     
     /**
      * Get masterDefenseJuryThesis by owner list

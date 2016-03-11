@@ -98,6 +98,7 @@
 									<th title="Faculty">Ủy viên</th>
 									<th title="Faculty">Thời gian</th>
 									<th title="Faculty">Địa điểm</th>
+									<th title="Faculty"></th>
 									<!-- <th title="Faculty">HĐ</th>
 									<th title="Faculty">Lớp-khóa</th>-->
 								</tr>
@@ -106,18 +107,21 @@
 								<c:if test="${listMasterDefenseJuryThesis != null}">
 									<c:forEach items="${listMasterDefenseJuryThesis}" var="aMasterDefenseJuryThesis">															
 										<tr class="gradeX">
-										 	<td><c:out value="${aMasterDefenseJuryThesis.studentName}"/></td>
-										 	<td><c:out value="${aMasterDefenseJuryThesis.thesisName}"/></td>
-										 	<td><c:out value="${aMasterDefenseJuryThesis.mentorName}"/></td>
-										 	<td><div id="val-defenseder01-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.examiner1Name}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.examiner1Code}" name="defenseder01" /> </div><span onclick="editJury('dialog-form-master-outer', 'defenseder01-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td><div id="val-defenseder02-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.examiner2Name}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.examiner2Code}" name="defenseder02" /> </div> <span onclick="editJury('dialog-form-master-inner', 'defenseder02-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td><div id="val-president-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.presidentName}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.presidentCode}" name="president" /> </div> <span onclick="editJury('dialog-form-master-inner', 'president-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td><div id="val-secretary-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.secretaryName}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.secretaryCode}" name="secretary" /> </div> <span onclick="editJury('dialog-form-master-inner', 'secretary-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td><div id="val-commissioner-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.externalMemberName}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.externalMemberCode}" name="commissioner" /> </div> <span onclick="editJury('dialog-form-master-outer', 'commissioner-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td><div id="val-slot-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.theTime}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.theTime}" name="slot" /> </div> <span onclick="editJury('dialog-form-slot', 'slot-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td><div id="val-room-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.roomPlaceCode}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.roomPlaceCode}" name="room" /> </div> <span onclick="editJury('dialog-form-room', 'room-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
+										 	<td class="studentNameCol"><c:out value="${aMasterDefenseJuryThesis.studentName}"/></td>
+										 	<td class="thesisNameCol"><c:out value="${aMasterDefenseJuryThesis.thesisName}"/></td>
+										 	<input type="hidden" class="thesisCode" value="${aMasterDefenseJuryThesis.thesisCode}">
+										 	<td class="mentorNameCol"><c:out value="${aMasterDefenseJuryThesis.mentorName}"/></td>
+										 	<td class="defender01Col"><div id="val-defenseder01-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.examiner1Name}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.examiner1Code}" name="defenseder01" class="defender01"/> </div><span onclick="editJury('dialog-form-master-outer', 'defenseder01-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
+										 	<td class="defender02Col"><div id="val-defenseder02-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.examiner2Name}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.examiner2Code}" name="defenseder02" class="defender02"/> </div> <span onclick="editJury('dialog-form-master-inner', 'defenseder02-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
+										 	<td class="presidentCol"><div id="val-president-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.presidentName}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.presidentCode}" name="president" class="president"/> </div> <span onclick="editJury('dialog-form-master-inner', 'president-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
+										 	<td class="secretaryCol"><div id="val-secretary-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.secretaryName}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.secretaryCode}" name="secretary" class="secretary"/> </div> <span onclick="editJury('dialog-form-master-inner', 'secretary-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
+										 	<td class="commissionerCol"><div id="val-commissioner-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.externalMemberName}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.externalMemberCode}" name="commissioner" class="commissioner" /> </div> <span onclick="editJury('dialog-form-master-outer', 'commissioner-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
+										 	<td class="slotCol"><div id="val-slot-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.theTime}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.theTime}" name="slot" class="slot"/> </div> <span onclick="editJury('dialog-form-slot', 'slot-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
+										 	<td class="roomCol"><div id="val-room-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.roomPlaceCode}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.roomPlaceCode}" name="room" class="room" /> </div> <span onclick="editJury('dialog-form-room', 'room-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
 										 	<!-- <td><div id="val-no-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.coucilNo}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.coucilNo}" name="no" /> </div> <span onclick="editJury('dialog-form-info', 'no-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
 										 	<td><div id="val-sclass-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.classCode}"/></td>-->
+										 	<td><div class="btn btn-primary btn-xs generatePDF">In quyết định</div></td>
+										 	
 										 	<div class="defense-values">
 										 		<input id="masterDefenseThesis" name="masterDefenseThesis" value="${aMasterDefenseJuryThesis.masterDefenseJuryCode}" type="hidden" />
 										 	</div>
@@ -210,6 +214,10 @@
 	  </form>
 	</div>
 </div>
+
+ 	
+
+
 <!-- /#page-wrapper -->
 
 <!-- DataTables JavaScript -->
@@ -269,6 +277,10 @@
 					    		nameVal= $("select#room-add option:selected").val();
 							    nameTitle = $("select#room-add option:selected").text();
 							    break;
+					    	case 'dialog-form-slot' :
+					    		nameVal= $("select#slot-add option:selected").val();
+					    		nameTitle= $("select#slot-add option:selected").val();
+					    		break;
 					    	case 'dialog-form-info' :
 					    		nameVal= $("input#jury-info").val();
 					    		nameTitle= $("input#jury-info").val();
@@ -317,5 +329,57 @@
 				   	  }
 				      cDialog.dialog( "open" );
 				}
+
+</script>
+<script>
+
+$(".generatePDF").click(function () {    	
+	studentName = $(this).parent().siblings(".studentNameCol").html();
+	thesisCode = $(this).parent().siblings(".thesisCode").val();
+	mentorName = $(this).parent().siblings(".mentorNameCol").html();
+	defender01 = $(this).parent().siblings(".defender01Col").children().children(".defender01").val();
+	defender02 = $(this).parent().siblings(".defender02Col").children().children(".defender02").val();
+	president = $(this).parent().siblings(".presidentCol").children().children(".president").val();
+	secretary = $(this).parent().siblings(".secretaryCol").children().children(".secretary").val();
+	commissioner = $(this).parent().siblings(".commissionerCol").children().children(".commissioner").val();
+	slot = $(this).parent().siblings(".slotCol").children().children(".slot").val();
+	room = $(this).parent().siblings(".roomCol").children().children(".room").val();
+		
+	stdata = {"studentName":studentName,"thesisCode":thesisCode,"mentorName":mentorName,"defender01":defender01,"defender02":defender02,"president":president,"secretary":secretary,"commissioner":commissioner,"slot":slot,"room":room};
+	$.ajax({
+		type: "POST",
+		url:'/webapp/mmservice/generateJuryPdf.html',
+		data:stdata,
+		dataType: "text",
+		success:function(s,x){
+			window.open('/webapp/mm/viewPdf/'+s+'.html','_blank');
+			/*stdata = {"masterDefenseJuryThesis_ID":s};
+			$.ajax({
+				type: "POST",
+				url:'/webapp/mmservice/viewpdf.html',
+				data:stdata,
+				dataType: "application/pdf",
+				success:function(s,x){
+					//window.open('/webapp/mm/viewPdf/'+s+'.html','_blank');
+					
+					
+					
+				},
+				error:function(data, textStatus, jqXHR){
+					alert(textStatus);
+				}
+			});	*/
+			
+			
+		},
+		error:function(data, textStatus, jqXHR){
+			alert(textStatus);
+		}
+	});		
+	
+	
+});
+
+
 
 </script>

@@ -16,6 +16,8 @@ public interface mmMasterThesisDAO {
 	
 	public mmMasterThesis getMasterThesisById(int MasterThesis_Id);
 	
+	public mmMasterThesis getMasterThesisByCode(String MasterThesis_Code);
+	
 	public void editAMasterThesis(mmMasterThesis MasterThesis);
     
     public int saveAMasterThesis(mmRawMasterThesis MasterThesis);

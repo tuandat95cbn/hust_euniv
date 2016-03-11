@@ -28,4 +28,6 @@ public interface mmDefenseSessionService {
     public int removeADefenseSession(int iDefenseSessionID);
     
     public mmDefenseSession getDefenseSessionById(int iDefenseSessionID);
+    
+    public mmDefenseSession getDefenseSessionByCode(String iDefenseSessionCode);
 }

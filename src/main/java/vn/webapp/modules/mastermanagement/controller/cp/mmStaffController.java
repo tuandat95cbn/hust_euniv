@@ -116,6 +116,7 @@ public class mmStaffController extends BaseWeb {
 	    */
 	   String userRole = session.getAttribute("currentUserRole").toString();
 	   mmStaff staff = mmstaffService.loadStaffById(userRole, professorId);
+	   //System.out.println(userRole);
 	   model.put("staffFormEdit", new StaffValidation());
 	   	
 	   if(staff != null)
@@ -137,7 +138,7 @@ public class mmStaffController extends BaseWeb {
 		   		   
 	       return "mm.editAProfessor";
 	   }
-	   return "mm.notFound404";
+	   return "cp.notFound404";
    }
    
    @RequestMapping(value = "/add-a-professor", method = RequestMethod.GET)
@@ -226,8 +227,9 @@ public class mmStaffController extends BaseWeb {
     	 			 break;
     	 	 }
     	 	 System.out.print(temp);
-    	 	 String staffCode = staffEmail.substring(0, temp);
-    		 //mmUsers user = mmuserService.loadUserByUserCode(staffCode);        	 
+    	 	 //String staffCode = staffEmail.substring(0, temp);
+    	 	 String staffCode = staffEmail;
+    	 	 
     	 	 mmUsers user = new mmUsers();
     	 	 user.setUsername(staffCode);
     		 
@@ -300,8 +302,9 @@ public class mmStaffController extends BaseWeb {
 	 			 break;
 	 	 }
 	 	 System.out.print(temp);
-	 	 String staffCode = staffEmail.substring(0, temp);
-		 //mmUsers user = mmuserService.loadUserByUserCode(staffCode);
+	 	 //String staffCode = staffEmail.substring(0, temp);
+	 	 String staffCode = staffEmail;
+	 	 
 	 	 mmUsers user = new mmUsers();
 	 	 user.setUsername(staffCode);
 		 
@@ -378,7 +381,7 @@ public class mmStaffController extends BaseWeb {
 		   model.put("status", status);
 		   return "mm.professors";
 	   }
-	   return "mm.notFound404";
+	   return "cp.notFound404";
   }
 
 }

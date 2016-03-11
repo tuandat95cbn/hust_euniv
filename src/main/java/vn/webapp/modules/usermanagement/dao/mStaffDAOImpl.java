@@ -144,7 +144,7 @@ public class mStaffDAOImpl extends BaseDao implements mStaffDAO{
         try {
             begin();
             Criteria criteria = getSession().createCriteria(mStaff.class);
-            criteria.add(Restrictions.eq("Staff_User_Code", userCode));
+            criteria.add(Restrictions.eq("Staff_Code", userCode));
             mStaff staff = (mStaff) criteria.uniqueResult();
             commit();
             return staff;

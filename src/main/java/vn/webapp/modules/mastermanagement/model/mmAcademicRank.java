@@ -2,10 +2,15 @@ package vn.webapp.modules.mastermanagement.model;
 
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,6 +26,12 @@ public class mmAcademicRank implements Serializable{
 	private String AcademicRank_VNAbbr;
 	private int AcademicRank_Score;
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="academicRank", cascade = CascadeType.ALL)
+	private Set<mmStaff> listStaffs = new HashSet<mmStaff>();
+    
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="academicRank", cascade = CascadeType.ALL)
+	private Set<mmStaffInput> listStaffInput = new HashSet<mmStaffInput>();
+    
 	
 	public int getAcademicRank_ID() {
 		return AcademicRank_ID;
@@ -58,4 +69,17 @@ public class mmAcademicRank implements Serializable{
 	public void setAcademicRank_Score(int academicRank_Score) {
 		AcademicRank_Score = academicRank_Score;
 	}
+	public Set<mmStaff> getListStaffs() {
+		return listStaffs;
+	}
+	public void setListStaffs(Set<mmStaff> listStaffs) {
+		this.listStaffs = listStaffs;
+	}
+	public Set<mmStaffInput> getListStaffInput() {
+		return listStaffInput;
+	}
+	public void setListStaffInput(Set<mmStaffInput> listStaffInput) {
+		this.listStaffInput = listStaffInput;
+	}
+	
 }

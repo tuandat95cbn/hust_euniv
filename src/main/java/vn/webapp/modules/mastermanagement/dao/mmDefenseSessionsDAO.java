@@ -23,4 +23,6 @@ public interface mmDefenseSessionsDAO {
     public int removeADefenseSession(int iDefenseSessionId);
     
     public mmDefenseSession getDefenseSessionById(int iDefenseSessionId);
+    
+    public mmDefenseSession getDefenseSessionByCode(String iDefenseSessionCode);
 }

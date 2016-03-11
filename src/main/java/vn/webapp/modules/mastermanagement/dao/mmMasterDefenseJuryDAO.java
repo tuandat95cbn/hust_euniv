@@ -14,6 +14,10 @@ public interface mmMasterDefenseJuryDAO {
 
 	public List<mmMasterDefenseJuryThesis> getListMasterDefenseJuryThesis();
 	
+	public mmMasterDefenseJuryThesis getMasterDefenseJuryThesisById(int Id);
+	
+	public mmMasterDefenseJuryThesis getMasterDefenseJuryThesisByThesisCode(String ThesisCode);
+	
 	public List<mmMasterDefenseJuryThesis> getListMasterDefenseJuryThesisByOwner(String ownerCode);
 	
 	public List<mmMasterDefenseJuryThesis> getListMasterDefenseJuryThesisByDefenseSessionAndOwner(String defenseSessionCode,String ownerCode);

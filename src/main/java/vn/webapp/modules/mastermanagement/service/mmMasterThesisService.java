@@ -20,6 +20,8 @@ public interface mmMasterThesisService {
 	public List<mmMasterThesis> listMasterThesis();
 	
 	public mmMasterThesis loadMasterThesisById(int masterThesis_ID);
+	
+	public mmMasterThesis loadMasterThesisByCode(String MasterThesis_Code);
 	  
     public void editAMasterThesis(int ThesisID, String ThesisCode, String ThesisName, mmStudent student, mmStaff supervisor, HashSet<mmSpecializationKeyword> specializationKeywords);
     

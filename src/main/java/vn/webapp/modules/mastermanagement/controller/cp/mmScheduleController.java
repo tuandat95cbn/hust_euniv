@@ -5,9 +5,16 @@
  */
 package vn.webapp.modules.mastermanagement.controller.cp;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,15 +27,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * Customize
  */
 import vn.webapp.controller.BaseWeb;
+import vn.webapp.modules.mastermanagement.controller.cpservice.PDFGenerator;
 import vn.webapp.modules.mastermanagement.model.mmDefenseSession;
 import vn.webapp.modules.mastermanagement.model.mmJuryMember;
 import vn.webapp.modules.mastermanagement.model.mmJuryRoom;
 import vn.webapp.modules.mastermanagement.model.mmJurySlot;
 import vn.webapp.modules.mastermanagement.model.mmListMasterThesis;
+import vn.webapp.modules.mastermanagement.model.mmMasterDefenseJuryThesis;
 import vn.webapp.modules.mastermanagement.model.mmRooms;
 import vn.webapp.modules.mastermanagement.model.mmShowedViewMasterDefenseThesis;
 import vn.webapp.modules.mastermanagement.model.mmStaff;
@@ -144,6 +165,7 @@ public class mmScheduleController extends BaseWeb {
     		model.put("listRooms", listAllRooms);
     	}
     	
+    	System.out.println(userCode);
     	model.put("department", mmstaffService.loadStaffByStaffCode(userCode).getDepartment().getDepartment_Code());
     	model.put("disableHeader", mmScheduleController.disableHeader);
     	model.put("defenseSession", defenseSession);
@@ -396,6 +418,47 @@ public class mmScheduleController extends BaseWeb {
  		  return "mm.jurySlots";
  	   }
  	  return "mm.jurySlots";
+   }
+   
+   @RequestMapping(value = "/viewPdf/{id}", method = RequestMethod.GET)
+   public void viewPdf(HttpServletRequest request, HttpServletResponse response, ModelMap model, @PathVariable("id") int masterDefenseJuryThesis_ID, HttpSession session) throws IOException {
+	   
+	   mmMasterDefenseJuryThesis masterDefenseJuryThesis = mmmasterDefenseJuryService.getMasterDefenseJuryThesisById(masterDefenseJuryThesis_ID);
+	     	   
+   	   String filePath = session.getServletContext().getRealPath("/"); 
+   	   String fileName = filePath+"upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".pdf";
+   	   System.out.println(fileName);
+   	   
+   	   ServletOutputStream out = response.getOutputStream();
+   	   
+   	   
+   	   
+   	try{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        baos = PDFGenerator.convertPDFToByteArrayOutputStream(fileName);
+        //response.setContentType("application/pdf");
+        //response.setHeader("Content-Disposition", "attachment:filename=report.pdf");
+        OutputStream os = response.getOutputStream();
+        baos.writeTo(os);
+        os.flush();
+	}catch (Exception e)
+	{
+		e.printStackTrace();
+	}
+   	      	   
+	   /*model.put("defenseSession", defenseSession);		 
+	   model.put("department", mmstaffService.loadStaffByStaffCode(userCode).getDepartment().getDepartment_Code());
+	   model.put("listInnerJuryMembers", listInnerJuryMembers);
+	   model.put("listOuterJuryMembers", listOuterJuryMembers);
+	   model.put("listJuryRooms", listJuryRooms);
+	   model.put("listJurySlot", listJurySlot);	   
+	   model.put("listMasterThesis", listMasterThesis);
+	   model.put("listMasterDefenseJuryThesis", listMasterDefenseJuryThesis);
+	   	   
+	   model.put("scheduling", mmScheduleController.scheduling);
+	   model.put("disableHeader", mmScheduleController.disableHeader);
+	   return "mm.settingjuries";*/   
+	   
    }
    
 }

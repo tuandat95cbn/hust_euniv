@@ -35,6 +35,7 @@
     <beans:bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 
+        <!-- <beans:property name="url" value="jdbc:mysql://localhost:3306/hust_euniv?useEncoding=true&amp;characterEncoding=UTF-8"/>-->
         <beans:property name="url" value="jdbc:mysql://localhost:3306/hust_euniv?useEncoding=true&amp;characterEncoding=UTF-8"/>
         <beans:property name="username" value="root"/>
         <beans:property name="password" value=""/>
@@ -55,7 +56,7 @@
         <beans:property name="hibernateProperties">            
             <beans:value>
                 hibernate.dialect=org.hibernate.dialect.MySQLDialect
-                hibernate.show_sql=true
+                hibernate.show_sql=false
             </beans:value>
         </beans:property>         
     </beans:bean>
