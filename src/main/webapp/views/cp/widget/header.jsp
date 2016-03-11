@@ -94,40 +94,57 @@
 	                <li>
 	                    <a href="#"><i class="fa fa-th-list fa-fw"></i> Quản lý thực hiện Đề tài<span class="fa arrow"></span></a>
 	                    <ul class="nav nav-second-level">
-			                <li>
-			                    <a href="<c:url value="${baseUrl}/cp/project-call-open.html"/>"><i class="fa fa-briefcase"></i> Mở đợt gọi Đề tài</a>
-			                </li>
+	                    	<c:if test="${iMANAGEPROJECTCALLS eq 1}">
+				                <li>
+				                    <a href="<c:url value="${baseUrl}/cp/project-call-open.html"/>"><i class="fa fa-briefcase"></i> Mở đợt gọi Đề tài</a>
+				                </li>
+			                </c:if>
 			                
-			                <li>
-			                    <%-- <a href="<c:url value="${baseUrl}/cp/threads-listadd.html"/>"><i class="fa fa-briefcase"></i> Đăng ký Đề tài</a> --%>
-			                    <a href="<c:url value="${baseUrl}/cp/list-projects.html"/>"><i class="fa fa-briefcase"></i> Đăng ký Đề tài</a>
-			                </li>
+			                <c:if test="${iPROJECTSIGNUP eq 1}">
+				                <li>
+				                    <%-- <a href="<c:url value="${baseUrl}/cp/threads-listadd.html"/>"><i class="fa fa-briefcase"></i> Đăng ký Đề tài</a> --%>
+				                    <a href="<c:url value="${baseUrl}/cp/list-projects.html"/>"><i class="fa fa-briefcase"></i> Đăng ký Đề tài</a>
+				                </li>
+			                </c:if>
 			                <!-- 
 			                <li>
 			                    <a href="<c:url value="${baseUrl}/cp/products.html"/>"><i class="fa fa-file-text"></i> Đăng ký Chuyên đề</a>
 			                </li>
 			                 -->
-			                <li>
-			                    <a href="<c:url value="${baseUrl}/cp/add-jury-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Thành lập hội đồng xét đề tài</a>
-			                </li>
-			                <li>
-			                    <a href="<c:url value="${baseUrl}/cp/assign-jury-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Phân công phản biện đề tài</a>
-			                </li>
-			                <li>
-			                    <a href="<c:url value="${baseUrl}/cp/review-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Phản biện đề tài</a>
-			                </li>
-			                <li>
-			                    <a href="<c:url value="${baseUrl}/cp/modify-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Chỉnh sửa thuyết minh đề tài sau phản biện</a>
-			                </li>
+			                <c:if test="${iADDJURYSUBMITTEDPROJECTS eq 1}">
+				                <li>
+				                    <a href="<c:url value="${baseUrl}/cp/add-jury-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Thành lập hội đồng xét đề tài</a>
+				                </li>
+			                </c:if>
 			                
+			                <c:if test="${iASSIGNJURYSUBMITTEDPROJECTS eq 1}">
+				                <li>
+				                    <a href="<c:url value="${baseUrl}/cp/assign-jury-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Phân công phản biện đề tài</a>
+				                </li>
+			                </c:if>
+			                
+			                <c:if test="${iMODIFYSUBMITTEDPROJECTS eq 1}">
+				                <li>
+				                    <a href="<c:url value="${baseUrl}/cp/review-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Phản biện đề tài</a>
+				                </li>
+			                </c:if>
+			                
+			                <c:if test="${iREVIEWSUBMITTEDPROJECTS eq 1}">
+				                <li>
+				                    <a href="<c:url value="${baseUrl}/cp/modify-submitted-projects.html"/>"><i class="fa fa-file-text"></i> Chỉnh sửa thuyết minh đề tài sau phản biện</a>
+				                </li>
+			                </c:if>
+			                <li>
+			                    <a href="<c:url value="${baseUrl}/cp/collect-comments.html"/>"><i class="fa fa-briefcase"></i> Tổng hợp comments</a>
+			                </li>
 			                <c:if test="${currentUserRole eq 'ROLE_ADMIN' || currentUserRole eq 'SUPER_ADMIN'}">
-			                <li>
-			                    <a href="<c:url value="${baseUrl}/cp/threads-approve.html"/>"><i class="fa fa-briefcase"></i> Phê duyệt đề tài</a>
-			                </li>
-			                
-			                <li>
-			                    <a href="<c:url value="${baseUrl}/cp/threads-evaluate.html"/>"><i class="fa fa-briefcase"></i> Nghiệm thu đề tài</a>
-			                </li>
+				                <li>
+				                    <a href="<c:url value="${baseUrl}/cp/approve-projects.html"/>"><i class="fa fa-briefcase"></i> Phê duyệt đề tài</a>
+				                </li>
+				                
+				                <li>
+				                    <a href="<c:url value="${baseUrl}/cp/threads-evaluate.html"/>"><i class="fa fa-briefcase"></i> Nghiệm thu đề tài</a>
+				                </li>
 			                </c:if>
 			                
 			                <li>

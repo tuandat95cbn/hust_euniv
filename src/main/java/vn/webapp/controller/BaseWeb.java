@@ -41,7 +41,13 @@ public class BaseWeb {
     public int iMANAGEPATENTS = 0;
     public int iMANAGESUMMARY = 0;
     public int iMANAGEPRODUCTS = 0;
-    
+	public int iMANAGEPROJECTCALLS = 0;
+	public int iPROJECTSIGNUP = 0;
+	public int iADDJURYSUBMITTEDPROJECTS = 0;
+	public int iASSIGNJURYSUBMITTEDPROJECTS = 0;
+	public int iMODIFYSUBMITTEDPROJECTS = 0;
+	public int iREVIEWSUBMITTEDPROJECTS = 0;
+                            
     @Autowired
     private mFuncsPermissionService funcsPermissionService;
     
@@ -70,6 +76,12 @@ public class BaseWeb {
     	this.iMANAGEPATENTS = (session.getAttribute("iMANAGEPATENTS") != null) ? (int) session.getAttribute("iMANAGEPATENTS") : 0;
     	this.iMANAGESUMMARY = (session.getAttribute("iMANAGESUMMARY") != null) ? (int) session.getAttribute("iMANAGESUMMARY") : 0;
     	this.iMANAGEPRODUCTS = (session.getAttribute("iMANAGEPRODUCTS") != null) ? (int) session.getAttribute("iMANAGEPRODUCTS") : 0;
+    	this.iMANAGEPROJECTCALLS = (session.getAttribute("iMANAGEPROJECTCALLS") != null) ? (int) session.getAttribute("iMANAGEPROJECTCALLS") : 0;
+	   	this.iPROJECTSIGNUP = (session.getAttribute("iPROJECTSIGNUP") != null) ? (int) session.getAttribute("iPROJECTSIGNUP") : 0;
+	   	this.iADDJURYSUBMITTEDPROJECTS = (session.getAttribute("iADDJURYSUBMITTEDPROJECTS") != null) ? (int) session.getAttribute("iADDJURYSUBMITTEDPROJECTS") : 0;
+	   	this.iASSIGNJURYSUBMITTEDPROJECTS = (session.getAttribute("iASSIGNJURYSUBMITTEDPROJECTS") != null) ? (int) session.getAttribute("iASSIGNJURYSUBMITTEDPROJECTS") : 0;
+	   	this.iMODIFYSUBMITTEDPROJECTS = (session.getAttribute("iMODIFYSUBMITTEDPROJECTS") != null) ? (int) session.getAttribute("iMODIFYSUBMITTEDPROJECTS") : 0;
+	   	this.iREVIEWSUBMITTEDPROJECTS = (session.getAttribute("iREVIEWSUBMITTEDPROJECTS") != null) ? (int) session.getAttribute("iREVIEWSUBMITTEDPROJECTS") : 0;
     }
     
     
@@ -110,5 +122,11 @@ public class BaseWeb {
         map.put("iMANAGEPATENTS", this.iMANAGEPATENTS);
         map.put("iMANAGESUMMARY", this.iMANAGESUMMARY);
         map.put("iMANAGEPRODUCTS", this.iMANAGEPRODUCTS);
+        map.put("iMANAGEPROJECTCALLS", this.iMANAGEPROJECTCALLS);
+        map.put("iPROJECTSIGNUP", this.iPROJECTSIGNUP);
+        map.put("iADDJURYSUBMITTEDPROJECTS", this.iADDJURYSUBMITTEDPROJECTS);
+        map.put("iASSIGNJURYSUBMITTEDPROJECTS", this.iASSIGNJURYSUBMITTEDPROJECTS);
+        map.put("iMODIFYSUBMITTEDPROJECTS", this.iMODIFYSUBMITTEDPROJECTS);
+        map.put("iREVIEWSUBMITTEDPROJECTS", this.iREVIEWSUBMITTEDPROJECTS);
     }
 }

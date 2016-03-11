@@ -45,6 +45,8 @@ public class Projects implements Serializable{
     private int PROJ_BudgetChanged; // Thay đổi tiền dự án
     private int PROJ_Locked2; // Khóa khi nộp lần cuối
     private String PROJ_PRJCall_Code; // Mã đợt gọi đề tài
+    private int PROJ_BudgetMaterial; // Chi mua vật tư nguyên vật liệu
+    private int PROJ_BudgetMaterialChanged; // Chi mua vật tư nguyên vật liệu
     
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "PROJ_User_Code", referencedColumnName = "Staff_User_Code", insertable=false, updatable=false)
@@ -264,5 +266,21 @@ public class Projects implements Serializable{
 
 	public void setPROJ_ObjectiveChanged(String pROJ_ObjectiveChanged) {
 		PROJ_ObjectiveChanged = pROJ_ObjectiveChanged;
+	}
+
+	public int getPROJ_BudgetMaterial() {
+		return PROJ_BudgetMaterial;
+	}
+
+	public void setPROJ_BudgetMaterial(int pROJ_BudgetMaterial) {
+		PROJ_BudgetMaterial = pROJ_BudgetMaterial;
+	}
+
+	public int getPROJ_BudgetMaterialChanged() {
+		return PROJ_BudgetMaterialChanged;
+	}
+
+	public void setPROJ_BudgetMaterialChanged(int pROJ_BudgetMaterialChanged) {
+		PROJ_BudgetMaterialChanged = pROJ_BudgetMaterialChanged;
 	}
 }

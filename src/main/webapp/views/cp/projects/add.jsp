@@ -58,19 +58,19 @@
 	                                </div>
 	                                <div class="form-group">
 	                                    <label for="projectStartDate">Thời gian bắt đầu</label>
-	                                    <form:input path="projectStartDate" class="form-control" name="projectStartDate" placeholder="Project Start Date"></form:input>
+	                                    <form:input path="projectStartDate" class="form-control" name="projectStartDate" readonly="true" placeholder="Project Start Date"></form:input>
 	    								<form:errors path="projectStartDate" class="alert-danger"></form:errors>
 	                                </div>
 	                                <div class="form-group">
 	                                    <label for="projectEndDate">Thời gian hoàn thành</label>
-	                                    <form:input path="projectEndDate" class="form-control" name="projectEndDate" placeholder="Project End Date"></form:input>
+	                                    <form:input path="projectEndDate" class="form-control" name="projectEndDate" readonly="true" placeholder="Project End Date"></form:input>
 	    								<form:errors path="projectEndDate" class="alert-danger"></form:errors>
 	                                </div>
-	                                <div class="form-group">
+	                                <%-- <div class="form-group">
 	                                    <label for="projectBudget">Kinh phí (triệu VNĐ)</label>
 	                                    <form:input path="projectBudget" class="form-control" name="projectBudget" placeholder="Budget"></form:input>
 	    								<form:errors path="projectBudget" class="alert-danger"></form:errors>
-	                                </div>
+	                                </div> --%>
 	                                <div class="form-group">
 	                                    <label>Đơn vị*</label>
 	                                    <form:select path="falcutyAddress" class="form-control" name="falcutyAddress">
@@ -91,9 +91,9 @@
 	   									<form:errors path="projectResult" class="alert-danger"></form:errors>
 	                               	 </div>
 	                               	 <div class="form-group">
-	                                    <label for="projectOtherFees">Kinh phí vật tư, vật liệu,…</label>
-	                                    <form:input path="projectOtherFees" class="form-control" name="projectOtherFees" placeholder="Other Fees"></form:input>
-	   									<form:errors path="projectOtherFees" class="alert-danger"></form:errors>
+	                                    <label for="budgetMaterial">Kinh phí vật tư, vật liệu,…</label>
+	                                    <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" placeholder="Other Fees"></form:input>
+	   									<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
 	                               	 </div>
 		                        </div>
 		                        <div class="col-lg-6">
@@ -217,6 +217,20 @@ $(document).ready(function(){
 	$('button.cancel').click(function(){
 		window.location = baseUrl+"/cp/list-projects.html";
 	});
+	
+	$('#projectStartDate').datepicker({
+		changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat : 'dd/mm/yy',
+        stepMonths: 12});
+	
+	$('#projectEndDate').datepicker({
+		changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat : 'dd/mm/yy',
+        stepMonths: 12});
 });
 
 function v_fAddMember(){

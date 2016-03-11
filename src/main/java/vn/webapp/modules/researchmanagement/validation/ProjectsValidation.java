@@ -42,9 +42,13 @@ public class ProjectsValidation{
 	
 	private String falcutyAddress;
 	
-	private int projectOtherFees;
+	private int budgetMaterial;
 	
 	private int projectMemberWorkingDays;
+	
+	private String currentProjectCode;
+	
+	private String projectStatusCode;
 	
 	@NotEmpty
 	private String projectCallCode;
@@ -178,11 +182,11 @@ public class ProjectsValidation{
 	}
 
 	public int getProjectOtherFees() {
-		return projectOtherFees;
+		return budgetMaterial;
 	}
 
-	public void setProjectOtherFees(int projectOtherFees) {
-		this.projectOtherFees = projectOtherFees;
+	public void setProjectOtherFees(int budgetMaterial) {
+		this.budgetMaterial = budgetMaterial;
 	}
 
 	public int getProjectMemberWorkingDays() {
@@ -201,4 +205,27 @@ public class ProjectsValidation{
 		this.falcutyAddress = falcutyAddress;
 	}
 
+	public int getBudgetMaterial() {
+		return budgetMaterial;
+	}
+
+	public void setBudgetMaterial(int budgetMaterial) {
+		this.budgetMaterial = budgetMaterial;
+	}
+
+	public String getCurrentProjectCode() {
+		return currentProjectCode;
+	}
+
+	public void setCurrentProjectCode(String currentProjectCode) {
+		this.currentProjectCode = currentProjectCode;
+	}
+
+	public String getProjectStatusCode() {
+		return projectStatusCode;
+	}
+
+	public void setProjectStatusCode(String projectStatusCode) {
+		this.projectStatusCode = projectStatusCode;
+	}
 }

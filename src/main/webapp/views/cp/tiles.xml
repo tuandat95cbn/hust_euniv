@@ -266,6 +266,25 @@
         <put-attribute name="content" value="/views/cp/projects/edit.jsp" />
     </definition>
     
+    <definition name="cp.projectsapprove" extends="layout.base">
+        <put-attribute name="title" value="Show list projects" />                                 
+        <put-attribute name="content" value="/views/cp/projects/listapprove.jsp" />
+    </definition>
+
+    <definition name="cp.approveaproject" extends="layout.base">
+        <put-attribute name="title" value="Edit a project" />                                 
+        <put-attribute name="content" value="/views/cp/projects/approve.jsp" />
+    </definition>
+    
+    <definition name="cp.listcomments" extends="layout.base">
+        <put-attribute name="title" value="Show list projects" />                                 
+        <put-attribute name="content" value="/views/cp/projects/listcomments.jsp" />
+    </definition>
+    
+    <definition name="cp.projectcomments" extends="layout.base">
+        <put-attribute name="title" value="Edit a project" />                                 
+        <put-attribute name="content" value="/views/cp/projects/comments.jsp" />
+    </definition>
 
     <!-- Master Management module -->
     <!-- Professors Module -->

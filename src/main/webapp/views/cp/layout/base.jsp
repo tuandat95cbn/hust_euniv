@@ -58,7 +58,6 @@
 	    <!-- Bootstrap Core JavaScript -->
 	    <script src="<c:url value="/assets/libs/bootstrap/dist/js/bootstrap.js"/>"></script>
 	
-	  	
 	    <!-- Custom Theme JavaScript -->
 	    <script src="<c:url value="/assets/js/sb-admin-2.js"/>"></script>
 	    

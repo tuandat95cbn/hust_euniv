@@ -29,6 +29,22 @@ public interface nProjectDAO {
 	 * @param userCode
 	 * @return
 	 */
+	public List<Projects> loadProjectsListByStaffAndStatus(String userRole, String userCode, String status);
+	
+	/**
+	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @return
+	 */
+	public List<Projects> loadApproveProjectsList(String userRole, String userCode);
+	
+	/**
+	 * 
+	 * @param userRole
+	 * @param userCode
+	 * @return
+	 */
 	public List<Projects> loadSubmittedProjectsListByStaff(String userRole, String userCode);
 	
 	/**
