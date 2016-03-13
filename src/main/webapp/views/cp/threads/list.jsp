@@ -46,8 +46,8 @@
 	                               	</c:forEach>
 		                        </form:select>
 		                        <form:select class="form-control" style="width:200px;" path="threadYear">
-		                        	<c:forEach items="${threadAcademicYears}" var="threadAcadYear">
-	                                 	<option value="${threadAcadYear.ACAYEAR_Code}">${threadAcadYear.ACAYEAR_Code}</option>
+		                        	<c:forEach items="${projectCallsList}" var="projectCall">
+	                                 	<option value="${projectCall.PROJCALL_CODE}">${projectCall.PROJCALL_NAME}</option>
 	                               	</c:forEach>
 		                        </form:select>
 		                        <c:if test="${currentUserRole eq 'ROLE_ADMIN' || currentUserRole eq 'SUPER_ADMIN'}">

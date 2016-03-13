@@ -73,7 +73,7 @@ public class nProjectController extends BaseRest {
 		//List<Threads> threads = threadService.filerThreadsList(userRole, userCode, 0, 100000000, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
     	List<mThreads> threads = threadService.filerThreadsListNoPagination(userRole, userCode, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
 		iTotalItems = threads.size();
-		System.out.println("cpservice/ThreadController::dataTable1, iTotalItems = " + iTotalItems);
+		System.out.println("cpservice/ThreadController::dataTable1, iTotalItems xxxx = " + sThreadYear);
     	
     	
     	//Search functionality: Returns filtered list based on search parameter

@@ -236,63 +236,47 @@ public class nProjectServiceImpl implements nProjectService {
 			HashSet<String> categories = new HashSet<String>();
 			if (sThreadCategory != null && !sThreadCategory.equals("")) {
 				categories.add(sThreadCategory);
-				System.out
-						.println("ThreadServiceImpl::filterThreadList, unique projectCategory "
-								+ sThreadCategory);
+				//System.out.println("ThreadServiceImpl::filterThreadList, unique projectCategory " + sThreadCategory);
 			} else {
 				for (mTopicCategory tc : projectCategories) {
 					categories.add(tc.getPROJCAT_Code());
 				}
-				System.out
-						.println("ThreadServiceImpl::filterThreadList, categories = ");
-				for (String s : categories)
-					System.out.println(s);
+				//System.out.println("ThreadServiceImpl::filterThreadList, categories = ");
+				//for (String s : categories) System.out.println(s);
 			}
 			List<mFaculty> faculties = facultyDAO.loadFacultyList();
 
 			List<mDepartment> dept = departmentDAO.loadDepartmentList();
-			for (mDepartment d : dept) {
-				System.out.println("ThreadServiceImpl::filterThreadsList --> "
-						+ d.getDepartment_Code() + "\t"
-						+ d.getDepartment_Faculty_Code());
-			}
+			/*for (mDepartment d : dept) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> " + d.getDepartment_Code() + "\t" + d.getDepartment_Faculty_Code());
+			}*/
 			List<mStaff> staffs = staffDAO.listStaffs();
-			for (mStaff st : staffs) {
-				System.out.println("ThreadServiceImpl::filterThreadsList --> "
-						+ st.getStaff_Code() + "\t"
-						+ st.getStaff_Department_Code());
-			}
+			/*for (mStaff st : staffs) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> " + st.getStaff_Code() + "\t" + st.getStaff_Department_Code());
+			}*/
 
 			HashSet<String> staffCodes = new HashSet<String>();
 			if (sThreadStaff != null && !sThreadStaff.equals("")) {
 				staffCodes.add(sThreadStaff);
-				System.out
-						.println("ThreadServiceImpl::filterThreadList, unique staffCode = "
-								+ sThreadStaff);
+				//System.out.println("ThreadServiceImpl::filterThreadList, unique staffCode = "+ sThreadStaff);
 			} else {
 				HashSet<String> deptCodes = new HashSet<String>();
 				if (sThreadDepartment != null && !sThreadDepartment.equals("")) {
 					deptCodes.add(sThreadDepartment);
-					System.out
-							.println("ThreadServiceImpl::filterThreadList, unique department = "
-									+ sThreadDepartment);
+					//System.out.println("ThreadServiceImpl::filterThreadList, unique department = " + sThreadDepartment);
 				} else {
 					HashSet<String> facultyCodes = new HashSet<String>();
 					if (sThreadFaculty != null && !sThreadFaculty.equals("")) {
 						facultyCodes.add(sThreadFaculty);
-						System.out
-								.println("ThreadServiceImpl::filterThreadList, unique faculty = "
-										+ sThreadFaculty);
+						//System.out.println("ThreadServiceImpl::filterThreadList, unique faculty = "+ sThreadFaculty);
 					} else {
 						for (mFaculty f : faculties) {
 							facultyCodes.add(f.getFaculty_Code());
 						}
 
-						System.out
-								.print("ThreadServiceImpl::filterThreadList, multi departments = ");
-						for (String s : deptCodes)
-							System.out.print(s + "\t");
-						System.out.println();
+						//System.out.print("ThreadServiceImpl::filterThreadList, multi departments = ");
+						//for (String s : deptCodes) System.out.print(s + "\t");
+						//System.out.println();
 					}
 					
 					for(mDepartment d : dept){
@@ -305,10 +289,8 @@ public class nProjectServiceImpl implements nProjectService {
 					if (deptCodes.contains(st.getStaff_Department_Code()))
 						staffCodes.add(st.getStaff_Code());
 				}
-				System.out
-						.println("ThreadServiceImpl::filterThreadList, multi staffs = ");
-				for (String s : staffCodes)
-					System.out.println(s);
+				//System.out.println("ThreadServiceImpl::filterThreadList, multi staffs = ");
+				//for (String s : staffCodes)System.out.println(s);
 			}
 
 			List<mProjectStatus> statuses = projectStatusDAO.getList();
@@ -317,31 +299,19 @@ public class nProjectServiceImpl implements nProjectService {
 				statusCodes.add(sThreadStatus);
 			else
 				for (mProjectStatus stat : statuses) {
-					System.out
-							.println("ThreadServiceImpl::filterThreadsList --> "
-									+ stat.getPROJSTAT_Code()
-									+ "\t"
-									+ stat.getPROJSTAT_Description());
+					//System.out.println("ThreadServiceImpl::filterThreadsList --> "+ stat.getPROJSTAT_Code()+ "\t"+ stat.getPROJSTAT_Description());
 					statusCodes.add(stat.getPROJSTAT_Code());
 				}
 
-			List<mThreads> allThreads = threadDAO.filerThreadsList(userRole,
-					userCode, sThreadStatus,
-					sThreadCategory, sThreadYear, sThreadFaculty,
-					sThreadDepartment, sThreadStaff);
-			for (mThreads t : allThreads) {
-				System.out.println("ThreadServiceImpl::filterThreadsList --> "
-						+ t.getPROJ_Name() + "\t" + t.getPROJ_Status_Code());
-
-			}
+			List<mThreads> allThreads = threadDAO.filerThreadsList(userRole, userCode, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
+			/*for (mThreads t : allThreads) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> "+ t.getPROJ_Name() + "\t" + t.getPROJ_Status_Code());
+			}*/
 
 			List<mProjectStaffs> allProjectStaffs = projectStaffsDAO.listAll();
-			for (mProjectStaffs ps : allProjectStaffs) {
-				System.out.println("ThreadServiceImpl::filterThreadsList --> "
-						+ ps.getPROJSTAFF_Proj_Code() + "\t"
-						+ ps.getPROJSTAFF_Staff_Code());
-
-			}
+			/*for (mProjectStaffs ps : allProjectStaffs) {
+				System.out.println("ThreadServiceImpl::filterThreadsList --> "+ ps.getPROJSTAFF_Proj_Code() + "\t"+ ps.getPROJSTAFF_Staff_Code());
+			}*/
 
 			List<mAcademicYear> years = yearDAO.getList();
 			HashSet<String> yearCodes = new HashSet<String>();
@@ -358,21 +328,15 @@ public class nProjectServiceImpl implements nProjectService {
 					threadCodes.add(ps.getPROJSTAFF_Proj_Code());
 			}
 
-			System.out
-					.println("ThreadServiceImpl::filterThreads, prepare filtering, categories = ");
-			for (String ct : categories)
-				System.out.println(ct);
-			System.out.println();
+			/*System.out.println("ThreadServiceImpl::filterThreads, prepare filtering, categories = ");
+			for (String ct : categories) System.out.println(ct);
+			System.out.println();*/
 
 			List<mThreads> FL = new ArrayList<mThreads>();
 			for (mThreads t : allThreads) {
-				System.out
-						.println("ThreadServiceImpl::filterThreads, consider project "
-								+ t.getPROJ_Name()
-								+ ", category "
-								+ t.getPROJ_ProjCat_Code() + ", userCode = " + t.getPROJ_User_Code() + ", login UserCode = " + userCode);
+				//System.out.println("ThreadServiceImpl::filterThreads, consider project "+ t.getPROJ_Name()+ ", category "+ t.getPROJ_ProjCat_Code() + ", userCode = " + t.getPROJ_User_Code() + ", login UserCode = " + userCode);
 				if (threadCodes.contains(t.getPROJ_Code())
-						&& yearCodes.contains(t.getPROJ_AcaYear_Code())
+						//&& yearCodes.contains(t.getPROJ_AcaYear_Code())
 						&& statusCodes.contains(t.getPROJ_Status_Code())
 						&& categories.contains(t.getPROJ_ProjCat_Code())) {
 				
@@ -382,17 +346,12 @@ public class nProjectServiceImpl implements nProjectService {
 					
 					if(ok){
 						FL.add(t);
-
-					System.out
-							.println("ThreadServiceImpl::filterThreads -> ACCEPT "
-									+ t.getPROJ_Name());
+						//System.out.println("ThreadServiceImpl::filterThreads -> ACCEPT "+ t.getPROJ_Name());
 					}
 				}
 			}
 
-			System.out
-					.println("ThreadServiceImpl::filterThreads -> TOTAL ACCEPT "
-							+ FL.size());
+			//System.out.println("ThreadServiceImpl::filterThreads -> TOTAL ACCEPT "+ FL.size());
 
 			return FL;
 			// return threadDAO.filerThreadsList(userRole, userCode, iStartItem,
@@ -410,14 +369,14 @@ public class nProjectServiceImpl implements nProjectService {
 			String sThreadCategory, String sThreadYear, String sThreadFaculty,
 			String sThreadDepartment, String sThreadStaff) {
 
-		System.out.println("ThreadServiceImpl::filterThreadsList, userCode = "
+		/*System.out.println("ThreadServiceImpl::filterThreadsList, userCode = "
 				+ userCode + "\n" + ", userRole = " + userRole + "\n"
 				+ ", sTheadStatus = " + sThreadStatus + "\n"
 				+ ", sThreadCategory = " + sThreadCategory + "\n"
 				+ ", sThreadYear = " + sThreadYear + "\n"
 				+ ", sThreadFaculty = " + sThreadFaculty + "\n"
 				+ ", sThreadDepartment = " + sThreadDepartment + "\n"
-				+ ", sThreadSatff = " + sThreadStaff);
+				+ ", sThreadSatff = " + sThreadStaff);*/
 		try {
 			List<mThreads> FL = filerThreadsListNoPagination(userRole, userCode, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
 			ArrayList<mThreads> pFL = new ArrayList<mThreads>();// extract from iStartItem to iStartItems + iNumberItems - 1

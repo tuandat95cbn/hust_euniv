@@ -341,13 +341,16 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			String sThreadStatus, String sThreadCategory, String sThreadYear, String sThreadFaculty, 
 			String sThreadDepartment, String sThreadStaff)
 	{
-		System.out.println("ThreadDAOImpl::filterThreadsList, userRole = " + userRole + ", userCode = " + userCode + 
+		/*System.out.println("ThreadDAOImpl::filterThreadsList, userRole = " + userRole + ", userCode = " + userCode + 
 				", sThreadStatus = " + sThreadStatus + 
 				", sThreadCategory = " + sThreadCategory + ", sThreadYear = " + sThreadYear + ", sThreadFaculty = " + sThreadFaculty + 
-				", sThreadDepartment = " + sThreadDepartment + ", sThreadStaff = " + sThreadStaff);
+				", sThreadDepartment = " + sThreadDepartment + ", sThreadStaff = " + sThreadStaff);*/
 		try {
 			begin();
 			Criteria criteria = getSession().createCriteria(mThreads.class);
+			if(!"".equals(sThreadYear)){
+				criteria.add(Restrictions.eq("PROJ_PRJCall_Code", sThreadYear));
+			}
 			criteria.setFirstResult(0);
 			List<mThreads> threads = criteria.list();
 			commit();
@@ -680,7 +683,7 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			begin();
 			Criteria criteria = getSession().createCriteria(mThreads.class, "threads");
 			if(null != yearForGenerating && !yearForGenerating.equals("")){
-				criteria.add(Restrictions.eq("threads.PROJ_AcaYear_Code", yearForGenerating));
+				criteria.add(Restrictions.eq("threads.PROJ_PRJCall_Code", yearForGenerating));
 			}
 			if(null != threadCategory && !threadCategory.equals("")){
 				criteria.add(Restrictions.eq("threads.PROJ_ProjCat_Code", threadCategory));

@@ -220,12 +220,13 @@ public class nProjectController extends BaseWeb {
 		List<mFaculty> threadFaculties = facultyService.loadFacultyList();
 		List<mDepartment> threadDepartments = departmentService.loadDepartmentList();
 		List<mStaff> threadStaffs = staffService.listStaffs();
+		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
 				
 		model.put("threadExcellForm", new mThreadExcellValidation());
 		model.put("threadsList", threadsList);
 		model.put("threadCategory", threadCategory);
 		model.put("threadStatuses", threadStatuses);
-		model.put("threadAcademicYears", threadAcademicYears);
+		model.put("projectCallsList", projectCallsList);
 		model.put("threadFaculties", threadFaculties);
 		model.put("threadDepartments", threadDepartments);
 		model.put("threadStaffs", threadStaffs);
@@ -1730,10 +1731,13 @@ public class nProjectController extends BaseWeb {
 		@RequestMapping(value = "/threadsExcell", method = RequestMethod.POST)
 		public ModelAndView downloadExcelThreads(@Valid @ModelAttribute("threadExcellForm") mThreadExcellValidation threadValidExcell, BindingResult result, Map model, HttpSession session) {
 			List<mAcademicYear> patentReportingAcademicDateList = academicYearService.list();
+			List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+			
+			model.put("projectCallsList", projectCallsList);
 		    model.put("reportingAcademicDate", patentReportingAcademicDateList);
 		    // create some sample data
 			 if(result.hasErrors()) {
-		          return new ModelAndView("cp.generateTopics");
+		          return new ModelAndView("cp.threads");
 		     }else
 		     {
 		    	/**
@@ -1749,24 +1753,27 @@ public class nProjectController extends BaseWeb {
 				List<mThreads> threadsList = threadService.loadThreadsListForReporting(threadCategory, threadStatus, threadFaculty, threadDepartment, threadStaff, yearForGenerating);
 				
 				List<List<String>> summaryThreadList = new ArrayList<>();
-				for(mThreads threads : threadsList)
+				if(threadsList != null)
 				{
-					String leaderFaculty = threadService.getFacultyName(threads.getStaff().getStaff_Faculty_Code());
-					String leaderDepartment = threadService.getDepartmentName(threads.getStaff().getStaff_Department_Code());
-					
-					//String sFacultyname = threadService.
-					List<String> summaryThread = new ArrayList<>();
-					summaryThread.add(threads.getPROJ_User_Code());
-					summaryThread.add(leaderFaculty);
-					summaryThread.add(leaderDepartment);
-					summaryThread.add(threads.getPROJ_Name());
-					summaryThread.add(Integer.toString(threads.getPROJ_TotalBudget()));
-					
-					summaryThreadList.add(summaryThread);
+					for(mThreads threads : threadsList)
+					{
+						String leaderFaculty = threadService.getFacultyName(threads.getStaff().getStaff_Faculty_Code());
+						String leaderDepartment = threadService.getDepartmentName(threads.getStaff().getStaff_Department_Code());
+						
+						//String sFacultyname = threadService.
+						List<String> summaryThread = new ArrayList<>();
+						summaryThread.add(threads.getPROJ_User_Code());
+						summaryThread.add(leaderFaculty);
+						summaryThread.add(leaderDepartment);
+						summaryThread.add(threads.getPROJ_Name());
+						summaryThread.add(Integer.toString(threads.getPROJ_TotalBudget()));
+						
+						summaryThreadList.add(summaryThread);
+					}
+				    /**
+				     * Get list of all Patents
+				     */
 				}
-			    /**
-			     * Get list of all Patents
-			     */
 			    model.put("summaryThreadList", summaryThreadList);
 				model.put("yearOfPaper", yearForGenerating);
 				// return a view which will be resolved by an excel view resolver

@@ -11,7 +11,6 @@ public class mThreadExcellValidation {
 	    private String paperYear;*/
 		
 		@NotEmpty
-	    @Pattern(regexp="^[0-9]{4}-[0-9]{4}$")
 	    private String threadYear;
 		
 		private String threadStatus;
