@@ -73,7 +73,7 @@ public class nProjectController extends BaseRest {
 		//List<Threads> threads = threadService.filerThreadsList(userRole, userCode, 0, 100000000, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
     	List<mThreads> threads = threadService.filerThreadsListNoPagination(userRole, userCode, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
 		iTotalItems = threads.size();
-		System.out.println("cpservice/ThreadController::dataTable1, iTotalItems xxxx = " + sThreadYear);
+		System.out.println("cpservice/ThreadController::dataTable1, iTotalItems = " + iTotalItems + " year = " + sThreadYear);
     	
     	
     	//Search functionality: Returns filtered list based on search parameter
@@ -168,6 +168,7 @@ public class nProjectController extends BaseRest {
 	{
 		List<mTopicCategory> topicCategory = tProjectCategoryService.list();
 		String sCateName = "";
+		System.out.println("nProjectController::getCateName(" + sCateCode +"), topicCategory = " + topicCategory.size());
 		if(!topicCategory.equals(""))
 		{
 			for(mTopicCategory category : topicCategory)

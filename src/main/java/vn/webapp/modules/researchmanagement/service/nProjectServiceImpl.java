@@ -232,6 +232,15 @@ public class nProjectServiceImpl implements nProjectService {
 			String sThreadDepartment, String sThreadStaff) {
 
 		try {
+			System.out.println("nProjectsService.filterThreadsListNoPagination, userRole = " + userRole +
+					", userCode = " + userCode + 
+					", sThreadStatus = " + sThreadStatus +
+					", sThreadCategory + " + sThreadCategory + 
+					", sThreadYear = " + sThreadYear +
+					", sThreadFaculty + " + sThreadFaculty +
+					", sThreadDepartment + " + sThreadDepartment+
+					", sThreadStaff = " + sThreadStaff);
+			
 			List<mTopicCategory> projectCategories = tProjectCategoryDAO.getList();
 			HashSet<String> categories = new HashSet<String>();
 			if (sThreadCategory != null && !sThreadCategory.equals("")) {
@@ -303,11 +312,15 @@ public class nProjectServiceImpl implements nProjectService {
 					statusCodes.add(stat.getPROJSTAT_Code());
 				}
 
+			
+			
 			List<mThreads> allThreads = threadDAO.filerThreadsList(userRole, userCode, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
 			/*for (mThreads t : allThreads) {
 				System.out.println("ThreadServiceImpl::filterThreadsList --> "+ t.getPROJ_Name() + "\t" + t.getPROJ_Status_Code());
 			}*/
 
+			System.out.println("nProjectService::filterThreadListNoPagination, allThreads = " + allThreads.size());
+			
 			List<mProjectStaffs> allProjectStaffs = projectStaffsDAO.listAll();
 			/*for (mProjectStaffs ps : allProjectStaffs) {
 				System.out.println("ThreadServiceImpl::filterThreadsList --> "+ ps.getPROJSTAFF_Proj_Code() + "\t"+ ps.getPROJSTAFF_Staff_Code());
@@ -327,6 +340,14 @@ public class nProjectServiceImpl implements nProjectService {
 				if (staffCodes.contains(ps.getPROJSTAFF_Staff_Code()))
 					threadCodes.add(ps.getPROJSTAFF_Proj_Code());
 			}
+			for(mThreads t: allThreads){
+				if(staffCodes.contains(t.getPROJ_User_Code()))
+					threadCodes.add(t.getPROJ_Code());
+			}
+			System.out.println("nProjectService::filterThreadListNoPagination, staffCodes = " + staffCodes);
+			System.out.println("nProjectService::filterThreadListNoPagination, statusCodes = " + statusCodes);
+			System.out.println("nProjectService::filterThreadListNoPagination, categories = " + categories);
+			System.out.println("nProjectService::filterThreadListNoPagination, threadCodes = " + threadCodes);
 
 			/*System.out.println("ThreadServiceImpl::filterThreads, prepare filtering, categories = ");
 			for (String ct : categories) System.out.println(ct);
@@ -334,24 +355,27 @@ public class nProjectServiceImpl implements nProjectService {
 
 			List<mThreads> FL = new ArrayList<mThreads>();
 			for (mThreads t : allThreads) {
-				//System.out.println("ThreadServiceImpl::filterThreads, consider project "+ t.getPROJ_Name()+ ", category "+ t.getPROJ_ProjCat_Code() + ", userCode = " + t.getPROJ_User_Code() + ", login UserCode = " + userCode);
+				System.out.println("ThreadServiceImpl::filterThreads, consider project "+ t.getPROJ_Code() + ", Name = " + 
+			t.getPROJ_Name()+ 
+						", category "+ t.getPROJ_ProjCat_Code() + ", userCode = " + t.getPROJ_User_Code() + 
+						", login UserCode = " + userCode + ", statusCode = " + t.getPROJ_Status_Code());
 				if (threadCodes.contains(t.getPROJ_Code())
 						//&& yearCodes.contains(t.getPROJ_AcaYear_Code())
-						&& statusCodes.contains(t.getPROJ_Status_Code())
-						&& categories.contains(t.getPROJ_ProjCat_Code())) {
+						&& statusCodes.contains(t.getPROJ_Status_Code())){
+						//&& categories.contains(t.getPROJ_ProjCat_Code())) {
 				
 					boolean ok = true;
-					if(!userRole.equals("ROLE_ADMIN"))
+					if(!userRole.equals("ROLE_ADMIN") && !userRole.equals("SUPER_ADMIN") )
 						ok = t.getPROJ_User_Code().equals(userCode);
 					
 					if(ok){
 						FL.add(t);
-						//System.out.println("ThreadServiceImpl::filterThreads -> ACCEPT "+ t.getPROJ_Name());
+						System.out.println("ThreadServiceImpl::filterThreads -> ACCEPT "+ t.getPROJ_Name());
 					}
 				}
 			}
 
-			//System.out.println("ThreadServiceImpl::filterThreads -> TOTAL ACCEPT "+ FL.size());
+			System.out.println("ThreadServiceImpl::filterThreads -> TOTAL ACCEPT "+ FL.size());
 
 			return FL;
 			// return threadDAO.filerThreadsList(userRole, userCode, iStartItem,
@@ -664,7 +688,10 @@ public class nProjectServiceImpl implements nProjectService {
 	 * Adding new project
 	 */
 	@Override
-	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int budgetMaterial, String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate){
+	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,
+			String projectContent,String projectMotivation,String projectResult,int budgetMaterial, String projectCode,
+			String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate, String projectCategory){
+		System.out.println("nProjectService::saveAProject, projectName = " + projectName + ", projectCode = " + projectCode);
 		if(userCode != "" && projectCode != "" && projectName != "" && projectCallCode != "")
 		{
 			Projects beInsertedProject = new Projects();
@@ -681,7 +708,7 @@ public class nProjectServiceImpl implements nProjectService {
 			beInsertedProject.setPROJ_StartDate(startDate);
 			beInsertedProject.setPROJ_EndDate(endDate);
 			beInsertedProject.setPROJ_Objective(projectObjective);
-			
+			beInsertedProject.setPROJ_ProjCat_Code(projectCategory);
 			int iInsertedProjectId = threadDAO.saveAProject(beInsertedProject);
 			if(iInsertedProjectId > 0 )
 			{
@@ -692,6 +719,10 @@ public class nProjectServiceImpl implements nProjectService {
 				
 				return iInsertedProjectId;
 			}
+		}else{
+			System.out.println("nProjectService::saveAProject, projectName = " + projectName + ", projectCode = " + projectCode + 
+					"DO NOTHING");
+			
 		}
 		return 0;
 	}
@@ -901,6 +932,7 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_Locked2(1);
 			}else{
 				project.setPROJ_Locked1(1);
+				project.setPROJ_Status_Code("SUBMIT");
 			}
 			threadDAO.editAProject(project);
 		}

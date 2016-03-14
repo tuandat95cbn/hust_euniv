@@ -160,7 +160,10 @@ public interface nProjectService {
 	 * @param projectBudget
 	 * @return
 	 */
-	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,String projectContent,String projectMotivation,String projectResult,int budgetMaterial, String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate);
+	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,
+			String projectContent,String projectMotivation,String projectResult,int budgetMaterial, 
+			String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,
+			String endDate, String projectCategory);
 	
 	/**
 	 * Saving member tasks for each project

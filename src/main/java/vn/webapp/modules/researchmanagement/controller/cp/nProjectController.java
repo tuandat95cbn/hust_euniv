@@ -438,6 +438,12 @@ public class nProjectController extends BaseWeb {
 			String projectObjective		= projectValid.getProjectObjective();
 			String projectCode 			= "PROJECT-CODE-" + projectCallCode;
 			String currentProjectCode 	= projectCode;
+			String projectCategory = "";
+			for(mProjectCalls pc: projectCallsList){
+				if(pc.getPROJCALL_CODE().equals(projectCallCode)){
+					projectCategory = pc.getPROJCALL_PROJCATCODE(); break;
+				}
+			}
 			//Members 
 			String[] projectMembers = request.getParameterValues("projectMembers");
 			String[] projectMemberRole = request.getParameterValues("projectMemberRole");
@@ -445,7 +451,9 @@ public class nProjectController extends BaseWeb {
 			String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
 			String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
 			
-			int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, facultyAdd, projectSurvey, projectObjective, startDate, endDate);
+			int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, 
+					projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, facultyAdd, 
+					projectSurvey, projectObjective, startDate, endDate, projectCategory);
 			if (i_InsertAProject > 0) {
 				model.put("status", "Thêm mới thành công!");
 				projectCode = projectCallCode + i_InsertAProject;
@@ -1042,7 +1050,8 @@ public class nProjectController extends BaseWeb {
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
 		Projects project = threadService.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
-							
+		//List<mProjectStatus> statuses = projectStatusService.list();
+		
      	// Put data back to view
 		model.put("projects", status);
 		if (project != null) {
