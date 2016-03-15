@@ -410,11 +410,11 @@ public class ScheduleController extends BaseWeb {
     	
     	
     	// Write completed content into file
-    	File o_CompletedContentFile = new File(filePath+"upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".html");
+    	File o_CompletedContentFile = new File(filePath+"\\upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".html");
     	
     	FileUtil.v_fWriteContentIntoAFile(o_CompletedContentFile, sTemplateContent);
 	    	    
-		PDFGenerator pdfGenerator = new PDFGenerator(filePath+"upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".html",fileName);
+		PDFGenerator pdfGenerator = new PDFGenerator(filePath+"\\upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".html",fileName);
 	    	try {
 				pdfGenerator.v_fGenerator();
 			} catch (IOException e) {

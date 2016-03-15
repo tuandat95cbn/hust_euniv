@@ -105,6 +105,7 @@ public class PDFGenerator {
     public void v_fGenerator() throws IOException, DocumentException {
     	//Creating empty pdf file
     	Document document = new Document();
+    	System.out.println("PDFGenerator::v_fGenerator, _sOutputFile = " + this._sOutPutFile);
 		PdfWriter.getInstance(document, new FileOutputStream(this._sOutPutFile));
 		
         File file = new File(this._sOutPutFile);

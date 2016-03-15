@@ -426,7 +426,7 @@ public class mmScheduleController extends BaseWeb {
 	   mmMasterDefenseJuryThesis masterDefenseJuryThesis = mmmasterDefenseJuryService.getMasterDefenseJuryThesisById(masterDefenseJuryThesis_ID);
 	     	   
    	   String filePath = session.getServletContext().getRealPath("/"); 
-   	   String fileName = filePath+"upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".pdf";
+   	   String fileName = filePath+"\\upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".pdf";
    	   System.out.println(fileName);
    	   
    	   ServletOutputStream out = response.getOutputStream();
