@@ -124,7 +124,7 @@ public class mmStaffDAOImpl extends BaseDao implements mmStaffDAO {
             begin();
             Criteria criteria = getSession().createCriteria(mmStaff.class);
             criteria.add(Restrictions.eq("Staff_ID", staff_Id));
-            if(!userRole.equals("ROLE_ADMIN")){
+            if(!(userRole.equals("ROLE_ADMIN")||userRole.equals("SUPER_ADMIN"))){
             	return null;
             }
             mmStaff professor = (mmStaff) criteria.uniqueResult();
