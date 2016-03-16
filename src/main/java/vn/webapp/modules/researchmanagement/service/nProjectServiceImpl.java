@@ -263,17 +263,34 @@ public class nProjectServiceImpl implements nProjectService {
 			/*for (mStaff st : staffs) {
 				System.out.println("ThreadServiceImpl::filterThreadsList --> " + st.getStaff_Code() + "\t" + st.getStaff_Department_Code());
 			}*/
-
+			
+			boolean chooseStaff = false;
+			boolean chooseDepartment = false;
+			boolean chooseFaculty = false;
+			HashSet<String> facultyCodes = new HashSet<String>();
+			if (sThreadFaculty != null && !sThreadFaculty.equals("")) {
+				facultyCodes.add(sThreadFaculty);
+				chooseFaculty = true;
+				//System.out.println("ThreadServiceImpl::filterThreadList, unique faculty = "+ sThreadFaculty);
+			} else {
+				for (mFaculty f : faculties) {
+					facultyCodes.add(f.getFaculty_Code());
+				}
+			}
+			
 			HashSet<String> staffCodes = new HashSet<String>();
 			if (sThreadStaff != null && !sThreadStaff.equals("")) {
 				staffCodes.add(sThreadStaff);
+				chooseStaff = true;
 				//System.out.println("ThreadServiceImpl::filterThreadList, unique staffCode = "+ sThreadStaff);
 			} else {
 				HashSet<String> deptCodes = new HashSet<String>();
 				if (sThreadDepartment != null && !sThreadDepartment.equals("")) {
 					deptCodes.add(sThreadDepartment);
+					chooseDepartment = true;
 					//System.out.println("ThreadServiceImpl::filterThreadList, unique department = " + sThreadDepartment);
 				} else {
+					/*
 					HashSet<String> facultyCodes = new HashSet<String>();
 					if (sThreadFaculty != null && !sThreadFaculty.equals("")) {
 						facultyCodes.add(sThreadFaculty);
@@ -287,13 +304,13 @@ public class nProjectServiceImpl implements nProjectService {
 						//for (String s : deptCodes) System.out.print(s + "\t");
 						//System.out.println();
 					}
-					
+					*/
 					for(mDepartment d : dept){
 						if(facultyCodes.contains(d.getDepartment_Faculty_Code()))
 							deptCodes.add(d.getDepartment_Code());
 					}
 				}
-
+				
 				for (mStaff st : staffs) {
 					if (deptCodes.contains(st.getStaff_Department_Code()))
 						staffCodes.add(st.getStaff_Code());
@@ -301,7 +318,13 @@ public class nProjectServiceImpl implements nProjectService {
 				//System.out.println("ThreadServiceImpl::filterThreadList, multi staffs = ");
 				//for (String s : staffCodes)System.out.println(s);
 			}
-
+			if(chooseFaculty && !chooseDepartment && !chooseStaff){// list all projects registered at the choose faculty
+				staffCodes.clear();
+				for (mStaff st : staffs) {
+					staffCodes.add(st.getStaff_Code());
+				}
+			}
+			
 			List<mProjectStatus> statuses = projectStatusDAO.getList();
 			HashSet<String> statusCodes = new HashSet<String>();
 			if (sThreadStatus != null && !sThreadStatus.equals(""))
@@ -341,13 +364,16 @@ public class nProjectServiceImpl implements nProjectService {
 					threadCodes.add(ps.getPROJSTAFF_Proj_Code());
 			}
 			for(mThreads t: allThreads){
-				if(staffCodes.contains(t.getPROJ_User_Code()))
+				if(staffCodes.contains(t.getPROJ_User_Code())
+						&& facultyCodes.contains(t.getPROJ_FacultyCode())
+						)
 					threadCodes.add(t.getPROJ_Code());
 			}
 			System.out.println("nProjectService::filterThreadListNoPagination, staffCodes = " + staffCodes);
 			System.out.println("nProjectService::filterThreadListNoPagination, statusCodes = " + statusCodes);
 			System.out.println("nProjectService::filterThreadListNoPagination, categories = " + categories);
 			System.out.println("nProjectService::filterThreadListNoPagination, threadCodes = " + threadCodes);
+			System.out.println("nProjectService::filterThreadListNoPagination, facultyCodes = " + facultyCodes);
 
 			/*System.out.println("ThreadServiceImpl::filterThreads, prepare filtering, categories = ");
 			for (String ct : categories) System.out.println(ct);
@@ -358,7 +384,9 @@ public class nProjectServiceImpl implements nProjectService {
 				System.out.println("ThreadServiceImpl::filterThreads, consider project "+ t.getPROJ_Code() + ", Name = " + 
 			t.getPROJ_Name()+ 
 						", category "+ t.getPROJ_ProjCat_Code() + ", userCode = " + t.getPROJ_User_Code() + 
-						", login UserCode = " + userCode + ", statusCode = " + t.getPROJ_Status_Code());
+						", login UserCode = " + userCode + ", statusCode = " + t.getPROJ_Status_Code() +
+						", facultyCode = " + t.getPROJ_FacultyCode());
+				
 				if (threadCodes.contains(t.getPROJ_Code())
 						//&& yearCodes.contains(t.getPROJ_AcaYear_Code())
 						&& statusCodes.contains(t.getPROJ_Status_Code())){

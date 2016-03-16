@@ -207,6 +207,9 @@ public class nProjectController extends BaseWeb {
 	 * @param model
 	 * @return
 	 */
+	public String name(){
+		return "nProjectController";
+	}
 	@RequestMapping(value = "/threads", method = RequestMethod.GET)
 	public String topicsList(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
@@ -231,6 +234,9 @@ public class nProjectController extends BaseWeb {
 		model.put("threadDepartments", threadDepartments);
 		model.put("threadStaffs", threadStaffs);
 		model.put("threads", status);
+		
+		System.out.println(name() + "::topicsList, threadsList.sz = " + threadsList.size() + ", threadFaculties = " + threadFaculties.size());
+		
 		return "cp.threads";
 	}
 

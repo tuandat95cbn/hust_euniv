@@ -116,6 +116,7 @@ public class BaseWeb {
         map.put("baseUrl", baseUrl);
         map.put("assetsUrl", assetsUrl);
         
+        System.out.println("BaseWeb::addGloablAttr, baseUrl = " + baseUrl + ", assetUrl = " + assetsUrl);
         map.put("iMANAGEUSERS", this.iMANAGEUSERS);
         map.put("iMANAGEPAPERS", this.iMANAGEPAPERS);
         map.put("iMANAGETOPICS", this.iMANAGETOPICS);

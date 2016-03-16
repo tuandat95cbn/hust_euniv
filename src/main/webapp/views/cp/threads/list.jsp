@@ -86,9 +86,8 @@
 									<th title="User of project">Người kê khai</th>
 									<th title="Name of project">Tên</th>
 									<th title="Category of project">Loại hình</th>
-									<th title="Description">Nội dung</th>
-									<th title="Status">Trạng thái</th>
-									<th title="Result">Kết quả</th>
+									<!-- <th title="Description">Nội dung</th>-->									<th title="Status">Trạng thái</th>
+									<!-- <th title="Result">Kết quả</th> -->
 									<th title="Start year">Năm thực hiện</th>
 									<th title="Budget">Kinh phí</th>
 									<th></th>
@@ -185,9 +184,9 @@ $(document).ready(function () {
 				{ "mData": "user_code", "sWidth": "100px" },          
 	            { "mData": "name", "bSortable": true, "sWidth": "20%" },
 	            { "mData": "category", "sWidth": "100px" },
-	            { "mData": "content", "sWidth": "100px" },
+	            //{ "mData": "content", "sWidth": "100px" },
 	            { "mData": "status", "sWidth": "100px" },
-	            { "mData": "result", "sWidth": "100px" },
+	            //{ "mData": "result", "sWidth": "100px" },
 	            { "mData": "start_date", "sWidth": "80px" },
 	            //{ "mData": "end_date", "sWidth": "80px", "bSortable": false },
 	            { "mData": "budget", "sWidth": "30px", "bSortable": false },

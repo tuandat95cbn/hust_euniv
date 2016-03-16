@@ -42,10 +42,14 @@ public class nProjectController extends BaseRest {
 	@Autowired
 	private tProjectCategoryService tProjectCategoryService;
     
+	public String name() {
+		return "cpservice/nProjectController";
+	}
     @ResponseBody
     @RequestMapping(value = "threads", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
     public String dataTable1(HttpServletRequest  request, HttpSession session ) {
     	
+    	System.out.println(name() + "::dataTable1.....");
     	// Get main user info
     	String userCode = session.getAttribute("currentUserCode").toString();
     	String userRole = session.getAttribute("currentUserRole").toString();
