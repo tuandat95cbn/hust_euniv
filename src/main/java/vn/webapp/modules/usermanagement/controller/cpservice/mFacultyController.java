@@ -74,6 +74,26 @@ public class mFacultyController extends BaseWeb {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value = "/getsinglestaffs", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
+	public String getSingleStaff(@RequestParam(value = "sDepartmentCode", defaultValue = "0") String sDepartmentCode) {
+		String sReturn = "";
+		// Get department lists
+		if(!sDepartmentCode.equals(""))
+		{
+			List<mStaff> listStaff = staffService.listStaffsByDepartment(sDepartmentCode);
+			if(listStaff != null){
+				sReturn = "<select class='form-control' name='members' id='members'>";
+				for(mStaff staff : listStaff)
+				{
+					sReturn += "<option value='"+staff.getStaff_Code()+"'>"+staff.getStaff_Name()+"</option>";
+				}
+				sReturn += "</select>";
+			}
+		}
+		return sReturn;
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/loaddepartments", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
 	public String deparmentsList(@RequestParam(value = "sFacultyCode", defaultValue = "0") String sFacultyCode) {
 		String sReturn = "";
