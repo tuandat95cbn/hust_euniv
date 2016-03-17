@@ -133,4 +133,16 @@ public class ProjectTasksDAOImpl extends BaseDao implements ProjectTasksDAO {
 		}
 	}
     
+	public void editAProjectTask(ProjectTasks pt){
+		try{
+			begin();
+			getSession().update(pt);
+			commit();
+		}catch(HibernateException e){
+			e.printStackTrace();
+			rollback();close();
+		}finally{
+			flush();close();
+		}
+	}
 }

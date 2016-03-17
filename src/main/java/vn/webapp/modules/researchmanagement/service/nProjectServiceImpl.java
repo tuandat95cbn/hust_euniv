@@ -2,6 +2,7 @@ package vn.webapp.modules.researchmanagement.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -717,7 +718,7 @@ public class nProjectServiceImpl implements nProjectService {
 	 */
 	@Override
 	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,
-			String projectContent,String projectMotivation,String projectResult,int budgetMaterial, String projectCode,
+			String projectContent,String projectMotivation,String projectResult,int budgetMaterial, int totalBudget, String projectCode,
 			String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate, String projectCategory){
 		System.out.println("nProjectService::saveAProject, projectName = " + projectName + ", projectCode = " + projectCode);
 		if(userCode != "" && projectCode != "" && projectName != "" && projectCallCode != "")
@@ -730,6 +731,7 @@ public class nProjectServiceImpl implements nProjectService {
 			beInsertedProject.setPROJ_Motivation(projectMotivation);
 			beInsertedProject.setPROJ_Result(projectResult);
 			beInsertedProject.setPROJ_BudgetMaterial(budgetMaterial);
+			beInsertedProject.setPROJ_TotalBudget(totalBudget);
 			beInsertedProject.setPROJ_Code(projectCode);
 			beInsertedProject.setPROJ_FacultyCode(facultyAdd);
 			beInsertedProject.setPROJ_Survey(projectSurvey);
@@ -1136,5 +1138,40 @@ public class nProjectServiceImpl implements nProjectService {
 			System.out.println("Exception: " + e.getMessage());
 			return null;
 		}		
+	}
+	
+	public String name(){
+		return "nProjectService";
+	}
+	public void generateProjectCodes(String projectCallCode){
+		
+		List<Projects> projects = loadProjectByProjectCallId(projectCallCode);
+		
+		
+		HashMap<String, String> mapOldCode2NewCode = new HashMap<String, String>();
+		
+		for(int i = 0; i < projects.size(); i++){
+			Projects p = projects.get(i);
+			List<ProjectTasks> projectTasks = projectTasksDAO.loadAProjectTaskByProjectCode(p.getPROJ_Code());
+			
+			int ID = i+1;
+			String sID = "";
+			if(ID < 10) sID = "00" + ID; 
+			else if(10 <= ID && ID <= 99) sID = "0" + ID;
+			else sID = "" + ID;
+			String newCode = p.getPROJ_PRJCall_Code() + "-" + sID;
+			
+			mapOldCode2NewCode.put(p.getPROJ_Code(), newCode);
+			p.setPROJ_Code(newCode);
+			threadDAO.editAProject(p);
+			System.out.println(name() + "::generateProjectCodes, oldCode = " + p.getPROJ_Code() + ", new Code = " + newCode);
+			for(ProjectTasks pt: projectTasks){
+				pt.setPRJTSK_Proj_Code(newCode);
+				projectTasksDAO.editAProjectTask(pt);
+				System.out.println(name() + "::generateProjectCodes, --> updated projectTask " + pt.getPRJTSK_Code() + 
+						", new ProjectCode = " + newCode + ", staffCode = " + pt.getPRJTSK_StaffCode());
+			}
+		}
+		
 	}
 }

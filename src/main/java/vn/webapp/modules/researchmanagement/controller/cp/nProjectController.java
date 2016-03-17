@@ -457,8 +457,16 @@ public class nProjectController extends BaseWeb {
 			String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
 			String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
 			
+			int totalBudget = budgetMaterial;
+			for(int i = 0; i < projectMemberBudget.length; i++){
+				System.out.println(name() + "::saveAProject, member[" + i + "] = " + 
+						projectMembers[i] + ", budget = " + projectMemberBudget[i]);
+				totalBudget += Integer.valueOf(projectMemberBudget[i]);
+			}
+			System.out.println(name() + "::saveAProject, totalBudget =  " + totalBudget); 
+					
 			int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, 
-					projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, facultyAdd, 
+					projectContent, projectMotivation, projectResult, budgetMaterial, totalBudget, projectCode, facultyAdd, 
 					projectSurvey, projectObjective, startDate, endDate, projectCategory);
 			if (i_InsertAProject > 0) {
 				model.put("status", "Thêm mới thành công!");

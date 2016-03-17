@@ -1,8 +1,10 @@
 package vn.webapp.modules.researchmanagement.controller.cpservice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import javax.faces.application.ProjectStage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -10,16 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import vn.webapp.controller.BaseRest;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectCategoryService;
+import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 import vn.webapp.modules.researchmanagement.service.mProductService;
+import vn.webapp.modules.researchmanagement.service.mProjectStaffsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStatusService;
 import vn.webapp.modules.researchmanagement.service.nProjectService;
 import vn.webapp.modules.usermanagement.service.mStaffService;
@@ -37,6 +43,9 @@ public class nProjectController extends BaseRest {
 	private nProjectService threadService;
 	
 	@Autowired
+	private mProjectStaffsService projectStaffsService;
+	
+	@Autowired
 	private mProjectStatusService projectStatusService;
 	
 	@Autowired
@@ -45,6 +54,17 @@ public class nProjectController extends BaseRest {
 	public String name() {
 		return "cpservice/nProjectController";
 	}
+	@ResponseBody
+    @RequestMapping(value = "generate-project-codes", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
+    public String generateProjectCode(HttpServletRequest  request, HttpSession session, 
+    		@RequestParam(value = "projectCallCode", defaultValue = "0") String projectCallCode) {
+		String json = "{}";
+		System.out.println(name() + "::generateProjectCode, projectCallCode = " + projectCallCode);
+		
+		threadService.generateProjectCodes(projectCallCode);
+		return json;
+	}
+	
     @ResponseBody
     @RequestMapping(value = "threads", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
     public String dataTable1(HttpServletRequest  request, HttpSession session ) {
@@ -145,6 +165,7 @@ public class nProjectController extends BaseRest {
 			
 			mThreadsList threadViewElement = new mThreadsList();
 			threadViewElement.setUser_code(thread.getPROJ_User_Code());
+			threadViewElement.setProjectcode(thread.getPROJ_Code());
 			threadViewElement.setName(thread.getPROJ_Name());
 			threadViewElement.setCategory(sCateName);
 			threadViewElement.setStatus(sStatusName);

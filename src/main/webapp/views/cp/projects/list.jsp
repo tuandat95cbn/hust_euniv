@@ -36,8 +36,8 @@
 							<thead>
 								<tr>
 									<th>STT</th>
-									<th>Mã loạt đề tài</th>
-									<th>Edit</th>
+									<th>Tên đề tài</th>
+									<th>Chỉnh sửa</th>
 								</tr>
 							</thead>
 							<tbody>

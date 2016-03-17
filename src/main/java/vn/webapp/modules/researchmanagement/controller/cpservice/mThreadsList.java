@@ -8,6 +8,13 @@ public class mThreadsList {
 	public void setUser_code(String user_code) {
 		this.user_code = user_code;
 	}
+	private String projectcode;
+	public String getProjectcode() {
+		return projectcode;
+	}
+	public void setProjectcode(String projectcode) {
+		this.projectcode = projectcode;
+	}
 	private String name;
     private String category;
     private String content;

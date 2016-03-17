@@ -37,4 +37,6 @@ public interface ProjectTasksDAO {
      * @return
      */
     public int removeAProjectTask(ProjectTasks projectTask);
+    
+    public void editAProjectTask(ProjectTasks pt);
 }

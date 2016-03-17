@@ -161,7 +161,7 @@ public interface nProjectService {
 	 * @return
 	 */
 	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,
-			String projectContent,String projectMotivation,String projectResult,int budgetMaterial, 
+			String projectContent,String projectMotivation,String projectResult,int budgetMaterial, int totalBudget,
 			String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,
 			String endDate, String projectCategory);
 	
@@ -317,4 +317,6 @@ public interface nProjectService {
 	 * @return
 	 */
 	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code);
+	
+	public void generateProjectCodes(String projectCallCode);
 }

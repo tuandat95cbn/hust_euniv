@@ -45,7 +45,7 @@
 	                                 	<option value="${threadStat.PROJSTAT_Code}">${threadStat.PROJSTAT_Description}</option>
 	                               	</c:forEach>
 		                        </form:select>
-		                        <form:select class="form-control" style="width:200px;" path="threadYear">
+		                        <form:select class="form-control" id="project-call" style="width:200px;" path="threadYear">
 		                        	<c:forEach items="${projectCallsList}" var="projectCall">
 	                                 	<option value="${projectCall.PROJCALL_CODE}">${projectCall.PROJCALL_NAME}</option>
 	                               	</c:forEach>
@@ -76,6 +76,7 @@
 		                        </c:if>
 								<button type="button" id="filter" class="btn btn-primary filter">Chọn</button>
 								<button type="submit" class="btn btn-primary">Kết xuất Excel</button>
+								<button type="button" id="generateCode" class="btn btn-primary generateCode">Sinh Mã cho đề tài</button>
 							</div>
 						</form:form>
 					</div>
@@ -85,6 +86,7 @@
 								<tr>
 									<th title="User of project">Người kê khai</th>
 									<th title="Name of project">Tên</th>
+									<th title="Code of project">Mã</th>
 									<th title="Category of project">Loại hình</th>
 									<!-- <th title="Description">Nội dung</th>-->									<th title="Status">Trạng thái</th>
 									<!-- <th title="Result">Kết quả</th> -->
@@ -183,6 +185,7 @@ $(document).ready(function () {
 	        "aoColumns": [
 				{ "mData": "user_code", "sWidth": "100px" },          
 	            { "mData": "name", "bSortable": true, "sWidth": "20%" },
+	            { "mData": "projectcode", "sWidth": "100px" },
 	            { "mData": "category", "sWidth": "100px" },
 	            //{ "mData": "content", "sWidth": "100px" },
 	            { "mData": "status", "sWidth": "100px" },
@@ -209,6 +212,33 @@ $(document).ready(function () {
     var oTable = $('#dataTables').dataTable(o_Settings);
     $("#filter").click(function(){
     	oTable.api().ajax.reload(); 
+    });
+    
+    $("#generateCode").click(function(){
+    	var data = document.getElementById("project-call").value;
+    	//var json = "{\"projectCallCode\":\"" + data + "\"}";
+    	var json = "projectCallCode=" + data + "";
+    	alert(json);
+    	
+    	$.ajax({
+			type : "POST",
+			//contentType : "application/json",
+			url : "${baseUrl}/cpservice/generate-project-codes.html",
+			data : json,
+			//dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				console.log("SUCCESS: ", data);
+				
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+				
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});
     });
 });
 
