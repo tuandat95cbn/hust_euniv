@@ -34,6 +34,7 @@ public class mStaff implements Serializable{
     private String Staff_Faculty_Code;
     private String Staff_Gender;
     private String Staff_DateOfBirth;
+    private String Staff_AcademicRank;
     
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "Staff_User_Code", referencedColumnName = "User_Code",insertable = false, updatable = false)
@@ -48,7 +49,7 @@ public class mStaff implements Serializable{
     private mDepartment department;
     
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="Staff_AcademicRank", referencedColumnName = "AcademicRank_Code")
+    @JoinColumn(name="Staff_AcademicRank", referencedColumnName = "AcademicRank_Code", insertable=false, updatable = false)
     public mAcademicRank academicRank;
 
 	public int getStaff_ID() {
@@ -177,6 +178,14 @@ public class mStaff implements Serializable{
 
 	public void setAcademicRank(mAcademicRank academicRank) {
 		this.academicRank = academicRank;
+	}
+
+	public String getStaff_AcademicRank() {
+		return Staff_AcademicRank;
+	}
+
+	public void setStaff_AcademicRank(String staff_AcademicRank) {
+		Staff_AcademicRank = staff_AcademicRank;
 	}
 	
 }

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import vn.webapp.controller.BaseWeb;
+import vn.webapp.modules.researchdeclarationmanagement.model.mPapers;
 import vn.webapp.modules.usermanagement.model.mDepartment;
 import vn.webapp.modules.usermanagement.model.mFaculty;
 import vn.webapp.modules.usermanagement.model.mFuncsPermission;
@@ -193,6 +194,32 @@ public class mUserController extends BaseWeb {
 	   model.put("currentUserName", session.getAttribute("currentUserName"));
 	   model.put("currentUserRole", session.getAttribute("currentUserRole"));
       return "cp.editAnUser";
+  }
+  
+  /**
+   * Show list all papers
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "/remove-an-user/{id}", method = RequestMethod.GET)
+  public String removeAPaper(ModelMap model, @PathVariable("id") int userId, HttpSession session) {
+	   String userCode = session.getAttribute("currentUserCode").toString();
+	   String userRole = session.getAttribute("currentUserRole").toString();
+	   List<mStaff> staffsList = new ArrayList<mStaff>();
+   	   if(userRole.equals(mUserController.SUPER_ADMIN)){
+   			staffsList = staffService.listStaffs();
+   	   }else{
+   			String currentUserFaculty = session.getAttribute("currentUserFaculty").toString();
+   			staffsList = staffService.listStaffsByFalcuty(currentUserFaculty);
+   	   }
+	   	
+	   model.put("staffsList", staffsList);
+	   mUsers user = userService.loadUserById(userId);
+	   if(user != null){
+		   userService.removeAnUser(userRole, user.getUser_ID(), user.getUser_Code());
+		   return "redirect:" + this.baseUrl + "/cp/users.html";
+	   }
+	   return "cp.notFound404";
   }
   
   /**

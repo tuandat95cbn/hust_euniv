@@ -64,4 +64,11 @@ public interface mStaffDAO {
      * @return
      */
     public int saveAStaff(mStaff staff);
+    
+    /**
+     * 
+     * @param staffId
+     * @return
+     */
+    public int removeAStaff(int staffId);
 }

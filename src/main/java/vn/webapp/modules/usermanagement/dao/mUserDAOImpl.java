@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import vn.webapp.dao.BaseDao;
+import vn.webapp.modules.usermanagement.model.mFaculty;
 import vn.webapp.modules.usermanagement.model.mUserRoles;
 import vn.webapp.modules.usermanagement.model.mUsers;
 
@@ -189,11 +190,26 @@ public class mUserDAOImpl extends BaseDao implements mUserDAO{
 	     * @return int
 	     */
 	    @Override
-	    public int removeUser(String id) {
-	        Query query = sessionFactory.getCurrentSession().createQuery(
-	                "delete from Users u where u.id ='" + id + "'");
-	        int result = query.executeUpdate();
-	        return result;
+	    public int removeAnUser(String loginUserRole, int id) {
+	    	mUsers user = new mUsers();
+	    	user.setUser_ID(id);
+			try {
+				if("ROLE_ADMIN".equals(loginUserRole) || "SUPER_ADMIN".equals(loginUserRole)){
+					begin();
+					getSession().delete(user);
+					commit();
+					return 1;
+				}
+				return 0;
+			} catch (HibernateException e) {
+				e.printStackTrace();
+				rollback();
+				close();
+				return 0;
+			} finally {
+				flush();
+				close();
+			}
 	    }
 
 	    /**

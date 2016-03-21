@@ -57,7 +57,7 @@ public interface mUserDAO {
      * @param id
      * @return
      */
-    public int removeUser(String id);
+    public int removeAnUser(String loginUserRole, int id);
     
     /**
      * 

@@ -47,6 +47,7 @@ public class mmStaff implements Serializable{
     private String Staff_Phone;
     private String Staff_User_Code;
     private String Staff_Faculty_Code;
+    private String Staff_AcademicRank;
 
 	@ManyToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)  
     @JoinTable(name = "tblstaffspecializationkeywords", 
@@ -209,6 +210,14 @@ public class mmStaff implements Serializable{
 
 	public void setAcademicRank(mmAcademicRank academicRank) {
 		this.academicRank = academicRank;
+	}
+
+	public String getStaff_AcademicRank() {
+		return Staff_AcademicRank;
+	}
+
+	public void setStaff_AcademicRank(String staff_AcademicRank) {
+		Staff_AcademicRank = staff_AcademicRank;
 	}
 	
 }

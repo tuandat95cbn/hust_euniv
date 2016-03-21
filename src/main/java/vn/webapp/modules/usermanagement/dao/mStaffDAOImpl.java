@@ -9,8 +9,10 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import vn.webapp.dao.BaseDao;
 import vn.webapp.modules.usermanagement.model.mStaff;
+import vn.webapp.modules.usermanagement.model.mUsers;
 
 @Repository("mStaffDAO")
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -144,7 +146,7 @@ public class mStaffDAOImpl extends BaseDao implements mStaffDAO{
         try {
             begin();
             Criteria criteria = getSession().createCriteria(mStaff.class);
-            criteria.add(Restrictions.eq("Staff_Code", userCode));
+            criteria.add(Restrictions.eq("Staff_User_Code", userCode));
             mStaff staff = (mStaff) criteria.uniqueResult();
             commit();
             return staff;
@@ -228,4 +230,34 @@ public class mStaffDAOImpl extends BaseDao implements mStaffDAO{
              close();
          }
     }
+    
+    /**
+     * Remove an user by id
+     * @param String
+     * @return int
+     */
+    @Override
+    public int removeAStaff(int staffId) {
+    	if(staffId > 0)
+    	{
+	    	mStaff staff = new mStaff();
+	    	staff.setStaff_ID(staffId);
+			try {
+				begin();
+				getSession().delete(staff);
+				commit();
+				return 1;
+			} catch (HibernateException e) {
+				e.printStackTrace();
+				rollback();
+				close();
+				return 0;
+			} finally {
+				flush();
+				close();
+			}
+    	}
+    	return 0;
+    }
+    
 }

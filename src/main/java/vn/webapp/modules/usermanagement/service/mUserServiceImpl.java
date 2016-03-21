@@ -161,8 +161,18 @@ public class mUserServiceImpl implements mUserService, UserDetailsService{
      * @return int
      */
     @Override
-    public int removeUser(String id) {
-        return userDAO.removeUser(id);
+    public int removeAnUser(String loginUserRole, int id, String userCode) {
+    	
+    	if(id > 0){
+    	   int isRemoveUser = userDAO.removeAnUser(loginUserRole, id);
+    	   mStaff staff = staffDAO.getByUserCode(userCode);
+    	   if(staff != null)
+    	   {
+    		   staffDAO.removeAStaff(staff.getStaff_ID());
+    	   }
+    	   return isRemoveUser;
+    	}
+        return 0;
     }
 
     /**
