@@ -13,80 +13,45 @@
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Thêm giảng viên</h1>
+			<h1 class="page-header">Phân đề tài cho học viên</h1>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
 	<!-- /.row -->
-	<form:form id="form-add" action="${baseUrl}/mm/save-a-professor.html" method="POST" commandName="staffFormAdd" role="form" accept-charset="UTF-8">
+	<form:form id="form-edit" action="${baseUrl}/mm/edit-a-thesis.html" method="POST" commandName="thesisFormEdit" role="form" accept-charset="UTF-8">
 		<div class="row">
 		<c:if test="${status != null}">	              
 		<div class="alert alert-success">
 			${status}
 		</div>
 		</c:if>
-			<div class="col-lg-4">
-				<div class="form-group">
-					<label>Họ tên</label>
-					<div class='form'>
-						<form:input path="staffName" class="form-control" name="staffName" type="text" placeholder="Name" value=""></form:input>
-	    				<form:errors path="staffName" class="alert-danger"></form:errors>
-    				</div>
+			<div class="col-lg-6">
+				<div class="well">
+					<h4>Họ tên học viên</h4>
+					<p class="value">${thesis.student.student_Name}</p>  
+					<form:input path="thesisID" class="form-control" name="thesisID" type="hidden" value="${thesis.thesis_ID}"></form:input>
+					<form:input path="studentCode" class="form-control" name="studentCode" type="hidden" value="${thesis.student.student_Code}"></form:input>
+	    			<form:errors path="studentCode" class="alert-danger"></form:errors> 
+					 				
 				</div>
-				
-				<div class="form-group">
-					<label>Khoa/viện </label>
-					<div class='form'>
-						<select id="staffFaculty" class="form-control">
-							<c:forEach items="${facultyList}" var="faculty">
-	                       		<option value="${faculty.faculty_Code}">${faculty.faculty_Name}</option>
-	                       	</c:forEach>							
-	                    </select>	                    
-                    </div>
-				</div>
-				
-				<div class="form-group">
-					<label>Email</label>
-					<div class='form'>
-						<form:input path="staffEmail" class="form-control" name="staffEmail" type="text" placeholder="Email" value=""></form:input>
-	    				<form:errors path="staffEmail" class="alert-danger"></form:errors>
-    				</div>
+				<div class="well">
+					<h4>Lớp</h4>
+					<p class="value">${thesis.student.masterClass.classes_Name}</p>    				
 				</div>
 				
 				<!-- /.col-lg-4 -->
 			</div>
 	
-			<div class="col-lg-4">		
-			
-				<div class="form-group">
-					<label>Học hàm học vị</label>
+			<div class="col-lg-6">
+				<div class="well">
+					<h4>Khoa viện</h4>
+					<p class="value">${thesis.student.masterClass.faculty.faculty_Name}</p>                    
+				</div>
+				<div class="well">
+					<h4>Tên đề tài</h4>
 					<div class='form'>
-						<form:select id="staffAcademicRank" path="staffAcademicRank" class="form-control" name="staffAcademicRank">
-							<c:forEach items="${academicRankList}" var="academicRank">
-	                       		<option value="${academicRank.academicRank_Code}">${academicRank.academicRank_VNName}</option>
-	                       	</c:forEach>							
-	                    </form:select>
-	                    <form:errors path="staffAcademicRank" class="alert-danger"></form:errors>
-                    </div>
-				</div>	
-			
-				<div class="form-group" id="DepartmentGroup" style="">
-					<label>Bộ môn</label>
-					<div class='form'>
-						<form:select path="staffDepartment" class="form-control" name="staffDepartment">
-							<c:forEach items="${departmentList}" var="department">
-	                       		<option value="${department.department_Code}" <c:if test="${staffDepartementCode eq department.department_Code}">selected</c:if>>${department.department_Name}</option>
-	                       	</c:forEach>
-	                    </form:select>
-	                    <form:errors path="staffDepartment" class="alert-danger"></form:errors>
-                    </div>
-				</div>				
-				
-				<div class="form-group">
-					<label>Điện thoại</label>
-					<div class='form'>
-						<form:input path="staffPhone" class="form-control" name="staffPhone" type="text" placeholder="Phone" value="${staffPhone}"></form:input>
-	    				<form:errors path="staffPhone" class="alert-danger"></form:errors>
+						<form:input path="thesisName" class="form-control" name="thesisName" type="text" placeholder="Tên đề tài" value="${thesis.thesis_Name}"></form:input>
+	    				<form:errors path="thesisName" class="alert-danger"></form:errors>
     				</div>
 				</div>
 				
@@ -95,6 +60,54 @@
 		</div>
 		<!-- /.row -->
 		
+		<div class="panel panel-default">
+				<div class="panel-heading"><h4>Chọn giảng viên</h4> 
+				    <div class='form'>
+				        <input id="supervisorName" class="form-control" type="text" readonly="true" placeholder="Chọn giảng viên" value="${thesis.supervisor.staff_Name}">
+						<form:input path="supervisor"  id="supervisor" class="form-control" name="supervisor" type="hidden" value="${thesis.supervisor.staff_Code}"></form:input>
+	    				<form:errors path="supervisor" class="alert-danger"></form:errors>
+    				</div>
+				
+				</div>
+					
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<div class="dataTable_wrapper">
+						<div class="" id="message">
+							
+						</div>
+						<table class="table table-striped table-bordered table-hover"
+							id="dataTables-professor">
+							<thead>
+								<tr>
+									<th title="Name">Tên giảng viên</th>
+									<th title="Department">Bộ môn</th>
+									<th title="Faculty">Khoa viện</th>
+									<th title="University">Trường</th>									
+									<th>Thêm</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach items="${professorList}" var="professor">
+									<tr class="gradeX">
+										 <td><c:out value="${professor.staff_Name}"/></td>
+										 <td><c:out value="${professor.department.department_Name}"/></td>
+										 <td><c:out value="${professor.department.faculty.faculty_Name}"/></td>
+										 <td><c:out value="${professor.department.faculty.university.university_Name}"/></td>
+										 <td class="center">
+											<button type="button" onclick="chooseProfessor('${professor.staff_Code}', '${professor.staff_Name}')" class="btn btn-info btn-xs" title="Edit">Chọn</button>
+											
+										</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+					<!-- /.table-responsive -->
+
+				</div>
+			</div>
+				
 		<div class="panel panel-default">
 			<div class="panel-heading"><h4>Từ khóa chuyên ngành</h4></div>
 			<div class="panel-body">
@@ -183,15 +196,12 @@
 	                          ]
 	    });
 		
-		$('#staffUniversity').change(function(){
-			
-			if($('#staffUniversity').val() == 'HUST'){
-				$('#DepartmentGroup').attr("style","");
-			}else{
-				$('#DepartmentGroup').attr("style","display:none;");
-			}
-			
-		});
+		$('#dataTables-professor').DataTable({
+            responsive: true,
+            "aoColumnDefs": [
+                             { 'bSortable': false, 'aTargets': [4] }
+                          ]
+    	});
 	    
 		$('#save').click(function(){
 			keyword = $('#data-keyword').children();
@@ -203,12 +213,12 @@
 				index++;		
 			});
 			
-			document.getElementById('form-add').submit();
+			document.getElementById('form-edit').submit();
 		});
 		
 		
 		$('#cancel').click(function() {
-			window.location = baseUrl + "/mm/professors.html";
+			window.location = baseUrl + "/mm/listThesis.html";
 		});	
 		
 	});
@@ -249,6 +259,11 @@
 		$("#message").html('Đã loại bỏ từ khóa "'+kwName+'" thành công');		
 	};	
 	
+	function chooseProfessor(proCode, proName){
+		$("#supervisorName").val(proName);
+		$("#supervisor").val(proCode);
+		
+	}
 
 
 </script>

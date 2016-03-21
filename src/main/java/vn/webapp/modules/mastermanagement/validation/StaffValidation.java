@@ -35,17 +35,19 @@ public class StaffValidation {
     private String staffDepartment;
     
     private String staffUniversity;
+    
+    private String staffAcademicRank;
         
     private int staffId;
     
     private ArrayList<String> staffKeywords;
 
-	public String getStaffUniversity() {
-		return staffUniversity;
+	public String getStaffAcademicRank() {
+		return staffAcademicRank;
 	}
 
-	public void setStaffUniversity(String staffUniversity) {
-		this.staffUniversity = staffUniversity;
+	public void setStaffAcademicRank(String staffAcademicRank) {
+		this.staffAcademicRank = staffAcademicRank;
 	}
 
 	public String getStaffName() {
@@ -95,5 +97,12 @@ public class StaffValidation {
 	public void setStaffId(int staffId) {
 		this.staffId = staffId;
 	}
-    
+
+	public String getStaffUniversity() {
+		return staffUniversity;
+	}
+
+	public void setStaffUniversity(String staffUniversity) {
+		this.staffUniversity = staffUniversity;
+	}    
 }

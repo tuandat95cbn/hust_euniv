@@ -141,6 +141,29 @@ public class mmStaffDAOImpl extends BaseDao implements mmStaffDAO {
         }
     }
     
+    public mmStaffInput getStaffInputById(String userRole, int staff_Id){
+    	
+    	try {
+            begin();
+            Criteria criteria = getSession().createCriteria(mmStaffInput.class);
+            criteria.add(Restrictions.eq("Staff_ID", staff_Id));
+            if(!(userRole.equals("ROLE_ADMIN")||userRole.equals("SUPER_ADMIN"))){
+            	return null;
+            }
+            mmStaffInput professor = (mmStaffInput) criteria.uniqueResult();
+            commit();
+            return professor;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+    	
+    }
     /**
      * Get an staff by staffname
      * @param staffname
@@ -192,7 +215,7 @@ public class mmStaffDAOImpl extends BaseDao implements mmStaffDAO {
      * @return int
      */
     @Override
-    public void editAStaff(mmStaff staff){
+    public void editAStaff(mmStaffInput staff){
     	try {
             begin();
             getSession().update(staff);

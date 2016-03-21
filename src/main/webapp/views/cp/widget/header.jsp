@@ -176,6 +176,12 @@
                         <li>
 		                    <a class="${professor}" href="<c:url value="${baseUrl}/mm/professors.html"/>"><i class="fa fa-dashboard fa-fw"></i> Quản lý giảng viên</a>
 		                </li>
+		                <li>
+		                    <a class="${externalprofessor}" href="<c:url value="${baseUrl}/mm/externalprofessors.html"/>"><i class="fa fa-dashboard fa-fw"></i> Quản lý giảng viên ngoài trường</a>
+		                </li>
+		                <li>
+		                    <a class="${university}" href="<c:url value="${baseUrl}/mm/partnerUniversities.html"/>"><i class="fa fa-dashboard fa-fw"></i> Quản lý trường đại học đối tác</a>
+		                </li>
 		                 <li>
 		                    <a class="${student}" href="<c:url value="${baseUrl}/mm/students.html"/>"><i class="fa fa-list fa-fw"></i> Quản lý học viên</a>
 		                </li>

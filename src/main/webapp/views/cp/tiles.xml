@@ -287,6 +287,22 @@
     </definition>
 
     <!-- Master Management module -->
+    <!-- Universities Module -->
+	<definition name="mm.partnerUniversities" extends="layout.base">
+		<put-attribute name="title" value="List universities" />
+		<put-attribute name="content" value="/views/cp/university/list.jsp" />
+	</definition>
+
+	<definition name="mm.addAnUniversity" extends="layout.base">
+		<put-attribute name="title" value="Create a university" />
+		<put-attribute name="content" value="/views/cp/university/add.jsp" />
+	</definition>
+
+	<definition name="mm.editAnUniversity" extends="layout.base">
+		<put-attribute name="title" value="Edit an university" />
+		<put-attribute name="content" value="/views/cp/university/edit.jsp" />
+	</definition>    
+    
     <!-- Professors Module -->
 	<definition name="mm.professors" extends="layout.base">
 		<put-attribute name="title" value="List professors" />
@@ -301,6 +317,22 @@
 	<definition name="mm.editAProfessor" extends="layout.base">
 		<put-attribute name="title" value="Edit a professor" />
 		<put-attribute name="content" value="/views/cp/professor/edit.jsp" />
+	</definition>
+	
+	 <!-- External Professors Module -->
+	<definition name="mm.externalprofessors" extends="layout.base">
+		<put-attribute name="title" value="List external professors" />
+		<put-attribute name="content" value="/views/cp/externalprofessor/list.jsp" />
+	</definition>
+
+	<definition name="mm.addAnExternalProfessor" extends="layout.base">
+		<put-attribute name="title" value="Create an external professor" />
+		<put-attribute name="content" value="/views/cp/externalprofessor/add.jsp" />
+	</definition>
+
+	<definition name="mm.editAnExternalProfessor" extends="layout.base">
+		<put-attribute name="title" value="Edit an external professor" />
+		<put-attribute name="content" value="/views/cp/externalprofessor/edit.jsp" />
 	</definition>
 	
     <!-- Students Module -->

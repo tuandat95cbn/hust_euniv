@@ -9,7 +9,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import vn.webapp.modules.usermanagement.dao.mStaffDAO;
+import vn.webapp.modules.usermanagement.model.mAcademicRank;
 import vn.webapp.modules.usermanagement.model.mStaff;
 
 @Service("mStaffService")
@@ -92,7 +94,7 @@ public class mStaffServiceImpl implements mStaffService {
      */
     @Override
     public void editAStaff(int StaffId, String staffName, String staffEmail, String staffPhone, String staffDepartment, 
-    						String userCode, String staffCatCode, String userFacultyCode, String staffGender, String staffDateOfBirth){
+    						String userCode, String staffCatCode, String userFacultyCode, String staffGender, String staffDateOfBirth, mAcademicRank academicRank){
     	
     	mStaff staff = new mStaff();
     	staff.setStaff_Department_Code(staffDepartment);
@@ -107,7 +109,7 @@ public class mStaffServiceImpl implements mStaffService {
     	staff.setStaff_Faculty_Code(userFacultyCode);
     	staff.setStaff_Gender(staffGender);
     	staff.setStaff_DateOfBirth(staffDateOfBirth);
-    	
+    	staff.setAcademicRank(academicRank);
     	staffDAO.editAStaff(staff);
     }
     

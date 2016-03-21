@@ -57,7 +57,7 @@ public class mFacultyServiceImpl implements mFacultyService {
 	 * @return
 	 */
 	@Override
-	public List<mFaculty> loadAFacultyByCode(String facultyCode) {
+	public mFaculty loadAFacultyByCode(String facultyCode) {
 		try {
 			if(facultyCode != null)
 			{

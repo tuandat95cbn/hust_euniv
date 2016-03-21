@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 
+
+
 /**
  * Customize
  */
@@ -51,6 +53,7 @@ import vn.webapp.modules.mastermanagement.service.mmSpecializationKeywordService
 import vn.webapp.modules.mastermanagement.service.mmStaffService;
 import vn.webapp.modules.mastermanagement.service.mmStudentService;
 import vn.webapp.modules.mastermanagement.service.mmUserService;
+import vn.webapp.modules.mastermanagement.validation.ThesisEditValidation;
 import vn.webapp.modules.mastermanagement.validation.ThesisValidation;
 
 
@@ -126,16 +129,26 @@ public class mmMasterThesisController extends BaseWeb {
 	   return "mm.notFound404";
    }
    
-   /*@RequestMapping("/editthesis/{id}")
+   @RequestMapping("/editthesis/{id}")
    public String EditThesis(ModelMap model, @PathVariable("id") int id, HttpSession session) {
 	   
 	   mmMasterThesis masterThesis = mmmasterThesisService.loadMasterThesisById(id);
 	   if(masterThesis == null){
 		   return "mm.notFound404";
 	   }
-	   mmStudent student = masterThesis.getStudent();   
-	   
-   }*/
+	   mmStudent student = masterThesis.getStudent();  
+	   model.put("thesisFormEdit", new ThesisEditValidation());
+	   if(student != null)
+	   {
+		   model.put("thesis", masterThesis);
+		   model.put("specializationKeywordList", mmspecializationKeywordService.loadSpecializationKeywordList());
+		   model.put("professorList", mmstaffService.listStaffs());
+		   model.put("departmentList", mmdepartmentService.loadDepartmentList());
+		   model.put("specializationKeywords", mmspecializationKeywordService.loadMasterThesisSpecializationKeywordList(masterThesis.getThesis_Code()));
+		   return "mm.editThesis";
+	   }
+	   return "mm.notFound404";	   
+   }
 	
    
    @RequestMapping(value = "/save-a-thesis", method = RequestMethod.POST)
@@ -186,11 +199,62 @@ public class mmMasterThesisController extends BaseWeb {
       }
    }
    
+   @RequestMapping(value = "/edit-a-thesis", method = RequestMethod.POST)
+   public String editThesis(@Valid @ModelAttribute("thesisFormEdit") ThesisEditValidation thesisFormEdit, 
+		   							BindingResult result,  Map model, HttpSession session) {
+ 	 //List<mmDepartment> departmentList = mmdepartmentService.loadDepartmentList();
+ 	 List<mmSpecializationKeyword> specializationKeywordList = mmspecializationKeywordService.loadSpecializationKeywordList();
+ 	 
+ 	 int thesisID = thesisFormEdit.getThesisID();
+ 	 String studentCode = thesisFormEdit.getStudentCode();
+ 	 String thesisName = thesisFormEdit.getThesisName();
+ 	 String supervisorCode = thesisFormEdit.getSupervisor();
+ 	 ArrayList<String> staffKeywords = thesisFormEdit.getStaffKeywords();
+ 	 HashSet<mmSpecializationKeyword> specializationKeywords = new HashSet<mmSpecializationKeyword>();
+ 	 for(String code:staffKeywords){
+ 		 mmSpecializationKeyword speKW = mmspecializationKeywordService.getSpecializationKeywordByCode(code);
+ 		 specializationKeywords.add(speKW);
+ 	 }
+ 	 
+ 	 //model.put("thesisName", thesisName);
+ 	 model.put("specializationKeywordList", specializationKeywordList);
+ 	 model.put("specializationKeywords", specializationKeywords);
+ 	 if(result.hasErrors()) {	
+ 		 String status = "Bạn đã lưu khong thành công thông tin đề tài";
+ 		 model.put("status", status);
+ 		 return "mm.assignThesis";
+      }else
+      {
+    	 mmStudent student = mmstudentService.loadStudentByCode(studentCode);
+    	 mmStaff supervisor = mmstaffService.loadStaffByStaffCode(supervisorCode);
+    	 String ThesisCode = studentCode + supervisorCode;
+    	 
+    	 if(student != null && supervisor != null){
+    		 mmmasterThesisService.editAMasterThesis(thesisID, ThesisCode, thesisName, student, supervisor, specializationKeywords);
+ 	     	 String status = "Bạn đã lưu thành công thông tin đề tài";
+ 	     	 model.put("status", status);
+    	 }
+    	 if(supervisor == null){
+    		 System.out.println("Supervisor null");
+    		 System.out.println(supervisorCode);
+    	 }
+    	 if(student == null){
+    		 System.out.println("Student null");
+    	 }
+     	 
+       List<mmMasterThesis> listMasterThesis = mmmasterThesisService.listMasterThesis();
+  	   model.put("listMasterThesis", listMasterThesis);
+  	   
+  	   return "mm.listThesis";  	   
+      }
+   }
+   
+   
    @RequestMapping(value = "/listThesis", method = RequestMethod.GET)
    public String thesisList(ModelMap model, HttpSession session) {
 
-	   List<mmStudent> studentList = mmstudentService.listStudentsByStatus(1);
-	   model.put("studentList", studentList);
+	   List<mmMasterThesis> listMasterThesis = mmmasterThesisService.listMasterThesis();
+	   model.put("listMasterThesis", listMasterThesis);
 	   
 	   return "mm.listThesis";
    }

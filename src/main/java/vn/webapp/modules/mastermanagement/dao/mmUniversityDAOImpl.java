@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.webapp.modules.mastermanagement.model.mmUniversity;
+import vn.webapp.modules.mastermanagement.model.mmUniversity;
 
 
 @Repository("mmuniversityDAO")
@@ -82,6 +83,83 @@ public class mmUniversityDAOImpl extends BaseDao implements mmUniversityDAO {
             flush();
             close();
         }
+    }
+    
+    public mmUniversity loadAUniversityByID(int universityID){
+    	try {
+            begin();
+            Criteria criteria = getSession().createCriteria(mmUniversity.class, "University");
+            criteria.add(Restrictions.eq("University.University_ID", universityID));
+            mmUniversity university = (mmUniversity) criteria.uniqueResult();
+            commit();
+            return university;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+    }
+    
+    public void editAUniversity(mmUniversity University){
+    	
+    	try {
+            begin();
+            getSession().update(University);
+            commit();
+         } catch (HibernateException e) {
+             e.printStackTrace();
+             rollback();
+             close();
+         } finally {
+             flush();
+             close();
+         }
+    	
+    	
+    }
+    
+    public int saveAUniversity(mmUniversity University){
+    	
+    	try {
+            begin();
+            int id = 0; 
+            id = (int)getSession().save(University);
+            commit();
+            return id;           
+         } catch (HibernateException e) {
+             e.printStackTrace();
+             rollback();
+             close();
+             return 0;
+         } finally {
+             flush();
+             close();
+         }
+    }
+    
+    public int removeAUniversity(int UniversityId){
+    	
+    	mmUniversity University = new mmUniversity();
+    	University.setUniversity_ID(UniversityId);
+    	try {
+            begin();
+            getSession().delete(University);
+            commit();
+            return 1;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return 0;
+        } finally {
+            flush();
+            close();
+        }
+    	
     }
     
     

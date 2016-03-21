@@ -7,6 +7,9 @@ public class mStaffValidation {
 	/** Set rules for fields*/
     @NotEmpty
     private String staffName;
+    
+    @NotEmpty
+    private String staffAcademicRank;    
 
     @NotEmpty
     @Email
@@ -89,4 +92,13 @@ public class mStaffValidation {
 	public void setStaffDateOfBirth(String staffDateOfBirth) {
 		this.staffDateOfBirth = staffDateOfBirth;
 	}
+
+	public String getStaffAcademicRank() {
+		return staffAcademicRank;
+	}
+
+	public void setStaffAcademicRank(String staffAcademicRank) {
+		this.staffAcademicRank = staffAcademicRank;
+	}
+	
 }

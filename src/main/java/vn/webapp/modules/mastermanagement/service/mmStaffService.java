@@ -13,10 +13,12 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import vn.webapp.dto.DataPage;
+import vn.webapp.modules.mastermanagement.model.mmAcademicRank;
 import vn.webapp.modules.mastermanagement.model.mmDepartment;
 import vn.webapp.modules.mastermanagement.model.mmSpecializationKeyword;
 import vn.webapp.modules.mastermanagement.model.mmStaff;
 import vn.webapp.modules.mastermanagement.model.mmStaffCategory;
+import vn.webapp.modules.mastermanagement.model.mmStaffInput;
 import vn.webapp.modules.mastermanagement.model.mmUniversity;
 import vn.webapp.modules.mastermanagement.model.mmUsers;
 
@@ -34,9 +36,11 @@ public interface mmStaffService {
     
     public mmStaff loadStaffById(String userRole, int staff_ID);
     
-    public void editAStaff(int staff_ID, String staffCode, String staffName, String staffEmail, String staffPhone, mmDepartment staffDepartment, mmUsers user, String userRole, mmStaffCategory staffCategory, HashSet<mmSpecializationKeyword> specializationKeywords);
+    public mmStaffInput getStaffInputById(String userRole, int staff_Id);
     
-    public int saveAStaff(String staffCode, String staffName, String staffEmail, String staffPhone, mmDepartment staffDepartment, mmUsers user, String userRole, mmStaffCategory staffCategory, HashSet<mmSpecializationKeyword> specializationKeywords);
+    public void editAStaff(int staff_ID, String staffCode, String staffName, String staffEmail, String staffPhone, mmDepartment staffDepartment, mmUsers user, String userRole, mmStaffCategory staffCategory, HashSet<mmSpecializationKeyword> specializationKeywords, mmAcademicRank academicRank);
+    
+    public int saveAStaff(String staffCode, String staffName, String staffEmail, String staffPhone, mmDepartment staffDepartment, mmUsers user, String userRole, mmStaffCategory staffCategory, HashSet<mmSpecializationKeyword> specializationKeywords, mmAcademicRank academicRank);
 
     public int removeAStaff(int staffID);
 }

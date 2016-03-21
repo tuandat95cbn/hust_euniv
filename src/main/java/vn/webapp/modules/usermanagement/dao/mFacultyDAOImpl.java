@@ -80,12 +80,12 @@ public class mFacultyDAOImpl extends BaseDao implements mFacultyDAO {
 	 * 
 	 */
 	@Override
-	public List<mFaculty> loadAFacultyByCode(String facultyCode) {
+	public mFaculty loadAFacultyByCode(String facultyCode) {
 		try {
 			begin();
 			Criteria criteria = getSession().createCriteria(mFaculty.class,"Faculty");
 			criteria.add(Restrictions.eq("Faculty.Faculty_Code", facultyCode));
-			List<mFaculty> faculty = criteria.list();
+			mFaculty faculty = (mFaculty)criteria.uniqueResult();
 			commit();
 			return faculty;
 		} catch (HibernateException e) {

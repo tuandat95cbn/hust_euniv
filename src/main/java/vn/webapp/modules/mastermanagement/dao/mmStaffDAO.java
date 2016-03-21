@@ -20,11 +20,13 @@ public interface mmStaffDAO {
 		
 	public mmStaff getStaffById(String userRole, int staff_Id);
 	
+	public mmStaffInput getStaffInputById(String userRole, int staff_Id);
+	
 	public mmStaff getByStaffCode(String staffCode);
 	
 	public mmStaff getByUserCode(String userCode);
     
-    public void editAStaff(mmStaff staff);
+    public void editAStaff(mmStaffInput staff);
     
     public int saveAStaff(mmStaffInput staff);
     

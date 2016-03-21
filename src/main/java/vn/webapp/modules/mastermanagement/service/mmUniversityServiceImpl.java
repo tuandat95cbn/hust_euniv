@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import vn.webapp.dto.DataPage;
 
+import vn.webapp.dto.DataPage;
 import vn.webapp.modules.mastermanagement.dao.mmUniversityDAO;
 import vn.webapp.modules.mastermanagement.model.mmUniversity;
 
@@ -64,4 +64,34 @@ public class mmUniversityServiceImpl implements mmUniversityService {
         }
     }
     
+    public mmUniversity loadAUniversityByID(int universityID){
+    	return mmuniversityDAO.loadAUniversityByID(universityID);
+    }
+    
+    public void editAUniversity(int universityID, String universityName, String universityCode){
+    	mmUniversity university = mmuniversityDAO.loadAUniversityByID(universityID);
+    	if(university != null){
+    		university.setUniversity_AsciiName(universityName);
+    		university.setUniversity_Code(universityCode);
+    		university.setUniversity_Name(universityName);
+    		university.setUniversity_Role("PARTNER");
+    		mmuniversityDAO.editAUniversity(university);
+    	}
+    }
+    
+    public int saveAUniversity(String universityName, String universityCode){
+    	
+    	mmUniversity university = new mmUniversity();
+    	university.setUniversity_AsciiName(universityName);
+    	university.setUniversity_Code(universityCode);
+    	university.setUniversity_Name(universityName);
+    	university.setUniversity_Role("PARTNER");
+    	mmuniversityDAO.saveAUniversity(university);
+    	return 1;   	
+    	
+    }
+    
+    public int removeAUniversity(int UniversityId){
+    	return mmuniversityDAO.removeAUniversity(UniversityId);    	
+    }    
 }

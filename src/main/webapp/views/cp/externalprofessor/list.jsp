@@ -16,8 +16,10 @@
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Danh sách đề tài cao học </h1>
-			
+			<h1 class="page-header">Danh sách giảng viên ngoài trường</h1>
+			<p>
+				<button type="button" class="btn btn-primary btn-xs add">Thêm mới</button>
+			</p>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
@@ -30,7 +32,7 @@
 				</div>
 			</c:if>
 			<div class="panel panel-default">
-				<div class="panel-heading"><h4>Danh sách học viên</h4></div>
+				<div class="panel-heading"><h4>Danh sách giảng viên ngoài trường</h4></div>
 					
 				<!-- /.panel-heading -->
 				<div class="panel-body">
@@ -39,20 +41,24 @@
 							id="dataTables-example">
 							<thead>
 								<tr>
-									<th title="Name">Họ và tên</th>
-									<th title="ThesisName">Đề tài</th>
-									<th title="Supervisor">Giáo viên hướng dẫn</th>
+									<th title="Name">Họ và tên</th>									
+									<th title="AcademicRank">Học hàm học vị</th>
+									<th title="University">Trường</th>
+									<th title="Email">Email</th>
 									<th>Chỉnh sửa</th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach items="${listMasterThesis}" var="thesis">
+								<c:forEach items="${externalprofessorList}" var="professor">
 									<tr class="gradeX">
-										 <td><c:out value="${thesis.student.student_Name}"/></td>
-										 <td><c:out value="${thesis.thesis_Name}"/></td>
-										 <td><c:out value="${thesis.supervisor.staff_Name}"/></td>
+										 <td><c:out value="${professor.EXTSTAF_Name}"/></td>
+										 	<td><c:out value="${professor.academicRank.academicRank_VNAbbr}"/></td>
+										 	<td><c:out value="${professor.university.university_Name}"/></td>
+										 	<td><c:out value="${professor.EXTSTAF_Email}"/></td>
 										 <td class="center">
-											<button type="button" onclick="EditThesis(${thesis.thesis_ID});" class="btn btn-info btn-xs" title="Assign">Chỉnh sửa</button>											
+											<button type="button" onclick="v_fViewDetailAProfessor(${professor.EXTSTAF_ID});" class="btn btn-info btn-xs" title="Edit">Sửa thông tin</button>
+											<br/>
+											<button type="button" id="removeProfessor" onclick="v_fRemoveAProfessor(${professor.EXTSTAF_ID});" class="btn btn-warning btn-xs" title="Remove">Xóa thông tin</button>
 										</td>
 									</tr>
 								</c:forEach>
@@ -84,17 +90,29 @@ $(document).ready(function() {
     $('#dataTables-example').DataTable({
             responsive: true,
             "aoColumnDefs": [
-                             { 'bSortable': false, 'aTargets': [3] }
+                             { 'bSortable': false, 'aTargets': [4] }
                           ]
-    });  
+    });
+    
+    $('.add').click(function(){
+    	window.location = baseUrl+"/mm/add-an-externalprofessor.html";
+    });
     
 });
 
-function EditThesis(thesisId){
-	var sViewDetailUrl = baseUrl + "/mm/editthesis/"+thesisId+".html";
+function v_fViewDetailAProfessor(iProfessorId){
+	var sViewDetailUrl = baseUrl + "/mm/externalprofessor-detail/"+iProfessorId+".html";
 	window.location = sViewDetailUrl;
 }
 
-
+function v_fRemoveAProfessor(iProfessorId){
+	var r = confirm("Bạn có muốn xóa giảng viên này ?");
+	if (r == true) {
+		var sRemoveAProfessorUrl = baseUrl + "/mm/remove-an-externalprofessor/"+iProfessorId+".html";
+		window.location = sRemoveAProfessorUrl;
+	} else {
+	    return false;
+	}
+}
 </script>
 

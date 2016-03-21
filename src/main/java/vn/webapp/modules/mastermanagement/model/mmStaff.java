@@ -58,7 +58,7 @@ public class mmStaff implements Serializable{
 	private Set<mmMasterThesis> listMasterThesis = new HashSet<mmMasterThesis>();
     
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="Staff_AcademicRank", referencedColumnName = "AcademicRank_ID", insertable=false, updatable = false)
+    @JoinColumn(name="Staff_AcademicRank", referencedColumnName = "AcademicRank_Code", insertable=false, updatable = false)
     public mmAcademicRank academicRank;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

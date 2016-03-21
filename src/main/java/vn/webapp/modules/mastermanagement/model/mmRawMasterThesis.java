@@ -7,12 +7,17 @@
 package vn.webapp.modules.mastermanagement.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -33,6 +38,13 @@ public class mmRawMasterThesis implements Serializable{
 	@ManyToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
 	@JoinColumn(name = "Thesis_SupervisorCode", referencedColumnName = "Staff_Code", nullable = false, insertable=false, updatable=false)
 	private mmStaff supervisor;
+	
+	@ManyToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)  
+	@JoinTable(name = "tblmasterthesisspecializationkeywords", 
+	  		   joinColumns = { @JoinColumn(name = "MTKW_ThesisCode", referencedColumnName = "Thesis_Code") }, 
+	   		   inverseJoinColumns = { @JoinColumn(name = "MTKW_KWCode", referencedColumnName = "KW_Code") })  
+	private Set<mmSpecializationKeyword> listSpecializationKeywords = new HashSet<mmSpecializationKeyword>();
+
 
 	public int getThesis_ID() {
 		return Thesis_ID;
@@ -80,5 +92,14 @@ public class mmRawMasterThesis implements Serializable{
 
 	public void setSupervisor(mmStaff supervisor) {
 		this.supervisor = supervisor;
+	}
+	
+	public Set<mmSpecializationKeyword> getListSpecializationKeywords() {
+		return listSpecializationKeywords;
+	}
+
+	public void setListSpecializationKeywords(
+			Set<mmSpecializationKeyword> listSpecializationKeywords) {
+		this.listSpecializationKeywords = listSpecializationKeywords;
 	}
 }

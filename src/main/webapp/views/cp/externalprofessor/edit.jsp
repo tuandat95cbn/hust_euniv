@@ -13,12 +13,12 @@
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Chỉnh sửa thông tin giảng viên</h1>
+			<h1 class="page-header">Chỉnh sửa thông tin giảng viên ngoài trường</h1>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
 	<!-- /.row -->
-	<form:form id="form-edit" action="${baseUrl}/mm/edit-staff.html" method="POST" commandName="staffFormEdit" role="form" accept-charset="UTF-8">
+	<form:form id="form-edit" action="${baseUrl}/mm/edit-externalstaff.html" method="POST" commandName="staffFormEdit" role="form" accept-charset="UTF-8">
 		<div class="row">
 		<c:if test="${status != null}">	              
 		<div class="alert alert-success">
@@ -33,24 +33,21 @@
 						<form:input path="staffName" class="form-control" name="staffName" type="text" placeholder="Name" value="${staffName}"></form:input>
 	    				<form:errors path="staffName" class="alert-danger"></form:errors>
     				</div>
-				</div>
-				
-				<div class="form-group">
-					<label>Khoa/viện </label>
-					<div class='form'>
-						<select id="staffFaculty" class="form-control">
-							<c:forEach items="${facultyList}" var="faculty">
-	                       		<option value="${faculty.faculty_Code}" <c:if test="${staff.department.faculty.faculty_Code eq faculty.faculty_Code}">selected</c:if>>${faculty.faculty_Name}</option>
-	                       	</c:forEach>							
-	                    </select>	                    
-                    </div>
-				</div>
+				</div>				
 				
 				<div class="form-group">
 					<label>Email</label>
 					<div class='form'>
 						<form:input path="staffEmail" class="form-control" name="staffEmail" type="text" placeholder="Email" value="${staffEmail}"></form:input>
 	    				<form:errors path="staffEmail" class="alert-danger"></form:errors>
+    				</div>
+				</div>
+				
+				<div class="form-group">
+					<label>Điện thoại</label>
+					<div class='form'>
+						<form:input path="staffPhone" class="form-control" name="staffPhone" type="text" placeholder="Phone" value="${staffPhone}"></form:input>
+	    				<form:errors path="staffPhone" class="alert-danger"></form:errors>
     				</div>
 				</div>
 				
@@ -70,25 +67,19 @@
 	                    <form:errors path="staffAcademicRank" class="alert-danger"></form:errors>
                     </div>
 				</div>
-				<div class="form-group" id="DepartmentGroup">
-					<label>Bộ môn</label>
-					<div class='form'>
-						<form:select path="staffDepartment" class="form-control" name="staffDepartment">
-							<c:forEach items="${departmentList}" var="department">
-	                       		<option value="${department.department_Code}" <c:if test="${staffDepartementCode eq department.department_Code}">selected</c:if>>${department.department_Name}</option>
-	                       	</c:forEach>
-	                    </form:select>
-	                    <form:errors path="staffDepartment" class="alert-danger"></form:errors>
-                    </div>
-				</div>				
-				
 				<div class="form-group">
-					<label>Điện thoại</label>
+					<label>Trường</label>
 					<div class='form'>
-						<form:input path="staffPhone" class="form-control" name="staffPhone" type="text" placeholder="Phone" value="${staffPhone}"></form:input>
-	    				<form:errors path="staffPhone" class="alert-danger"></form:errors>
-    				</div>
-				</div>
+						<form:select id="staffUniversity" path="staffUniversity" class="form-control" name="staffUniversity">
+							 <c:forEach items="${universityList}" var="university">
+	                       		<option value="${university.university_Code}" <c:if test="${staff.university.university_Code eq university.university_Code}">selected</c:if>>${university.university_Name}</option>
+	                       	</c:forEach>                    	
+	                    </form:select>
+	                    <form:errors path="staffUniversity" class="alert-danger"></form:errors>
+                    </div>
+				</div>								
+				
+				
 				
 				<!-- /.col-lg-4 -->
 			</div>
@@ -205,7 +196,7 @@ $(document).ready(function() {
 	
 	
 	$('#cancel').click(function() {
-		window.location = baseUrl + "/mm/professors.html";
+		window.location = baseUrl + "/mm/externalprofessors.html";
 	});	
 	
 });

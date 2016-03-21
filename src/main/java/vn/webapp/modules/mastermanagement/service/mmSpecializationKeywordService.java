@@ -16,5 +16,6 @@ public interface mmSpecializationKeywordService {
     public List<mmSpecializationKeyword> loadSpecializationKeywordByScientificField(String SCIF_Code);
     public mmSpecializationKeyword getSpecializationKeywordByCode(String KW_Code);
     public List<mmSpecializationKeyword> loadStaffSpecializationKeywordList(String staffCode);
+    public List<mmSpecializationKeyword> loadMasterThesisSpecializationKeywordList(String thesisCode);
     
 }

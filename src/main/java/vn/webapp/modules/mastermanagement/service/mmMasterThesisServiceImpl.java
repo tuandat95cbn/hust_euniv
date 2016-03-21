@@ -96,12 +96,12 @@ public class mmMasterThesisServiceImpl implements mmMasterThesisService {
     @Override
     public void editAMasterThesis(int ThesisID, String ThesisCode, String ThesisName, mmStudent student, mmStaff supervisor, HashSet<mmSpecializationKeyword> specializationKeywords){
     	
-    	 mmMasterThesis masterThesis = mmmasterThesisDAO.getMasterThesisById(ThesisID);
+    	 mmRawMasterThesis masterThesis = mmmasterThesisDAO.getRawMasterThesisById(ThesisID);
     	 if(masterThesis != null){
     	   	masterThesis.setThesis_Name(ThesisName);
     	   	masterThesis.setThesis_Code(ThesisCode);
     	   	//masterThesis.setStudent(student);
-    	   	//masterThesis.setSupervisor(supervisor);
+    	   	masterThesis.setSupervisor(supervisor);
     		masterThesis.setListSpecializationKeywords(specializationKeywords);
     	   	   		 
     		mmmasterThesisDAO.editAMasterThesis(masterThesis);
@@ -126,25 +126,8 @@ public class mmMasterThesisServiceImpl implements mmMasterThesisService {
 	   	masterThesis.setThesis_Code(ThesisCode);
 	   	masterThesis.setThesis_StudentCode(studentCode);
 	   	masterThesis.setThesis_SupervisorCode(supervisor);
+	   	masterThesis.setListSpecializationKeywords(specializationKeywords);
 	   	
-	   	// Save special keywords for a staff
-	   	if(specializationKeywords != null)
-	   	{
-	   		for (mmSpecializationKeyword specializationKeyword : specializationKeywords) {
-	   			
-	   			mmStaffSpecializationKeywords staffSpecializationKeywords = mmstaffSpecialKeyWordsDAO.getStaffSpecializationKeywordsByStaffAndCode(supervisor, specializationKeyword.getKW_Code());
-	   			if(staffSpecializationKeywords == null)
-	   			{
-	   				mmStaffSpecializationKeywords newStaffSpecializationKeywords = new mmStaffSpecializationKeywords();
-	   				
-	   				newStaffSpecializationKeywords.setSTFKW_KeywordCode(specializationKeyword.getKW_Code());
-	   				newStaffSpecializationKeywords.setSTFKW_StaffCode(supervisor);
-	   				mmstaffSpecialKeyWordsDAO.saveAStaffSpecializationKeywords(newStaffSpecializationKeywords);
-	   			}
-	   				
-			}
-	   	}
-		
 		// Change status of a Student
 		student.setStudent_StatusID(1);
 		mmstudentDAO.editAStudent(student);

@@ -20,15 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import vn.webapp.modules.mastermanagement.model.mmMasterThesis;
-import vn.webapp.modules.mastermanagement.model.mmRawMasterThesis;
+import vn.webapp.modules.mastermanagement.model.mmExternalStaff;
 import vn.webapp.modules.mastermanagement.model.mmStaff;
+import vn.webapp.modules.mastermanagement.model.mmStaffInput;
 
-
-@Repository("mmmasterThesisDAO")
+@Repository("mmexternalstaffDAO")
 @SuppressWarnings({"unchecked", "rawtypes"})
 
-public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO {
+public class mmExternalStaffDAOImpl extends BaseDao implements mmExternalStaffDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -42,63 +41,15 @@ public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO 
      * @param String
      * @return object
      */
-    @Override
-    public List<mmMasterThesis> listMasterThesis(){
+    
+    public List<mmExternalStaff> listExternalStaffs(){
+    	
     	try {
     		begin();
-            Criteria criteria = getSession().createCriteria(mmMasterThesis.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-            criteria.setFirstResult(0);
-            List<mmMasterThesis> masterThesis = criteria.list();
+            Criteria criteria = getSession().createCriteria(mmExternalStaff.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            List<mmExternalStaff> externalstaffs = criteria.list();
             commit();
-            return masterThesis;
-        } catch (HibernateException e) {
-            e.printStackTrace();
-            rollback();
-            close();
-            return null;
-        } finally {
-            flush();
-            close();
-        }
-    }
-    
-    /**
-     * Load A Professor by id 
-     * @param int
-     * @return object
-     */
-    @Override
-    public mmMasterThesis getMasterThesisById(int masterThesis_Id){
-    	try {
-            begin();
-            Criteria criteria = getSession().createCriteria(mmMasterThesis.class);
-            criteria.add(Restrictions.eq("Thesis_ID", masterThesis_Id));
-            
-            mmMasterThesis masterThesis = (mmMasterThesis) criteria.uniqueResult();
-            commit();
-            return masterThesis;
-        } catch (HibernateException e) {
-            e.printStackTrace();
-            rollback();
-            close();
-            return null;
-        } finally {
-            flush();
-            close();
-        }
-    }
-    
-    @Override
-    public mmRawMasterThesis getRawMasterThesisById(int masterThesis_Id){
-    	
-    	try {
-            begin();
-            Criteria criteria = getSession().createCriteria(mmRawMasterThesis.class);
-            criteria.add(Restrictions.eq("Thesis_ID", masterThesis_Id));
-            
-            mmRawMasterThesis masterThesis = (mmRawMasterThesis) criteria.uniqueResult();
-            commit();
-            return masterThesis;
+            return externalstaffs;
         } catch (HibernateException e) {
             e.printStackTrace();
             rollback();
@@ -110,16 +61,16 @@ public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO 
         }
     	
     }
-    
-    public mmMasterThesis getMasterThesisByCode(String MasterThesis_Code){
-    	try {
-            begin();
-            Criteria criteria = getSession().createCriteria(mmMasterThesis.class);
-            criteria.add(Restrictions.eq("Thesis_Code", MasterThesis_Code));
-            
-            mmMasterThesis masterThesis = (mmMasterThesis) criteria.uniqueResult();
+	
+	public List<mmExternalStaff> listExternalStaffsByUniversity(String universityCode){
+		
+		try {
+    		begin();
+            Criteria criteria = getSession().createCriteria(mmExternalStaff.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            criteria.add(Restrictions.eq("EXTSTAF_UniversityCode", universityCode));            
+            List<mmExternalStaff> externalstaffs = criteria.list();
             commit();
-            return masterThesis;
+            return externalstaffs;
         } catch (HibernateException e) {
             e.printStackTrace();
             rollback();
@@ -129,19 +80,60 @@ public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO 
             flush();
             close();
         }
-    }
-    
-    
-    /**
-     * Edit a master thesis
-     * @param Object
-     * @return int
-     */
-    @Override
-    public void editAMasterThesis(mmRawMasterThesis masterThesis){
+		
+		
+		
+	}
+		
+	public mmExternalStaff getExternalStaffById(String userRole, int staff_Id){
+		
+		try {
+            begin();
+            Criteria criteria = getSession().createCriteria(mmExternalStaff.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            criteria.add(Restrictions.eq("EXTSTAF_ID", staff_Id));            
+            if(!(userRole.equals("ROLE_ADMIN")||userRole.equals("SUPER_ADMIN"))){
+            	return null;
+            }
+            mmExternalStaff professor = (mmExternalStaff) criteria.uniqueResult();
+            commit();
+            return professor;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+		
+	}
+	
+	public mmExternalStaff getByExternalStaffCode(String externalStaffCode){
+		
+		try {
+            begin();
+            Criteria criteria = getSession().createCriteria(mmExternalStaff.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            criteria.add(Restrictions.eq("EXTSTAF_Code", externalStaffCode));            
+            mmExternalStaff professor = (mmExternalStaff) criteria.uniqueResult();
+            commit();
+            return professor;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+		
+	}
+		   
+    public void editAExternalStaff(mmExternalStaff externalstaff){
     	try {
             begin();
-            getSession().update(masterThesis);
+            getSession().update(externalstaff);
             commit();
          } catch (HibernateException e) {
              e.printStackTrace();
@@ -153,19 +145,12 @@ public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO 
          }
     }
     
-    /**
-     * Save a master thesis
-     * @param Object
-     * @return int
-     */
-    @Override
-    public int saveAMasterThesis(mmRawMasterThesis masterThesis){
+    public int saveAExternalStaff(mmExternalStaff externalstaff){
     	try {
             begin();
             int id = 0; 
-            id = (int)getSession().save(masterThesis);
+            id = (int)getSession().save(externalstaff);
             commit();
-            System.out.println("OK");
             return id;           
          } catch (HibernateException e) {
              e.printStackTrace();
@@ -178,13 +163,12 @@ public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO 
          }
     }
     
-    @Override
-    public int removeAMasterThesis(int masterThesisId){
-    	mmMasterThesis masterThesis = new mmMasterThesis();
-    	masterThesis.setThesis_ID(masterThesisId);
+    public int removeAExternalStaff(int staffId){
+    	mmExternalStaff staff = new mmExternalStaff();
+    	staff.setEXTSTAF_ID(staffId);
     	try {
             begin();
-            getSession().delete(masterThesis);
+            getSession().delete(staff);
             commit();
             return 1;
         } catch (HibernateException e) {
@@ -197,5 +181,5 @@ public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO 
             close();
         }
     }
-    
+        
 }

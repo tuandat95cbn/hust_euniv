@@ -20,15 +20,7 @@
 	<!-- /.row -->
 	<form:form action="${baseUrl}/cp/edit-staff-detail.html" method="POST" commandName="staffFormEdit" role="form" accept-charset="UTF-8">
 		<div class="row">
-			<div class="col-lg-4">
-				<div class="well">
-					<h4>Email</h4>
-					<p class="value">${staffEmail}</p>
-					<div ${error == 1 ? "class='form'" : "class='form hidden'"}>
-						<form:input path="staffEmail" class="form-control" name="staffEmail" type="text" placeholder="Email" value="${staffEmail}"></form:input>
-	    				<form:errors path="staffEmail" class="alert-danger"></form:errors>
-    				</div>
-				</div>
+			<div class="col-lg-5">
 				<div class="well">
 					<h4>Họ tên</h4>
 					<p class="value">${staffName}</p>
@@ -37,6 +29,24 @@
 	    				<form:errors path="staffName" class="alert-danger"></form:errors>
     				</div>
 				</div>
+				
+				<div class="well">
+					<h4>Bộ môn</h4>
+					<p class="value">${staffDepartmentName}</p>
+					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
+						<div id="default_department">
+							<form:select path="staffDepartment" class="form-control" name="staffDepartment">
+								<c:forEach items="${departmentList}" var="department">
+		                       		<option value="${department.department_Code}" <c:if test="${staffDepartmentCode eq department.department_Code}">selected</c:if>>${department.department_Name}</option>
+		                       	</c:forEach>
+		                    </form:select>
+		                    <form:errors path="staffDepartment" class="alert-danger"></form:errors>
+	                    </div>
+	                    <div id="department"></div>
+                    </div>
+				</div>
+				
+				
 				<!-- /.col-lg-4 -->
 				<div class="well">
 					<h4>Giới tính</h4>
@@ -59,18 +69,11 @@
 				</div>
 			</div>
 			
-			<div class="col-lg-4">
-				<div class="well">
-					<h4>Điện thoại</h4>
-					<p class="value">${staffPhone}</p>
-					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
-						<form:input path="staffPhone" class="form-control" name="staffPhone" type="text" placeholder="Phone" value="${staffPhone}"></form:input>
-	    				<form:errors path="staffPhone" class="alert-danger"></form:errors>
-    				</div>
-				</div>
+			<div class="col-lg-5">
+			
 				<div class="well">
 					<h4>Khoa/Viện</h4>
-					<p class="value">${staffFacultyCode}</p>
+					<p class="value">${staffFacultyName}</p>
 					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
 						<form:select path="staffFaculty" class="form-control" name="staffFaculty" onchange="showDepartment(this);">
 							<c:forEach items="${facultyList}" var="faculty">
@@ -80,21 +83,41 @@
 	                    <form:errors path="staffFaculty" class="alert-danger"></form:errors>
                     </div>
 				</div>
+				
 				<div class="well">
-					<h4>Bộ môn</h4>
-					<p class="value">${staffDepartementName}</p>
+					<h4>Học hàm học vị</h4>
+					<p class="value">${academicRank.academicRank_VNName}</p>
 					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
-						<div id="default_department">
-							<form:select path="staffDepartment" class="form-control" name="staffDepartment">
-								<c:forEach items="${departmentList}" var="department">
-		                       		<option value="${department.department_Code}" <c:if test="${staffDepartementCode eq department.department_Code}">selected</c:if>>${department.department_Name}</option>
-		                       	</c:forEach>
-		                    </form:select>
-		                    <form:errors path="staffDepartment" class="alert-danger"></form:errors>
+						<div id="default_academicRank">
+							<form:select id="staffAcademicRank" path="staffAcademicRank" class="form-control" name="staffAcademicRank">
+							<c:forEach items="${academicRankList}" var="acaRank">
+	                       		<option value="${acaRank.academicRank_Code}" <c:if test="${academicRank.academicRank_Code eq acaRank.academicRank_Code}">selected</c:if>>${acaRank.academicRank_VNName}</option>
+	                       	</c:forEach>							
+	                    </form:select>
+	                    <form:errors path="staffAcademicRank" class="alert-danger"></form:errors>
 	                    </div>
-	                    <div id="department"></div>
+	                    <div id="academicRank"></div>
                     </div>
 				</div>
+				
+				<div class="well">
+					<h4>Email</h4>
+					<p class="value">${staffEmail}</p>
+					<div ${error == 1 ? "class='form'" : "class='form hidden'"}>
+						<form:input path="staffEmail" class="form-control" name="staffEmail" type="text" placeholder="Email" value="${staffEmail}"></form:input>
+	    				<form:errors path="staffEmail" class="alert-danger"></form:errors>
+    				</div>
+				</div>
+				<div class="well">
+					<h4>Điện thoại</h4>
+					<p class="value">${staffPhone}</p>
+					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
+						<form:input path="staffPhone" class="form-control" name="staffPhone" type="text" placeholder="Phone" value="${staffPhone}"></form:input>
+	    				<form:errors path="staffPhone" class="alert-danger"></form:errors>
+    				</div>
+				</div>
+				
+				
 				<!-- /.col-lg-4 -->
 			</div>
 		</div>

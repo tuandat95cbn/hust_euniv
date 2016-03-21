@@ -19,4 +19,12 @@ public interface mmUniversityService {
     
     public mmUniversity loadAUniversityByCodes(String universityCode);
     
+    public mmUniversity loadAUniversityByID(int universityID);
+    
+    public void editAUniversity(int universityID, String universityName, String universityCode);
+    
+    public int saveAUniversity(String universityName, String universityCode);
+    
+    public int removeAUniversity(int UniversityId);
+    
 }

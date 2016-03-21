@@ -27,7 +27,7 @@ import vn.webapp.modules.usermanagement.model.mFaculty;
 	 * @param facultyCode
 	 * @return
 	 */
-	public List<mFaculty> loadAFacultyByCode(String facultyCode);
+	public mFaculty loadAFacultyByCode(String facultyCode);
 	
 	/**
 	 * 

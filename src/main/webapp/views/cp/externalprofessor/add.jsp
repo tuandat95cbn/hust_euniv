@@ -13,12 +13,12 @@
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Thêm giảng viên</h1>
+			<h1 class="page-header">Thêm giảng viên ngoài trường</h1>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
 	<!-- /.row -->
-	<form:form id="form-add" action="${baseUrl}/mm/save-a-professor.html" method="POST" commandName="staffFormAdd" role="form" accept-charset="UTF-8">
+	<form:form id="form-add" action="${baseUrl}/mm/save-an-externalprofessor.html" method="POST" commandName="staffFormAdd" role="form" accept-charset="UTF-8">
 		<div class="row">
 		<c:if test="${status != null}">	              
 		<div class="alert alert-success">
@@ -33,18 +33,6 @@
 	    				<form:errors path="staffName" class="alert-danger"></form:errors>
     				</div>
 				</div>
-				
-				<div class="form-group">
-					<label>Khoa/viện </label>
-					<div class='form'>
-						<select id="staffFaculty" class="form-control">
-							<c:forEach items="${facultyList}" var="faculty">
-	                       		<option value="${faculty.faculty_Code}">${faculty.faculty_Name}</option>
-	                       	</c:forEach>							
-	                    </select>	                    
-                    </div>
-				</div>
-				
 				<div class="form-group">
 					<label>Email</label>
 					<div class='form'>
@@ -52,11 +40,18 @@
 	    				<form:errors path="staffEmail" class="alert-danger"></form:errors>
     				</div>
 				</div>
+				<div class="form-group">
+					<label>Điện thoại</label>
+					<div class='form'>
+						<form:input path="staffPhone" class="form-control" name="staffPhone" type="text" placeholder="Phone" value="${staffPhone}"></form:input>
+	    				<form:errors path="staffPhone" class="alert-danger"></form:errors>
+    				</div>
+				</div>
 				
 				<!-- /.col-lg-4 -->
 			</div>
 	
-			<div class="col-lg-4">		
+			<div class="col-lg-4">
 			
 				<div class="form-group">
 					<label>Học hàm học vị</label>
@@ -70,25 +65,18 @@
                     </div>
 				</div>	
 			
-				<div class="form-group" id="DepartmentGroup" style="">
-					<label>Bộ môn</label>
+				<div class="form-group">
+					<label>Trường</label>
 					<div class='form'>
-						<form:select path="staffDepartment" class="form-control" name="staffDepartment">
-							<c:forEach items="${departmentList}" var="department">
-	                       		<option value="${department.department_Code}" <c:if test="${staffDepartementCode eq department.department_Code}">selected</c:if>>${department.department_Name}</option>
-	                       	</c:forEach>
+						<form:select id="staffUniversity" path="staffUniversity" class="form-control" name="staffUniversity">
+							 <c:forEach items="${universityList}" var="university">
+	                       		<option value="${university.university_Code}">${university.university_Name}</option>
+	                       	</c:forEach>                    	
 	                    </form:select>
-	                    <form:errors path="staffDepartment" class="alert-danger"></form:errors>
+	                    <form:errors path="staffUniversity" class="alert-danger"></form:errors>
                     </div>
 				</div>				
 				
-				<div class="form-group">
-					<label>Điện thoại</label>
-					<div class='form'>
-						<form:input path="staffPhone" class="form-control" name="staffPhone" type="text" placeholder="Phone" value="${staffPhone}"></form:input>
-	    				<form:errors path="staffPhone" class="alert-danger"></form:errors>
-    				</div>
-				</div>
 				
 				<!-- /.col-lg-4 -->
 			</div>
@@ -208,7 +196,7 @@
 		
 		
 		$('#cancel').click(function() {
-			window.location = baseUrl + "/mm/professors.html";
+			window.location = baseUrl + "/mm/externalprofessors.html";
 		});	
 		
 	});

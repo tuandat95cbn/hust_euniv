@@ -331,11 +331,12 @@ public class mUserController extends BaseWeb {
  public List<mFaculty> getFacultyByUserRole(String userRole, String currentUserFacultyCode)
  {
 	  List<mFaculty> facultyList = new ArrayList<mFaculty>();
-	  if(userRole.equals(mUserController.SUPER_ADMIN) || currentUserFacultyCode.equals(null)){
+	  facultyList = facultyService.loadFacultyList();
+	  /*if(userRole.equals(mUserController.SUPER_ADMIN) || currentUserFacultyCode.equals(null)){
 		   facultyList = facultyService.loadFacultyList();
 	   }else{
 		   facultyList = facultyService.loadAFacultyByCode(currentUserFacultyCode);
-	   }
+	   }*/
 	  return facultyList;
  }
  

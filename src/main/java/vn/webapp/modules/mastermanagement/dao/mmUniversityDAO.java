@@ -10,4 +10,12 @@ public interface mmUniversityDAO {
     
     public mmUniversity loadAUniversityByCodes(String universityCode);
     
+    public mmUniversity loadAUniversityByID(int universityID);
+    
+    public void editAUniversity(mmUniversity University);
+    
+    public int saveAUniversity(mmUniversity University);
+    
+    public int removeAUniversity(int UniversityId);
+    
 }

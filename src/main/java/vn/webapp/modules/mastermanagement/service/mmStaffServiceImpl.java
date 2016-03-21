@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import vn.webapp.dto.DataPage;
 import vn.webapp.modules.mastermanagement.dao.mmStaffDAO;
+import vn.webapp.modules.mastermanagement.model.mmAcademicRank;
 import vn.webapp.modules.mastermanagement.model.mmDepartment;
 import vn.webapp.modules.mastermanagement.model.mmSpecializationKeyword;
 import vn.webapp.modules.mastermanagement.model.mmStaff;
@@ -116,6 +117,10 @@ public class mmStaffServiceImpl implements mmStaffService {
         }
     }
     
+    public mmStaffInput getStaffInputById(String userRole, int staff_Id){
+    	return staffDAO.getStaffInputById(userRole, staff_Id);
+    }
+    
     public mmStaff loadStaffByStaffCode(final String staffCode){
     	try {
             return staffDAO.getByStaffCode(staffCode);
@@ -133,23 +138,24 @@ public class mmStaffServiceImpl implements mmStaffService {
      * @return int
      */
     @Override
-    public void editAStaff(int staff_ID, String staffCode, String staffName, String staffEmail, String staffPhone, mmDepartment staffDepartment, mmUsers user, String userRole, mmStaffCategory staffCategory, HashSet<mmSpecializationKeyword> specializationKeywords){
+    public void editAStaff(int staff_ID, String staffCode, String staffName, String staffEmail, String staffPhone, mmDepartment staffDepartment, mmUsers user, String userRole, mmStaffCategory staffCategory, HashSet<mmSpecializationKeyword> specializationKeywords, mmAcademicRank academicRank){
     	
-    	 mmStaff staff = staffDAO.getStaffById(userRole, staff_ID);
+    	 mmStaffInput staff = staffDAO.getStaffInputById(userRole, staff_ID);
     	 if(staff != null){
     		 //staff.setUniversity(staffUniversity);
     		 
-    		 staff.setDepartment(staffDepartment);
+    		 staff.setStaff_Department_Code(staffDepartment.getDepartment_Code());
 	     	 staff.setStaff_AsciiName(staffName);
 	     	 staff.setStaff_Name(staffName);
 	     	 staff.setStaff_Phone(staffPhone);
-	     	 staff.setStaffCategory(staffCategory);
+	     	 staff.setStaff_Category_Code(staffCategory.getStaff_Category_Code());
 	     	 //staff.setStaff_Category_Code(staffCategory.getStaff_Category_Code());
 	     	 //staff.setUser(user);
 	     	 staff.setStaff_User_Code(user.getUsername());
 	     	 staff.setStaff_Email(staffEmail);
 	     	 staff.setStaff_Code(staffCode);
 	     	 staff.setListSpecializationKeywords(specializationKeywords);
+	     	 staff.setStaff_AcademicRank(academicRank.getAcademicRank_Code());
 	     	 
 	     	 
 	     	
@@ -166,7 +172,7 @@ public class mmStaffServiceImpl implements mmStaffService {
      * @return int
      */
     @Override
-    public int saveAStaff(String staffCode, String staffName, String staffEmail, String staffPhone, mmDepartment staffDepartment, mmUsers user, String userRole, mmStaffCategory staffCategory, HashSet<mmSpecializationKeyword> specializationKeywords){
+    public int saveAStaff(String staffCode, String staffName, String staffEmail, String staffPhone, mmDepartment staffDepartment, mmUsers user, String userRole, mmStaffCategory staffCategory, HashSet<mmSpecializationKeyword> specializationKeywords, mmAcademicRank academicRank){
     	
     	mmStaffInput staff = new mmStaffInput();
 		//staff.setDepartment(staffDepartment);
@@ -181,6 +187,7 @@ public class mmStaffServiceImpl implements mmStaffService {
 	    staff.setStaff_Email(staffEmail);
 		staff.setStaff_Code(staffCode);
 		staff.setListSpecializationKeywords(specializationKeywords);
+		staff.setStaff_AcademicRank(academicRank.getAcademicRank_Code());
 
     	return staffDAO.saveAStaff(staff);
     }

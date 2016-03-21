@@ -133,4 +133,22 @@ public class mmSpecializationKeywordDAOImpl extends BaseDao implements mmSpecial
         }
     }
     
+    @Override
+    public List<mmSpecializationKeyword> loadMasterThesisSpecializationKeywordList(String thesisCode){
+    	try {
+            begin();
+            SQLQuery q = getSession().createSQLQuery("SELECT DISTINCT KW_ID,KW_Code,KW_EngName,KW_VNName,KW_ScientificFieldCode FROM `tblspecializationkeywords` AS t1 JOIN (SELECT * FROM `tblmasterthesisspecializationkeywords` WHERE MTKW_ThesisCode = '"+thesisCode+"') AS t2 ON t1.KW_Code = t2.MTKW_KWCode");
+    		q.addEntity(mmSpecializationKeyword.class);
+            commit();
+            return q.list();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+    }
 }

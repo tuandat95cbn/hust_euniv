@@ -6,6 +6,8 @@
 package vn.webapp.modules.usermanagement.service;
 
 import java.util.List;
+
+import vn.webapp.modules.usermanagement.model.mAcademicRank;
 import vn.webapp.modules.usermanagement.model.mStaff;
 
 public interface mStaffService {
@@ -51,7 +53,7 @@ public interface mStaffService {
      * @param staffDateOfBirth
      */
     public void editAStaff(int StaffId, String staffName, String staffEmail, String staffPhone, String staffDepartment, 
-    						String userCode, String staffCatCode, String userFacultyCode, String staffGender, String staffDateOfBirth);
+    						String userCode, String staffCatCode, String userFacultyCode, String staffGender, String staffDateOfBirth, mAcademicRank academicRank);
     
     /**
      * 

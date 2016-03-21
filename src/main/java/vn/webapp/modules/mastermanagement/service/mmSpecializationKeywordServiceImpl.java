@@ -76,4 +76,7 @@ public class mmSpecializationKeywordServiceImpl implements mmSpecializationKeywo
      public List<mmSpecializationKeyword> loadStaffSpecializationKeywordList(String staffCode){
     	 return mmspecializationKeywordDAO.loadStaffSpecializationKeywordList(staffCode);
      }
+     public List<mmSpecializationKeyword> loadMasterThesisSpecializationKeywordList(String thesisCode){
+    	 return mmspecializationKeywordDAO.loadMasterThesisSpecializationKeywordList(thesisCode);
+     }
 }

@@ -6,8 +6,10 @@
 package vn.webapp.modules.usermanagement.model;
 
 import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -44,6 +46,10 @@ public class mStaff implements Serializable{
     @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "Staff_Department_Code", referencedColumnName = "Department_Code",insertable = false, updatable = false)
     private mDepartment department;
+    
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="Staff_AcademicRank", referencedColumnName = "AcademicRank_Code")
+    public mAcademicRank academicRank;
 
 	public int getStaff_ID() {
 		return Staff_ID;
@@ -164,4 +170,13 @@ public class mStaff implements Serializable{
 	public void setStaff_DateOfBirth(String staff_DateOfBirth) {
 		Staff_DateOfBirth = staff_DateOfBirth;
 	}
+
+	public mAcademicRank getAcademicRank() {
+		return academicRank;
+	}
+
+	public void setAcademicRank(mAcademicRank academicRank) {
+		this.academicRank = academicRank;
+	}
+	
 }

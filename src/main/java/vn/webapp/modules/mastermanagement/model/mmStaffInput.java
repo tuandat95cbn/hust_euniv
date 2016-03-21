@@ -49,7 +49,7 @@ public class mmStaffInput implements Serializable{
     private String Staff_User_Code;
     private String Staff_Faculty_Code;
     private String Staff_Category_Code;
-    
+    private String Staff_AcademicRank;
 
 	@ManyToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)  
     @JoinTable(name = "tblstaffspecializationkeywords", 
@@ -57,27 +57,7 @@ public class mmStaffInput implements Serializable{
     		   inverseJoinColumns = { @JoinColumn(name = "STFKW_KeywordCode", referencedColumnName = "KW_Code") })  
     private Set<mmSpecializationKeyword> listSpecializationKeywords = new HashSet<mmSpecializationKeyword>();
     
-	/*@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="Staff_Category_Code", referencedColumnName = "Staff_Category_Code", insertable=false, updatable = false)
-    public mmStaffCategory staffCategory;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "Staff_Department_Code", referencedColumnName = "Department_Code", insertable=false, updatable = false)
-    private mmDepartment department;*/
-    
-    
-	/*public mmDepartment getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(mmDepartment department) {
-		this.department = department;
-	}*/
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="Staff_AcademicRank", referencedColumnName = "AcademicRank_ID", insertable=false, updatable = false)
-    public mmAcademicRank academicRank;
-	    
 	public String getStaff_Category_Code() {
 		return Staff_Category_Code;
 	}
@@ -190,13 +170,6 @@ public class mmStaffInput implements Serializable{
 		Staff_User_Code = staff_User_Code;
 	}
 
-	/*public University getUniversity() {
-		return university;
-	}
-
-	public void setUniversity(University university) {
-		this.university = university;
-	}*/	
 	
  	public String getStaff_Faculty_Code() {
 		return Staff_Faculty_Code;
@@ -206,12 +179,12 @@ public class mmStaffInput implements Serializable{
 		Staff_Faculty_Code = staff_Faculty_Code;
 	}
 
-	public mmAcademicRank getAcademicRank() {
-		return academicRank;
+	public String getStaff_AcademicRank() {
+		return Staff_AcademicRank;
 	}
 
-	public void setAcademicRank(mmAcademicRank academicRank) {
-		this.academicRank = academicRank;
+	public void setStaff_AcademicRank(String staff_AcademicRank) {
+		Staff_AcademicRank = staff_AcademicRank;
 	}
 	
 }

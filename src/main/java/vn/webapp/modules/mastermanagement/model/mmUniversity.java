@@ -23,13 +23,9 @@ public class mmUniversity implements Serializable{
 	private String University_Name;
 	private String University_AsciiName;
 	private String University_Role;
-	
-	
+		
 	@OneToMany(fetch = FetchType.LAZY, mappedBy="university", cascade = CascadeType.ALL)
 	private Set<mmFaculty> listFaculty;
-	
-	/*@OneToMany(fetch = FetchType.LAZY, mappedBy="university", cascade = CascadeType.ALL)
-	private Set<Staff> listStaff;*/
 	
 	public Set<mmFaculty> getListFaculty() {
 		return listFaculty;
@@ -66,5 +62,6 @@ public class mmUniversity implements Serializable{
 	}
 	public void setUniversity_Role(String university_Role) {
 		University_Role = university_Role;
-	}	
+	}
+	
 }

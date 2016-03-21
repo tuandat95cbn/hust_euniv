@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import vn.webapp.controller.BaseWeb;
+import vn.webapp.modules.usermanagement.model.mAcademicRank;
 import vn.webapp.modules.usermanagement.model.mDepartment;
 import vn.webapp.modules.usermanagement.model.mFaculty;
 import vn.webapp.modules.usermanagement.model.mStaff;
+import vn.webapp.modules.usermanagement.service.mAcademicRankService;
 import vn.webapp.modules.usermanagement.service.mDepartmentService;
 import vn.webapp.modules.usermanagement.service.mFacultyService;
 import vn.webapp.modules.usermanagement.service.mStaffService;
@@ -28,6 +30,10 @@ import vn.webapp.modules.usermanagement.validation.mStaffValidation;
 @Controller("cpmStaff")
 @RequestMapping(value = {"/cp"})
 public class mStaffController extends BaseWeb {
+	
+	@Autowired
+    private mAcademicRankService academicRankService;
+	
 	@Autowired
     private mStaffService staffService;
     
@@ -56,7 +62,8 @@ public class mStaffController extends BaseWeb {
 	   
 	   String currentUserFacultyCode = session.getAttribute("currentUserFaculty").toString();
 	   // Add the saved validationForm to the model
-	   List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
+	   //List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
+	   List<mFaculty> facultyList = facultyService.loadFacultyList();
 	   List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
 	   
 	   model.put("staffFormEdit", new mStaffValidation());
@@ -65,15 +72,19 @@ public class mStaffController extends BaseWeb {
 		   model.put("staffName", staff.getStaff_Name());
 		   model.put("staffPhone", staff.getStaff_Phone());
 		   model.put("staffCategory", staff.getStaffCategory().getStaff_Category_Name());
-		   model.put("staffDepartementName", staff.getDepartment().getDepartment_Name());
-		   model.put("staffDepartementCode", staff.getDepartment().getDepartment_Code());
+		   model.put("staffDepartmentName", staff.getDepartment().getDepartment_Name());
+		   model.put("staffDepartmentCode", staff.getDepartment().getDepartment_Code());
 		   model.put("staffFacultyCode", staff.getStaff_Faculty_Code());
+		   model.put("staffFacultyName", staff.getDepartment().getFaculty().getFaculty_Name());		   
 		   model.put("staffGender", staff.getStaff_Gender());
 		   model.put("staffDateOfBirth", staff.getStaff_DateOfBirth());
+		   model.put("academicRank", staff.getAcademicRank());	   
 		   
 	   }
 	   model.put("departmentList", departmentList);
 	   model.put("facultyList", facultyList);
+	   model.put("academicRankList", academicRankService.list());
+	   
        return "cp.profile";
    }
    
@@ -88,7 +99,8 @@ public class mStaffController extends BaseWeb {
 	  String userRole = session.getAttribute("currentUserRole").toString();
 	  String currentUserFacultyCode = session.getAttribute("currentUserFaculty").toString();
 	  // Add the saved validationForm to the model
-	  List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
+	  //List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
+	  List<mFaculty> facultyList = facultyService.loadFacultyList();
 	  List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
 	  String staffEmail = staffFormEdit.getStaffEmail();
 	  String staffName = staffFormEdit.getStaffName();
@@ -98,16 +110,20 @@ public class mStaffController extends BaseWeb {
 	  String staffGender = staffFormEdit.getStaffGender();
 	  String staffDateOfBirth = staffFormEdit.getStaffDateOfBirth();
 	  String staffFacultyCode = staffFormEdit.getStaffFaculty();
-	 
+	  String staffAcademicRankCode = staffFormEdit.getStaffAcademicRank();
+		  
 	  model.put("staffEmail", staffEmail);
 	  model.put("staffName", staffName);
 	  model.put("staffPhone", staffPhone);
 	  model.put("departmentList", departmentList);
 	  model.put("facultyList", facultyList);
+	  model.put("academicRankList", academicRankService.list());
 	  model.put("staffDateOfBirth", staffDateOfBirth);
 	  model.put("staffGender", staffGender);
 	  model.put("staffFacultyCode", staffFacultyCode);
-	  model.put("staffDepartementName", staffDepartment);
+	  model.put("staffDepartmentCode", staffDepartment);
+	
+	  model.put("academicRank", academicRankService.loadByCode(staffAcademicRankCode));
 	  if(result.hasErrors()) {
 		  model.put("error", 1);
 		  return "cp.profile";
@@ -119,11 +135,13 @@ public class mStaffController extends BaseWeb {
     	 	if(staff != null){
     	 		String staffCatCode = "LEC";
     	 		int staffID = staff.getStaff_ID();
-	    	 
-    	 		staffService.editAStaff(staffID, staffName, staffEmail, staffPhone, staffDepartment, userCode, staffCatCode, userFacultyCode, staffGender, staffDateOfBirth);
+    	 		mAcademicRank academicRank = academicRankService.loadByCode(staffAcademicRankCode);
+    	 		staffService.editAStaff(staffID, staffName, staffEmail, staffPhone, staffDepartment, userCode, staffCatCode, userFacultyCode, staffGender, staffDateOfBirth, academicRank);
+    	 		staff = staffService.loadStaffByUserCode(userCode);
+    	 		model.put("staffFacultyName", staff.getDepartment().getFaculty().getFaculty_Name());
+    	 		model.put("staffDepartmentName", staff.getDepartment().getDepartment_Name());
     	 		model.put("staffCategory", staff.getStaffCategory().getStaff_Category_Name());
-    	 		model.put("staffDepartementName", staff.getDepartment().getDepartment_Name());
-    	 		model.put("staffDepartementCode", staffDepartment);
+    	 			  
     	 	}
     	 	return "cp.profile";
 	  }
@@ -135,7 +153,7 @@ public class mStaffController extends BaseWeb {
    * @param session
    * @return
    */
-  public List<mFaculty> getFacultyByUserRole(String userRole, String currentUserFacultyCode)
+  /*public List<mFaculty> getFacultyByUserRole(String userRole, String currentUserFacultyCode)
   {
 	  List<mFaculty> facultyList = new ArrayList<mFaculty>();
 	  if(userRole.equals(this.SUPER_ADMIN) || currentUserFacultyCode.equals(null)){

@@ -45,7 +45,13 @@ public class mmSpecializationKeyword implements Serializable{
     Set<mmStaffInput> listStaffInputs = new HashSet<mmStaffInput>();
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "listSpecializationKeywords",cascade = CascadeType.ALL)  
-    Set<mmMasterThesis> listMasterThesis = new HashSet<mmMasterThesis>();  
+    Set<mmMasterThesis> listMasterThesis = new HashSet<mmMasterThesis>(); 
+    
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "listSpecializationKeywords",cascade = CascadeType.ALL)  
+    Set<mmExternalStaff> listExternalStaffs = new HashSet<mmExternalStaff>();  
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "listSpecializationKeywords",cascade = CascadeType.ALL)  
+    Set<mmRawMasterThesis> listRawMasterThesis = new HashSet<mmRawMasterThesis>();  
 
 
 	public Set<mmMasterThesis> getListMasterThesis() {
@@ -123,6 +129,22 @@ public class mmSpecializationKeyword implements Serializable{
 
 	public void setListStaffInputs(Set<mmStaffInput> listStaffInputs) {
 		this.listStaffInputs = listStaffInputs;
-	}  
-    
+	}
+
+	public Set<mmRawMasterThesis> getListRawMasterThesis() {
+		return listRawMasterThesis;
+	}
+
+	public void setListRawMasterThesis(Set<mmRawMasterThesis> listRawMasterThesis) {
+		this.listRawMasterThesis = listRawMasterThesis;
+	}
+
+	public Set<mmExternalStaff> getListExternalStaffs() {
+		return listExternalStaffs;
+	}
+
+	public void setListExternalStaffs(Set<mmExternalStaff> listExternalStaffs) {
+		this.listExternalStaffs = listExternalStaffs;
+	}     
+	
 }
