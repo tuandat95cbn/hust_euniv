@@ -12,7 +12,7 @@
 	    <meta name="description" content="">
 	    <meta name="author" content="">
 	
-	    <title>Viện Công nghệ Thông tin và Truyền Thông - ĐHBK Hà Nội</title>
+	    <title>ĐHBK Hà Nội</title>
 	    
 		<link rel="Shortcut Icon" href="<c:url value="/assets/img/icon.ico"/>" />
 		
