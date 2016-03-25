@@ -52,7 +52,7 @@ public interface mUserService {
      * @param id
      * @return
      */
-    public int removeUser(String id);
+    public int removeAnUser(String loginUserRole, int id, String userCode);
     
     /**
      * 

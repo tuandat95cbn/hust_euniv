@@ -47,6 +47,7 @@ public class mmStaff implements Serializable{
     private String Staff_User_Code;
     private String Staff_Faculty_Code;
     private String Staff_Department_Code;
+    private String Staff_AcademicRank;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy="supervisor", cascade = CascadeType.ALL)
 	private Set<mmMasterThesis> listMasterThesis = new HashSet<mmMasterThesis>();
@@ -181,6 +182,14 @@ public class mmStaff implements Serializable{
 
 	public void setStaff_Department_Code(String staff_Department_Code) {
 		Staff_Department_Code = staff_Department_Code;
+	}
+	
+	public String getStaff_AcademicRank() {
+		return Staff_AcademicRank;
+	}
+
+	public void setStaff_AcademicRank(String staff_AcademicRank) {
+		Staff_AcademicRank = staff_AcademicRank;
 	}
 	
 }

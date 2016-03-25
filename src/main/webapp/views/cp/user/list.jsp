@@ -107,8 +107,8 @@ function v_fRemoveAnUser(iUserId){
 	var r = confirm("Do you really want to remove this user ?");
 	if (r == true) {
 		//TODO
-		//var sRemoveAnUserUrl = baseUrl + "/cp/remove-an-user/"+iUserId+".html";
-		//window.location = sRemoveAnUserUrl;
+		var sRemoveAnUserUrl = baseUrl + "/cp/remove-an-user/"+iUserId+".html";
+		window.location = sRemoveAnUserUrl;
 	} else {
 	    return false;
 	}
