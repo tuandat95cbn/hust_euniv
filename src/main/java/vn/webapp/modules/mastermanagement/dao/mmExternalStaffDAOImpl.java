@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.webapp.modules.mastermanagement.model.mmExternalStaff;
+import vn.webapp.modules.mastermanagement.model.mmExternalStaffInput;
 import vn.webapp.modules.mastermanagement.model.mmStaff;
 import vn.webapp.modules.mastermanagement.model.mmStaffInput;
 
@@ -80,9 +81,7 @@ public class mmExternalStaffDAOImpl extends BaseDao implements mmExternalStaffDA
             flush();
             close();
         }
-		
-		
-		
+			
 	}
 		
 	public mmExternalStaff getExternalStaffById(String userRole, int staff_Id){
@@ -109,6 +108,29 @@ public class mmExternalStaffDAOImpl extends BaseDao implements mmExternalStaffDA
 		
 	}
 	
+	public mmExternalStaffInput getExternalStaffInputById(String userRole, int staff_Id){
+		
+		try {
+            begin();
+            Criteria criteria = getSession().createCriteria(mmExternalStaffInput.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            criteria.add(Restrictions.eq("EXTSTAF_ID", staff_Id));            
+            if(!(userRole.equals("ROLE_ADMIN")||userRole.equals("SUPER_ADMIN"))){
+            	return null;
+            }
+            mmExternalStaffInput professor = (mmExternalStaffInput) criteria.uniqueResult();
+            commit();
+            return professor;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+	}
+	
 	public mmExternalStaff getByExternalStaffCode(String externalStaffCode){
 		
 		try {
@@ -130,7 +152,7 @@ public class mmExternalStaffDAOImpl extends BaseDao implements mmExternalStaffDA
 		
 	}
 		   
-    public void editAExternalStaff(mmExternalStaff externalstaff){
+    public void editAExternalStaff(mmExternalStaffInput externalstaff){
     	try {
             begin();
             getSession().update(externalstaff);
@@ -145,7 +167,7 @@ public class mmExternalStaffDAOImpl extends BaseDao implements mmExternalStaffDA
          }
     }
     
-    public int saveAExternalStaff(mmExternalStaff externalstaff){
+    public int saveAExternalStaff(mmExternalStaffInput externalstaff){
     	try {
             begin();
             int id = 0; 

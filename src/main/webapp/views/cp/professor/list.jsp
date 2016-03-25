@@ -42,9 +42,10 @@
 							<thead>
 								<tr>
 									<th title="Name">Họ và tên</th>
+									<th title="AcademicRank">Học hàm học vị</th>
 									<th title="Department">Bộ môn</th>
 									<th title="Faculty">Khoa/Viện</th>
-									<th title="University">Trường</th>
+									
 									<th>Chỉnh sửa</th>
 								</tr>
 							</thead>
@@ -52,9 +53,10 @@
 								<c:forEach items="${professorList}" var="professor">
 									<tr class="gradeX">
 										 <td><c:out value="${professor.staff_Name}"/></td>
+										 <td><c:out value="${professor.academicRank.academicRank_VNAbbr}"/></td>
 										 	<td><c:out value="${professor.department.department_Name}"/></td>
 										 	<td><c:out value="${professor.department.faculty.faculty_Name}"/></td>
-										 	<td><c:out value="${professor.department.faculty.university.university_Name}"/></td>
+										 	
 										 <td class="center">
 											<button type="button" onclick="v_fViewDetailAProfessor(${professor.staff_ID});" class="btn btn-info btn-xs" title="Edit">Sửa thông tin</button>
 											<br/>

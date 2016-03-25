@@ -38,16 +38,15 @@ public class mmStudent implements Serializable{
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "Student_Code", referencedColumnName = "Thesis_StudentCode", insertable=false, updatable=false)
-    private mmRawMasterThesis masterThesis;
+    private mmMasterThesis masterThesis;
 	
-	public mmRawMasterThesis getMasterThesis() {
+	public mmMasterThesis getMasterThesis() {
 		return masterThesis;
 	}
 
-	public void setMasterThesis(mmRawMasterThesis masterThesis) {
+	public void setMasterThesis(mmMasterThesis masterThesis) {
 		this.masterThesis = masterThesis;
 	}
-
 
 	public int getStudent_ID() {
 		return Student_ID;

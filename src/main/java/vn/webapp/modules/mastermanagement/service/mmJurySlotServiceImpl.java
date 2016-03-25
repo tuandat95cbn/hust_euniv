@@ -40,11 +40,13 @@ public class mmJurySlotServiceImpl implements mmJurySlotService{
 	}
 	
 	@Override
-	public int saveAJurySlot(int jurySlot_Index, String jurySlotCode, String defenseSessionCode, String userCode){
-		mmJurySlot aJurySlot = mmjurySlotDAO.getJurySlotByCode(jurySlotCode, defenseSessionCode, userCode);
+	public int saveAJurySlot(int jurySlot_Index, String jurySlotName, String defenseSessionCode, String userCode){
+		String jurySlotCode = jurySlotName+"_"+defenseSessionCode;
+		mmJurySlot aJurySlot = mmjurySlotDAO.getJurySlotByCode(jurySlotCode);
 		if(aJurySlot == null)
 		{
 			mmJurySlot jurySlot = new mmJurySlot();
+			jurySlot.setJurySlot_Name(jurySlotName);
 			jurySlot.setJurySlot_Code(jurySlotCode);
 			jurySlot.setJurySlot_DefenseSessionCode(defenseSessionCode);
 			jurySlot.setJurySlot_StaffCode(userCode);

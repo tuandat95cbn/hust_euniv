@@ -14,6 +14,6 @@ import vn.webapp.modules.mastermanagement.model.mmJurySlot;
 public interface mmJurySlotService {
 	List<mmJurySlot> listJurySlots(String defenseSessionCode, String staffCode);
 	List<mmJurySlot> listJurySlots(String staffCode);
-	int saveAJurySlot(int jurySlot_Index, String jurySlotCode, String defenseSessionCode, String userCode);
+	int saveAJurySlot(int jurySlot_Index, String jurySlotName, String defenseSessionCode, String userCode);
 	public int removeAJurySlot(String userCode, String sJurySlotCode);
 }

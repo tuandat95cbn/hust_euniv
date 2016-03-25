@@ -106,7 +106,7 @@ function v_fViewDetailAClass(iClassId){
 }
 
 function v_fRemoveAClass(iClassId){
-	var r = confirm("Bạn có muốn xóa lớp " + iClassId + " này ?");
+	var r = confirm("Bạn có muốn xóa lớp học này ?");
 	if (r == true) {
 		var sRemoveAClassUrl = baseUrl + "/mm/remove-a-class/"+iClassId+".html";
 		window.location = sRemoveAClassUrl;

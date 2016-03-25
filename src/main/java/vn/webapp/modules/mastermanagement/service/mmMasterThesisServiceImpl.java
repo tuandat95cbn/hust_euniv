@@ -12,17 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import vn.webapp.modules.mastermanagement.dao.mmDefenseSessionsDAO;
-import vn.webapp.modules.mastermanagement.dao.mmListMasterThesisDAO;
 import vn.webapp.modules.mastermanagement.dao.mmMasterThesisDAO;
 import vn.webapp.modules.mastermanagement.dao.mmStaffSpecialKeyWordsDAO;
 import vn.webapp.modules.mastermanagement.dao.mmStudentDAO;
 import vn.webapp.modules.mastermanagement.model.mmDefenseSession;
-import vn.webapp.modules.mastermanagement.model.mmListMasterThesis;
 import vn.webapp.modules.mastermanagement.model.mmMasterThesis;
-import vn.webapp.modules.mastermanagement.model.mmRawMasterThesis;
+import vn.webapp.modules.mastermanagement.model.mmMasterThesisInput;
 import vn.webapp.modules.mastermanagement.model.mmSpecializationKeyword;
 import vn.webapp.modules.mastermanagement.model.mmStaff;
-import vn.webapp.modules.mastermanagement.model.mmStaffSpecializationKeywords;
 import vn.webapp.modules.mastermanagement.model.mmStudent;
 
 
@@ -31,9 +28,6 @@ public class mmMasterThesisServiceImpl implements mmMasterThesisService {
 
     @Autowired
     private mmMasterThesisDAO mmmasterThesisDAO;
-    
-    @Autowired
-    private mmListMasterThesisDAO mmlistMasterThesisDAO;
     
     @Autowired
     private mmDefenseSessionsDAO mmlistDefenseSessionDAO;
@@ -96,12 +90,15 @@ public class mmMasterThesisServiceImpl implements mmMasterThesisService {
     @Override
     public void editAMasterThesis(int ThesisID, String ThesisCode, String ThesisName, mmStudent student, mmStaff supervisor, HashSet<mmSpecializationKeyword> specializationKeywords){
     	
-    	 mmRawMasterThesis masterThesis = mmmasterThesisDAO.getRawMasterThesisById(ThesisID);
+    	 mmMasterThesisInput masterThesis = mmmasterThesisDAO.getRawMasterThesisById(ThesisID);
     	 if(masterThesis != null){
     	   	masterThesis.setThesis_Name(ThesisName);
     	   	masterThesis.setThesis_Code(ThesisCode);
-    	   	//masterThesis.setStudent(student);
-    	   	masterThesis.setSupervisor(supervisor);
+    	   	masterThesis.setThesis_StudentCode(student.getStudent_Code());
+    	   	masterThesis.setThesis_SupervisorCode(supervisor.getStaff_Code());
+    	   	masterThesis.setListSpecializationKeywords(specializationKeywords);
+    	   	
+    	   	
     		masterThesis.setListSpecializationKeywords(specializationKeywords);
     	   	   		 
     		mmmasterThesisDAO.editAMasterThesis(masterThesis);
@@ -121,7 +118,7 @@ public class mmMasterThesisServiceImpl implements mmMasterThesisService {
     								HashSet<mmSpecializationKeyword> specializationKeywords, mmStudent student){
     	
     	// Save info for MasterThesis
-    	mmRawMasterThesis masterThesis = new mmRawMasterThesis();
+    	mmMasterThesisInput masterThesis = new mmMasterThesisInput();
     	masterThesis.setThesis_Name(ThesisName);
 	   	masterThesis.setThesis_Code(ThesisCode);
 	   	masterThesis.setThesis_StudentCode(studentCode);
@@ -143,20 +140,7 @@ public class mmMasterThesisServiceImpl implements mmMasterThesisService {
     @Override
     public int removeAMasterThesis(int masterThesisID){
     	return mmmasterThesisDAO.removeAMasterThesis(masterThesisID);
-    }
-    
-    /**
-     * 
-     */
-    @Override
-    public List<mmListMasterThesis> getListMasterThesis(){
-    	try {
-            return mmlistMasterThesisDAO.getListMasterThesis();
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
-            return null;
-        }
-    }
+    }    
     
     /**
      * Get DefenseSession list

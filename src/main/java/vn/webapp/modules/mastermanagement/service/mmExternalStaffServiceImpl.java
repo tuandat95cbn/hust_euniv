@@ -16,6 +16,7 @@ import vn.webapp.modules.mastermanagement.dao.mmExternalStaffDAO;
 import vn.webapp.modules.mastermanagement.dao.mmUniversityDAO;
 import vn.webapp.modules.mastermanagement.model.mmAcademicRank;
 import vn.webapp.modules.mastermanagement.model.mmExternalStaff;
+import vn.webapp.modules.mastermanagement.model.mmExternalStaffInput;
 import vn.webapp.modules.mastermanagement.model.mmSpecializationKeyword;
 import vn.webapp.modules.mastermanagement.model.mmUniversity;
 
@@ -34,51 +35,52 @@ public class mmExternalStaffServiceImpl implements mmExternalStaffService {
     @Override
     public List<mmExternalStaff> listExternalStaffs(){
     	List<mmExternalStaff> listExternalStaffs = externalstaffDAO.listExternalStaffs();
-    	for(mmExternalStaff externalStaff:listExternalStaffs){
+    	/*for(mmExternalStaff externalStaff:listExternalStaffs){
     		mmUniversity university = universityDAO.loadAUniversityByCodes(externalStaff.getEXTSTAF_UniversityCode());
     		mmAcademicRank academicRank = academicrankDAO.loadByCode(externalStaff.getEXTSTAF_AcademicRank());
     		externalStaff.setAcademicRank(academicRank);
     		externalStaff.setUniversity(university);   		
-    	}    	
+    	}*/    	
     	return listExternalStaffs;
     }
 	
     @Override
     public List<mmExternalStaff> listExternalStaffsByUniversity(String universityCode){
     	List<mmExternalStaff> listExternalStaffs = externalstaffDAO.listExternalStaffsByUniversity(universityCode);
-    	for(mmExternalStaff externalStaff:listExternalStaffs){
+    	/*for(mmExternalStaff externalStaff:listExternalStaffs){
     		mmUniversity university = universityDAO.loadAUniversityByCodes(externalStaff.getEXTSTAF_UniversityCode());
     		mmAcademicRank academicRank = academicrankDAO.loadByCode(externalStaff.getEXTSTAF_AcademicRank());
     		externalStaff.setAcademicRank(academicRank);
     		externalStaff.setUniversity(university);   		
-    	}    	
+    	}*/    	
     	return listExternalStaffs;
 	}
 		
     @Override
     public mmExternalStaff getExternalStaffById(String userRole, int staff_Id){
     	mmExternalStaff externalStaff = externalstaffDAO.getExternalStaffById(userRole, staff_Id);
-    	mmUniversity university = universityDAO.loadAUniversityByCodes(externalStaff.getEXTSTAF_UniversityCode());
+    	/*mmUniversity university = universityDAO.loadAUniversityByCodes(externalStaff.getEXTSTAF_UniversityCode());
 		mmAcademicRank academicRank = academicrankDAO.loadByCode(externalStaff.getEXTSTAF_AcademicRank());
 		externalStaff.setAcademicRank(academicRank);
-		externalStaff.setUniversity(university);   		
+		externalStaff.setUniversity(university);*/   		
 		return externalStaff;
 	}
 	
     @Override
     public mmExternalStaff getByExternalStaffCode(String externalStaffCode){
     	mmExternalStaff externalStaff = externalstaffDAO.getByExternalStaffCode(externalStaffCode);
-    	mmUniversity university = universityDAO.loadAUniversityByCodes(externalStaff.getEXTSTAF_UniversityCode());
+    	/*mmUniversity university = universityDAO.loadAUniversityByCodes(externalStaff.getEXTSTAF_UniversityCode());
 		mmAcademicRank academicRank = academicrankDAO.loadByCode(externalStaff.getEXTSTAF_AcademicRank());
 		externalStaff.setAcademicRank(academicRank);
-		externalStaff.setUniversity(university);   		
+		externalStaff.setUniversity(university); 
+		System.out.println(academicRank.getAcademicRank_AsciiName());*/
 		return externalStaff; 
 	}
 		   
     @Override
     public void editAExternalStaff(int staff_ID, String staffCode, String staffName, String staffEmail, String staffPhone, String userRole, HashSet<mmSpecializationKeyword> specializationKeywords, mmAcademicRank academicRank, mmUniversity university){
     	
-		mmExternalStaff staff = externalstaffDAO.getExternalStaffById(userRole,staff_ID);
+		mmExternalStaffInput staff = externalstaffDAO.getExternalStaffInputById(userRole,staff_ID);
 		if (staff != null) {
 			
 			staff.setEXTSTAF_Code(staffCode);
@@ -101,13 +103,12 @@ public class mmExternalStaffServiceImpl implements mmExternalStaffService {
     @Override    
     public int saveAExternalStaff(String staffCode, String staffName, String staffEmail, String staffPhone, String userRole, HashSet<mmSpecializationKeyword> specializationKeywords, mmAcademicRank academicRank, mmUniversity university){
     	
-    	mmExternalStaff staff = new mmExternalStaff();   
+    	mmExternalStaffInput staff = new mmExternalStaffInput();   
     	
     	staff.setEXTSTAF_Code(staffCode);
 		staff.setEXTSTAF_Email(staffEmail);
 		staff.setEXTSTAF_Name(staffName);
 		staff.setEXTSTAF_Phone(staffPhone);
-		System.out.println(academicRank.getAcademicRank_Code());
 		staff.setEXTSTAF_AcademicRank(academicRank.getAcademicRank_Code());
 		staff.setEXTSTAF_UniversityCode(university.getUniversity_Code());
 		//staff.setAcademicRank(academicRank);		

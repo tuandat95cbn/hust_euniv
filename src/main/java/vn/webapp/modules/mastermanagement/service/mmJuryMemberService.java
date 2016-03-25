@@ -15,5 +15,6 @@ public interface mmJuryMemberService {
 	List<mmJuryMember> listJuryMembers(String defenseSessionCode, String staffCode);
 	List<mmJuryMember> listJuryMembers(String staffCode);
 	int saveAJuryMember(String juryMemberCode, String defenseSessionCode, String userCode);
+	public mmJuryMember getAJuryMemberByMemberAndDefenseSession(String DefenseSessionCode, String sJuryMemberMemCode, String sStaffCode);
 	public int removeAJuryMember(String userCode, String sJuryMemberCode);
 }

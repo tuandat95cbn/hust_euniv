@@ -8,7 +8,7 @@ package vn.webapp.modules.mastermanagement.dao;
 import java.util.List;
 
 import vn.webapp.modules.mastermanagement.model.mmMasterThesis;
-import vn.webapp.modules.mastermanagement.model.mmRawMasterThesis;
+import vn.webapp.modules.mastermanagement.model.mmMasterThesisInput;
 
 public interface mmMasterThesisDAO {
 
@@ -16,13 +16,13 @@ public interface mmMasterThesisDAO {
 	
 	public mmMasterThesis getMasterThesisById(int MasterThesis_Id);
 	
-	public mmRawMasterThesis getRawMasterThesisById(int MasterThesis_Id);
+	public mmMasterThesisInput getRawMasterThesisById(int MasterThesis_Id);
 	
 	public mmMasterThesis getMasterThesisByCode(String MasterThesis_Code);
 	
-	public void editAMasterThesis(mmRawMasterThesis MasterThesis);
+	public void editAMasterThesis(mmMasterThesisInput MasterThesis);
     
-    public int saveAMasterThesis(mmRawMasterThesis MasterThesis);
+    public int saveAMasterThesis(mmMasterThesisInput MasterThesis);
     
     public int removeAMasterThesis(int MasterThesisId);
     

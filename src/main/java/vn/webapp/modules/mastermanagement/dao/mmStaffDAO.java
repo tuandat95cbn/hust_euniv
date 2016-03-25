@@ -16,8 +16,8 @@ public interface mmStaffDAO {
 	
 	public List<mmStaff> listStaffsByDepartment(String departmentCode);
 	
-	public List<mmStaff> listStaffsByUniversity(String universityCode);
-		
+	public List<mmStaff> listStaffsByFaculty(String facultyCode);
+	
 	public mmStaff getStaffById(String userRole, int staff_Id);
 	
 	public mmStaffInput getStaffInputById(String userRole, int staff_Id);

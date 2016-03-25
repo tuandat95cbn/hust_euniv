@@ -15,6 +15,7 @@ public class mmJurySlot implements Serializable{
 	private int JurySlot_ID;
 	private int JurySlot_Index;
 	private String JurySlot_Code;
+	private String JurySlot_Name;
 	private String JurySlot_DefenseSessionCode;
 	private String JurySlot_StaffCode;
 	public int getJurySlot_ID() {
@@ -47,5 +48,10 @@ public class mmJurySlot implements Serializable{
 	public void setJurySlot_StaffCode(String jurySlot_StaffCode) {
 		JurySlot_StaffCode = jurySlot_StaffCode;
 	}
-	
+	public String getJurySlot_Name() {
+		return JurySlot_Name;
+	}
+	public void setJurySlot_Name(String jurySlot_Name) {
+		JurySlot_Name = jurySlot_Name;
+	}	
 }

@@ -28,9 +28,6 @@
 	    <!-- Custom CSS -->
 	    <link href="<c:url value="/assets/css/sb-admin-2.css" />" rel="stylesheet" type="text/css" media="all" />
 	
-	    <!-- Morris Charts CSS -->
-	    <link href="<c:url value="/assets/libs/morrisjs/morris.css" />" rel="stylesheet" type="text/css" media="all" />
-	
 	    <!-- Custom Fonts -->
 	    <link href="<c:url value="/assets/libs/font-awesome/css/font-awesome.css" />" rel="stylesheet" type="text/css" media="all">
 		

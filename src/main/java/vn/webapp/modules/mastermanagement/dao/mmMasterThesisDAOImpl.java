@@ -21,9 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import vn.webapp.modules.mastermanagement.model.mmMasterThesis;
-import vn.webapp.modules.mastermanagement.model.mmRawMasterThesis;
-import vn.webapp.modules.mastermanagement.model.mmStaff;
-
+import vn.webapp.modules.mastermanagement.model.mmMasterThesisInput;
 
 @Repository("mmmasterThesisDAO")
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -89,14 +87,14 @@ public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO 
     }
     
     @Override
-    public mmRawMasterThesis getRawMasterThesisById(int masterThesis_Id){
+    public mmMasterThesisInput getRawMasterThesisById(int masterThesis_Id){
     	
     	try {
             begin();
-            Criteria criteria = getSession().createCriteria(mmRawMasterThesis.class);
+            Criteria criteria = getSession().createCriteria(mmMasterThesisInput.class);
             criteria.add(Restrictions.eq("Thesis_ID", masterThesis_Id));
             
-            mmRawMasterThesis masterThesis = (mmRawMasterThesis) criteria.uniqueResult();
+            mmMasterThesisInput masterThesis = (mmMasterThesisInput) criteria.uniqueResult();
             commit();
             return masterThesis;
         } catch (HibernateException e) {
@@ -138,7 +136,7 @@ public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO 
      * @return int
      */
     @Override
-    public void editAMasterThesis(mmRawMasterThesis masterThesis){
+    public void editAMasterThesis(mmMasterThesisInput masterThesis){
     	try {
             begin();
             getSession().update(masterThesis);
@@ -159,7 +157,7 @@ public class mmMasterThesisDAOImpl extends BaseDao implements mmMasterThesisDAO 
      * @return int
      */
     @Override
-    public int saveAMasterThesis(mmRawMasterThesis masterThesis){
+    public int saveAMasterThesis(mmMasterThesisInput masterThesis){
     	try {
             begin();
             int id = 0; 

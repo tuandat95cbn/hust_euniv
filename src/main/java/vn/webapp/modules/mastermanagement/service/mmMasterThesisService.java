@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import vn.webapp.modules.mastermanagement.model.mmDefenseSession;
-import vn.webapp.modules.mastermanagement.model.mmListMasterThesis;
 import vn.webapp.modules.mastermanagement.model.mmMasterThesis;
 import vn.webapp.modules.mastermanagement.model.mmSpecializationKeyword;
 import vn.webapp.modules.mastermanagement.model.mmStaff;
@@ -28,8 +27,6 @@ public interface mmMasterThesisService {
     public int saveAMasterThesis(String ThesisCode, String ThesisName, String studentCode, String supervisor, HashSet<mmSpecializationKeyword> specializationKeywords, mmStudent student);
 
     public int removeAMasterThesis(int ThesisID);
-    
-    public List<mmListMasterThesis> getListMasterThesis();
     
     public List<mmDefenseSession> listDefenseSession();
 }

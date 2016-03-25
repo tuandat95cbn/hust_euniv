@@ -39,7 +39,6 @@ public class mmStaff implements Serializable{
     @GeneratedValue
     private int Staff_ID;
     
-    //private String Staff_University_Code;
     private String Staff_Code;
     private String Staff_Name;
     private String Staff_AsciiName;
@@ -47,13 +46,8 @@ public class mmStaff implements Serializable{
     private String Staff_Phone;
     private String Staff_User_Code;
     private String Staff_Faculty_Code;
+    private String Staff_Department_Code;
 
-	@ManyToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)  
-    @JoinTable(name = "tblstaffspecializationkeywords", 
-    		   joinColumns = { @JoinColumn(name = "STFKW_StaffCode", referencedColumnName = "Staff_Code") }, 
-    		   inverseJoinColumns = { @JoinColumn(name = "STFKW_KeywordCode", referencedColumnName = "KW_Code") })  
-    private Set<mmSpecializationKeyword> listSpecializationKeywords = new HashSet<mmSpecializationKeyword>();
-    
 	@OneToMany(fetch = FetchType.LAZY, mappedBy="supervisor", cascade = CascadeType.ALL)
 	private Set<mmMasterThesis> listMasterThesis = new HashSet<mmMasterThesis>();
     
@@ -68,11 +62,6 @@ public class mmStaff implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "Staff_Department_Code", referencedColumnName = "Department_Code", insertable=false, updatable = false)
     private mmDepartment department;
-    
-    /*@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "Staff_University_Code", referencedColumnName = "University_Code")
-    private University university;*/
-
     
     public Set<mmMasterThesis> getListMasterThesis() {
 		return listMasterThesis;
@@ -93,24 +82,7 @@ public class mmStaff implements Serializable{
 	public int getStaff_ID() {
 		return Staff_ID;
 	}
-
-	public Set<mmSpecializationKeyword> getListSpecializationKeywords() {
-		return listSpecializationKeywords;
-	}
-
-	public void setListSpecializationKeywords(
-			Set<mmSpecializationKeyword> listSpecializationKeywords) {
-		this.listSpecializationKeywords = listSpecializationKeywords;
-	}
-
-	/*public Set<MasterThesis> getListMasterThesis() {
-		return listMasterThesis;
-	}
-
-	public void setListMasterThesis(Set<MasterThesis> listMasterThesis) {
-		this.listMasterThesis = listMasterThesis;
-	}*/
-
+	
 	public void setStaff_ID(int staff_ID) {
 		Staff_ID = staff_ID;
 	}
@@ -186,14 +158,6 @@ public class mmStaff implements Serializable{
 	public void setStaff_User_Code(String staff_User_Code) {
 		Staff_User_Code = staff_User_Code;
 	}
-
-	/*public University getUniversity() {
-		return university;
-	}
-
-	public void setUniversity(University university) {
-		this.university = university;
-	}*/	
 	
  	public String getStaff_Faculty_Code() {
 		return Staff_Faculty_Code;
@@ -209,6 +173,14 @@ public class mmStaff implements Serializable{
 
 	public void setAcademicRank(mmAcademicRank academicRank) {
 		this.academicRank = academicRank;
+	}
+
+	public String getStaff_Department_Code() {
+		return Staff_Department_Code;
+	}
+
+	public void setStaff_Department_Code(String staff_Department_Code) {
+		Staff_Department_Code = staff_Department_Code;
 	}
 	
 }

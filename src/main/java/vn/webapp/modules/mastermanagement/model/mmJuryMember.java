@@ -23,14 +23,6 @@ public class mmJuryMember implements Serializable{
 	private String JuryMem_DefenseSessionCode;
 	private String JuryMem_StaffCode;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "JuryMem_MemberCode", referencedColumnName = "Staff_Code", insertable=false, updatable=false)
-	private mmStaffJuryMember memJuryMember;
-	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "JuryMem_DefenseSessionCode", referencedColumnName = "DEFSESS_Code", insertable=false, updatable=false)
-	private mmDefenseSession defenseSessionJuryMember;
-	
 	public int getJuryMem_ID() {
 		return JuryMem_ID;
 	}
@@ -68,18 +60,6 @@ public class mmJuryMember implements Serializable{
 	
 	public void setJuryMem_StaffCode(String juryMem_StaffCode) {
 		JuryMem_StaffCode = juryMem_StaffCode;
-	}
-	public mmStaffJuryMember getMemJuryMember() {
-		return memJuryMember;
-	}
-	public void setMemJuryMember(mmStaffJuryMember memJuryMember) {
-		this.memJuryMember = memJuryMember;
-	}
-	public mmDefenseSession getDefenseSessionJuryMember() {
-		return defenseSessionJuryMember;
-	}
-	public void setDefenseSessionJuryMember(mmDefenseSession defenseSessionJuryMember) {
-		this.defenseSessionJuryMember = defenseSessionJuryMember;
-	}
+	}	
 	
 }

@@ -5,13 +5,15 @@ import java.util.List;
 import vn.webapp.modules.mastermanagement.model.mmJuryMember;
 
 public interface mmJuryMemberDAO {
-	List<mmJuryMember> listJuryMembers(String defenseSessionCode, String staffCode);
+	public List<mmJuryMember> listJuryMembers(String defenseSessionCode, String staffCode);
 	
-	mmJuryMember getAJuryMemberByCode(String sJuryMemberCode, String sStaffCode);
+	public mmJuryMember getAJuryMemberByCode(String sJuryMemberCode, String sStaffCode);
 	
-	List<mmJuryMember> listJuryMembers(String staffCode);
+	public mmJuryMember getAJuryMemberByMemberAndDefenseSession(String DefenseSessionCode, String sJuryMemberMemCode, String sStaffCode);
 	
-	int saveJuryMember(mmJuryMember juryMember);
+	public List<mmJuryMember> listJuryMembers(String staffCode);
+	
+	public int saveJuryMember(mmJuryMember juryMember);
 	
 	public int removeAJuryMemberByCode(mmJuryMember aJuryMember);
 }

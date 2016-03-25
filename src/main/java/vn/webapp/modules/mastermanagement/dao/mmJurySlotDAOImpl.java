@@ -71,14 +71,12 @@ public class mmJurySlotDAOImpl extends BaseDao implements mmJurySlotDAO {
 	}
 	
 	@Override
-	public mmJurySlot getJurySlotByCode(String sJurySlotCode, String defenseSessionCode, String userCode){
+	public mmJurySlot getJurySlotByCode(String sJurySlotCode){
 		try{
 			begin();
 			Criteria criteria = getSession().createCriteria(mmJurySlot.class);
 			criteria.setFirstResult(0);
 			criteria.add(Restrictions.eq("JurySlot_Code", sJurySlotCode));
-			criteria.add(Restrictions.eq("JurySlot_DefenseSessionCode", defenseSessionCode));
-			criteria.add(Restrictions.eq("JurySlot_StaffCode", userCode));
 			mmJurySlot jurySlot = (mmJurySlot)criteria.uniqueResult();
 			commit();
 			return jurySlot;

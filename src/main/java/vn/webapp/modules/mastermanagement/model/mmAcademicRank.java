@@ -29,6 +29,10 @@ public class mmAcademicRank implements Serializable{
 	@OneToMany(fetch = FetchType.LAZY, mappedBy="academicRank", cascade = CascadeType.ALL)
 	private Set<mmStaff> listStaffs = new HashSet<mmStaff>();
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="academicRank", cascade = CascadeType.ALL)
+	private Set<mmExternalStaff> listExternalStaffs = new HashSet<mmExternalStaff>();
+	
+	
 	public int getAcademicRank_ID() {
 		return AcademicRank_ID;
 	}
@@ -71,4 +75,10 @@ public class mmAcademicRank implements Serializable{
 	public void setListStaffs(Set<mmStaff> listStaffs) {
 		this.listStaffs = listStaffs;
 	}
+	public Set<mmExternalStaff> getListExternalStaffs() {
+		return listExternalStaffs;
+	}
+	public void setListExternalStaffs(Set<mmExternalStaff> listExternalStaffs) {
+		this.listExternalStaffs = listExternalStaffs;
+	}	
 }

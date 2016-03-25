@@ -8,4 +8,6 @@ public interface mmRoomsDAO {
 
 	public List<mmRooms> listRooms();
 	
+	public mmRooms getByCode(String roomCode);
+	
 }

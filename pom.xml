@@ -268,11 +268,19 @@
 		  <artifactId>itext-xtra</artifactId>
 		  <version>5.5.8</version>
 		</dependency>
+		
 		<dependency>
 		  <groupId>com.itextpdf.tool</groupId>
 		  <artifactId>xmlworker</artifactId>
 		  <version>5.5.8</version>
 		</dependency>
+		
+		<dependency>
+		  <groupId>com.opencbls</groupId>
+		  <artifactId>opencbls</artifactId>
+		  <version>0.0.1</version>
+		</dependency>
+		
 				
     </dependencies>
 
