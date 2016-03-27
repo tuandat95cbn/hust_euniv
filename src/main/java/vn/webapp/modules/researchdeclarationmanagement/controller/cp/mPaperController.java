@@ -39,8 +39,10 @@ import vn.webapp.modules.researchdeclarationmanagement.model.mAcademicYear;
 import vn.webapp.modules.researchdeclarationmanagement.model.mJournal;
 import vn.webapp.modules.researchdeclarationmanagement.model.mPaperCategory;
 import vn.webapp.modules.researchdeclarationmanagement.model.mPapers;
+import vn.webapp.modules.researchdeclarationmanagement.model.mPapersCategoryHourBudget;
 import vn.webapp.modules.researchdeclarationmanagement.service.mAcademicYearService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mJournalService;
+import vn.webapp.modules.researchdeclarationmanagement.service.mPaperCategoryHourBudgetService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mPaperCategoryService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mPaperService;
 import vn.webapp.modules.researchdeclarationmanagement.validation.mPaperExcellValidation;
@@ -50,6 +52,7 @@ import vn.webapp.modules.usermanagement.model.mStaff;
 import vn.webapp.modules.usermanagement.service.mDepartmentService;
 import vn.webapp.modules.usermanagement.service.mStaffService;
 import vn.webapp.modules.usermanagement.service.mUserService;
+
 import com.google.gson.Gson;
 
 @Controller("cpmPaper")
@@ -72,6 +75,9 @@ public class mPaperController extends BaseWeb {
     
     @Autowired
     private mAcademicYearService academicYearService;
+    
+    @Autowired
+    private mPaperCategoryHourBudgetService paperCategoryHourBudgetService;
     
     @Autowired
     private mUserService userService;
@@ -106,23 +112,17 @@ public class mPaperController extends BaseWeb {
     */
    @RequestMapping(value = "/add-a-paper", method = RequestMethod.GET)
    public String addPaper(ModelMap model, HttpSession session) {
-	  
-	   /*
-	    * Get current user name and role
-	    */
-	   String currentUserName = session.getAttribute("currentUserName").toString();
-	   String userRole = session.getAttribute("currentUserRole").toString();
-	   
 	   /*
 	    * Get paper's category
 	    */
 	   List<mPaperCategory> paperCategory = paperCategoryService.list();
 	   List<mJournal> journalList = journalService.list();
-	   String paperConvertedHours = this.setJsonByListPaperCategory(paperCategory);
+	   List<mPapersCategoryHourBudget> papersCategoryHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgets();
 	   
 	   // Get list reportingYear
 	   List<mAcademicYear> patentReportingAcademicDateList = academicYearService.list();
 	   
+	   String paperConvertedHours = this.setJsonByListPaperCategory(papersCategoryHourBudget, patentReportingAcademicDateList);
 	   /*
 	    * Put data back to view
 	    */
@@ -140,14 +140,22 @@ public class mPaperController extends BaseWeb {
     * @param theListPaperCategory
     * @return
     */
-   public String setJsonByListPaperCategory(List<mPaperCategory> theListPaperCategory) {
+   public String setJsonByListPaperCategory(List<mPapersCategoryHourBudget> papersCategoryHourBudget, List<mAcademicYear> patentReportingAcademicDateList) {
 	   /*
 	    * Set a hashmap for holding paper list by key - value pairs
 	    */
-	   HashMap<String, Integer> paperConvertedHours = new HashMap<String, Integer>();
-	   if(theListPaperCategory != null){
-		   for(mPaperCategory paperCat : theListPaperCategory){
-			   paperConvertedHours.put(paperCat.getPCAT_Code(), paperCat.getPCAT_ConvertedHours());
+	   HashMap<String, HashMap<String, Integer>> paperConvertedHours = new HashMap<String, HashMap<String, Integer>>();
+	   if(patentReportingAcademicDateList != null && papersCategoryHourBudget != null){
+		   for(mAcademicYear acaYear : patentReportingAcademicDateList){
+			   String sYearCode = acaYear.getACAYEAR_Code();
+			   HashMap<String, Integer> paperCatHourBudgetByYear = new HashMap<String, Integer>();
+			   for (mPapersCategoryHourBudget paperCatHourBudget : papersCategoryHourBudget) {
+				   if(sYearCode.equals(paperCatHourBudget.getPCAHOBUD_AcademicYearCode()))
+				   {
+					   paperCatHourBudgetByYear.put(paperCatHourBudget.getPCAHOBUD_PaperCategoryCode(), paperCatHourBudget.getPCAHOBUD_Hour());
+				   }
+			   }
+			   paperConvertedHours.put(sYearCode, paperCatHourBudgetByYear);
 		   }
 		   
 		   Gson gson = new Gson(); 
@@ -172,10 +180,10 @@ public class mPaperController extends BaseWeb {
 	    */
 	   List<mPaperCategory> paperCategory = paperCategoryService.list();
 	   List<mJournal> journalList = journalService.list();
-	   String paperConvertedHours = this.setJsonByListPaperCategory(paperCategory);
-	   
+	   List<mPapersCategoryHourBudget> papersCategoryHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgets();
 	   // Get list reportingYear
 	   List<mAcademicYear> patentReportingAcademicDateList = academicYearService.list();
+	   String paperConvertedHours = this.setJsonByListPaperCategory(papersCategoryHourBudget, patentReportingAcademicDateList);
 	   
 	   /*
 	    * Put data back to view
@@ -194,6 +202,8 @@ public class mPaperController extends BaseWeb {
     	    */
     	   String paperCatCode = paperValid.getPaperCatCode();
     	   mPaperCategory paperCate = paperCategoryService.getPaperCateByCode(paperCatCode);
+    	   String paperReportingAcademicDate = paperValid.getPatentReportingAcademicDate();
+    	   mPapersCategoryHourBudget papersCateHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgetByCategoryAndYear(paperCatCode, paperReportingAcademicDate);
     	   
     	   String paperAuthors 			= paperValid.getPaperAuthorList();
     	   String[] paperAuthorsList 	= paperAuthors.trim().split("\\,");
@@ -247,9 +257,8 @@ public class mPaperController extends BaseWeb {
 	    	   String paperJConfName 	= paperValid.getPaperJConfName();
 	    	   String paperISSN 		= paperValid.getPaperISSN();
 	    	   String paperJIndexCode 	= paperCate.getPCAT_Journal();
-	    	   String paperReportingAcademicDate = paperValid.getPatentReportingAcademicDate();
 	    	   
-	    	   int paperPubConHours 	= (!paperCate.getPCAT_ConvertedHours().equals(null)) ? paperCate.getPCAT_ConvertedHours() : paperValid.getPaperPubConHours();
+	    	   int paperPubConHours 	= (!"".equals(papersCateHourBudget.getPCAHOBUD_Hour())) ? papersCateHourBudget.getPCAHOBUD_Hour() : paperValid.getPaperPubConHours();
 	    	   int paperAutConHours 	= (!numberOfAuthors.equals(0)) ? (int) Math.round(paperPubConHours/numberOfAuthors) : 0;
 	    	   int paperYear 			= paperValid.getPaperYear();
 	    	   String paperVolumn 			= paperValid.getPaperVolumn();
@@ -338,7 +347,8 @@ public class mPaperController extends BaseWeb {
 	   {
 		   List<mPaperCategory> paperCategory = paperCategoryService.list();
 		   List<mJournal> journalList = journalService.list();
-		   String paperConvertedHours = this.setJsonByListPaperCategory(paperCategory);
+		   List<mPapersCategoryHourBudget> papersCategoryHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgets();
+		   String paperConvertedHours = this.setJsonByListPaperCategory(papersCategoryHourBudget, patentReportingAcademicDateList);
 		   /*
 		    * Put journal list and paper category to view
 		    */
@@ -374,10 +384,10 @@ public class mPaperController extends BaseWeb {
 	   
 	   List<mPaperCategory> paperCategories = paperCategoryService.list();
 	   List<mJournal> journalList = journalService.list();
-	   String paperConvertedHours = this.setJsonByListPaperCategory(paperCategories);
-	   
+	   List<mPapersCategoryHourBudget> papersCategoryHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgets();
 	   // Get list reportingYear
 	   List<mAcademicYear> patentReportingAcademicDateList = academicYearService.list();
+	   String paperConvertedHours = this.setJsonByListPaperCategory(papersCategoryHourBudget, patentReportingAcademicDateList);
 	   
 	   /*
 	    * Put data back to view
@@ -454,7 +464,7 @@ public class mPaperController extends BaseWeb {
 	    	  	 * Prepare data for inserting DB
 	    	  	 */
 		   	  	mPaperCategory paperCategory = paperCategoryService.getPaperCateByCode(paperCate);
-	   	   
+		   	  	mPapersCategoryHourBudget papersCateHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgetByCategoryAndYear(paperCate, paperFormEdit.getPatentReportingAcademicDate());
 		   	  	String authors = paperFormEdit.getPaperAuthorList();
 	   	   		String[] paperAuthorsList 	= authors.trim().split("\\,");
 	   	   		Integer numberOfAuthors 		= paperAuthorsList.length;
@@ -468,7 +478,7 @@ public class mPaperController extends BaseWeb {
 	   	   		String journalName = paperFormEdit.getPaperJConfName();
 	   	   		String ISSN = paperFormEdit.getPaperISSN();
 	   	   		String paperReportingAcademicDate = paperFormEdit.getPatentReportingAcademicDate();
-	   	   		int publicConvertedHours = (!paperCategory.getPCAT_ConvertedHours().equals(null)) ? paperCategory.getPCAT_ConvertedHours() : paperFormEdit.getPaperPubConHours();
+	   	   		int publicConvertedHours = (!"".equals(papersCateHourBudget.getPCAHOBUD_Hour())) ? papersCateHourBudget.getPCAHOBUD_Hour() : paperFormEdit.getPaperPubConHours();
 	   	   		int authorConvertedHours = (!numberOfAuthors.equals(0)) ? (int) Math.round(publicConvertedHours/numberOfAuthors) : 0;
 	   	   		int paperYear = paperFormEdit.getPaperYear();
 	   	   		String volumn = paperFormEdit.getPaperVolumn();

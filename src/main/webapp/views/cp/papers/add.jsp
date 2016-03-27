@@ -63,7 +63,7 @@
 	                                </div>
 	                                <div class="form-group">
 	                                	<label for="patentAuthors">Năm kê khai*</label>
-		                                <form:select path="patentReportingAcademicDate" class="form-control" name="patentReportingAcademicDate" >
+		                                <form:select path="patentReportingAcademicDate" class="form-control" name="patentReportingAcademicDate" onchange="v_fChangeCategory();">
 		                                	<c:forEach items="${patentReportingAcademicDateList}" var="patentDate">
 		                                     <option value="${patentDate.ACAYEAR_Code}">${patentDate.ACAYEAR_Code}</option>
 		                                   	</c:forEach>
@@ -182,12 +182,19 @@ $(document).ready(function(){
 
 function v_fChangeCategory(){
 	var sCateCode = $("#paperCatCode").val();
+	var sYearCode = $("#patentReportingAcademicDate").val();
 	var iConvertedHours = 0;
 	if((paperConvertedHours != undefined || paperConvertedHours != "undefined") && paperConvertedHours != ""){
 		for(var key in paperConvertedHours)
 		{
-			if(key == sCateCode){
-				iConvertedHours = paperConvertedHours[key];
+			if(key == sYearCode){
+				var aPaperHours = paperConvertedHours[key];
+				for(var sCat in aPaperHours){
+					if(sCat == sCateCode){
+						iConvertedHours = aPaperHours[sCat];
+					}
+				}
+
 			}
 		}
 	}

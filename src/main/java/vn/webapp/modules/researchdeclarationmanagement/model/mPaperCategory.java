@@ -23,6 +23,9 @@ public class mPaperCategory implements Serializable{
     
     @OneToMany(mappedBy="paperCategory")
     private Set<mPapers> papers;
+    
+    @OneToMany(mappedBy="paperCate")
+    private Set<mPapersCategoryHourBudget> papersCategoryHourBudget;
 
 	public int getPCAT_ID() {
 		return PCAT_ID;
@@ -87,4 +90,14 @@ public class mPaperCategory implements Serializable{
 	public void setPCAT_Budget(int pCAT_Budget) {
 		PCAT_Budget = pCAT_Budget;
 	}
+
+	public Set<mPapersCategoryHourBudget> getPapersCategoryHourBudget() {
+		return papersCategoryHourBudget;
+	}
+
+	public void setPapersCategoryHourBudget(
+			Set<mPapersCategoryHourBudget> papersCategoryHourBudget) {
+		this.papersCategoryHourBudget = papersCategoryHourBudget;
+	}
+	
 }
