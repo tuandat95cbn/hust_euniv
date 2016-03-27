@@ -8,6 +8,7 @@ package vn.webapp.modules.mastermanagement.dao;
 import java.util.List;
 
 import vn.webapp.modules.mastermanagement.model.mmExternalStaff;
+import vn.webapp.modules.mastermanagement.model.mmExternalStaffInput;
 
 public interface mmExternalStaffDAO {
 
@@ -17,11 +18,13 @@ public interface mmExternalStaffDAO {
 		
 	public mmExternalStaff getExternalStaffById(String userRole, int staff_Id);
 	
+	public mmExternalStaffInput getExternalStaffInputById(String userRole, int staff_Id);
+	
 	public mmExternalStaff getByExternalStaffCode(String externalStaffCode);
 		   
-    public void editAExternalStaff(mmExternalStaff externalstaff);
+    public void editAExternalStaff(mmExternalStaffInput externalstaff);
     
-    public int saveAExternalStaff(mmExternalStaff externalstaff);
+    public int saveAExternalStaff(mmExternalStaffInput externalstaff);
     
     public int removeAExternalStaff(int staffId);
     

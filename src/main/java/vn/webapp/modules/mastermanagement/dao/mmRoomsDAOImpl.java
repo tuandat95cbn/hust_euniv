@@ -10,6 +10,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -50,5 +51,27 @@ public class mmRoomsDAOImpl extends BaseDao implements mmRoomsDAO {
             flush();
             close();
         }
+    }
+    
+    @Override
+    public mmRooms getByCode(String roomCode){
+    	
+    	try {
+    		begin();
+            Criteria criteria = getSession().createCriteria(mmRooms.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            criteria.add(Restrictions.eq("R_Code", roomCode));
+            mmRooms room = (mmRooms)criteria.uniqueResult();
+            commit();
+            return room;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+    	
     }
 }

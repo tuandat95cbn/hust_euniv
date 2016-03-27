@@ -1,4 +1,8 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page session="false"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Bootstrap Admin Theme</title>
+    <title>ĐHBK Hà Nội</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="<c:url value="/assets/libs/bootstrap/dist/css/bootstrap.min.css" />" rel="stylesheet" type="text/css" media="all" />
@@ -35,31 +39,42 @@
 </head>
 
 <body>
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+  <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">ĐHBK Hà Nội</a>
+    </div>
+</nav>
 
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Please Sign In</h3>
+                        <h3 class="panel-title">ĐHBK Hà Nội</h3>
                     </div>
                     <div class="panel-body">
                         <form role="form" name="f" action="<c:url value="/j_spring_security_check" />" method="POST">
                             <fieldset>
                                 <div class="form-group">
-									<input class="form-control" type="text" name="j_username" id="j_username" value="${username}" placeholder="Username" autofocus />
+									<input class="form-control" type="text" name="j_username" id="j_username" value="${username}" placeholder="Tên đăng nhập" autofocus />
                                 </div>
                                 <div class="form-group">
-                                	<input class="form-control" type="password" name="j_password" id="j_password" value="${param.j_password }" placeholder="Password" />
+                                	<input class="form-control" type="password" name="j_password" id="j_password" value="${param.j_password }" placeholder="Mật khẩu" />
                                 </div>
-                                <div class="checkbox">
+                                <!-- <div class="checkbox">
                                     <label>
                                         <input name="remember" type="checkbox" value="Remember Me">Remember Me
                                     </label>
-                                </div>
+                                </div>-->
                                 <!-- Change this to a button or input when using this as a form -->
                                 
-                                <input class="btn btn-lg btn-success btn-block" name="submit" type="submit" value="Login"/>
+                                <input class="btn btn-lg btn-success btn-block" name="submit" type="submit" value="Đăng nhập"/>
                                 <div class="error_ntc">
 			                        <b>${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}</b>
 			                    </div>

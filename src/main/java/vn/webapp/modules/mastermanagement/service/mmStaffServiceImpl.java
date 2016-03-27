@@ -73,10 +73,10 @@ public class mmStaffServiceImpl implements mmStaffService {
      * @return object
      */
     @Override
-    public List<mmStaff> listStaffsByUniversity(String universityCode){
+    public List<mmStaff> listStaffsByFaculty(String facultyCode){
     	try {
-    		if(universityCode != null){
-    			return staffDAO.listStaffsByUniversity(universityCode);
+    		if(facultyCode != null){
+    			return staffDAO.listStaffsByFaculty(facultyCode);
     		}
     		return null;
         } catch (Exception e) {

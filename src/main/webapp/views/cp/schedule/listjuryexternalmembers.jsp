@@ -13,13 +13,13 @@
 <div id="${(disableHeader != null) ? 'page-wrapper-no-layout' : 'page-wrapper'}">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Tạo danh sách thành viên hội đồng trong trường</h1>
+			<h1 class="page-header">Tạo danh sách thành viên hội đồng ngoài trường</h1>
 			<button type="button" class='form btn btn-primary' id="cancel" style="margin-top:-5px; margin-bottom:10px;" >Quay về</button>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
 	<!-- /.row -->
-	<form:form id="form-add" action="${baseUrl}/mm/save-a-jury-members.html" method="POST" role="form" accept-charset="UTF-8">
+	<form:form id="form-add" action="${baseUrl}/mm/save-a-jury-external-members.html" method="POST" role="form" accept-charset="UTF-8">
 		<div class="row">
 			<div class="col-lg-6">
 				<div class="well">
@@ -58,7 +58,7 @@
 							<thead>
 								<tr>
 									<th title="Name">Họ và tên</th>
-									<th title="Department">Bộ môn</th>
+									<th title="AcademicRank">Học hàm học vị</th>
 									<th title="University">Trường</th>
 									<th></th>
 								</tr>
@@ -67,12 +67,12 @@
 								<c:if test="${listMembers != null}">
 									<c:forEach items="${listMembers}" var="aMember">															
 										<tr class="gradeX">
-										  	<td><c:out value="${aMember.staff_Name}"/></td>
+										  	<td><c:out value="${aMember.EXTSTAF_Name}"/></td>
 										
-										 	<td><c:out value="${aMember.department.department_Name}"/></td>
-										 	<td><c:out value="${aMember.department.faculty.university.university_Name}"/></td>
+										 	<td><c:out value="${aMember.academicRank.academicRank_VNAbbr}"/></td>
+										 	<td><c:out value="${aMember.university.university_Name}"/></td>
 										
-										 	<td class="center"><button type="button" onclick="addJuryMember('${aMember.staff_Code}');" class="btn btn-info btn-xs" title="Remove">Thêm</button></td>
+										 	<td class="center"><button type="button" onclick="addJuryMember('${aMember.EXTSTAF_Code}');" class="btn btn-info btn-xs" title="Remove">Thêm</button></td>
 										</tr>
 									</c:forEach>
 								</c:if>
@@ -93,7 +93,7 @@
 							<thead>
 								<tr>
 									<th title="Name">Họ và tên</th>
-									<th title="Department">Bộ môn</th>
+									<th title="AcademicRank">Học hàm học vị</th>
 									<th title="University">Trường</th>
 									<th></th>
 								</tr>
@@ -102,12 +102,11 @@
 								<c:if test="${listJuryMembers != null}">
 									<c:forEach items="${listJuryMembers}" var="aMember">															
 										<tr class="gradeX">
-										  	<td><c:out value="${aMember.staff_Name}"/></td>
+										  	<td><c:out value="${aMember.EXTSTAF_Name}"/></td>
 										
-										 	<td><c:out value="${aMember.department.department_Name}"/></td>
-										 	<td><c:out value="${aMember.department.faculty.university.university_Name}"/></td>
-										
-										 	<td class="center"><button type="button" onclick="v_fRemoveJuryMember('${aMember.staff_Code}');" class="btn btn-danger btn-xs" title="Remove">Loại bỏ</button></td>
+										 	<td><c:out value="${aMember.academicRank.academicRank_VNAbbr}"/></td>
+										 	<td><c:out value="${aMember.university.university_Name}"/></td>
+										 	<td class="center"><button type="button" onclick="v_fRemoveJuryMember('${aMember.EXTSTAF_Code}');" class="btn btn-danger btn-xs" title="Remove">Loại bỏ</button></td>
 										</tr>
 									</c:forEach>
 								</c:if>
@@ -168,19 +167,19 @@
 	{
 		//var sJuryMemberCode = $("select#juryMember option:selected").val();
 		var sDefenseSessionCode = $("#defenseSession").val();
-		var savingJuryMemberUrl = "${baseUrl}/mmservice/savejurymember.html";
+		var savingJuryMemberUrl = "${baseUrl}/mmservice/savejuryexternalmember.html";
 		if (sJuryMemberCode.length > 0 ) {
 			 $.ajax({
 					type: "POST",
 					url: savingJuryMemberUrl,
-					data: "sJuryMemberCode="+sJuryMemberCode+"&sDefenseSessionCode="+sDefenseSessionCode,
+					data: "sJuryExternalMemberCode="+sJuryMemberCode+"&sDefenseSessionCode="+sDefenseSessionCode,
 					cache: true,
 					beforeSend: function () { 
 						//$('#department').html('<img src="loader.gif" alt="" width="24" height="24">');
 					},
 					success: function(html) {    
 						$("#status").html( html );
-						window.location = baseUrl + "/mm/jurymembers/"+${defenseSession.DEFSESS_ID}+".html";
+						window.location = baseUrl + "/mm/juryexternalmembers/"+${defenseSession.DEFSESS_ID}+".html";
 					}
 				});
 		}else{
@@ -191,19 +190,19 @@
 	function v_fRemoveJuryMember(sJuryMemberCode){
 		//var sJuryMemberCode = $("select#juryMember option:selected").val();
 		var sDefenseSessionCode = $("#defenseSession").val();
-		var savingJuryMemberUrl = "${baseUrl}/mmservice/removejurymember.html";
+		var savingJuryMemberUrl = "${baseUrl}/mmservice/removejuryexternalmember.html";
 		if (sJuryMemberCode.length > 0 ) {
 			 $.ajax({
 					type: "POST",
 					url: savingJuryMemberUrl,
-					data: "sJuryMemberCode="+sJuryMemberCode+"&sDefenseSessionCode="+sDefenseSessionCode,
+					data: "sJuryExternalMemberCode="+sJuryMemberCode+"&sDefenseSessionCode="+sDefenseSessionCode,
 					cache: true,
 					beforeSend: function () { 
 						//$('#department').html('<img src="loader.gif" alt="" width="24" height="24">');
 					},
 					success: function(html) {    
 						$("#status").html( html );
-						window.location = baseUrl + "/mm/jurymembers/"+${defenseSession.DEFSESS_ID}+".html";
+						window.location = baseUrl + "/mm/juryexternalmembers/"+${defenseSession.DEFSESS_ID}+".html";
 					}
 				});
 		}else{

@@ -7,7 +7,6 @@
 package vn.webapp.modules.mastermanagement.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +18,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -39,49 +37,13 @@ public class mmSpecializationKeyword implements Serializable{
     public mmScientificField scientificField;
     
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "listSpecializationKeywords",cascade = CascadeType.ALL)  
-    Set<mmStaff> listStaffs = new HashSet<mmStaff>();
-    
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "listSpecializationKeywords",cascade = CascadeType.ALL)  
     Set<mmStaffInput> listStaffInputs = new HashSet<mmStaffInput>();
-	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "listSpecializationKeywords",cascade = CascadeType.ALL)  
-    Set<mmMasterThesis> listMasterThesis = new HashSet<mmMasterThesis>(); 
-    
+		
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "listSpecializationKeywords",cascade = CascadeType.ALL)  
-    Set<mmExternalStaff> listExternalStaffs = new HashSet<mmExternalStaff>();  
+    Set<mmExternalStaffInput> listExternalStaffInputs = new HashSet<mmExternalStaffInput>();  
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "listSpecializationKeywords",cascade = CascadeType.ALL)  
-    Set<mmRawMasterThesis> listRawMasterThesis = new HashSet<mmRawMasterThesis>();  
-
-
-	public Set<mmMasterThesis> getListMasterThesis() {
-		return listMasterThesis;
-	}
-
-	public void setListMasterThesis(Set<mmMasterThesis> listMasterThesis) {
-		this.listMasterThesis = listMasterThesis;
-	}
-
-	public void setListStaffs(Set<mmStaff> listStaffs) {
-		this.listStaffs = listStaffs;
-	}
-
-	public Set<mmStaff> getListStaffs() {
-		return listStaffs;
-	}
-	/*
-	public Set<StaffSpecializationKeyword> getListStaffSpecializationKeywords() {
-		return listStaffSpecializationKeywords;
-	}
-
-	public void setListStaffSpecializationKeywords(
-			Set<StaffSpecializationKeyword> listStaffSpecializationKeywords) {
-		this.listStaffSpecializationKeywords = listStaffSpecializationKeywords;
-	}
-
-	/*public void setListStaffs(Set<Staff> staffs) {
-		listStaffs = staffs;
-	}*/
+    Set<mmMasterThesisInput> listRawMasterThesis = new HashSet<mmMasterThesisInput>();  
 
 	public int getKW_ID() {
 		return KW_ID;
@@ -131,20 +93,20 @@ public class mmSpecializationKeyword implements Serializable{
 		this.listStaffInputs = listStaffInputs;
 	}
 
-	public Set<mmRawMasterThesis> getListRawMasterThesis() {
+	public Set<mmExternalStaffInput> getListExternalStaffInputs() {
+		return listExternalStaffInputs;
+	}
+
+	public void setListExternalStaffInputs(
+			Set<mmExternalStaffInput> listExternalStaffInputs) {
+		this.listExternalStaffInputs = listExternalStaffInputs;
+	}
+
+	public Set<mmMasterThesisInput> getListRawMasterThesis() {
 		return listRawMasterThesis;
 	}
 
-	public void setListRawMasterThesis(Set<mmRawMasterThesis> listRawMasterThesis) {
+	public void setListRawMasterThesis(Set<mmMasterThesisInput> listRawMasterThesis) {
 		this.listRawMasterThesis = listRawMasterThesis;
-	}
-
-	public Set<mmExternalStaff> getListExternalStaffs() {
-		return listExternalStaffs;
-	}
-
-	public void setListExternalStaffs(Set<mmExternalStaff> listExternalStaffs) {
-		this.listExternalStaffs = listExternalStaffs;
-	}     
-	
+	}	
 }

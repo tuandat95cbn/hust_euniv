@@ -111,10 +111,10 @@
 								<c:if test="${listMasterDefenseJuryThesis != null}">
 									<c:forEach items="${listMasterDefenseJuryThesis}" var="aMasterDefenseJuryThesis">															
 										<tr class="gradeX">
-										 	<td><c:out value="${aMasterDefenseJuryThesis.studentName}"/></td>
-										 	<td><c:out value="${aMasterDefenseJuryThesis.thesisName}"/></td>
-										 	<td><c:out value="${aMasterDefenseJuryThesis.mentorName}"/></td>
-										 	<td class="center"><button type="button" id="removeMasterThesis" onclick="v_fRemoveMasterThesis('${aMasterDefenseJuryThesis.masterDefenseJuryCode}')" class="btn btn-danger btn-xs" title="Remove">Loại bỏ</button></td>
+										 	<td><c:out value="${aMasterDefenseJuryThesis.masterThesis.student.student_Name}"/></td>
+										 	<td><c:out value="${aMasterDefenseJuryThesis.masterThesis.thesis_Name}"/></td>
+										 	<td><c:out value="${aMasterDefenseJuryThesis.masterThesis.supervisor.staff_Name}"/></td>
+										 	<td class="center"><button type="button" id="removeMasterThesis" onclick="v_fRemoveMasterThesis('${aMasterDefenseJuryThesis.masterThesis.thesis_Code}')" class="btn btn-danger btn-xs" title="Remove">Loại bỏ</button></td>
 										</tr>
 									</c:forEach>
 								</c:if>

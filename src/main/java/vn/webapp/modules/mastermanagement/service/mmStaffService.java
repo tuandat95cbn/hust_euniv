@@ -28,7 +28,7 @@ public interface mmStaffService {
 	
 	public List<mmStaff> listStaffsByDepartment(String departmentCode);
 	
-	public List<mmStaff> listStaffsByUniversity(String universityCode);
+	public List<mmStaff> listStaffsByFaculty(String facultyCode);
 	
     public mmStaff loadStaffByUserCode(final String userCode);
     

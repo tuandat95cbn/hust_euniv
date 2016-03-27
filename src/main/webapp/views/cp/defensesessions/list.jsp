@@ -70,8 +70,9 @@
 											<button type="button" id="removeStudent" onclick="v_fRemoveADefenseSession(${defenseSession.DEFSESS_ID});" class="btn btn-warning btn-xs" title="Remove">Xóa thông tin</button>
 										</td>
 										<td>
-											<button type="button" onclick="Student(${defenseSession.DEFSESS_ID});" class="btn btn-info btn-xs" title="Edit">Học viên bảo vệ</button>
-											<button type="button" onclick="Member(${defenseSession.DEFSESS_ID});" class="btn btn-info btn-xs" title="Edit">Thành viên hội đồng</button>
+											<button type="button" onclick="Student(${defenseSession.DEFSESS_ID});" class="btn btn-info btn-xs" title="Edit">Học viên</button>
+											<button type="button" onclick="Member(${defenseSession.DEFSESS_ID});" class="btn btn-info btn-xs" title="Edit">Thành viên trong trường</button>
+											<button type="button" onclick="ExternalMember(${defenseSession.DEFSESS_ID});" class="btn btn-info btn-xs" title="Edit">Thành viên ngoài trường</button>											
 											<button type="button" onclick="Room(${defenseSession.DEFSESS_ID});" class="btn btn-info btn-xs" title="Edit">Phòng</button>
 											<button type="button" onclick="Slot(${defenseSession.DEFSESS_ID});" class="btn btn-info btn-xs" title="Edit">Kíp</button>											
 										</td>
@@ -132,6 +133,11 @@ function Student(idefenseSessionId){
 function Member(idefenseSessionId){
 	var sViewDetailUrl = baseUrl + "/mm/jurymembers/"+idefenseSessionId+".html";
 	//var sViewDetailUrl = baseUrl + "/cp/jurymembers.html";
+	window.location = sViewDetailUrl;
+}
+
+function ExternalMember(idefenseSessionId){
+	var sViewDetailUrl = baseUrl + "/mm/juryexternalmembers/"+idefenseSessionId+".html";
 	window.location = sViewDetailUrl;
 }
 

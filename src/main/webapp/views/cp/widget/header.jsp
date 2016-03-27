@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="home.html">ĐHBK Hà Nội</a>
+        <a class="navbar-brand" href="/webapp/cp/home.html">ĐHBK Hà Nội</a>
     </div>
     <!-- /.navbar-header -->
 

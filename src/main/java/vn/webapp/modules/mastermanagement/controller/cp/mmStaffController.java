@@ -92,8 +92,9 @@ public class mmStaffController extends BaseWeb {
    @RequestMapping(value = "/professors", method = RequestMethod.GET)
    public String paperList(ModelMap model, HttpSession session) {
 
-	   List<mmStaff> professorList = mmstaffService.listStaffs();
-	   
+	   //List<mmStaff> professorList = mmstaffService.listStaffs();
+	   //List<mmStaff> professorList = mmstaffService.listStaffsByFaculty("SOICT");
+	   List<mmStaff> professorList = mmstaffService.listStaffsByDepartment("SOICT-BMKHMT");
 	   model.put("professorList", professorList);
 	   model.put("departmentList",mmdepartmentService.loadDepartmentList());
 	   return "mm.professors";
@@ -192,7 +193,7 @@ public class mmStaffController extends BaseWeb {
 	 model.put("departmentList", departmentList);
 	 model.put("specializationKeywordList", specializationKeywordList);
 	 model.put("specializationKeywords", specializationKeywords);
-	 model.put("staffDepartementCode", staffDepartmentCode); 
+	 model.put("staffDepartmentCode", staffDepartmentCode); 
 		 
 	 if(result.hasErrors()) {		
 		 return "mm.addAProfessor";

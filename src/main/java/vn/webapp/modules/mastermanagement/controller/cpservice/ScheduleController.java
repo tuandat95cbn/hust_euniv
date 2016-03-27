@@ -28,10 +28,15 @@ import com.itextpdf.text.DocumentException;
 
 import vn.webapp.controller.BaseWeb;
 import vn.webapp.libraries.FileUtil;
+import vn.webapp.modules.mastermanagement.model.mmExternalStaff;
+import vn.webapp.modules.mastermanagement.model.mmJuryExternalMember;
+import vn.webapp.modules.mastermanagement.model.mmJuryMember;
 import vn.webapp.modules.mastermanagement.model.mmMasterDefenseJuryThesis;
 import vn.webapp.modules.mastermanagement.model.mmMasterThesis;
 import vn.webapp.modules.mastermanagement.model.mmStaff;
 import vn.webapp.modules.mastermanagement.model.mmStudent;
+import vn.webapp.modules.mastermanagement.service.mmExternalStaffService;
+import vn.webapp.modules.mastermanagement.service.mmJuryExternalMemberService;
 import vn.webapp.modules.mastermanagement.service.mmJuryMemberService;
 import vn.webapp.modules.mastermanagement.service.mmJuryRoomService;
 import vn.webapp.modules.mastermanagement.service.mmJurySlotService;
@@ -52,6 +57,9 @@ public class ScheduleController extends BaseWeb {
     private mmStaffService mmstaffService;
     
     @Autowired
+    private mmExternalStaffService mmexternalStaffService;
+    
+    @Autowired
     private mmMasterClassService mmmasterClassService;
     
     @Autowired
@@ -62,6 +70,9 @@ public class ScheduleController extends BaseWeb {
 
     @Autowired
     private mmJuryMemberService mmjuryMemberService;
+    
+    @Autowired
+    private mmJuryExternalMemberService mmjuryExternalMemberService;
     
     @Autowired
     private mmJuryRoomService mmjuryRoomService;
@@ -159,14 +170,40 @@ public class ScheduleController extends BaseWeb {
 		String sReturn = "";
 		if(!sJuryMemberCode.equals("") && !sDefenseSessionCode.equals("")){
 			String userCode = session.getAttribute("currentUserCode").toString();
-			int iSaved = mmjuryMemberService.removeAJuryMember(userCode, sJuryMemberCode);
-			if(iSaved > 0){
-				sReturn = "<span>Lưu thành công !</span>";
-			}else{
-				sReturn = "<span>Add A Jury Member --> Không thành công" + 
-						"cpservice/ScheduleController::saveAJuryMember, juryMemberCode = " + sJuryMemberCode + ", defenseSessionCode = " + sDefenseSessionCode 
-						+ "</span>";
-			}
+			mmJuryMember juryMember = mmjuryMemberService.getAJuryMemberByMemberAndDefenseSession(sDefenseSessionCode, sJuryMemberCode, userCode);
+			if(juryMember != null)
+				mmjuryMemberService.removeAJuryMember(userCode, juryMember.getJuryMem_Code());
+			
+		}
+		return sReturn;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/savejuryexternalmember", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
+	public String saveAJuryExternalMember(@RequestParam(value = "sJuryExternalMemberCode", defaultValue = "0") String sJuryExternalMemberCode,
+			@RequestParam(value = "sDefenseSessionCode", defaultValue = "0") String sDefenseSessionCode,
+			HttpSession session){
+		String sReturn = "";
+		if(!sJuryExternalMemberCode.equals("") && !sDefenseSessionCode.equals("")){
+			String userCode = session.getAttribute("currentUserCode").toString();
+			mmjuryExternalMemberService.saveAJuryExternalMember(sJuryExternalMemberCode, sDefenseSessionCode, userCode);
+			
+		}
+		return sReturn;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/removejuryexternalmember", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
+	public String removeAJuryExternalMember(@RequestParam(value = "sJuryExternalMemberCode", defaultValue = "0") String sJuryExternalMemberCode,
+			@RequestParam(value = "sDefenseSessionCode", defaultValue = "0") String sDefenseSessionCode,
+			HttpSession session){
+		String sReturn = "";
+		if(!sJuryExternalMemberCode.equals("") && !sDefenseSessionCode.equals("")){
+			String userCode = session.getAttribute("currentUserCode").toString();
+			mmJuryExternalMember juryExternalMember = mmjuryExternalMemberService.getAJuryExternalMemberByMemberAndDefenseSession(sDefenseSessionCode, sJuryExternalMemberCode, userCode);
+			if(juryExternalMember != null)
+				mmjuryExternalMemberService.removeAJuryExternalMember(juryExternalMember);
+			
 		}
 		return sReturn;
 	}
@@ -278,70 +315,7 @@ public class ScheduleController extends BaseWeb {
 		}
 		return sReturn;
 	}
-	
-	
-	/*@ResponseBody
-	@RequestMapping(value = "/generateJuryPdf", method = RequestMethod.POST, produces="application/pdf")
-	public byte[] generateJuryPdf(
-			@RequestParam(value = "studentName") String studentName,
-			@RequestParam(value = "thesisCode") String thesisCode,
-			@RequestParam(value = "mentorName") String mentorName,
-			@RequestParam(value = "defender01") String defender01,
-			@RequestParam(value = "defender02") String defender02,
-			@RequestParam(value = "president") String president,
-			@RequestParam(value = "secretary") String secretary,
-			@RequestParam(value = "commissioner") String commissioner,
-			@RequestParam(value = "slot") String slot,
-			@RequestParam(value = "room") String room,
-									
-			HttpSession session){
-	
-		
-		//final ServletContext servletContext = session.getServletContext();
-	    //final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-	    //final String temperotyFilePath = tempDirectory.getAbsolutePath();
-		String filePath = session.getServletContext().getRealPath("/"); 
-		
-	    mmMasterThesis masterThesis = mmmasterThesisService.loadMasterThesisByCode(thesisCode);
-	    mmMasterDefenseJuryThesis masterDefenseJuryThesis = mmmasterDefenseJuryService.getMasterDefenseJuryThesisByThesisCode(thesisCode);
-	    if(masterThesis == null || masterDefenseJuryThesis == null){
-	    	return null;
-	    }
-	    String fileName = filePath+"upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".pdf";
-	    System.out.println(fileName);
-		PDFGenerator pdfGenerator = new PDFGenerator("html/test.html",fileName);
-	    	try {
-				pdfGenerator.v_fGenerator();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (DocumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			    
-	    	FileInputStream fileInputStream=null;
-	        
-	        File file = new File(fileName);
-	        
-	        byte[] bFile = new byte[(int) file.length()];
-	        
-	        try {
-				fileInputStream = new FileInputStream(file);
-				fileInputStream.read(bFile);				
-				fileInputStream.close();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	   
-	    	
-	    	return bFile;
-	    	//return masterDefenseJuryThesis.getMASDEFJury_ID()+"";
-	    //return fileName;
-	}*/
+
 	
 	@ResponseBody
 	@RequestMapping(value = "/generateJuryPdf", method = RequestMethod.POST)
@@ -349,8 +323,8 @@ public class ScheduleController extends BaseWeb {
 			@RequestParam(value = "studentName") String studentName,
 			@RequestParam(value = "thesisCode") String thesisCode,
 			@RequestParam(value = "mentorName") String mentorName,
-			@RequestParam(value = "defender01") String defender01Code,
-			@RequestParam(value = "defender02") String defender02Code,
+			@RequestParam(value = "examiner1") String examiner1Code,
+			@RequestParam(value = "examiner2") String examiner2Code,
 			@RequestParam(value = "president") String presidentCode,
 			@RequestParam(value = "secretary") String secretaryCode,
 			@RequestParam(value = "commissioner") String commissionerCode,
@@ -360,20 +334,21 @@ public class ScheduleController extends BaseWeb {
 			HttpSession session) throws IOException{
 	
 		
-		String filePath = session.getServletContext().getRealPath("/"); 
+		final ServletContext servletContext = session.getServletContext();
+		final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+	    final String temporaryFilePath = tempDirectory.getAbsolutePath();
 		
 	    mmMasterThesis masterThesis = mmmasterThesisService.loadMasterThesisByCode(thesisCode);
 	    mmMasterDefenseJuryThesis masterDefenseJuryThesis = mmmasterDefenseJuryService.getMasterDefenseJuryThesisByThesisCode(thesisCode);
 	    if(masterThesis == null || masterDefenseJuryThesis == null){
 	    	return -1+"";
 	    }
-	    String fileName = filePath+"upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".pdf";
-	    //System.out.println(fileName);
+	    String fileName = temporaryFilePath+"\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".pdf";
 	    
 	    ClassLoader classLoader = getClass().getClassLoader();
 	    File o_FontFile = new File(classLoader.getResource("html/juryTemplate.html").getFile());
     	String sFilePath = o_FontFile.getAbsolutePath();
-	    StringBuilder sTemplateContent = FileUtil.sGetFileContent(sFilePath);
+    	StringBuilder sTemplateContent = FileUtil.sGetFileContent(sFilePath);
     	
 	    Date date = new Date();
 	    Calendar calendar = new GregorianCalendar();
@@ -387,34 +362,77 @@ public class ScheduleController extends BaseWeb {
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Year__", year+"");
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Month__", month+"");
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Day__", day+"");
+       	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__StudentName__", studentName);
     	
-    	//mmStudent student = mmstudentService.loadStudentByCode(masterThesis.getThesis_StudentCode());
-    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__StudentName__", studentName);
-    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ThesisName__", masterThesis.getThesis_Name());
-    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__SupervisorName__", mentorName);
+       	String thesisTempHead = "<tr><td></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    	String thesisTempTail = "</td></tr>";
+    	String thesisName = masterThesis.getThesis_Name();
+    	String[] tokens = thesisName.split(" ");
+    	int currentLength = 0;
+    	int numOfLine = 0;
+    	String[] line = new String[3];
+    	for(int i=0;i<3;i++){
+    		line[i] = "";
+    	}
+    	for(String token:tokens){
+    		if(numOfLine > 3)
+    			break;
+    		currentLength += token.length() + 1;    		
+    		if(currentLength >= 65){    			
+    			numOfLine++;
+    			currentLength = 0;
+    		}else{
+    			line[numOfLine] += token+" ";
+    		}    		
+    	}
     	
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ThesisName0__", line[0]);
+		if(numOfLine == 0){        	
+    		sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ThesisName1__", "");
+    		sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ThesisName2__", "");
+    	}
+    	if(numOfLine == 1){
+    		sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ThesisName1__", thesisTempHead+line[1]+thesisTempTail);
+    		sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ThesisName2__", "");
+    	}
+    	if(numOfLine == 2){
+    		sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ThesisName1__", thesisTempHead+line[1]+thesisTempTail);
+    		sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ThesisName2__", thesisTempHead+line[2]+thesisTempTail);
+    	}  	
+    	
+    	mmStaff supervisor = masterThesis.getSupervisor();    	
     	mmStaff chairman = mmstaffService.loadStaffByStaffCode(presidentCode);
-    	mmStaff examiner1 = mmstaffService.loadStaffByStaffCode(defender01Code);
-    	mmStaff examiner2 = mmstaffService.loadStaffByStaffCode(defender02Code);
+    	mmExternalStaff examiner1 = mmexternalStaffService.getByExternalStaffCode(examiner1Code);
+    	mmStaff examiner2 = mmstaffService.loadStaffByStaffCode(examiner2Code);
     	mmStaff secretary = mmstaffService.loadStaffByStaffCode(secretaryCode);
-    	mmStaff commissioner = mmstaffService.loadStaffByStaffCode(commissionerCode);
+    	mmExternalStaff commissioner = mmexternalStaffService.getByExternalStaffCode(commissionerCode);
+    	
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__SupervisorAcademicRank__", supervisor.getAcademicRank().getAcademicRank_VNAbbr());
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__SupervisorName__", supervisor.getStaff_Name());
+    	
     	
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ChairmanName__", chairman.getStaff_Name());
-    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Examiner1Name__", examiner1.getStaff_Name());
-    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Examiner1University__", examiner1.getDepartment().getFaculty().getUniversity().getUniversity_Name());
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ChairmanAcademicRank__", chairman.getAcademicRank().getAcademicRank_VNAbbr());
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Examiner1Name__", examiner1.getEXTSTAF_Name());
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Examiner1AcademicRank__", examiner1.getAcademicRank().getAcademicRank_VNAbbr());
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Examiner1University__", examiner1.getUniversity().getUniversity_Name());
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Examiner2Name__", examiner2.getStaff_Name());
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Examiner2AcademicRank__", examiner2.getAcademicRank().getAcademicRank_VNAbbr());
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__SecretaryName__", secretary.getStaff_Name());
-    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__CommissionerName__", commissioner.getStaff_Name());
-    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__CommissionerUniversity__", commissioner.getDepartment().getFaculty().getUniversity().getUniversity_Name());
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__SecretaryAcademicRank__", secretary.getAcademicRank().getAcademicRank_VNAbbr());
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__CommissionerName__", commissioner.getEXTSTAF_Name());
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__CommissionerUniversity__", commissioner.getUniversity().getUniversity_Name());
+    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__CommissionerAcademicRank__", commissioner.getAcademicRank().getAcademicRank_VNAbbr());
+    	
     	
     	
     	
     	// Write completed content into file
-    	File o_CompletedContentFile = new File(filePath+"\\upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".html");
+    	File o_CompletedContentFile = new File(temporaryFilePath+"\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".html");
     	
     	FileUtil.v_fWriteContentIntoAFile(o_CompletedContentFile, sTemplateContent);
 	    	    
-		PDFGenerator pdfGenerator = new PDFGenerator(filePath+"\\upload\\mastermanagement\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".html",fileName);
+		PDFGenerator pdfGenerator = new PDFGenerator(temporaryFilePath+"\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".html",fileName);
 	    	try {
 				pdfGenerator.v_fGenerator();
 			} catch (IOException e) {

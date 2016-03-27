@@ -17,8 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import vn.webapp.modules.mastermanagement.model.mmMasterClass;
 import vn.webapp.modules.mastermanagement.model.mmMasterDefenseJuryThesis;
-import vn.webapp.modules.mastermanagement.model.mmRawMasterDefenseJuryThesis;
-
 
 @Repository("mmmasterDefenseJuryDAO")
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -243,7 +241,7 @@ public class mmMasterDefenseJuryDAOImpl extends BaseDao implements mmMasterDefen
     /**
      * 
      */
-    @Override
+    /*@Override
     public mmRawMasterDefenseJuryThesis getRawMasterDefenseJuryThesisByThesisCodeAndOwner(String masterThesisCode, String ownerCode)
     {
     	try {
@@ -263,13 +261,13 @@ public class mmMasterDefenseJuryDAOImpl extends BaseDao implements mmMasterDefen
             flush();
             close();
         }
-    }
+    }*/
     
     /**
      * 
      */
     @Override
-    public int removeAMasterThesis(mmRawMasterDefenseJuryThesis masterDefenseJuryThesis){
+    public int removeAMasterThesis(mmMasterDefenseJuryThesis masterDefenseJuryThesis){
     	try {
             begin();
             getSession().delete(masterDefenseJuryThesis);

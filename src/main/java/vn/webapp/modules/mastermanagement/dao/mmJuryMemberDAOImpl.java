@@ -70,6 +70,30 @@ public class mmJuryMemberDAOImpl extends BaseDao implements mmJuryMemberDAO {
 			close();
 		}
 	}
+	
+	@Override
+	public mmJuryMember getAJuryMemberByMemberAndDefenseSession(String DefenseSessionCode, String sJuryMemberMemCode, String sStaffCode){
+		// TODO Auto-generated method stub
+		try{
+			begin();
+			Criteria criteria = getSession().createCriteria(mmJuryMember.class);
+			criteria.setFirstResult(0);
+			criteria.add(Restrictions.eq("JuryMem_MemberCode", sJuryMemberMemCode));
+			criteria.add(Restrictions.eq("JuryMem_StaffCode", sStaffCode));
+			criteria.add(Restrictions.eq("JuryMem_DefenseSessionCode", DefenseSessionCode));
+			mmJuryMember aJuryMember = (mmJuryMember)criteria.uniqueResult();
+			commit();
+			return aJuryMember;
+		}catch(HibernateException e){
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		}finally{
+			flush();
+			close();
+		}
+	}
 
 	@Override
 	public List<mmJuryMember> listJuryMembers(String staffCode) {

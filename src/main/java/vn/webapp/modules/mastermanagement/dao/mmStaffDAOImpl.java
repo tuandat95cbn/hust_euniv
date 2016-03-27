@@ -92,14 +92,12 @@ public class mmStaffDAOImpl extends BaseDao implements mmStaffDAO {
      * @return object
      */
     @Override
-    public List<mmStaff> listStaffsByUniversity(String universityCode){
+    public List<mmStaff> listStaffsByFaculty(String facultyCode){
     	try {
     		begin();
             Criteria criteria = getSession().createCriteria(mmStaff.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-            criteria.setFirstResult(0);
-            criteria.add(Restrictions.eq("Staff_University", universityCode));
-            List<mmStaff> staff = criteria.list();
-            System.out.println("DAO OK");
+            criteria.add(Restrictions.eq("Staff_Faculty_Code", facultyCode));
+            List<mmStaff> staff = criteria.list();            
             commit();
             return staff;
         } catch (HibernateException e) {

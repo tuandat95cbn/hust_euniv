@@ -29,11 +29,11 @@
 				</div>
 				<div class="well">
 					<h4>Thời gian</h4>
-					<input type="text" name="time" id="time" />
+					<input class="form-control" type="text" name="time" id="time" />
 					<h4>Thứ tự</h4>
-					<input type="text" name="order" id="order" var="0" />
+					<input class="form-control" type="text" name="order" id="order" var="0" />
 					<br>
-					<button type="button" class="form btn btn-primary" onclick="addJurySlot();" id="choose" style="margin-top:20px;">Thêm</button>
+					<button type="button" class="form btn btn-primary" onclick="addJurySlot();" id="choose" >Thêm</button>
 				</div>
 			</div>
 		
@@ -67,7 +67,7 @@
 									<c:forEach items="${listJurySlots}" var="aJurySlot">															
 										<tr class="gradeX">
 											<td><c:out value="${aJurySlot.jurySlot_Index}"/></td>
-										 	<td><c:out value="${aJurySlot.jurySlot_Code}"/></td>
+										 	<td><c:out value="${aJurySlot.jurySlot_Name}"/></td>
 										 	<td class="center"><button type="button" id="removeJurySlot" onclick="v_fRemoveJurySlot('${aJurySlot.jurySlot_Code}');" class="btn btn-danger btn-xs" title="Remove">Remove</button></td>
 										</tr>
 									</c:forEach>

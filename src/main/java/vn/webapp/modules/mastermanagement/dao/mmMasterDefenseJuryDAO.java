@@ -8,7 +8,6 @@ package vn.webapp.modules.mastermanagement.dao;
 import java.util.List;
 
 import vn.webapp.modules.mastermanagement.model.mmMasterDefenseJuryThesis;
-import vn.webapp.modules.mastermanagement.model.mmRawMasterDefenseJuryThesis;
 
 public interface mmMasterDefenseJuryDAO {
 
@@ -30,8 +29,8 @@ public interface mmMasterDefenseJuryDAO {
 	
 	public int saveAMasterThesis(mmMasterDefenseJuryThesis masterDefenseJuryThesis);
 	
-	public mmRawMasterDefenseJuryThesis getRawMasterDefenseJuryThesisByThesisCodeAndOwner(String masterThesisCode, String ownerCode);
+	//public mmRawMasterDefenseJuryThesis getRawMasterDefenseJuryThesisByThesisCodeAndOwner(String masterThesisCode, String ownerCode);
 	
-	public int removeAMasterThesis(mmRawMasterDefenseJuryThesis masterDefenseJuryThesis);
+	public int removeAMasterThesis(mmMasterDefenseJuryThesis masterDefenseJuryThesis);
 	
 }

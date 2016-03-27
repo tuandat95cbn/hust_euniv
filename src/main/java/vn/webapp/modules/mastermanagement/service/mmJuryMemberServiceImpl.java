@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+
 import vn.webapp.modules.mastermanagement.dao.mmJuryMemberDAO;
 import vn.webapp.modules.mastermanagement.model.mmJuryMember;
 
@@ -37,6 +38,10 @@ public class mmJuryMemberServiceImpl implements mmJuryMemberService{
 		}
 	}
 	
+	public mmJuryMember getAJuryMemberByMemberAndDefenseSession(String DefenseSessionCode, String sJuryMemberMemCode, String sStaffCode){
+		return mmjuryMemberDAO.getAJuryMemberByMemberAndDefenseSession(DefenseSessionCode, sJuryMemberMemCode, sStaffCode);
+	}
+	
 	@Override
 	public int saveAJuryMember(String juryMemberCode, String defenseSessionCode, String userCode){
 		mmJuryMember juryMember = new mmJuryMember();
@@ -46,6 +51,7 @@ public class mmJuryMemberServiceImpl implements mmJuryMemberService{
 		juryMember.setJuryMem_Code(defenseSessionCode + "-" + userCode + "-"+juryMemberCode); 
 		return mmjuryMemberDAO.saveJuryMember(juryMember);
 	}
+	
 	
 	/**
      * 

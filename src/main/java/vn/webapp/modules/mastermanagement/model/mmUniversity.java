@@ -2,6 +2,7 @@ package vn.webapp.modules.mastermanagement.model;
 
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -26,6 +27,10 @@ public class mmUniversity implements Serializable{
 		
 	@OneToMany(fetch = FetchType.LAZY, mappedBy="university", cascade = CascadeType.ALL)
 	private Set<mmFaculty> listFaculty;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="university", cascade = CascadeType.ALL)
+	private Set<mmExternalStaff> listExternalStaff = new HashSet<mmExternalStaff>();
+   
 	
 	public Set<mmFaculty> getListFaculty() {
 		return listFaculty;
@@ -63,5 +68,12 @@ public class mmUniversity implements Serializable{
 	public void setUniversity_Role(String university_Role) {
 		University_Role = university_Role;
 	}
+	public Set<mmExternalStaff> getListExternalStaff() {
+		return listExternalStaff;
+	}
+	public void setListExternalStaff(Set<mmExternalStaff> listExternalStaff) {
+		this.listExternalStaff = listExternalStaff;
+	}
+	
 	
 }

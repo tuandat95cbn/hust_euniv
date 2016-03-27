@@ -39,44 +39,66 @@
 		<!-- /.col-lg-12 -->
 	</div>
 	<!-- /.row -->
-	<form:form id="form-add" action="${baseUrl}/mm/save-defenses.html" method="POST" commandName="juriesForm" role="form" accept-charset="UTF-8">
-		<div class="row">
-		<c:if test="${status != null}">	              
-		<div class="alert alert-success">
-			${status}
-		</div>
-		</c:if>
-		
-		
-			<div class="col-lg-6">
+		<div class="row">		
+			<div class="col-lg-3">				
 				<div class="well">
-					<h4>Đợt bảo vệ</h4>
-						<p class="value">${defenseSession.DEFSESS_Name}</p>
-						<input id="defenseSession" type="hidden" value="${defenseSession.DEFSESS_Code}" name="defenseSession">					  
+					<h4>Thông tin đợt bảo vệ</h4>	
+					<div class="input-group">
+						<span class="input-group-addon">Đợt bảo vệ</span>
+						<p class="form-control">${defenseSession.DEFSESS_Name}</p>
+						<input id="defenseSession" type="hidden" value="${defenseSession.DEFSESS_Code}" name="defenseSession">										 
+					</div>
+					<div class="input-group">						
+						<span class="input-group-addon">Bộ môn</span>
+						<p class="form-control">${department}</p>
+					</div>	    	
+					<div class="row" style="margin-top:10px;margin-left:0px;">
+						
+							<button type="button" class="btn btn-primary" id="save">Lưu</button>
+							<button type="button" class='form btn btn-primary' id="cancel" >Quay về</button>				
+						<!-- /.col-lg-4 -->
+					</div>				  
 				</div>
-				<!-- <div class="well">
-					<h4>Danh sách học viên bảo vệ</h4>
-					<c:if test="${listMasterThesis != null}">
-						<select class="form-control" name="masterThesis" id="masterThesis" >
-							<c:forEach items="${listMasterThesis}" var="masterThesis">
-			               		<option value="${masterThesis.thesis_Code}" >${masterThesis.student.student_Name} : ${masterThesis.thesis_Name} : ${masterThesis.supervisor.staff_Name}</option>
-			               	</c:forEach>
-                    	</select>
-                    </c:if>   				
-				</div>
-				-->
+			
 				<!-- /.col-lg-4 -->
 			</div>
 	
-			<div class="col-lg-6">
+			<div class="col-lg-4">
+					<div class="well">
+						<h4>Xếp tự động</h4>
+						<div class="input-group">
+							<span class="input-group-addon">Thuật toán</span> <select type="check"
+								class="form-control" id="filter-algorithm">
+								<option value="local search" selected>Local search</option>
+								<option value="Backtracking search">Backtracking search</option>
+							</select>								
+						</div>
+						<div style="margin-top:10px;">
+							<button id="autoSchedule" class="btn btn-success" ><i class="fa fa-table"></i>&nbspXếp tự động</button>
+							<button id="checkSchedule" class="btn btn-info"><i class="fa fa-search"></i>&nbspKiểm tra</button>
+							<button id="reloadSchedule" class="btn btn-warning" ><i class="fa fa-undo"></i>&nbspKhởi tạo lại</button>
+						</div>			
+					</div>					
+				</div>		
+				
+			<div class="col-lg-4">
 				<div class="well">
-					<h4>Bộ môn</h4>
-					<p class="value">${department}</p>                    
-				</div>
-			</div>
+				<h4>Lưu ra file excel</h4>
+				<div class="input-group">
+					<span class="input-group-addon">Tên file</span>
+					<input type="text" class="form-control" id="file-name" placeholder="Nhập tên file" value="HỘI ĐỒNG BẢO VỆ CAO HỌC ${defenseSession.DEFSESS_Name}">					 
+				</div>		
+				<div style="margin-top:10px;">
+					<button class="btn btn-success" id="excel" ><i class="fa fa-floppy-o"></i>&nbspLưu</button>
+				</div>			
+				</div>				
+			</div>		
+					
 		
 		</div>
 		<!-- /.row -->
+		
+		<div id ="status" ></div>
 		
 		<div class="panel panel-default">
 				<!-- /.panel-heading -->
@@ -86,6 +108,8 @@
 							
 						</div>
 						<table class="table table-striped table-bordered table-hover" id="dataTables-Juries">
+						<input type="hidden" value="${listMasterDefenseJuryThesis.size()}" id="listMasterDefenseJuryThesisSize">
+						<caption><h2>HỘI ĐỒNG BẢO VỆ CAO HỌC ${defenseSession.DEFSESS_Name}</caption>
 							<thead>
 								<tr>
 									<th title="Name">Học viên</th>
@@ -104,27 +128,40 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:if test="${listMasterDefenseJuryThesis != null}">
-									<c:forEach items="${listMasterDefenseJuryThesis}" var="aMasterDefenseJuryThesis">															
+								<c:if test="${listMasterDefenseJuryThesis.size() != 0}">								
+									<c:forEach var="i" begin="0" end="${listMasterDefenseJuryThesis.size()-1}">
 										<tr class="gradeX">
-										 	<td class="studentNameCol"><c:out value="${aMasterDefenseJuryThesis.studentName}"/></td>
-										 	<td class="thesisNameCol"><c:out value="${aMasterDefenseJuryThesis.thesisName}"/></td>
-										 	<input type="hidden" class="thesisCode" value="${aMasterDefenseJuryThesis.thesisCode}">
-										 	<td class="mentorNameCol"><c:out value="${aMasterDefenseJuryThesis.mentorName}"/></td>
-										 	<td class="defender01Col"><div id="val-defenseder01-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.examiner1Name}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.examiner1Code}" name="defenseder01" class="defender01"/> </div><span onclick="editJury('dialog-form-master-outer', 'defenseder01-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td class="defender02Col"><div id="val-defenseder02-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.examiner2Name}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.examiner2Code}" name="defenseder02" class="defender02"/> </div> <span onclick="editJury('dialog-form-master-inner', 'defenseder02-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td class="presidentCol"><div id="val-president-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.presidentName}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.presidentCode}" name="president" class="president"/> </div> <span onclick="editJury('dialog-form-master-inner', 'president-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td class="secretaryCol"><div id="val-secretary-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.secretaryName}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.secretaryCode}" name="secretary" class="secretary"/> </div> <span onclick="editJury('dialog-form-master-inner', 'secretary-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td class="commissionerCol"><div id="val-commissioner-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.externalMemberName}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.externalMemberCode}" name="commissioner" class="commissioner" /> </div> <span onclick="editJury('dialog-form-master-outer', 'commissioner-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td class="slotCol"><div id="val-slot-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.theTime}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.theTime}" name="slot" class="slot"/> </div> <span onclick="editJury('dialog-form-slot', 'slot-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
-										 	<td class="roomCol"><div id="val-room-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.roomPlaceCode}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.roomPlaceCode}" name="room" class="room" /> </div> <span onclick="editJury('dialog-form-room', 'room-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
+										 	<td class="studentNameCol"><c:out value="${listMasterDefenseJuryThesis.get(i).masterThesis.student.student_Name}"/></td>
+										 	<td class="thesisNameCol"><c:out value="${listMasterDefenseJuryThesis.get(i).masterThesis.thesis_Name}"/></td>
+										 	<input type="hidden" class="thesisCode" value="${listMasterDefenseJuryThesis.get(i).masterThesis.thesis_Code}">
+										 	<td class="mentorNameCol"><div id="val-supervisor-${i}"><c:out value="${listMasterDefenseJuryThesis.get(i).masterThesis.supervisor.academicRank.academicRank_VNAbbr} ${listMasterDefenseJuryThesis.get(i).masterThesis.supervisor.staff_Name}"/></div></td>
+										 	<td class="examiner1Col"><div id="val-examiner1-${i}"><c:out value="${listMasterDefenseJuryThesis.get(i).examiner1.academicRank.academicRank_VNAbbr} ${listMasterDefenseJuryThesis.get(i).examiner1.EXTSTAF_Name}"/> </div><div onclick="editJury('dialog-form-master-outer', 'examiner1-${i}');" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil pointer"></i></div><div class="btn btn-warning btn-xs" onclick="deleteJury('examiner1-${i}');" title="Delete"><i class="fa fa-trash"></i></div></td>
+										 	<td class="examiner2Col"><div id="val-examiner2-${i}"><c:out value="${listMasterDefenseJuryThesis.get(i).examiner2.academicRank.academicRank_VNAbbr} ${listMasterDefenseJuryThesis.get(i).examiner2.staff_Name}"/>  </div> <div onclick="editJury('dialog-form-master-inner', 'examiner2-${i}');" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil pointer"></i></div><div onclick="deleteJury('examiner2-${i}');" class="btn btn-warning btn-xs" title="Delete"><i class="fa fa-trash"></i></div></td>
+										 	<td class="presidentCol"><div id="val-president-${i}"><c:out value="${listMasterDefenseJuryThesis.get(i).president.academicRank.academicRank_VNAbbr} ${listMasterDefenseJuryThesis.get(i).president.staff_Name}"/> </div> <div onclick="editJury('dialog-form-master-inner', 'president-${i}');" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil pointer"></i></div><div onclick="deleteJury('president-${i}');" class="btn btn-warning btn-xs" title="Delete"><i class="fa fa-trash"></i></div></td>
+										 	<td class="secretaryCol"><div id="val-secretary-${i}"><c:out value="${listMasterDefenseJuryThesis.get(i).secretary.academicRank.academicRank_VNAbbr} ${listMasterDefenseJuryThesis.get(i).secretary.staff_Name}"/>  </div> <div onclick="editJury('dialog-form-master-inner', 'secretary-${i}');" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil pointer"></i></div><div onclick="deleteJury('secretary-${i}');" class="btn btn-warning btn-xs" title="Delete"><i class="fa fa-trash"></div></td>
+										 	<td class="commissionerCol"><div id="val-commissioner-${i}"><c:out value="${listMasterDefenseJuryThesis.get(i).member.academicRank.academicRank_VNAbbr} ${listMasterDefenseJuryThesis.get(i).member.EXTSTAF_Name}"/>  </div> <div onclick="editJury('dialog-form-master-outer', 'commissioner-${i}');" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil pointer"></i></div><div onclick="deleteJury('commissioner-${i}');" class="btn btn-warning btn-xs" title="Delete"><i class="fa fa-trash"></i></div></td>
+										 	<td class="slotCol"><div id="val-slot-${i}"><c:out value="${listMasterDefenseJuryThesis.get(i).slot.jurySlot_Name}"/> </div> <div onclick="editJury('dialog-form-slot', 'slot-${i}');" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil pointer"></i></div><div onclick="deleteJury('slot-${i}');" class="btn btn-warning btn-xs" title="Delete"><i class="fa fa-trash"></i></div></td>
+										 	<td class="roomCol"><div id="val-room-${i}"><c:out value="${listMasterDefenseJuryThesis.get(i).room.r_Code}"/> </div> <div onclick="editJury('dialog-form-room', 'room-${i}');" class="btn btn-info btn-xs" title="Edit"><i class="fa fa-pencil pointer"></i></div><div onclick="deleteJury('room-${i}');" class="btn btn-warning btn-xs" title="Delete"><i class="fa fa-trash"></i></div></td>
+										 	
 										 	<!-- <td><div id="val-no-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.coucilNo}"/> <input type="hidden" value="${aMasterDefenseJuryThesis.coucilNo}" name="no" /> </div> <span onclick="editJury('dialog-form-info', 'no-${aMasterDefenseJuryThesis.iKey}');" class="fa fa-pencil pointer" title="Edit"></span></td>
 										 	<td><div id="val-sclass-${aMasterDefenseJuryThesis.iKey}"><c:out value="${aMasterDefenseJuryThesis.classCode}"/></td>-->
-										 	<td><div class="btn btn-primary btn-xs generatePDF">In quyết định</div></td>
+										 	<td class="utility">
+										 		<div class="btn btn-success generatePDF"><i class="fa fa-print"></i></div>
+										 		<div class="btn btn-warning clear-row"><i class="fa fa-trash"></i></div>
+										 		<div class="uti" id="uti-${i}">
+										 			<input type="hidden" value="${listMasterDefenseJuryThesis.get(i).masterThesis.supervisor.staff_Code}" name="supervisor[${i}]" class="supervisor" />
+											 		<input type="hidden" value="${listMasterDefenseJuryThesis.get(i).masterThesis.thesis_Code}" name="masterDefenseThesis[${i}]" class="thesis" />
+											 		<input type="hidden" value="${listMasterDefenseJuryThesis.get(i).examiner1.EXTSTAF_Code}" name="examiner1[${i}]" class="examiner1"/> 
+											 		<input type="hidden" value="${listMasterDefenseJuryThesis.get(i).examiner2.staff_Code}" name="examiner2[${i}]" class="examiner2"/>
+											 		<input type="hidden" value="${listMasterDefenseJuryThesis.get(i).president.staff_Code}" name="president[${i}]" class="president"/> 
+											 		<input type="hidden" value="${listMasterDefenseJuryThesis.get(i).secretary.staff_Code}" name="secretary[${i}]" class="secretary"/>
+											 		<input type="hidden" value="${listMasterDefenseJuryThesis.get(i).member.EXTSTAF_Code}" name="commissioner[${i}]" class="commissioner" />
+											 		<input type="hidden" value="${listMasterDefenseJuryThesis.get(i).slot.jurySlot_Code}" name="slot[${i}]" class="slot"/>
+											 		<input type="hidden" value="${listMasterDefenseJuryThesis.get(i).room.r_Code}" name="room[${i}]" class="room" />
+											 	</div>
+										 	</td>
 										 	
-										 	<div class="defense-values">
-										 		<input id="masterDefenseThesis" name="masterDefenseThesis" value="${aMasterDefenseJuryThesis.masterDefenseJuryCode}" type="hidden" />
-										 	</div>
+										 	
 										</tr>
 									</c:forEach>
 								</c:if>
@@ -137,16 +174,9 @@
 			</div>
 
 		
-		<div class="row" style="padding-bottom:20px;">
-			<div class="col-lg-4">
-				<button type="submit" class="btn btn-primary" id="add">Lưu</button>
-				<button type="button" class='form btn btn-primary' id="cancel" >Quay về</button>				
-			</div>
-			<!-- /.col-lg-4 -->
-		</div>
 		
 		<!-- /.row -->
-	</form:form>
+	
 </div>
 
 <div class="hide">
@@ -156,7 +186,7 @@
 			  <select name="master-name-inner" id="master-name-inner" class="form-control">
 			  	<c:if test="${listInnerJuryMembers != null}">
 	               	<c:forEach items="${listInnerJuryMembers}" var="staff">
-	               		<option value="${staff.memJuryMember.staff_Code}" >${staff.memJuryMember.staff_Name}</option>
+	               		<option value="${staff.staff_Code}" >${staff.academicRank.academicRank_VNAbbr} ${staff.staff_Name}</option>
 	               	</c:forEach>
                 </c:if>
 			  </select>
@@ -170,7 +200,7 @@
 			  <select name="master-name-outer" id="master-name-outer" class="form-control">
 			  	<c:if test="${listOuterJuryMembers != null}">
 	               	<c:forEach items="${listOuterJuryMembers}" var="staff">
-	               		<option value="${staff.memJuryMember.staff_Code}" >${staff.memJuryMember.staff_Name}</option>
+	               		<option value="${staff.EXTSTAF_Code}" >${staff.academicRank.academicRank_VNAbbr} ${staff.EXTSTAF_Name}</option>
 	               	</c:forEach>
                 </c:if>
 			  </select>
@@ -198,7 +228,7 @@
 			  <select name="slot-add" id="slot-add" class="form-control">
 				  	<c:if test="${listJurySlot != null}">
 		            	<c:forEach items="${listJurySlot}" var="slot">
-		            		<option value="${slot.jurySlot_Code}" >${slot.jurySlot_Code}</option>
+		            		<option value="${slot.jurySlot_Code}" >${slot.jurySlot_Name}</option>
 		            	</c:forEach>
 	            	</c:if>
 			  </select>
@@ -217,7 +247,6 @@
 
  	
 
-
 <!-- /#page-wrapper -->
 
 <!-- DataTables JavaScript -->
@@ -227,159 +256,21 @@
 	src="<c:url value="/assets/libs/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.js"/>"></script>
 	
 
-<!-- Page-Level Demo Scripts - Tables - Use for reference -->
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('#save').click(function(){
-			keyword = $('#data-keyword').children();
-			var index = 0;
-			keyword.each(function(){
-				code = $(this).children(".keyword-code").val();
-				input = $('<input path="staffKeywords" class="keyword-code" name="staffKeywords['+index+']" type="hidden" value="'+code+'">');
-				$('#data-keyword').append(input);	
-				index++;		
-			});
-			
-			document.getElementById('form-add').submit();
-		});
-		
-		
-		$('#cancel').click(function() {
-			window.location = baseUrl + "/mm/defensesession.html";
-		});	
-	});
+ <script type="text/javascript">
+var tableToExcel = (function() {
+  var uri = 'data:application/vnd.ms-excel;base64,'
+    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
+    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+  return function(table, name) {
+    if (!table.nodeType) table = document.getElementById(table)
+    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+    //window.location.href = uri + base64(format(template, ctx))
+    var link = document.createElement("a");
+    link.download = $('#file-name').val()+".xls";
+    link.href = uri + base64(format(template, ctx));
+    link.click();
+  }
+})()
 </script>
-
-<!-- Dialog input value  --> 
-<script type="text/javascript">
-	
-				function editJury(the_sz_TypeForm, the_sz_Id) {
-					
-				  	var sz_currentElement = '';
-				  	var sz_NameInputChanged = '';
-				    var cDialog, form,
-					    name = $( "#master-name" ),
-					    allFields = $( [] ).add( name ),
-					    tips = $( ".validateTips" );
-				    var nameVal = '', 
-				    	nameTitle = '';
-				    function addUser() {
-				    	switch (the_sz_TypeForm){
-					    	case 'dialog-form-master-outer':					    		
-					    		nameVal= $("select#master-name-outer option:selected").val();
-							    nameTitle = $("select#master-name-outer option:selected").text();
-							    break;
-					    	case 'dialog-form-master-inner':					    		
-					    		nameVal= $("select#master-name-inner option:selected").val();
-							    nameTitle = $("select#master-name-inner option:selected").text();
-							    break;					    	
-					    	case 'dialog-form-room':
-					    		nameVal= $("select#room-add option:selected").val();
-							    nameTitle = $("select#room-add option:selected").text();
-							    break;
-					    	case 'dialog-form-slot' :
-					    		nameVal= $("select#slot-add option:selected").val();
-					    		nameTitle= $("select#slot-add option:selected").val();
-					    		break;
-					    	case 'dialog-form-info' :
-					    		nameVal= $("input#jury-info").val();
-					    		nameTitle= $("input#jury-info").val();
-					    		break;
-					    	default :
-					    		nameVal= $("input#jury-info").val();
-				    			nameTitle= $("input#jury-info").val();
-				    	}
-				      
-				      $( sz_currentElement ).html("");
-				      if ( nameVal != "" ) {
-				        $( sz_currentElement ).append(nameTitle + "<input name='"+sz_NameInputChanged+"' type='hidden' value='"+nameVal+"' />");
-				        cDialog.dialog( "close" );
-				      }
-				      return true;
-				    }
-				 	
-				    cDialog = $( "#"+the_sz_TypeForm ).dialog({
-				      autoOpen: false,
-				      height: 170,
-				      width: 350,
-				      modal: true,
-				      buttons: {
-				        "Sửa": addUser,
-				        "Hủy": function() {
-				            cDialog.dialog( "close" );
-				        }
-				      },
-				      close: function() {
-				        form[ 0 ].reset();
-				        allFields.removeClass( "ui-state-error" );
-				      }
-				    });
-				 
-				    form = cDialog.find( "form" ).on( "submit", function( event ) {
-				      event.preventDefault();				      
-				      addUser();
-				    });
-				
-				    
-				      if(the_sz_Id != "")
-				   	  {
-				    	  sz_currentElement = "#val-"+the_sz_Id;
-				    	  a_currentElements = the_sz_Id.split("-");
-				    	  sz_NameInputChanged = a_currentElements[0];
-				   	  }
-				      cDialog.dialog( "open" );
-				}
-
-</script>
-<script>
-
-$(".generatePDF").click(function () {    	
-	studentName = $(this).parent().siblings(".studentNameCol").html();
-	thesisCode = $(this).parent().siblings(".thesisCode").val();
-	mentorName = $(this).parent().siblings(".mentorNameCol").html();
-	defender01 = $(this).parent().siblings(".defender01Col").children().children(".defender01").val();
-	defender02 = $(this).parent().siblings(".defender02Col").children().children(".defender02").val();
-	president = $(this).parent().siblings(".presidentCol").children().children(".president").val();
-	secretary = $(this).parent().siblings(".secretaryCol").children().children(".secretary").val();
-	commissioner = $(this).parent().siblings(".commissionerCol").children().children(".commissioner").val();
-	slot = $(this).parent().siblings(".slotCol").children().children(".slot").val();
-	room = $(this).parent().siblings(".roomCol").children().children(".room").val();
-		
-	stdata = {"studentName":studentName,"thesisCode":thesisCode,"mentorName":mentorName,"defender01":defender01,"defender02":defender02,"president":president,"secretary":secretary,"commissioner":commissioner,"slot":slot,"room":room};
-	$.ajax({
-		type: "POST",
-		url:'/webapp/mmservice/generateJuryPdf.html',
-		data:stdata,
-		dataType: "text",
-		success:function(s,x){
-			window.open('/webapp/mm/viewPdf/'+s+'.html','_blank');
-			/*stdata = {"masterDefenseJuryThesis_ID":s};
-			$.ajax({
-				type: "POST",
-				url:'/webapp/mmservice/viewpdf.html',
-				data:stdata,
-				dataType: "application/pdf",
-				success:function(s,x){
-					//window.open('/webapp/mm/viewPdf/'+s+'.html','_blank');
-					
-					
-					
-				},
-				error:function(data, textStatus, jqXHR){
-					alert(textStatus);
-				}
-			});	*/
-			
-			
-		},
-		error:function(data, textStatus, jqXHR){
-			alert(textStatus);
-		}
-	});		
-	
-	
-});
-
-
-
-</script>
+<script src="<c:url value="/assets/js/source/mastermanagement/settingjuries.js"/>"></script>

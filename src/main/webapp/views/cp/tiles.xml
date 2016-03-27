@@ -420,6 +420,12 @@
 		<put-attribute name="content"
 			value="/views/cp/schedule/listjurymembers.jsp" />
 	</definition>
+	
+	<definition name="mm.juryExternalMembers" extends="layout.base">
+		<put-attribute name="title" value="list jury external members" />
+		<put-attribute name="content"
+			value="/views/cp/schedule/listjuryexternalmembers.jsp" />
+	</definition>
 
 	<!-- JuryRooms Module -->
 	<definition name="mm.juryRooms" extends="layout.base">

@@ -147,7 +147,8 @@ public class mmUniversityController extends BaseWeb {
 	    	  model.put("universityFormEdit", new UniversityValidation());			   
 			  model.put("universityName", universityName);
 			  model.put("universityCode", universityCode);
-			  model.put("universityID", universityId);	    	  
+			  model.put("universityID", universityId);	
+			  mmuniversityService.editAUniversity(universityId, universityName, universityCode);
 	    	  return "mm.editAnUniversity";
 	      }
 	   }

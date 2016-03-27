@@ -7,7 +7,7 @@ import vn.webapp.modules.mastermanagement.model.mmJurySlot;
 
 public interface mmJurySlotDAO {
 	public List<mmJurySlot> listJurySlots(String defenseSessionCode, String staffCode);
-	public mmJurySlot getJurySlotByCode(String sJurySlotCode, String defenseSessionCode, String userCode);
+	public mmJurySlot getJurySlotByCode(String sJurySlotCode);
 	public mmJurySlot getJurySlotByUserCode(String sJurySlotCode, String userCode);
 	public List<mmJurySlot> listJurySlots(String staffCode);
 	public int saveJurySlot(mmJurySlot jurySlot);

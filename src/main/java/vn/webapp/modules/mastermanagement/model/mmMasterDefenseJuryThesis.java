@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 /**
@@ -40,29 +41,29 @@ public class mmMasterDefenseJuryThesis implements Serializable{
     private String MASDEFJury_DefenseSessionCode;
     private String MASDEFJury_StaffCode;
 
-    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	@JoinColumn(name = "MASDEFJury_PresidentCode", referencedColumnName = "Staff_Code", insertable = false, updatable = false)
-	private mmMasterThesisStaff presidentInfo;
+    @Transient
+    mmExternalStaff examiner1;
     
-    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	@JoinColumn(name = "MASDEFJury_SecretaryCode", referencedColumnName = "Staff_Code", insertable = false, updatable = false)
-	private mmMasterThesisStaff secretaryInfo;
+    @Transient
+    mmExternalStaff member;
     
-    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	@JoinColumn(name = "MASDEFJury_Examiner1Code", referencedColumnName = "Staff_Code", insertable = false, updatable = false)
-	private mmMasterThesisStaff examiner1Info;
+    @Transient
+    mmStaff examiner2;
     
-    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	@JoinColumn(name = "MASDEFJury_Examiner2Code", referencedColumnName = "Staff_Code", insertable = false, updatable = false)
-	private mmMasterThesisStaff examiner2Info;
+    @Transient
+    mmStaff president;
     
-    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	@JoinColumn(name = "MASDEFJury_MemberCode", referencedColumnName = "Staff_Code", insertable = false, updatable = false)
-	private mmMasterThesisStaff externalMemberInfo;
+    @Transient
+    mmStaff secretary;
     
-    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	@JoinColumn(name = "MASDEFJury_RoomCode", referencedColumnName = "R_Code", insertable = false, updatable = false)
-	private mmRooms roomInfo;
+    @Transient 
+    mmJurySlot slot;
+    
+    @Transient 
+    mmRooms room;
+    
+    @Transient
+    mmMasterThesis masterThesis;    
     
 	public int getMASDEFJury_ID() {
 		return MASDEFJury_ID;
@@ -161,51 +162,67 @@ public class mmMasterDefenseJuryThesis implements Serializable{
 		MASDEFJury_StaffCode = mASDEFJury_StaffCode;
 	}
 
-	public mmMasterThesisStaff getPresidentInfo() {
-		return presidentInfo;
+	public mmExternalStaff getExaminer1() {
+		return examiner1;
 	}
 
-	public void setPresidentInfo(mmMasterThesisStaff presidentInfo) {
-		this.presidentInfo = presidentInfo;
+	public void setExaminer1(mmExternalStaff examiner1) {
+		this.examiner1 = examiner1;
 	}
 
-	public mmMasterThesisStaff getSecretaryInfo() {
-		return secretaryInfo;
+	public mmExternalStaff getMember() {
+		return member;
 	}
 
-	public void setSecretaryInfo(mmMasterThesisStaff secretaryInfo) {
-		this.secretaryInfo = secretaryInfo;
+	public void setMember(mmExternalStaff member) {
+		this.member = member;
 	}
 
-	public mmMasterThesisStaff getExaminer1Info() {
-		return examiner1Info;
+	public mmStaff getExaminer2() {
+		return examiner2;
 	}
 
-	public void setExaminer1Info(mmMasterThesisStaff examiner1Info) {
-		this.examiner1Info = examiner1Info;
+	public void setExaminer2(mmStaff examiner2) {
+		this.examiner2 = examiner2;
 	}
 
-	public mmMasterThesisStaff getExaminer2Info() {
-		return examiner2Info;
+	public mmStaff getPresident() {
+		return president;
 	}
 
-	public void setExaminer2Info(mmMasterThesisStaff examiner2Info) {
-		this.examiner2Info = examiner2Info;
+	public void setPresident(mmStaff president) {
+		this.president = president;
 	}
 
-	public mmMasterThesisStaff getExternalMemberInfo() {
-		return externalMemberInfo;
+	public mmStaff getSecretary() {
+		return secretary;
 	}
 
-	public void setExternalMemberInfo(mmMasterThesisStaff externalMemberInfo) {
-		this.externalMemberInfo = externalMemberInfo;
+	public void setSecretary(mmStaff secretary) {
+		this.secretary = secretary;
 	}
 
-	public mmRooms getRoomInfo() {
-		return roomInfo;
+	public mmJurySlot getSlot() {
+		return slot;
 	}
 
-	public void setRoomInfo(mmRooms roomInfo) {
-		this.roomInfo = roomInfo;
+	public void setSlot(mmJurySlot slot) {
+		this.slot = slot;
 	}
+
+	public mmRooms getRoom() {
+		return room;
+	}
+
+	public void setRoom(mmRooms room) {
+		this.room = room;
+	}
+
+	public mmMasterThesis getMasterThesis() {
+		return masterThesis;
+	}
+
+	public void setMasterThesis(mmMasterThesis masterThesis) {
+		this.masterThesis = masterThesis;
+	}		
 }

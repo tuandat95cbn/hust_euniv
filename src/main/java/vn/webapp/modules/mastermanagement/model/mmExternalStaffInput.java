@@ -34,7 +34,7 @@ import org.hibernate.validator.cfg.context.Cascadable;
  */
 @Entity
 @Table(name = "tblexternalstaffs")
-public class mmExternalStaff implements Serializable{
+public class mmExternalStaffInput implements Serializable{
     
     @Id
     @GeneratedValue
@@ -45,16 +45,16 @@ public class mmExternalStaff implements Serializable{
     private String EXTSTAF_Name;
     private String EXTSTAF_Email;    
     private String EXTSTAF_Phone;
+    private String EXTSTAF_UniversityCode;
+    private String EXTSTAF_AcademicRank;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="EXTSTAF_AcademicRank", referencedColumnName = "AcademicRank_Code", insertable=false, updatable = false)
-    public mmAcademicRank academicRank;
-    
-    @ManyToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	@JoinColumn(name="EXTSTAF_UniversityCode", referencedColumnName = "University_Code", insertable = false, updatable = false)
-	private mmUniversity university;
-    
-		
+    @ManyToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)  
+    @JoinTable(name = "tblstaffspecializationkeywords", 
+    		   joinColumns = { @JoinColumn(name = "STFKW_StaffCode", referencedColumnName = "EXTSTAF_Code") }, 
+    		   inverseJoinColumns = { @JoinColumn(name = "STFKW_KeywordCode", referencedColumnName = "KW_Code") })  
+    private Set<mmSpecializationKeyword> listSpecializationKeywords = new HashSet<mmSpecializationKeyword>();
+        
+    	
 	public int getEXTSTAF_ID() {
 		return EXTSTAF_ID;
 	}
@@ -86,29 +86,37 @@ public class mmExternalStaff implements Serializable{
 	public void setEXTSTAF_Email(String eXTSTAF_Email) {
 		EXTSTAF_Email = eXTSTAF_Email;
 	}
-	
+
 	public String getEXTSTAF_Phone() {
 		return EXTSTAF_Phone;
-	}	
+	}
 
 	public void setEXTSTAF_Phone(String eXTSTAF_Phone) {
 		EXTSTAF_Phone = eXTSTAF_Phone;
 	}
 
-	public mmAcademicRank getAcademicRank() {
-		return academicRank;
+	public Set<mmSpecializationKeyword> getListSpecializationKeywords() {
+		return listSpecializationKeywords;
 	}
 
-	public void setAcademicRank(mmAcademicRank academicRank) {
-		this.academicRank = academicRank;
+	public void setListSpecializationKeywords(
+			Set<mmSpecializationKeyword> listSpecializationKeywords) {
+		this.listSpecializationKeywords = listSpecializationKeywords;
 	}
 
-	public mmUniversity getUniversity() {
-		return university;
+	public String getEXTSTAF_UniversityCode() {
+		return EXTSTAF_UniversityCode;
 	}
 
-	public void setUniversity(mmUniversity university) {
-		this.university = university;
+	public void setEXTSTAF_UniversityCode(String eXTSTAF_UniversityCode) {
+		EXTSTAF_UniversityCode = eXTSTAF_UniversityCode;
+	}
+
+	public String getEXTSTAF_AcademicRank() {
+		return EXTSTAF_AcademicRank;
+	}
+
+	public void setEXTSTAF_AcademicRank(String eXTSTAF_AcademicRank) {
+		EXTSTAF_AcademicRank = eXTSTAF_AcademicRank;
 	}	
-	
 }

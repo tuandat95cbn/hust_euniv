@@ -25,7 +25,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tblmasterthesis")
-public class mmMasterThesis implements Serializable{
+public class mmMasterThesisInput implements Serializable{
     
     @Id
     @GeneratedValue
@@ -34,33 +34,16 @@ public class mmMasterThesis implements Serializable{
     private String Thesis_Code;
     private String Thesis_StudentCode;
     private String Thesis_SupervisorCode;
-    
-	@OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	@JoinColumn(name = "Thesis_StudentCode", referencedColumnName = "Student_Code", nullable = false, insertable=false, updatable=false)
-	private mmStudent student;
-		
-	@ManyToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	@JoinColumn(name = "Thesis_SupervisorCode", referencedColumnName = "Staff_Code", nullable = false, insertable=false, updatable=false)
-	private mmStaff supervisor;
-	
+
+	@ManyToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)  
+	@JoinTable(name = "tblmasterthesisspecializationkeywords", 
+	  		   joinColumns = { @JoinColumn(name = "MTKW_ThesisCode", referencedColumnName = "Thesis_Code") }, 
+	   		   inverseJoinColumns = { @JoinColumn(name = "MTKW_KWCode", referencedColumnName = "KW_Code") })  
+	private Set<mmSpecializationKeyword> listSpecializationKeywords = new HashSet<mmSpecializationKeyword>();
+
+
 	public int getThesis_ID() {
 		return Thesis_ID;
-	}
-
-	public mmStudent getStudent() {
-		return student;
-	}
-
-	public void setStudent(mmStudent student) {
-		this.student = student;
-	}
-
-	public mmStaff getSupervisor() {
-		return supervisor;
-	}
-
-	public void setSupervisor(mmStaff supervisor) {
-		this.supervisor = supervisor;
 	}
 
 	public void setThesis_ID(int thesis_ID) {
@@ -97,5 +80,14 @@ public class mmMasterThesis implements Serializable{
 
 	public void setThesis_SupervisorCode(String thesis_SupervisorCode) {
 		Thesis_SupervisorCode = thesis_SupervisorCode;
+	}
+	
+	public Set<mmSpecializationKeyword> getListSpecializationKeywords() {
+		return listSpecializationKeywords;
+	}
+
+	public void setListSpecializationKeywords(
+			Set<mmSpecializationKeyword> listSpecializationKeywords) {
+		this.listSpecializationKeywords = listSpecializationKeywords;
 	}
 }

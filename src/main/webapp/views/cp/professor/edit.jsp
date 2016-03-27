@@ -75,7 +75,7 @@
 					<div class='form'>
 						<form:select path="staffDepartment" class="form-control" name="staffDepartment">
 							<c:forEach items="${departmentList}" var="department">
-	                       		<option value="${department.department_Code}" <c:if test="${staffDepartementCode eq department.department_Code}">selected</c:if>>${department.department_Name}</option>
+	                       		<option value="${department.department_Code}" <c:if test="${staffDepartmentCode eq department.department_Code}">selected</c:if>>${department.department_Name}</option>
 	                       	</c:forEach>
 	                    </form:select>
 	                    <form:errors path="staffDepartment" class="alert-danger"></form:errors>
