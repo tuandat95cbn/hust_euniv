@@ -65,7 +65,7 @@ public class PDFGenerator {
 	        
 	        // HTML
 	        XMLWorkerFontProvider fontProvider = new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
-	        fontProvider.register(sz_FontPath, "Serif");
+	        fontProvider.register(sz_FontPath);
 	        CssAppliers cssAppliers = new CssAppliersImpl(fontProvider);
 	        HtmlPipelineContext htmlContext = new HtmlPipelineContext(cssAppliers);
 	        htmlContext.setTagFactory(Tags.getHtmlTagProcessorFactory());

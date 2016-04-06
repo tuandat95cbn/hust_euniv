@@ -380,10 +380,10 @@ public class ScheduleController extends BaseWeb {
     		currentLength += token.length() + 1;    		
     		if(currentLength >= 65){    			
     			numOfLine++;
-    			currentLength = 0;
-    		}else{
-    			line[numOfLine] += token+" ";
-    		}    		
+    			currentLength = token.length() + 1;
+    		}
+    		line[numOfLine] += token+" ";
+    		    		
     	}
     	
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ThesisName0__", line[0]);
@@ -409,8 +409,7 @@ public class ScheduleController extends BaseWeb {
     	
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__SupervisorAcademicRank__", supervisor.getAcademicRank().getAcademicRank_VNAbbr());
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__SupervisorName__", supervisor.getStaff_Name());
-    	
-    	
+    	    	
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ChairmanName__", chairman.getStaff_Name());
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__ChairmanAcademicRank__", chairman.getAcademicRank().getAcademicRank_VNAbbr());
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__Examiner1Name__", examiner1.getEXTSTAF_Name());
@@ -423,9 +422,8 @@ public class ScheduleController extends BaseWeb {
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__CommissionerName__", commissioner.getEXTSTAF_Name());
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__CommissionerUniversity__", commissioner.getUniversity().getUniversity_Name());
     	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "__CommissionerAcademicRank__", commissioner.getAcademicRank().getAcademicRank_VNAbbr());
-    	
-    	
-    	
+    	    	
+    	//System.out.println(sTemplateContent.toString());
     	
     	// Write completed content into file
     	File o_CompletedContentFile = new File(temporaryFilePath+"\\"+masterDefenseJuryThesis.getMASDEFJury_Code()+".html");

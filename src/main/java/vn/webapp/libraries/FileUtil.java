@@ -3,9 +3,12 @@ package vn.webapp.libraries;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,24 +24,19 @@ public class FileUtil {
 	 */
 	public static StringBuilder sGetFileContent(String sFilePath) throws IOException 
 	{
-       BufferedReader br = null;
-       FileReader fr = null;
-
+       BufferedReader in = null;
+       
 		try {
-			fr = new FileReader(sFilePath);
-			br = new BufferedReader(fr);
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(sFilePath), "UTF8"));
 			String nextLine = "";
 			StringBuilder sb = new StringBuilder();
-			while ((nextLine = br.readLine()) != null) {
+			while ((nextLine = in.readLine()) != null) {
 				sb.append(nextLine); // note: BufferedReader strips the EOL character so we add a new one!
 				sb.append(EOL);
 			}
 			return sb;
 		} finally {
-			if (br != null)
-				br.close();
-			if (fr != null)
-				fr.close();
+			in.close();			
 		}
 	 }
 	
@@ -73,10 +71,9 @@ public class FileUtil {
 				file.createNewFile();
 			}
 
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(content.toString());
-			bw.close();
+			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file.getAbsoluteFile()), "UTF8"));
+			out.write(content.toString());
+			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
