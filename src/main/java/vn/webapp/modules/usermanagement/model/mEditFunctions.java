@@ -5,23 +5,14 @@
  */
 package vn.webapp.modules.usermanagement.model;
 
-import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "tblfunctions")
-public class mFunction implements Serializable{
+public class mEditFunctions{
 	
-	@Id
-    @GeneratedValue
     private int FUNC_ID;
     private String FUNC_CODE;
     private String FUNC_NAME;
     private String FUNC_URL;
     private int FUNC_PARENTID;
+    private int SELECTED;
     private String FUNC_TITLE_CLASS;
     private String FUNC_SELECTED_CLASS;
     private int FUNC_HAS_CHILDREN;
@@ -55,6 +46,12 @@ public class mFunction implements Serializable{
 	}
 	public void setFUNC_PARENTID(int fUNC_PARENTID) {
 		FUNC_PARENTID = fUNC_PARENTID;
+	}
+	public int getSELECTED() {
+		return SELECTED;
+	}
+	public void setSELECTED(int sELECTED) {
+		SELECTED = sELECTED;
 	}
 	public String getFUNC_TITLE_CLASS() {
 		return FUNC_TITLE_CLASS;

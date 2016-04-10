@@ -16,4 +16,8 @@ public interface mFunctionsDAO {
 	 */
 	public List<mFunction> loadFunctionsList();
 	
+	public List<mFunction> loadFunctionsParentHierachyList();
+	
+	public List<mFunction> loadFunctionsChildHierachyList();
+	
 }

@@ -10,6 +10,7 @@
  */
 package vn.webapp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import vn.webapp.modules.usermanagement.model.mEditFunctions;
 import vn.webapp.modules.usermanagement.model.mFuncsPermission;
 import vn.webapp.modules.usermanagement.model.mFunction;
 import vn.webapp.modules.usermanagement.service.mFuncsPermissionService;
@@ -34,6 +36,8 @@ public class BaseWeb {
     protected static String sUserName;
     protected static String sUserRole;
     public static List<mFunction> mFuncsPermissionList;
+    public static List<mFunction> mFuncsChildrenPermissionList;
+    public static List<mFunction> mFuncsParentsPermissionList;
     
     public int iMANAGEUSERS = 0;
     public int iMANAGEPAPERS = 0;
@@ -69,6 +73,10 @@ public class BaseWeb {
     	BaseWeb.sUserName = session.getAttribute("currentUserName").toString();
     	// set User permissions
     	BaseWeb.mFuncsPermissionList = funcsPermissionService.loadFunctionsList();
+    	// set User permissions
+    	BaseWeb.mFuncsChildrenPermissionList = funcsPermissionService.loadFunctionsChildHierachyList();
+    	// set User permissions
+    	BaseWeb.mFuncsParentsPermissionList = funcsPermissionService.loadFunctionsParentHierachyList();
     	
     	this.iMANAGEUSERS = (session.getAttribute("iMANAGEUSERS") != null) ? (int) session.getAttribute("iMANAGEUSERS") : 0;
     	this.iMANAGEPAPERS = (session.getAttribute("iMANAGEPAPERS") != null) ? (int) session.getAttribute("iMANAGEPAPERS") : 0;
@@ -115,8 +123,6 @@ public class BaseWeb {
         assetsUrl = baseUrl + "/assets";
         map.put("baseUrl", baseUrl);
         map.put("assetsUrl", assetsUrl);
-        
-        System.out.println("BaseWeb::addGloablAttr, baseUrl = " + baseUrl + ", assetUrl = " + assetsUrl);
         map.put("iMANAGEUSERS", this.iMANAGEUSERS);
         map.put("iMANAGEPAPERS", this.iMANAGEPAPERS);
         map.put("iMANAGETOPICS", this.iMANAGETOPICS);
@@ -129,5 +135,59 @@ public class BaseWeb {
         map.put("iASSIGNJURYSUBMITTEDPROJECTS", this.iASSIGNJURYSUBMITTEDPROJECTS);
         map.put("iMODIFYSUBMITTEDPROJECTS", this.iMODIFYSUBMITTEDPROJECTS);
         map.put("iREVIEWSUBMITTEDPROJECTS", this.iREVIEWSUBMITTEDPROJECTS);
+        
+        
+       List<mEditFunctions> funcsEditParentsList = new ArrayList<>();
+ 	   List<mEditFunctions> funcsEditChildrenList = new ArrayList<>();
+ 	   List<mFunction> funcsChildrenPermissionList = BaseWeb.mFuncsChildrenPermissionList;
+ 	   List<mFunction> funcsParentsPermissionList = BaseWeb.mFuncsParentsPermissionList;
+ 	   List<mFuncsPermission> mCurrentUserFuncsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(BaseWeb.sUserCode);
+ 	  
+ 	   for (mFunction mFunction : funcsChildrenPermissionList) {
+ 		   mEditFunctions temp = new mEditFunctions();
+ 		   temp.setFUNC_ID(mFunction.getFUNC_ID());
+ 		   temp.setFUNC_CODE(mFunction.getFUNC_CODE());
+ 		   temp.setFUNC_NAME(mFunction.getFUNC_NAME());
+ 		   temp.setFUNC_PARENTID(mFunction.getFUNC_PARENTID());
+ 		   temp.setFUNC_URL(mFunction.getFUNC_URL());
+ 		   temp.setSELECTED(0);
+ 		   temp.setFUNC_SELECTED_CLASS(mFunction.getFUNC_SELECTED_CLASS());
+ 		   temp.setFUNC_TITLE_CLASS(mFunction.getFUNC_TITLE_CLASS());
+ 		   temp.setFUNC_HAS_CHILDREN(mFunction.getFUNC_HAS_CHILDREN());
+ 		   if(mCurrentUserFuncsPermissionList.size() > 0){
+ 			   for (mFuncsPermission currentFunction : mCurrentUserFuncsPermissionList) {
+ 				   if(currentFunction.getUSERFUNC_FUNCCODE().equals(mFunction.getFUNC_CODE()))
+ 				   {
+ 					   temp.setSELECTED(1);
+ 				   }
+ 			   }
+ 		   }
+ 		   funcsEditChildrenList.add(temp);
+ 	   }
+ 	   
+ 	   for (mFunction mFunction : funcsParentsPermissionList) {
+ 		   mEditFunctions temp = new mEditFunctions();
+ 		   temp.setFUNC_ID(mFunction.getFUNC_ID());
+ 		   temp.setFUNC_CODE(mFunction.getFUNC_CODE());
+ 		   temp.setFUNC_NAME(mFunction.getFUNC_NAME());
+ 		   temp.setFUNC_PARENTID(mFunction.getFUNC_PARENTID());
+ 		   temp.setFUNC_URL(mFunction.getFUNC_URL());
+ 		   temp.setSELECTED(0);
+ 		   temp.setFUNC_SELECTED_CLASS(mFunction.getFUNC_SELECTED_CLASS());
+		   temp.setFUNC_TITLE_CLASS(mFunction.getFUNC_TITLE_CLASS());
+		   temp.setFUNC_HAS_CHILDREN(mFunction.getFUNC_HAS_CHILDREN());
+ 		   if(mCurrentUserFuncsPermissionList.size() > 0){
+ 			   for (mFuncsPermission currentFunction : mCurrentUserFuncsPermissionList) {
+ 				   if(currentFunction.getUSERFUNC_FUNCCODE().equals(mFunction.getFUNC_CODE()))
+ 				   {
+ 					   temp.setSELECTED(1);
+ 				   }
+ 			   }
+ 		   }
+ 		   funcsEditParentsList.add(temp);
+ 	   }
+ 	   
+ 	   map.put("funcsChildrenList", funcsEditChildrenList);
+ 	   map.put("funcsParentsList", funcsEditParentsList);
     }
 }

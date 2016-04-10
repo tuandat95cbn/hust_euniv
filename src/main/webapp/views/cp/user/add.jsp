@@ -117,9 +117,18 @@
 							<div class="tree form-group">
 								<label>Chức năng</label>
 					            <ul>
-						            	<c:forEach items="${listShowedPermission}" var="showedPermission">	
+						            	<c:forEach items="${funcsParentsPermissionList}" var="showedParentPermission">	
 							                <li class="checkbox">
-												<label><input type="checkbox" name="functions" value="${showedPermission.FUNC_CODE}" /> <span>${showedPermission.FUNC_NAME}</span></label>
+							                	<label><input type="checkbox" name="functions" value="${showedParentPermission.FUNC_CODE}" /> <span>${showedParentPermission.FUNC_NAME}</span></label>
+							                	<ul>
+							                	<c:forEach items="${funcsChildrenPermissionList}" var="showedChildrenPermission">
+							                		<c:if test="${showedChildrenPermission.FUNC_PARENTID == showedParentPermission.FUNC_ID}">
+							                			<li>
+														<label><input type="checkbox" name="functions" value="${showedChildrenPermission.FUNC_CODE}" /> <span>${showedChildrenPermission.FUNC_NAME}</span></label>
+														</li>									                	
+								                    </c:if>
+							                	</c:forEach>
+							                	</ul>
 							                </li>
 						                </c:forEach>
 						                <!-- <li>

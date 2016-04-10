@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import vn.webapp.controller.BaseWeb;
 import vn.webapp.modules.researchdeclarationmanagement.model.mPapers;
 import vn.webapp.modules.usermanagement.model.mDepartment;
+import vn.webapp.modules.usermanagement.model.mEditFunctions;
 import vn.webapp.modules.usermanagement.model.mFaculty;
 import vn.webapp.modules.usermanagement.model.mFuncsPermission;
 import vn.webapp.modules.usermanagement.model.mFunction;
@@ -111,9 +112,13 @@ public class mUserController extends BaseWeb {
 	   List<mFaculty> facultyList = this.getFacultyByUserRole(BaseWeb.sUserRole, currentUserFacultyCode);
 	   List<mDepartment> departmentList = this.getDepartmentByUserRole(BaseWeb.sUserRole, currentUserFacultyCode);
 	   List<mFunction> funcsPermissionList = BaseWeb.mFuncsPermissionList;
+	   List<mFunction> funcsChildrenPermissionList = BaseWeb.mFuncsChildrenPermissionList;
+	   List<mFunction> funcsParentsPermissionList = BaseWeb.mFuncsParentsPermissionList;
 	   
+	   model.put("funcsChildrenPermissionList", funcsChildrenPermissionList);
+	   model.put("funcsParentsPermissionList", funcsParentsPermissionList);
 	   model.put("listShowedPermission", funcsPermissionList);
-	   model.put("permissionList", BaseWeb.mFuncsPermissionList);
+	   //model.put("permissionList", BaseWeb.mFuncsPermissionList);
 	   model.put("facultyList", facultyList);
 	   model.put("departmentList", departmentList);
 	   model.put("currentUserName", BaseWeb.sUserName);
@@ -185,6 +190,57 @@ public class mUserController extends BaseWeb {
 	   List<mFuncsPermission> mCurrentUserFuncsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(user.get("userCode"));
 	   HashMap<List<String>, Integer> listShowedPermission = this.getUserPermissionList(user.get("userCode"));
 	   
+	   List<mEditFunctions> funcsEditParentsList = new ArrayList<>();
+	   List<mEditFunctions> funcsEditChildrenList = new ArrayList<>();
+	   List<mFunction> funcsChildrenPermissionList = BaseWeb.mFuncsChildrenPermissionList;
+	   List<mFunction> funcsParentsPermissionList = BaseWeb.mFuncsParentsPermissionList;
+	   
+	   for (mFunction mFunction : funcsChildrenPermissionList) {
+		   mEditFunctions temp = new mEditFunctions();
+		   temp.setFUNC_ID(mFunction.getFUNC_ID());
+		   temp.setFUNC_CODE(mFunction.getFUNC_CODE());
+		   temp.setFUNC_NAME(mFunction.getFUNC_NAME());
+		   temp.setFUNC_PARENTID(mFunction.getFUNC_PARENTID());
+		   temp.setFUNC_URL(mFunction.getFUNC_URL());
+		   temp.setSELECTED(0);
+		   temp.setFUNC_SELECTED_CLASS(mFunction.getFUNC_SELECTED_CLASS());
+ 		   temp.setFUNC_TITLE_CLASS(mFunction.getFUNC_TITLE_CLASS());
+ 		   temp.setFUNC_HAS_CHILDREN(mFunction.getFUNC_HAS_CHILDREN());
+		   if(mCurrentUserFuncsPermissionList.size() > 0){
+			   for (mFuncsPermission currentFunction : mCurrentUserFuncsPermissionList) {
+				   if(currentFunction.getUSERFUNC_FUNCCODE().equals(mFunction.getFUNC_CODE()))
+				   {
+					   temp.setSELECTED(1);
+				   }
+			   }
+		   }
+		   funcsEditChildrenList.add(temp);
+	   }
+	   
+	   for (mFunction mFunction : funcsParentsPermissionList) {
+		   mEditFunctions temp = new mEditFunctions();
+		   temp.setFUNC_ID(mFunction.getFUNC_ID());
+		   temp.setFUNC_CODE(mFunction.getFUNC_CODE());
+		   temp.setFUNC_NAME(mFunction.getFUNC_NAME());
+		   temp.setFUNC_PARENTID(mFunction.getFUNC_PARENTID());
+		   temp.setFUNC_URL(mFunction.getFUNC_URL());
+		   temp.setSELECTED(0);
+		   temp.setFUNC_SELECTED_CLASS(mFunction.getFUNC_SELECTED_CLASS());
+ 		   temp.setFUNC_TITLE_CLASS(mFunction.getFUNC_TITLE_CLASS());
+ 		   temp.setFUNC_HAS_CHILDREN(mFunction.getFUNC_HAS_CHILDREN());
+		   if(mCurrentUserFuncsPermissionList.size() > 0){
+			   for (mFuncsPermission currentFunction : mCurrentUserFuncsPermissionList) {
+				   if(currentFunction.getUSERFUNC_FUNCCODE().equals(mFunction.getFUNC_CODE()))
+				   {
+					   temp.setSELECTED(1);
+				   }
+			   }
+		   }
+		   funcsEditParentsList.add(temp);
+	   }
+	   
+	   model.put("funcsChildrenPermissionList", funcsEditChildrenList);
+	   model.put("funcsParentsPermissionList", funcsEditParentsList);
 	   model.put("listShowedPermission", listShowedPermission);
 	   model.put("facultyList", facultyList);
 	   model.put("departmentList", departmentList);

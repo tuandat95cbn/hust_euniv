@@ -1,5 +1,6 @@
 package vn.webapp.modules.usermanagement.controller.cp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import vn.webapp.controller.BaseWeb;
+import vn.webapp.modules.usermanagement.model.mEditFunctions;
 import vn.webapp.modules.usermanagement.model.mFuncsPermission;
+import vn.webapp.modules.usermanagement.model.mFunction;
 import vn.webapp.modules.usermanagement.model.mStaff;
 import vn.webapp.modules.usermanagement.model.mUser;
 import vn.webapp.modules.usermanagement.service.mFuncsPermissionService;
@@ -85,7 +88,7 @@ public class IndexController {
 		   session.setAttribute("currentUserCode", sUserCode);
 		   
 		   // Set current user permissions
-	       List<mFuncsPermission> currentUserFunctionsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(sUserCode);
+	       /*List<mFuncsPermission> currentUserFunctionsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(sUserCode);
 	       String sFuncsCode;
    		   for (mFuncsPermission mFuncsPermission : currentUserFunctionsPermissionList) {
    				sFuncsCode = mFuncsPermission.getUSERFUNC_FUNCCODE();
@@ -115,9 +118,63 @@ public class IndexController {
 	   			}else if("MODIFY-SUBMITTED-PROJECTS".equals(sFuncsCode)){
 	   				session.setAttribute("iREVIEWSUBMITTEDPROJECTS", 1);
 	   			}
-			}
-	   }
-	    this.iMANAGEUSERS = (session.getAttribute("iMANAGEUSERS") != null) ? (int) session.getAttribute("iMANAGEUSERS") : 0;
+			}*/
+   		   
+   		   // New settings for permission functions
+   		   List<mEditFunctions> funcsEditParentsList = new ArrayList<>();
+	   	   List<mEditFunctions> funcsEditChildrenList = new ArrayList<>();
+	   	   List<mFunction> funcsChildrenPermissionList = funcsPermissionService.loadFunctionsChildHierachyList();
+	   	   List<mFunction> funcsParentsPermissionList = funcsPermissionService.loadFunctionsParentHierachyList();
+	   	   List<mFuncsPermission> mCurrentUserFuncsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(sUserCode);
+	   	  
+	   	   for (mFunction mFunction : funcsChildrenPermissionList) {
+	   		   mEditFunctions temp = new mEditFunctions();
+	   		   temp.setFUNC_ID(mFunction.getFUNC_ID());
+	   		   temp.setFUNC_CODE(mFunction.getFUNC_CODE());
+	   		   temp.setFUNC_NAME(mFunction.getFUNC_NAME());
+	   		   temp.setFUNC_PARENTID(mFunction.getFUNC_PARENTID());
+	   		   temp.setFUNC_URL(mFunction.getFUNC_URL());
+	   		   temp.setSELECTED(0);
+	   		   temp.setFUNC_SELECTED_CLASS(mFunction.getFUNC_SELECTED_CLASS());
+	   		   temp.setFUNC_TITLE_CLASS(mFunction.getFUNC_TITLE_CLASS());
+	   		   temp.setFUNC_HAS_CHILDREN(mFunction.getFUNC_HAS_CHILDREN());
+	   		   if(mCurrentUserFuncsPermissionList.size() > 0){
+	   			   for (mFuncsPermission currentFunction : mCurrentUserFuncsPermissionList) {
+	   				   if(currentFunction.getUSERFUNC_FUNCCODE().equals(mFunction.getFUNC_CODE()))
+	   				   {
+	   					   temp.setSELECTED(1);
+	   				   }
+	   			   }
+	   		   }
+	   		   funcsEditChildrenList.add(temp);
+	   	   }
+	   	   
+	   	   for (mFunction mFunction : funcsParentsPermissionList) {
+	   		   mEditFunctions temp = new mEditFunctions();
+	   		   temp.setFUNC_ID(mFunction.getFUNC_ID());
+	   		   temp.setFUNC_CODE(mFunction.getFUNC_CODE());
+	   		   temp.setFUNC_NAME(mFunction.getFUNC_NAME());
+	   		   temp.setFUNC_PARENTID(mFunction.getFUNC_PARENTID());
+	   		   temp.setFUNC_URL(mFunction.getFUNC_URL());
+	   		   temp.setSELECTED(0);
+	   		   temp.setFUNC_SELECTED_CLASS(mFunction.getFUNC_SELECTED_CLASS());
+	  		   temp.setFUNC_TITLE_CLASS(mFunction.getFUNC_TITLE_CLASS());
+	  		   temp.setFUNC_HAS_CHILDREN(mFunction.getFUNC_HAS_CHILDREN());
+	   		   if(mCurrentUserFuncsPermissionList.size() > 0){
+	   			   for (mFuncsPermission currentFunction : mCurrentUserFuncsPermissionList) {
+	   				   if(currentFunction.getUSERFUNC_FUNCCODE().equals(mFunction.getFUNC_CODE()))
+	   				   {
+	   					   temp.setSELECTED(1);
+	   				   }
+	   			   }
+	   		   }
+	   		   funcsEditParentsList.add(temp);
+	   	   }
+	   	   
+	   	   map.put("funcsChildrenList", funcsEditChildrenList);
+	   	   map.put("funcsParentsList", funcsEditParentsList);
+	   	}
+	    /*this.iMANAGEUSERS = (session.getAttribute("iMANAGEUSERS") != null) ? (int) session.getAttribute("iMANAGEUSERS") : 0;
 	   	this.iMANAGEPAPERS = (session.getAttribute("iMANAGEPAPERS") != null) ? (int) session.getAttribute("iMANAGEPAPERS") : 0;
 	   	this.iMANAGETOPICS = (session.getAttribute("iMANAGETOPICS") != null) ? (int) session.getAttribute("iMANAGETOPICS") : 0;
 	   	this.iMANAGEPATENTS = (session.getAttribute("iMANAGEPATENTS") != null) ? (int) session.getAttribute("iMANAGEPATENTS") : 0;
@@ -142,7 +199,7 @@ public class IndexController {
         map.put("iADDJURYSUBMITTEDPROJECTS", this.iADDJURYSUBMITTEDPROJECTS);
         map.put("iASSIGNJURYSUBMITTEDPROJECTS", this.iASSIGNJURYSUBMITTEDPROJECTS);
         map.put("iMODIFYSUBMITTEDPROJECTS", this.iMODIFYSUBMITTEDPROJECTS);
-        map.put("iREVIEWSUBMITTEDPROJECTS", this.iREVIEWSUBMITTEDPROJECTS);
+        map.put("iREVIEWSUBMITTEDPROJECTS", this.iREVIEWSUBMITTEDPROJECTS);*/
         
         return "cp.home";
    }

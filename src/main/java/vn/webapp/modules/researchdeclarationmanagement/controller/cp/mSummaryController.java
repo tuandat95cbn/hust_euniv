@@ -244,9 +244,6 @@ public class mSummaryController extends BaseWeb {
 	   String userCode = session.getAttribute("currentUserCode").toString();
 	   mStaff staff = staffService.loadStaffByUserCode(userCode);
 	   
-	   System.out.println(name() + "::generate01CN02CN, userRole = " + userRole + ", userCode = " + userCode + 
-			   ", staff name = " + staff.getStaff_Name());
-	   
 	   List<mAcademicYear> lstYears = academicYearService.list();
 	   List<mStaff> lstStaffs = null;
 	   if(userRole.equals("ROLE_USER")){
@@ -255,7 +252,6 @@ public class mSummaryController extends BaseWeb {
 	   }else{
 		   lstStaffs = staffService.listStaffs();
 	   }
-	   System.out.println("SummaryController::generateExcel01CN02CN, lstStaffs.sz = " + lstStaffs.size());
 	   model.put("reportingYear", lstYears);
 	   model.put("listStaffs", lstStaffs);
 	   model.put("staffname", staff.getStaff_Name());
@@ -264,21 +260,19 @@ public class mSummaryController extends BaseWeb {
 	   model.put("generateExcelForm01CN02CN", new mExcel01CN02CNValidation());
 	   return "cp.generateForm01CN02CN";
    }
+   
+   
    @RequestMapping(value = "/generateExcel01CN02CN", method = RequestMethod.POST)
-   public ModelAndView downloadExcel01CN02CN(@Valid @ModelAttribute("generateExcelForm01CN02CN")
-   mExcel01CN02CNValidation paperValidExcel, BindingResult result, Map model, HttpSession session){
+   public ModelAndView downloadExcel01CN02CN(@Valid @ModelAttribute("generateExcelForm01CN02CN") mExcel01CN02CNValidation paperValidExcel, BindingResult result, Map model, HttpSession session){
 	   if(result.hasErrors()) {
 	         return new ModelAndView("cp.generateSummary");
 	     }else {
 	    	 String userCode = paperValidExcel.getStaffCode(); 
 	    	 mStaff staff = staffService.loadStaffByUserCode(userCode);
-	    	 System.out.println("SummaryController::downloadExcel01CN02CN, userCode = " + userCode + 
-	    			 ", staff name = " + staff.getStaff_Name());
 	    	 String yearGenerate = paperValidExcel.getReportingAcademicDate();
 	 		//String userName = session.getAttribute("currentUserName").toString();
 	 		//String userCode = session.getAttribute("currentUserCode").toString();
 	 		String userRole = session.getAttribute("currentUserRole").toString();
-	 		
 	 		
 	 		model.put("yearOfPaper", paperValidExcel.getReportingAcademicDate());
 	 		if(staff != null){
@@ -297,18 +291,6 @@ public class mSummaryController extends BaseWeb {
 	 		model.put("listPapers", listPapers);
 	 		model.put("listTopics", listTopics);
 	 		model.put("listPatents", listPatents);
-	 		if(listTopics != null){
-	 			for(mTopics T : listTopics){
-	 				System.out.println(T.getPROJDECL_Name() + ", " + T.getPROJDECL_ProjCategory_Code() + ", " + T.getPROJDECL_User_Code());
-	 			}
-	 		}
-	 		if(listPapers != null){
-	 			for(mPapers p : listPapers){
-	 				System.out.println("SummaryController::downloadExcel01CN02CN get paper " + p.getPDECL_PublicationName());
-	 			}
-	 		}else{
-	 			System.out.println("SummaryController::downloadExcel01CN02CN listPapers is NULL");
-	 		}
 	 		return new ModelAndView("excel01CN02CN","listPapers", listPapers);
 	     }
 	   

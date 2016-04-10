@@ -40,32 +40,38 @@
 	<div class="navbar-default sidebar" id="sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
-            	<!-- 
-                <li class="sidebar-search">
-                    <div class="input-group custom-search-form">
-                        <input type="text" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
-                    </div>
-                </li>
-                <!-- /input-group -->
+            	<c:forEach items="${funcsParentsList}" var="showedParentPermission">
+            		<c:if test="${showedParentPermission.SELECTED == 1}">	
+		                <li>
+		                	<a class="${showedParentPermission.FUNC_SELECTED_CLASS}" href="<c:url value="${baseUrl}${showedParentPermission.FUNC_URL}"/>"><i class="${showedParentPermission.FUNC_TITLE_CLASS}"></i> ${showedParentPermission.FUNC_NAME} <c:if test="${showedParentPermission.FUNC_HAS_CHILDREN == 1}"><span class="fa arrow"></span></c:if></a>
+		                	<c:if test="${showedParentPermission.FUNC_HAS_CHILDREN == 1}">
+		                	<ul class="nav nav-second-level">
+		                	<c:forEach items="${funcsChildrenList}" var="showedChildrenPermission">
+		                		<c:if test="${showedChildrenPermission.FUNC_PARENTID == showedParentPermission.FUNC_ID}">
+		                			<c:if test="${showedChildrenPermission.SELECTED == 1}">
+			                			<li>
+											<a class="${showedChildrenPermission.FUNC_SELECTED_CLASS}" href="<c:url value="${baseUrl}${showedChildrenPermission.FUNC_URL}"/>"><i class="${showedChildrenPermission.FUNC_TITLE_CLASS}"></i> ${showedChildrenPermission.FUNC_NAME}</a>
+										</li>
+									</c:if>									                	
+			                    </c:if>
+		                	</c:forEach>
+		                	</ul>
+		                	</c:if>
+		                </li>
+	                </c:if>
+                </c:forEach>
+                
+                
+                
+                <!-- OLD LIST -->
                 <c:if test="${iMANAGEUSERS eq 1 && (currentUserRole eq 'ROLE_ADMIN' || currentUserRole eq 'SUPER_ADMIN')}">
-	                <li>
+	                <%-- <li>
 	                    <a class="${users}" href="<c:url value="${baseUrl}/cp/users.html"/>"><i class="fa fa-user fa-fw"></i> Quản lý Users</a>
-	                </li>
-
-	                <%-- 
-	                <li>
-	                    <a class="${staffs}" href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Quản lý Nhân sự</a>
-	                </li>
-	                 --%>
+	                </li> --%>
                 </c:if>
                 
-                <li>
-                    <a href="#"><i class="fa fa-tasks fa-fw"></i> Quản lý kê khai<span class="fa arrow"></span></a>
+                <%-- <li>
+                    <a href="#"><i class="fa fa-tasks fa-fw"></i> ++++++ QLKK +++++++<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                     	<c:if test="${iMANAGEPAPERS eq 1}">
 			                <li>
@@ -88,10 +94,10 @@
 			                </li>
 		                </c:if>
 		           </ul>
-		        </li>
+		        </li> --%>
 		        
 		        <c:if test="${iMANAGEPRODUCTS eq 1}">
-	                <li>
+	                <%-- <li>
 	                    <a href="#"><i class="fa fa-th-list fa-fw"></i> Quản lý thực hiện Đề tài<span class="fa arrow"></span></a>
 	                    <ul class="nav nav-second-level">
 	                    	<c:if test="${iMANAGEPROJECTCALLS eq 1}">
@@ -102,7 +108,7 @@
 			                
 			                <c:if test="${iPROJECTSIGNUP eq 1}">
 				                <li>
-				                    <%-- <a href="<c:url value="${baseUrl}/cp/threads-listadd.html"/>"><i class="fa fa-briefcase"></i> Đăng ký Đề tài</a> --%>
+				                    <a href="<c:url value="${baseUrl}/cp/threads-listadd.html"/>"><i class="fa fa-briefcase"></i> Đăng ký Đề tài</a>
 				                    <a href="<c:url value="${baseUrl}/cp/list-projects.html"/>"><i class="fa fa-briefcase"></i> Đăng ký Đề tài</a>
 				                </li>
 			                </c:if>
@@ -151,10 +157,10 @@
 			                    <a href="<c:url value="${baseUrl}/cp/threads.html"/>"><i class="fa fa-briefcase"></i> Thống kê đề tài</a>
 			                </li>
 			             </ul>
-	                </li>
+	                </li> --%>
                 </c:if>
                  
-                <li>
+                <%-- <li>
                     <a href="#"><i class="fa fa-university fa-fw"></i> Quản lý danh mục<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
@@ -168,9 +174,9 @@
 	                	</li>
                     </ul>
                     
-                </li>
+                </li> --%>
                 
-                <li>
+                <%-- <li>
                     <a href="#"><i class="fa fa-graduation-cap fa-fw"></i> Quản lý đào tạo cao học<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
@@ -202,21 +208,21 @@
                       
                     </ul>
                     
-                </li>
+                </li> --%>
                
 	                 
-	                <%-- <li>
-	                    <a class="${departments}" href="#"><i class="fa fa-table fa-fw"></i> Quản lý Bộ môn</a>
-	                </li>
-	                <li>
-	                    <a class="${falcuties}" href="#"><i class="fa fa-edit fa-fw"></i> Quản lý Khoa/Viện</a>
-	                </li>
-	                <li>
-	                    <a class="${settings}" href="#"><i class="fa fa-wrench fa-fw"></i> Settings</a>
-	                </li> --%>
+                <%-- <li>
+                    <a class="${departments}" href="#"><i class="fa fa-table fa-fw"></i> Quản lý Bộ môn</a>
+                </li>
+                <li>
+                    <a class="${falcuties}" href="#"><i class="fa fa-edit fa-fw"></i> Quản lý Khoa/Viện</a>
+                </li>
+                <li>
+                    <a class="${settings}" href="#"><i class="fa fa-wrench fa-fw"></i> Settings</a>
+                </li> --%>
                 
                 <c:if test="${iMANAGESUMMARY eq 1}">
-	                <li>
+	                <%-- <li>
 	                    <a class="${summary}" href="#"><i class="fa fa-wrench fa-fw"></i> Tổng hợp<span class="fa arrow"></span></a>
 	                    <ul class="nav nav-second-level">
 	                        <li>
@@ -243,7 +249,7 @@
 	                        </c:if>
 	                    </ul>
 	                    <!-- /.nav-second-level -->
-	                </li>
+	                </li> --%>
                 </c:if>
             </ul>
             

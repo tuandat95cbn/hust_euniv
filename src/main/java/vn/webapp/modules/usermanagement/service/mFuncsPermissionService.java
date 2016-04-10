@@ -24,5 +24,17 @@ public interface mFuncsPermissionService {
 	 * @return
 	 */
 	public List<mFunction> loadFunctionsList();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<mFunction> loadFunctionsParentHierachyList();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<mFunction> loadFunctionsChildHierachyList();
    
 }

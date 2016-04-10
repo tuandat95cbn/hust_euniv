@@ -18,8 +18,6 @@ public class mPaperCategory implements Serializable{
     private String PCAT_Description;
     private String PCAT_Code;
     private String PCAT_Journal;
-    private Integer PCAT_ConvertedHours;
-    private int PCAT_Budget;
     
     @OneToMany(mappedBy="paperCategory")
     private Set<mPapers> papers;
@@ -73,22 +71,6 @@ public class mPaperCategory implements Serializable{
 
 	public void setPapers(Set<mPapers> papers) {
 		this.papers = papers;
-	}
-
-	public Integer getPCAT_ConvertedHours() {
-		return PCAT_ConvertedHours;
-	}
-
-	public void setPCAT_ConvertedHours(Integer pCAT_ConvertedHours) {
-		PCAT_ConvertedHours = pCAT_ConvertedHours;
-	}
-
-	public int getPCAT_Budget() {
-		return PCAT_Budget;
-	}
-
-	public void setPCAT_Budget(int pCAT_Budget) {
-		PCAT_Budget = pCAT_Budget;
 	}
 
 	public Set<mPapersCategoryHourBudget> getPapersCategoryHourBudget() {
