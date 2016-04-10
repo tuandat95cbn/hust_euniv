@@ -117,19 +117,20 @@
 							<div class="tree form-group">
 								<label>Chức năng</label>
 					            <ul>
-						            	<c:forEach items="${listShowedPermission}" var="showedPermission">	
+						               <c:forEach items="${funcsParentsPermissionList}" var="showedParentPermission">	
 							                <li class="checkbox">
-												<label><input type="checkbox" <c:if test="${showedPermission.value eq 1}">checked</c:if> name="functions" value="${showedPermission.key[0]}" /> <span>${showedPermission.key[1]}</span></label>
+							                	<label><input type="checkbox" name="functions" <c:if test="${showedParentPermission.SELECTED eq 1}">checked</c:if> value="${showedParentPermission.FUNC_CODE}" /> <span>${showedParentPermission.FUNC_NAME}</span></label>
+							                	<ul>
+							                	<c:forEach items="${funcsChildrenPermissionList}" var="showedChildrenPermission">
+							                		<c:if test="${showedChildrenPermission.FUNC_PARENTID == showedParentPermission.FUNC_ID}">
+							                			<li>
+															<label><input type="checkbox" name="functions" <c:if test="${showedChildrenPermission.SELECTED eq 1}">checked</c:if> value="${showedChildrenPermission.FUNC_CODE}" /> <span>${showedChildrenPermission.FUNC_NAME}</span></label>
+														</li>									                	
+								                    </c:if>
+							                	</c:forEach>
+							                	</ul>
 							                </li>
 						                </c:forEach>
-						                <!-- <li>
-					                	<span><i class="icon-minus-sign"></i>Quản lý thực hiện đề tài</span>
-					                    <ul>
-					                        <li>
-						                        <input type="checkbox" name="function1" value="" /> <span><i class="icon-leaf"></i> Quản lý chuyên đề</span> 
-					                        </li>
-					                    </ul>
-					                </li> -->
 					            </ul>
 							</div>
 							<!-- /.col-lg-4 -->

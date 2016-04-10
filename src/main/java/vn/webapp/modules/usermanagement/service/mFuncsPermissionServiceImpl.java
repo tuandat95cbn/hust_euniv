@@ -10,6 +10,7 @@
  */
 package vn.webapp.modules.usermanagement.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,34 @@ public class mFuncsPermissionServiceImpl implements mFuncsPermissionService {
     	try {
     		return functionsDAO.loadFunctionsList();
         } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public List<mFunction> loadFunctionsParentHierachyList(){
+    	try {
+    		return functionsDAO.loadFunctionsParentHierachyList();
+    	
+    	} catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public List<mFunction> loadFunctionsChildHierachyList(){
+    	try {
+    		return functionsDAO.loadFunctionsChildHierachyList();
+    	
+    	} catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
             return null;
         }
