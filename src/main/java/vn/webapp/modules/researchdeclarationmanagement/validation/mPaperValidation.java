@@ -55,9 +55,9 @@ public class mPaperValidation {
     @Pattern(regexp="^[0-9]{4}-[0-9]{4}$")
     private String patentReportingAcademicDate;
     
-    @UploadFileRequired
+    /*@UploadFileRequired
     @UploadFileNotEmpty
-    @UploadFileMaxSize(20971520)
+    @UploadFileMaxSize(20971520)*/
     private MultipartFile paperFileUpload;
 
 	public String getPaperCatCode() {

@@ -24,8 +24,7 @@ import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
 
 public class mExcel01CN02CNBuilder extends AbstractExcelView {
 	public String name(){ return "Excel01CN02CNBuilder";} 
-	private void buildPaperSheet(Map<String, Object> model,
-			HSSFWorkbook workbook) {
+	private void buildPaperSheet(Map<String, Object> model, HSSFWorkbook workbook) {
 
 		// get data model which is passed by the Spring container
 		List<mPapers> listPapers = (List<mPapers>) model.get("listPapers");
@@ -40,10 +39,8 @@ public class mExcel01CN02CNBuilder extends AbstractExcelView {
 		String staffEmail = (String) model.get("staffEmail");
 		String staffName = (String) model.get("staffName");
 		String staffPhone = (String) model.get("staffPhone");
-		String staffDepartementCode = (String) model
-				.get("staffDepartementCode");
-		String staffDepartementName = (String) model
-				.get("staffDepartementName");
+		String staffDepartementCode = (String) model.get("staffDepartementCode");
+		String staffDepartementName = (String) model.get("staffDepartementName");
 
 		int iCurrentRow = 1;
 		/**
@@ -60,9 +57,7 @@ public class mExcel01CN02CNBuilder extends AbstractExcelView {
 
 		// create title of the paper
 		HSSFRow title = sheet.createRow(iCurrentRow);
-		title.createCell(1).setCellValue(
-				"BẢNG KÊ KHAI KHỐI LƯỢNG NGHIÊN CỨU KHOA HỌC  NĂM HỌC "
-						+ yearOfPaper);
+		title.createCell(1).setCellValue("BẢNG KÊ KHAI KHỐI LƯỢNG NGHIÊN CỨU KHOA HỌC  NĂM HỌC " + yearOfPaper);
 		title.getCell(1).setCellStyle(style);
 		sheet.setColumnWidth(0, 400);
 		sheet.addMergedRegion(new CellRangeAddress(1, // first row (0-based)
