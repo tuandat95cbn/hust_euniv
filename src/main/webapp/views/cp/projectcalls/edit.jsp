@@ -31,7 +31,7 @@
                 <div class="panel-body">
                 	<c:if test="${status != null}">
 	                	<div class="alert alert-success">
-	                        ${status}. <a href="<c:url value="${baseUrl}/cp/topics.html"/>" class="alert-link">Trở lại</a>.
+	                        ${status}. <a href="<c:url value="${baseUrl}/cp/project-call-open.html"/>" class="alert-link">Trở lại</a>.
 	                    </div>
                     </c:if>
                     <c:if test="${err != null}">
@@ -65,6 +65,18 @@
     								<form:errors path="projectCallDate" class="alert-danger"></form:errors>
                                 </div>
 	                        </div>
+	                        <div class="col-lg-6">
+		                        <div class="form-group">
+	                                 <label>Trạng thái*</label>
+	                                 <form:select path="projectCallStatus" class="form-control" name="projectCallStatus">
+	                                      <option value="OPEN_FOR_SUBMISSION" <c:if test="${'OPEN_FOR_SUBMISSION' == projectCalls.PROJCALL_STATUS}">selected</c:if>  >Mở cho phép đăng ký mới</option>
+	                                      <option value="SUBMISSION_CLOSED" <c:if test="${'SUBMISSION_CLOSED' == projectCalls.PROJCALL_STATUS}">selected</c:if>  >Đóng, không thể đăng ký mới</option>
+	                                      <option value="OPEN_FOR_REVISE" <c:if test="${'OPEN_FOR_REVISE' == projectCalls.PROJCALL_STATUS}">selected</c:if>  >Mở, cho phép chủ nhiệm đề tài chỉnh sửa</option>
+	                                      <option value="REVISE_CLOSED" <c:if test="${'REVISE_CLOSED' == projectCalls.PROJCALL_STATUS}">selected</c:if>  >Đóng, không cho phép chủ nhiệm đề tài chỉnh sửa đề tài</option>
+	                                 </form:select>
+	                                 <form:errors path="projectCallStatus" class="alert-danger"></form:errors>
+	                             </div>
+                             </div>
 	                        <!-- /.col-lg-6 (nested) -->
 	                    </div>
 	                    <!-- /.row (nested) -->
