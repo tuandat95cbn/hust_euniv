@@ -147,7 +147,8 @@ public class mProjectCallsController extends BaseWeb {
 				String PROJCALL_PROJCATCODE = projectCallValid.getProjectCallCatCode();
 				String PROJCALL_DATE 		= DateUtil.s_fConvertDateFormatType1(projectCallValid.getProjectCallDate());
 				String sPROJCALL_CODE 		= "T"+DateUtil.s_fGetCurrentDate();
-				int i_InsertAProjectCall 	= projectCallsService.saveAProjectCall(sPROJCALL_CODE, PROJCALL_PROJCATCODE, PROJCALL_NAME, PROJCALL_DATE);
+				String sPROJCALL_STATUS 	= projectCallValid.getProjectCallStatus();
+				int i_InsertAProjectCall 	= projectCallsService.saveAProjectCall(sPROJCALL_CODE, PROJCALL_PROJCATCODE, PROJCALL_NAME, PROJCALL_DATE, sPROJCALL_STATUS);
 				if (i_InsertAProjectCall > 0) {
 					model.put("status", "Lưu thành công");
 				}else{
@@ -208,11 +209,12 @@ public class mProjectCallsController extends BaseWeb {
 			 {
 				 String sPROJCALL_DATE 			= DateUtil.s_fConvertDateFormatType1(projectCallValid.getProjectCallDate());
 				 String sPROJCALL_PROJCATCODE 	= projectCallValid.getProjectCallCatCode();
+				 String sPROJCALL_STATUS		= projectCallValid.getProjectCallStatus();
 				 
 				 LocalDate o_fFormatDateByFormat = DateUtil.o_fFormatDateByFormatType1(projectCallValid.getProjectCallDate());
 				 String sPROJCALL_CODE = "T"+o_fFormatDateByFormat.getYear()+iPROJCALL_ID;
 
-				 projectCallsService.editAProjectCall(iPROJCALL_ID, sPROJCALL_CODE, sPROJCALL_PROJCATCODE, sPROJCALL_NAME, sPROJCALL_DATE);
+				 projectCallsService.editAProjectCall(iPROJCALL_ID, sPROJCALL_CODE, sPROJCALL_PROJCATCODE, sPROJCALL_NAME, sPROJCALL_DATE, sPROJCALL_STATUS);
 				 model.put("status", "Chỉnh sửa thành công.");
 			 }else{
 				 model.put("err", "Đợt gọi đề tài đã tồn tại");

@@ -54,6 +54,7 @@
 	                                    </form:select>
 	                                    <form:errors path="projectCallCatCode" class="alert-danger"></form:errors>
 	                                </div>
+	                                <form:hidden path="projectCallStatus" name="projectCallStatus" value="OPEN_FOR_SUBMISSION"></form:hidden>
 	                                <button type="submit" class="btn btn-primary" id="addANewProjectCall">Lưu</button>
 	                                <!-- <button type="reset" class="btn btn-primary">Clear</button> -->
 	                                <button type="reset" class="btn btn-primary cancel">Hủy</button>

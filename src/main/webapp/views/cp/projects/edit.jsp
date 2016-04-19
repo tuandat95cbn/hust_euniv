@@ -46,7 +46,7 @@
                                    <label>Chọn đợt đề tài*</label>
                                    <form:select path="projectCallCode" class="form-control" name="projectCallCode" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}">
                                    	<c:forEach items="${projectCallsList}" var="projectCall">
-                                        <option value="${projectCall.PROJCALL_CODE}">${projectCall.PROJCALL_NAME}</option>
+                                        <option value="${projectCall.PROJCALL_CODE}" <c:if test="${projectEdit.PROJ_PRJCall_Code == projectCall.PROJCALL_CODE}">selected</c:if> >${projectCall.PROJCALL_NAME}</option>
                                       	</c:forEach>
                                    </form:select>
                                    <form:errors path="projectCallCode" class="alert-danger"></form:errors>
@@ -200,12 +200,12 @@
 	                    <div class="row">
 	                        <div class="col-lg-6">
 	                        	<label for="threadResult">Thành viên tham gia*</label>
-                                    <select class="form-control" name="faculty" onchange="showDepartment(this);" >
-                                    	<option value="">Chọn Khoa/Viện</option>
-                                    	<c:forEach items="${listFaculty}" var="faculty">
-	                                        <option value="${faculty.faculty_Code}">${faculty.faculty_Name}</option>
-                                       	</c:forEach>
-                                    </select>
+                                 <select class="form-control" name="faculty" onchange="showDepartment(this);" >
+                                 	<option value="">Chọn Khoa/Viện</option>
+                                 	<c:forEach items="${listFaculty}" var="faculty">
+                                      <option value="${faculty.faculty_Code}">${faculty.faculty_Name}</option>
+                                    	</c:forEach>
+                                 </select>
                                     <br>
                                     <div id="department">
 	                                    <select class="form-control" name="department">

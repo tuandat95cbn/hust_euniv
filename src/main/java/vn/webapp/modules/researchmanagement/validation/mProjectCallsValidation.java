@@ -18,6 +18,9 @@ public class mProjectCallsValidation {
 
 	@NotEmpty
 	private String projectCallName;
+	
+	@NotEmpty
+	private String projectCallStatus;
 
 	@NotEmpty
 	@Pattern(regexp = "^(0[1-9]|[1-2][0-9]|3[0-1])/(0[1-9]|1[0-2])/[0-9]{4}$")
@@ -61,6 +64,14 @@ public class mProjectCallsValidation {
 
 	public void setProjectCallDate(String projectCallDate) {
 		this.projectCallDate = projectCallDate;
+	}
+
+	public String getProjectCallStatus() {
+		return projectCallStatus;
+	}
+
+	public void setProjectCallStatus(String projectCallStatus) {
+		this.projectCallStatus = projectCallStatus;
 	}
 	
 }

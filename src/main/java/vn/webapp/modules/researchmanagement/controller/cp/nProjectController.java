@@ -444,37 +444,48 @@ public class nProjectController extends BaseWeb {
 			String projectObjective		= projectValid.getProjectObjective();
 			String projectCode 			= "PROJECT-CODE-" + projectCallCode;
 			String currentProjectCode 	= projectCode;
-			String projectCategory = "";
-			for(mProjectCalls pc: projectCallsList){
-				if(pc.getPROJCALL_CODE().equals(projectCallCode)){
-					projectCategory = pc.getPROJCALL_PROJCATCODE(); break;
-				}
-			}
-			//Members 
-			String[] projectMembers = request.getParameterValues("projectMembers");
-			String[] projectMemberRole = request.getParameterValues("projectMemberRole");
-			String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
-			String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
-			String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
+			String projectCategory 		= "";
 			
-			int totalBudget = budgetMaterial;
-			for(int i = 0; i < projectMemberBudget.length; i++){
-				System.out.println(name() + "::saveAProject, member[" + i + "] = " + 
-						projectMembers[i] + ", budget = " + projectMemberBudget[i]);
-				totalBudget += Integer.valueOf(projectMemberBudget[i]);
-			}
-			System.out.println(name() + "::saveAProject, totalBudget =  " + totalBudget); 
+			mProjectCalls selectedProjectCall = projectCallsService.loadAProjectCallByCode(projectCallCode);
+			if("OPEN_FOR_SUBMISSION".equals(selectedProjectCall.getPROJCALL_STATUS())){
+				for(mProjectCalls pc: projectCallsList){
+					if(pc.getPROJCALL_CODE().equals(projectCallCode)){
+						projectCategory = pc.getPROJCALL_PROJCATCODE(); break;
+					}
+				}
+				try{
+					//Members 
+					String[] projectMembers = request.getParameterValues("projectMembers");
+					String[] projectMemberRole = request.getParameterValues("projectMemberRole");
+					String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
+					String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
+					String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
 					
-			int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, 
-					projectContent, projectMotivation, projectResult, budgetMaterial, totalBudget, projectCode, facultyAdd, 
-					projectSurvey, projectObjective, startDate, endDate, projectCategory);
-			if (i_InsertAProject > 0) {
-				model.put("status", "Thêm mới thành công!");
-				projectCode = projectCallCode + i_InsertAProject;
-				threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget, currentProjectCode);
+					if(projectMembers.length > 0)
+					{
+						int totalBudget = budgetMaterial;
+						for(int i = 0; i < projectMemberBudget.length; i++){
+							totalBudget += Integer.valueOf(projectMemberBudget[i]);
+						}
+								
+						int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, 
+								projectContent, projectMotivation, projectResult, budgetMaterial, totalBudget, projectCode, facultyAdd, 
+								projectSurvey, projectObjective, startDate, endDate, projectCategory);
+						if (i_InsertAProject > 0) {
+							model.put("status", "Thêm mới thành công!");
+							projectCode = projectCallCode + i_InsertAProject;
+							threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget, currentProjectCode);
+						}
+						return "redirect:" + this.baseUrl + "/cp/list-projects.html";
+					}
+				}catch(NullPointerException e)
+				{
+					model.put("err", "Cần phải thêm thành viên vào đề tài.");
+				}
+			}else{
+				model.put("err", "Xin lỗi! Đợt gọi đề tài đã bị đóng.");
 			}
-			//return "cp.addAThread";
-			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
+			return "cp.addAProject";
 		}
 	}
 
@@ -1322,25 +1333,36 @@ public class nProjectController extends BaseWeb {
 
 		 // Get list of project calls
 		 List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
-					
+		
+		 String userRole 	= session.getAttribute("currentUserRole").toString();
+		 String userCode 	= session.getAttribute("currentUserCode").toString();
+		 int projectEditId 	= projectFormEdit.getProjectId();
+		 Projects project 	= threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectEditId);
+		 List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
+		 
+		// Get list faculty
+		List<mFaculty> listFaculty = facultyService.loadFacultyList();
+		// Get list staffs
+		List<mStaff> staffList = staffService.listStaffs();
+		 
 		 // Put data back to view
+		 model.put("staffList", staffList);
+		 model.put("projectTasks", projectTasks);
 		 model.put("projectCallsList", projectCallsList);
 		 model.put("projects", status);
-
+		 model.put("projectEdit", project);
 		 if (result.hasErrors()) {
 			 return "cp.editAProject";
 		 }else
 		 {
 			// Prepare data for inserting DB
-			String userRole 			= session.getAttribute("currentUserRole").toString();
-			String userCode 			= session.getAttribute("currentUserCode").toString();
 			String projectName 			= projectFormEdit.getProjectName();
 			String projectCallCode 		= projectFormEdit.getProjectCallCode();
 			String projectContent 		= projectFormEdit.getProjectContent();
 			String projectMotivation 	= projectFormEdit.getProjectMotivation();
 			String projectResult 		= projectFormEdit.getProjectResult();
 			int budgetMaterial 			= projectFormEdit.getBudgetMaterial();
-			int projectEditId 			= projectFormEdit.getProjectId();
+			
 			String projectCode 			= projectCallCode + projectEditId;
 			String startDate 			= projectFormEdit.getProjectStartDate();
 			String endDate				= projectFormEdit.getProjectEndDate();
@@ -1350,19 +1372,30 @@ public class nProjectController extends BaseWeb {
 			String currentProjectCode	= projectFormEdit.getCurrentProjectCode();
 			boolean bEditSumittedProject= false;
 			
-			//Members 
-			String[] projectMembers = request.getParameterValues("projectMembers");
-			String[] projectMemberRole = request.getParameterValues("projectMemberRole");
-			String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
-			String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
-			String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
-
-			// Editing project info
-			threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject);
-			// Editting tasks info
-			threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget, currentProjectCode);
-			 
-			return "redirect:" + this.baseUrl + "/cp/list-projects.html";
+			mProjectCalls selectedProjectCall = projectCallsService.loadAProjectCallByCode(projectCallCode);
+			if("OPEN_FOR_SUBMISSION".equals(selectedProjectCall.getPROJCALL_STATUS())){
+				try{
+					//Members 
+					String[] projectMembers = request.getParameterValues("projectMembers");
+					String[] projectMemberRole = request.getParameterValues("projectMemberRole");
+					String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
+					String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
+					String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
+					if(projectMembers.length > 0){
+						// Editing project info
+						threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject);
+						// Editting tasks info
+						threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget, currentProjectCode);
+						return "redirect:" + this.baseUrl + "/cp/list-projects.html";
+					}
+				}catch (NullPointerException e) {
+					model.put("err", "Cần phải thêm thành viên vào đề tài.");
+				}
+			}else{
+				model.put("err", "Xin lỗi! Đợt gọi đề tài đã bị đóng.");
+			}
+			
+			return "cp.editAProject";
 		 }
 	 }
 	 

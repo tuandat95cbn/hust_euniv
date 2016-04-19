@@ -59,7 +59,7 @@ public class mProjectCallsServiceImpl implements mProjectCallsService {
 	 * 
 	 */
 	@Override
-	public int saveAProjectCall(String sPROJCALL_CODE, String sPROJCALL_PROJCATCODE, String sPROJCALL_NAME, String sPROJCALL_DATE){
+	public int saveAProjectCall(String sPROJCALL_CODE, String sPROJCALL_PROJCATCODE, String sPROJCALL_NAME, String sPROJCALL_DATE, String sPROJCALL_STATUS){
 		try {
 			if (sPROJCALL_CODE != null && sPROJCALL_NAME != null) {
 				mProjectCalls projectCalls = new mProjectCalls();
@@ -67,6 +67,7 @@ public class mProjectCallsServiceImpl implements mProjectCallsService {
 				projectCalls.setPROJCALL_PROJCATCODE(sPROJCALL_PROJCATCODE);
 				projectCalls.setPROJCALL_NAME(sPROJCALL_NAME);
 				projectCalls.setPROJCALL_DATE(sPROJCALL_DATE);
+				projectCalls.setPROJCALL_STATUS(sPROJCALL_STATUS);
 				
 				// Create 
 				int i_InsertedAProjectCallId = projectCallsDAO.saveAProjectCall(projectCalls);
@@ -152,7 +153,7 @@ public class mProjectCallsServiceImpl implements mProjectCallsService {
 	 * @return null
 	 */
 	@Override
-	public void editAProjectCall(int iProjectCallId, String sPROJCALL_CODE, String PROJCALL_PROJCATCODE, String PROJCALL_NAME, String PROJCALL_DATE){
+	public void editAProjectCall(int iProjectCallId, String sPROJCALL_CODE, String PROJCALL_PROJCATCODE, String PROJCALL_NAME, String PROJCALL_DATE, String sPROJCALL_STATUS){
 		try {
 			mProjectCalls projectCalls = projectCallsDAO.loadAProjectCallById(iProjectCallId);
 			if (projectCalls != null) {
@@ -160,6 +161,7 @@ public class mProjectCallsServiceImpl implements mProjectCallsService {
 				projectCalls.setPROJCALL_DATE(PROJCALL_DATE);
 				projectCalls.setPROJCALL_PROJCATCODE(PROJCALL_PROJCATCODE);
 				projectCalls.setPROJCALL_NAME(PROJCALL_NAME);
+				projectCalls.setPROJCALL_STATUS(sPROJCALL_STATUS);
 				projectCallsDAO.editAProjectCall(projectCalls);
 			}
 		} catch (Exception e) {

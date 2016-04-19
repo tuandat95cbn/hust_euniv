@@ -16,6 +16,8 @@ public class mProjectCalls implements Serializable{
     private String PROJCALL_PROJCATCODE;
     private String PROJCALL_NAME;
     private String PROJCALL_DATE;
+    private String PROJCALL_STATUS;
+    
 	public int getPROJCALL_ID() {
 		return PROJCALL_ID;
 	}
@@ -45,5 +47,11 @@ public class mProjectCalls implements Serializable{
 	}
 	public void setPROJCALL_DATE(String pROJCALL_DATE) {
 		PROJCALL_DATE = pROJCALL_DATE;
+	}
+	public String getPROJCALL_STATUS() {
+		return PROJCALL_STATUS;
+	}
+	public void setPROJCALL_STATUS(String pROJCALL_STATUS) {
+		PROJCALL_STATUS = pROJCALL_STATUS;
 	}
 }

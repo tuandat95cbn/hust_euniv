@@ -21,7 +21,7 @@ public interface mProjectCallsService {
 	 * @param PROJCALL_DATE
 	 * @return
 	 */
-	public int saveAProjectCall(String sPROJCALL_CODE, String PROJCALL_PROJCATCODE, String PROJCALL_NAME, String PROJCALL_DATE);
+	public int saveAProjectCall(String sPROJCALL_CODE, String PROJCALL_PROJCATCODE, String PROJCALL_NAME, String PROJCALL_DATE, String sPROJCALL_STATUS);
 
 	/**
 	 * 
@@ -57,7 +57,7 @@ public interface mProjectCallsService {
 	 * @param PROJCALL_NAME
 	 * @param PROJCALL_DATE
 	 */
-	public void editAProjectCall(int iProjectCallId, String sPROJCALL_CODE, String sPROJCALL_PROJCATCODE, String sPROJCALL_NAME, String sPROJCALL_DATE);
+	public void editAProjectCall(int iProjectCallId, String sPROJCALL_CODE, String sPROJCALL_PROJCATCODE, String sPROJCALL_NAME, String sPROJCALL_DATE, String sPROJCALL_STATUS);
 	
 	/**
 	 * 
