@@ -2,9 +2,14 @@ package vn.webapp.modules.researchmanagement.validation;
 
 import java.util.List;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.NumberFormat;
+import org.springframework.format.annotation.NumberFormat.Style;
 import org.springframework.web.multipart.MultipartFile;
+
 import vn.webapp.validation.UploadFileMaxSize;
 
 public class ProjectsValidation{
@@ -42,6 +47,8 @@ public class ProjectsValidation{
 	
 	private String falcutyAddress;
 	
+	@NumberFormat(style = Style.NUMBER)
+    @Min(1)
 	private int budgetMaterial;
 	
 	private int projectMemberWorkingDays;
