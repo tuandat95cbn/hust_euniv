@@ -195,7 +195,7 @@ $(document).ready(function () {
 	            { "mData": "budget", "sWidth": "30px", "bSortable": false },
 	            { "mData": "id", "sWidth": "50px", "bSortable": false, 'mRender': function(resObj) {
 	                	var res = '<button type="button" onclick="v_fViewDetailAThread('+resObj+');" class="btn btn-info btn-xs" title="Edit">Info</button><br>';
-	                	res += '<a href="'+baseUrl+'/cp/download-thread/' + resObj + '.html" title="Download file xác thực" class="btn btn-success btn-xs" >Download</a>';
+	                	res += '<a onclick="v_fGeneratePDF('+resObj+')" title="Download file xác thực" class="btn btn-success btn-xs" >Download</a>';
 	                	return res;
 	              } },
 	        ],
@@ -306,6 +306,11 @@ function showDepartment(sFaculty)
 			sStaffs +=  '</select>';
 		$("#list-staff").html( sStaffs );
 	}
+}
+
+function v_fGeneratePDF(iProjectId){
+	var sGeneratePdfUrl = baseUrl + "/cp/generatepdf/"+iProjectId+".html";
+	window.location = sGeneratePdfUrl;
 }
 
 function showStaff(sDepartment) {

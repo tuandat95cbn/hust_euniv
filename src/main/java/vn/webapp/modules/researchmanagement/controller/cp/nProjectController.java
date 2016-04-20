@@ -968,6 +968,7 @@ public class nProjectController extends BaseWeb {
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___YEAR___", sYear);
 		    	
 		    	// Replace project name
+		    	sProjectName = sProjectName.replaceAll("&", "&amp;"); // Fix defect name has problem
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_NAME___", sProjectName);
 		    	
 		    	// Replace project start date
@@ -1823,7 +1824,8 @@ public class nProjectController extends BaseWeb {
 						summaryThread.add(leaderDepartment);
 						summaryThread.add(threads.getPROJ_Name());
 						summaryThread.add(Integer.toString(threads.getPROJ_TotalBudget()));
-						
+						summaryThread.add(threads.getPROJ_ContentChanged());
+						summaryThread.add(threads.getPROJ_ResultChanged());
 						summaryThreadList.add(summaryThread);
 					}
 				    /**

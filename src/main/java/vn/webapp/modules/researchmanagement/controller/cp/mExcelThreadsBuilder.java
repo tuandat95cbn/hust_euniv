@@ -28,7 +28,7 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 		
 		// create a new Excel sheet
 		HSSFSheet sheet = workbook.createSheet("Thong ke de tai");
-		//sheet.setDefaultColumnWidth(20);
+		sheet.setDefaultColumnWidth(20);
 		
 		// preparing data
 		String yearOfPaper = (String) model.get("yearOfPaper");
@@ -48,7 +48,7 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 		
 		// create title of the paper
 		HSSFRow title = sheet.createRow(iCurrentRow);
-		title.createCell(1).setCellValue("BẢNG THỐNG KÊ ĐỀ TÀI NĂM HỌC " + yearOfPaper);
+		title.createCell(1).setCellValue("DANH MỤC ĐĂNG KÝ ĐỀ TÀI KHOA HỌC VÀ CÔNG NGHỆ CẤP TRƯỜNG - NĂM " + yearOfPaper);
 		title.getCell(1).setCellStyle(style);
 		sheet.setColumnWidth(0, 400);
 		sheet.addMergedRegion(new CellRangeAddress(
@@ -57,6 +57,10 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 		            1, //first column (0-based)
 		            8  //last column  (0-based)
 		    ));
+		iCurrentRow++;
+		HSSFRow title2 = sheet.createRow(iCurrentRow);
+		title2.createCell(2).setCellValue("TÊN ĐƠN VỊ");
+		title2.getCell(2).setCellStyle(style);
 		
 		/**
 		 * Create a cell for sub title
@@ -86,6 +90,7 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 		 */
 		// Style the cell with borders all around.
 	    CellStyle styleBox = workbook.createCellStyle();
+	    styleBox.setWrapText(true);
 	    styleBox.setBorderBottom(CellStyle.BORDER_THIN);
 	    styleBox.setBottomBorderColor(IndexedColors.BLACK.getIndex());
 	    styleBox.setBorderLeft(CellStyle.BORDER_THIN);
@@ -96,35 +101,38 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 	    styleBox.setTopBorderColor(IndexedColors.BLACK.getIndex());
 	    styleBox.setFont(fontSubTitle);
 	    
-	    iCurrentRow = 3;
+	    iCurrentRow = 4;
 		HSSFRow boxHeader = sheet.createRow(iCurrentRow);
 		boxHeader.createCell(1).setCellValue("STT");
 		boxHeader.getCell(1).setCellStyle(styleBox);
 		
-		boxHeader.createCell(2).setCellValue("Chủ nhiệm đề tài");
+		boxHeader.createCell(2).setCellValue("Tên đề tài");
 		boxHeader.getCell(2).setCellStyle(styleBox);
 		
-		boxHeader.createCell(3).setCellValue("Bộ môn");
+		boxHeader.createCell(3).setCellValue("Tên chủ nhiệm");
 		boxHeader.getCell(3).setCellStyle(styleBox);
 		
-		boxHeader.createCell(4).setCellValue("Khoa/Viện");
+		boxHeader.createCell(4).setCellValue("Nội dung nghiên cứu");
 		boxHeader.getCell(4).setCellStyle(styleBox);
 		
-		boxHeader.createCell(5).setCellValue("Tên đề tài");
+		boxHeader.createCell(5).setCellValue("Kết quả đạt được");
 		boxHeader.getCell(5).setCellStyle(styleBox);
 		
 		boxHeader.createCell(6).setCellValue("Kinh phí");
 		boxHeader.getCell(6).setCellStyle(styleBox);
 		
+		boxHeader.createCell(7).setCellValue("Điểm đánh giá trung bìn HĐ, nhận xét và kiến nghị");
+		boxHeader.getCell(7).setCellStyle(styleBox);
+		
 		/**
 		 * Show numbers of column
+		 * iCurrentRow++;
+			HSSFRow boxNo = sheet.createRow(iCurrentRow);
+			for(int iNo = 1; iNo <=6; iNo++){
+				boxNo.createCell(iNo).setCellValue(iNo);
+				boxNo.getCell(iNo).setCellStyle(styleBox);
+			}
 		 */
-		iCurrentRow++;
-		HSSFRow boxNo = sheet.createRow(iCurrentRow);
-		for(int iNo = 1; iNo <=6; iNo++){
-			boxNo.createCell(iNo).setCellValue(iNo);
-			boxNo.getCell(iNo).setCellStyle(styleBox);
-		}
 
 		/**
 		 * Show all contents for the first category
@@ -139,6 +147,7 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 		
 		// Style the cell with borders all around.
 	    CellStyle styleContentBox = workbook.createCellStyle();
+	    styleContentBox.setWrapText(true);
 	    styleContentBox.setBorderBottom(CellStyle.BORDER_THIN);
 	    styleContentBox.setBottomBorderColor(IndexedColors.BLACK.getIndex());
 	    styleContentBox.setBorderLeft(CellStyle.BORDER_THIN);
@@ -158,24 +167,29 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 				boxFisrtCatContent.createCell(1).setCellValue(iCount++);
 				boxFisrtCatContent.getCell(1).setCellStyle(styleContentBox);
 				
-				// Name
-				boxFisrtCatContent.createCell(2).setCellValue(oThread.get(0));
+				// Name project
+				boxFisrtCatContent.createCell(2).setCellValue(oThread.get(3));
 				boxFisrtCatContent.getCell(2).setCellStyle(styleContentBox);
 				
-				// Budget
+				// Project leader 
 				boxFisrtCatContent.createCell(3).setCellValue(oThread.get(1));
 				boxFisrtCatContent.getCell(3).setCellStyle(styleContentBox);
 				
-				boxFisrtCatContent.createCell(4).setCellValue(oThread.get(2));
+				// Project content
+				boxFisrtCatContent.createCell(4).setCellValue(oThread.get(5));
 				boxFisrtCatContent.getCell(4).setCellStyle(styleContentBox);
 				
-				// Author Converted hours
-				boxFisrtCatContent.createCell(5).setCellValue(oThread.get(3));
+				// Project result
+				boxFisrtCatContent.createCell(5).setCellValue(oThread.get(6));
 				boxFisrtCatContent.getCell(5).setCellStyle(styleContentBox);
 				
-				// Author Converted hours
+				// Budget
 				boxFisrtCatContent.createCell(6).setCellValue(oThread.get(4));
 				boxFisrtCatContent.getCell(6).setCellStyle(styleContentBox);
+				
+				// Empty column
+				boxFisrtCatContent.createCell(7).setCellValue("");
+				boxFisrtCatContent.getCell(7).setCellStyle(styleContentBox);
 				
 				iTotalBudget += Integer.parseInt(oThread.get(4));
 				iCurrentRow++;
@@ -186,7 +200,7 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 		 * Papers - total line
 		 */
 		HSSFRow boxNoTotal = sheet.createRow(iCurrentRow);
-		for(int iNo = 1; iNo <=6; iNo++){
+		for(int iNo = 1; iNo <=7; iNo++){
 			
 			if(iNo == 1){
 				boxNoTotal.createCell(iNo).setCellValue("Tổng cộng");
@@ -207,6 +221,16 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 		HSSFRow dateEnd = sheet.createRow(iCurrentRow);
 		dateEnd.createCell(6).setCellValue("Hà Nội, Ngày.........tháng.........năm.........");
 		dateEnd.getCell(6).setCellStyle(styleSubtitle);
+		
+		iCurrentRow +=2 ;
+		HSSFRow leadSign = sheet.createRow(iCurrentRow);
+		leadSign.createCell(6).setCellValue("Thủ trưởng đơn vị");
+		leadSign.getCell(6).setCellStyle(styleSubtitle);
+		
+		iCurrentRow +=3 ;
+		HSSFRow noteCont = sheet.createRow(iCurrentRow);
+		noteCont.createCell(1).setCellValue("Ghi chú: “Bảng tổng hợp” tổng hợp cả thuyết minh không đạt,  và phải được gửi cho các cá nhân đề xuất đề tài");
+		noteCont.getCell(1).setCellStyle(styleSubtitle);
 		
 	}
 }
