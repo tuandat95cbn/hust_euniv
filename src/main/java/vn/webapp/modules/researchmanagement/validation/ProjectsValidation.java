@@ -48,8 +48,7 @@ public class ProjectsValidation{
 	private String falcutyAddress;
 	
 	@NumberFormat(style = Style.NUMBER)
-    @Min(1)
-	private int budgetMaterial;
+   	private int budgetMaterial;
 	
 	private int projectMemberWorkingDays;
 	

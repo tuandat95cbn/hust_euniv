@@ -395,6 +395,9 @@ function v_fSendProject(iProjectId){
 }
 
 function v_fAddMember(){
+	var patt = new RegExp("^[0-9]*$");
+	
+	
 	var sMemberCode = $("select#members").find(":selected").val();
 	var sMemberName = $("select#members").find(":selected").text();
 	var sMemberRoleCode = $("#memberRole").find(":selected").val();
@@ -402,6 +405,13 @@ function v_fAddMember(){
 	var sTask = $("#taskContent").val();
 	var iMemberWorkingDays = $("#memberWorkingDays").val();
 	var iBudget = $("#taskBudget").val();
+	
+	if(!patt.test(iMemberWorkingDays)){
+		alert("Số ngày công " + iMemberWorkingDays + " sai định dạng: chỉ chấp nhận chữ số"); return;
+	}
+	if(!patt.test(iBudget)){
+		alert("Thành tiền " + iBudget + " sai định dạng: chỉ chấp nhận chữ số"); return;
+	}
 	
 	var sAddedMember = "";
 	if(sMemberName != "" && sMemberCode != "")
