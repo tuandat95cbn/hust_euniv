@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/webapp/cp/home.html">ĐHBK Hà Nội</a>
+        <a class="navbar-brand" href="/webapp/cp/home.html">Hệ thống hỗ trợ quản lý Khoa học và Công nghệ, ĐHBK Hà Nội</a>
     </div>
     <!-- /.navbar-header -->
 
