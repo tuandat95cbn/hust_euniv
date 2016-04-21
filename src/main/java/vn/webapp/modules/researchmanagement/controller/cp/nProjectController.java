@@ -144,7 +144,8 @@ public class nProjectController extends BaseWeb {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
 		List<Projects> projectsList = threadService.loadProjectsListByStaff(userRole, userCode);
-
+		System.out.println(name() + "::getListProjects, userCode = " + userCode + ", userRole = " + userRole);
+		
 		model.put("projectsList", projectsList);
 		model.put("projects", status);
 		return "cp.projectsList";
@@ -244,6 +245,8 @@ public class nProjectController extends BaseWeb {
 	public String topicsListToAdd(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
+		System.out.println(name() + "::topicsList, userCode = " + userCode + ", userRole = " + userRole);
+		
 		List<mThreads> threadsList = threadService.loadThreadsListByStaff(userRole, userCode);
 		// Get topic's category
 		List<mTopicCategory> threadCategory = tProjectCategoryService.list();
