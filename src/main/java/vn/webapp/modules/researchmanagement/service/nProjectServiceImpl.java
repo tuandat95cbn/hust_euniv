@@ -1038,8 +1038,13 @@ public class nProjectServiceImpl implements nProjectService {
 	 * @return null
 	 */
 	@Override
-	public List<mThreads> loadThreadsListForReporting(String threadCategory, String threadStatus, String threadFaculty, String threadDepartment, String threadStaff, String yearForGenerating){
+	public List<mThreads> loadThreadsListForReporting(String threadCategory, String threadStatus, 
+			String threadFaculty, String threadDepartment, String threadStaff, String yearForGenerating){
 		try {
+			System.out.println(name() + "::loadThreadListForReporting, threadCategory = " + 
+		threadCategory + ", threadStatus = " + threadStatus + ", threadFaculty = " + 
+					threadFaculty + ", threadDepartment = " + threadDepartment + ", threadStaff = " + 
+		threadStaff + ", yearFor Generating = " + yearForGenerating);
 			List<mThreads> o_ReturnedThreadFilterList = new ArrayList<mThreads>();
 			if(threadStaff != "")
 			{
@@ -1049,6 +1054,7 @@ public class nProjectServiceImpl implements nProjectService {
 				for(mStaff oStaff : listStaff)
 				{
 					staffCodeList.add(oStaff.getStaff_Code());
+					System.out.println(name() + "::loadThreadListForReporting, collect staff = " + oStaff.getStaff_Code());
 				}
 				List<mProjectStaffs> projectStaffLists = projectStaffsDAO.loadAProjectStaffInListStaffs(staffCodeList);
 				HashSet<String> projectCodeList = new HashSet<String>();

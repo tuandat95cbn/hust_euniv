@@ -1810,7 +1810,11 @@ public class nProjectController extends BaseWeb {
 				String threadDepartment = threadValidExcell.getThreadDepartment();
 				String threadStaff = threadValidExcell.getThreadStaff();
 				// Get list of Threads
-				List<mThreads> threadsList = threadService.loadThreadsListForReporting(threadCategory, threadStatus, threadFaculty, threadDepartment, threadStaff, yearForGenerating);
+				
+				System.out.println(name() + "::downloadExcelThread, threadFaculty = " + threadFaculty + 
+						", threadStaff = " + threadStaff);
+				List<mThreads> threadsList = threadService.loadThreadsListForReporting(threadCategory, 
+						threadStatus, threadFaculty, threadDepartment, threadStaff, yearForGenerating);
 				
 				List<List<String>> summaryThreadList = new ArrayList<>();
 				if(threadsList != null)
