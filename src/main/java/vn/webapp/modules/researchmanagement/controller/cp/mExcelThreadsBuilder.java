@@ -5,7 +5,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -14,6 +16,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.jsoup.Jsoup;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 public class mExcelThreadsBuilder extends AbstractExcelView{
@@ -161,6 +164,7 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 		int iCount = 1;
 		iCurrentRow++;
 		int iTotalBudget = 0;
+		String sContent = "";
 		for (List<String> oThread : summaryThreadList) { 
 			
 				HSSFRow boxFisrtCatContent = sheet.createRow(iCurrentRow);
@@ -172,15 +176,17 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 				boxFisrtCatContent.getCell(2).setCellStyle(styleContentBox);
 				
 				// Project leader 
-				boxFisrtCatContent.createCell(3).setCellValue(oThread.get(1));
+				boxFisrtCatContent.createCell(3).setCellValue(oThread.get(0));
 				boxFisrtCatContent.getCell(3).setCellStyle(styleContentBox);
 				
 				// Project content
-				boxFisrtCatContent.createCell(4).setCellValue(oThread.get(5));
+				sContent = (!"".equals(oThread.get(5)) && oThread.get(5) != null) ? Jsoup.parse(oThread.get(5)).text() : "";
+				boxFisrtCatContent.createCell(4).setCellValue(sContent);
 				boxFisrtCatContent.getCell(4).setCellStyle(styleContentBox);
 				
 				// Project result
-				boxFisrtCatContent.createCell(5).setCellValue(oThread.get(6));
+				sContent = (!"".equals(oThread.get(6)) && oThread.get(6) != null) ? Jsoup.parse(oThread.get(6)).text() : "";
+				boxFisrtCatContent.createCell(5).setCellValue(sContent);
 				boxFisrtCatContent.getCell(5).setCellStyle(styleContentBox);
 				
 				// Budget

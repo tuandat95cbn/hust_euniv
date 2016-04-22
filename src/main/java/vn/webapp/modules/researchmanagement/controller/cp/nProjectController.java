@@ -41,6 +41,7 @@ import com.itextpdf.text.DocumentException;
 import vn.webapp.controller.BaseWeb;
 import vn.webapp.libraries.DateUtil;
 import vn.webapp.libraries.FileUtil;
+import vn.webapp.libraries.Money2StringConvertor;
 import vn.webapp.modules.researchdeclarationmanagement.model.mAcademicYear;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 import vn.webapp.modules.researchdeclarationmanagement.service.mAcademicYearService;
@@ -955,7 +956,7 @@ public class nProjectController extends BaseWeb {
 				}
 				
 				String sProjectObjective	= (project.getPROJ_Objective() != null) ? project.getPROJ_Objective() : "PROJECT'S OBJECTIVE";
-				String sTasksBudgetWords	= "";
+				String sTasksBudgetWords	= Money2StringConvertor.convert2Text(Integer.toString(iTotalFee));
 				String sLeaderDegree 		= "";
 				String sLeaderRole 			= "Giảng viên";
 
@@ -1827,8 +1828,8 @@ public class nProjectController extends BaseWeb {
 						summaryThread.add(leaderDepartment);
 						summaryThread.add(threads.getPROJ_Name());
 						summaryThread.add(Integer.toString(threads.getPROJ_TotalBudget()));
-						summaryThread.add(threads.getPROJ_ContentChanged());
-						summaryThread.add(threads.getPROJ_ResultChanged());
+						summaryThread.add(threads.getPROJ_Content());
+						summaryThread.add(threads.getPROJ_Result());
 						summaryThreadList.add(summaryThread);
 					}
 				    /**
