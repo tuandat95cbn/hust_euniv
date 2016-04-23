@@ -1401,9 +1401,15 @@ public class nProjectController extends BaseWeb {
 					String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
 					String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
 					String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
+					
+					int totalBudget = budgetMaterial;
+					for(int i = 0; i < projectMemberBudget.length; i++){
+						totalBudget += Integer.valueOf(projectMemberBudget[i]);
+					}
+					
 					if(projectMembers.length > 0){
 						// Editing project info
-						threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject);
+						threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject, totalBudget);
 						// Editting tasks info
 						threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget, currentProjectCode);
 						return "redirect:" + this.baseUrl + "/cp/list-projects.html";
@@ -1449,8 +1455,8 @@ public class nProjectController extends BaseWeb {
 				String projectSurvey 		= projectFormEdit.getProjectSurvey();
 				String projectObjective		= projectFormEdit.getProjectObjective();
 				boolean bEditSumittedProject= true;
-
-			 threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectBudget, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective,  bEditSumittedProject);
+				int projectMaterialBudget 	= 0;
+			 threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectMaterialBudget, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective,  bEditSumittedProject, projectBudget);
 			 return "redirect:" + this.baseUrl + "/cp/modify-submitted-projects.html";
 		 }
 	 }

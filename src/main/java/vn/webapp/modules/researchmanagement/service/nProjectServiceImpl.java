@@ -973,16 +973,17 @@ public class nProjectServiceImpl implements nProjectService {
 	 */
 	@Override
 	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, String projectMotivation, String projectResult, 
-								int budgetMaterial, String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject){
+								int budgetMaterial, String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject, int projectBudget){
 		Projects project = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
 		if (project != null) {
 			if(bEditSumittedProject == true)
 			{
+				int iTotalBudget = projectBudget + project.getPROJ_BudgetMaterial();
 				project.setPROJ_Code(projectCode);
 				project.setPROJ_ContentChanged(projectContent);
 				project.setPROJ_MotivationChanged(projectMotivation);
 				project.setPROJ_ResultChanged(projectResult);
-				project.setPROJ_BudgetMaterialChanged(budgetMaterial);
+				project.setPROJ_TotalBudget(iTotalBudget);
 				project.setPROJ_ObjectiveChanged(projectObjective);
 				project.setPROJ_SurveyChanged(projectSurvey);
 			}else{
@@ -992,6 +993,7 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_Name(projectName);
 				project.setPROJ_Result(projectResult);
 				project.setPROJ_BudgetMaterial(budgetMaterial);
+				project.setPROJ_TotalBudget(projectBudget);
 				project.setPROJ_PRJCall_Code(projectCallCode);
 				project.setPROJ_StartDate(startDate);
 				project.setPROJ_EndDate(endDate);
