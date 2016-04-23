@@ -983,7 +983,7 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_ContentChanged(projectContent);
 				project.setPROJ_MotivationChanged(projectMotivation);
 				project.setPROJ_ResultChanged(projectResult);
-				project.setPROJ_TotalBudget(iTotalBudget);
+				project.setPROJ_BudgetChanged(iTotalBudget);
 				project.setPROJ_ObjectiveChanged(projectObjective);
 				project.setPROJ_SurveyChanged(projectSurvey);
 			}else{
