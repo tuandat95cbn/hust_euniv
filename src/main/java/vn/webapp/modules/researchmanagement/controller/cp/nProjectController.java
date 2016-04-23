@@ -926,18 +926,14 @@ public class nProjectController extends BaseWeb {
 				int iTotalFee				= iBudgetMaterial;
 				//List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(sProjectCode);
 				List<List<String>> projectTasks = projectTasksService.getProjectTaskByProjectCode(sProjectCode);
+				HashSet<List<String>> memberNameList = new HashSet<>();
 				if(projectTasks != null)
 				{
-					
-					int iNo = 1;
 					for (List<String> projectTask : projectTasks) {
-						// Showing project members
-						sProjectMembersList 		+= "<tr>";
-						sProjectMembersList 		+= "<td width='5%'><div class='content'>"+iNo+".</div></td>";
-						sProjectMembersList 		+= "<td colspan='2'><div class='content'>"+projectTask.get(0)+"</div></td>";
-						sProjectMembersList 		+= "<td width='45%'><div class='content'>"+projectTask.get(1)+"</div></td>";
-						sProjectMembersList 		+= "<td width='15%'><div class='content'></div></td>";
-						sProjectMembersList 		+= "</tr>";
+						List<String> memberTemp = new ArrayList<>();
+						memberTemp.add(projectTask.get(0)); // Name
+						memberTemp.add(projectTask.get(1)); // School-Faculty
+						memberNameList.add(memberTemp);
 						
 						// Showing tasks
 						sProjectTasksList 			+= "<tr>";
@@ -948,13 +944,27 @@ public class nProjectController extends BaseWeb {
 						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(6)+"</div></td>";
 						sProjectTasksList 			+= "<td><div class='content'></div></td>";
 						sProjectTasksList 			+= "</tr>";
-						
-						iNo++;
+
 						iTotalWorkingDays			+= Integer.parseInt(projectTask.get(5));
 						iTotalTaskFees				+= Integer.parseInt(projectTask.get(6));
 					}
 					// Calculating total fee
 					iTotalFee						+= iTotalTaskFees;
+				}
+				
+				if(memberNameList.size() > 0)
+				{
+					int iNo = 1;
+					for (List<String> list : memberNameList) {
+						// Showing project members
+						sProjectMembersList 		+= "<tr>";
+						sProjectMembersList 		+= "<td width='5%'><div class='content'>"+iNo+".</div></td>";
+						sProjectMembersList 		+= "<td colspan='2'><div class='content'>"+list.get(0)+"</div></td>";
+						sProjectMembersList 		+= "<td width='45%'><div class='content'>"+list.get(1)+"</div></td>";
+						sProjectMembersList 		+= "<td width='15%'><div class='content'></div></td>";
+						sProjectMembersList 		+= "</tr>";
+						iNo++;
+					}
 				}
 				
 				String sProjectObjective	= (project.getPROJ_Objective() != null) ? project.getPROJ_Objective() : "PROJECT'S OBJECTIVE";
@@ -1033,6 +1043,9 @@ public class nProjectController extends BaseWeb {
 		    	
 		    	// Replace project total budget
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET___", Integer.toString(iTotalFee));
+		    	
+		    	// Replace project total budget
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET_WORDS___", Money2StringConvertor.convert2Text(Integer.toString(iTotalFee)));
 		    	
 		    	// Replace project tasks list
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TASKS_LIST___", sProjectTasksList);
