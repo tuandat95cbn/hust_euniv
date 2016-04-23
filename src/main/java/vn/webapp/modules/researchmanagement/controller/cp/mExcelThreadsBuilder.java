@@ -1,5 +1,6 @@
 package vn.webapp.modules.researchmanagement.controller.cp;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,8 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.jsoup.Jsoup;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
+import vn.webapp.modules.researchmanagement.model.ProjectTasks;
+
 public class mExcelThreadsBuilder extends AbstractExcelView{
 	
 	/**
@@ -28,6 +31,7 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 	protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// get data model which is passed by the Spring container
 		List<List<String>> summaryThreadList = (List<List<String>>) model.get("summaryThreadList");
+		HashSet<String> listMembers = (HashSet<String>) model.get("listMembers");
 		
 		// create a new Excel sheet
 		HSSFSheet sheet = workbook.createSheet("Thong ke de tai");
@@ -217,6 +221,36 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 			}else{
 				boxNoTotal.createCell(iNo).setCellValue("");
 				boxNoTotal.getCell(iNo).setCellStyle(styleBox);
+			}
+		}
+		
+		iCurrentRow +=2 ;
+		HSSFRow listJoiningMembers = sheet.createRow(iCurrentRow);
+		listJoiningMembers.createCell(1).setCellValue("Danh sách thành viên tham gia");
+		listJoiningMembers.getCell(1).setCellStyle(styleSubtitle);
+		
+		iCurrentRow += 2;
+		HSSFRow boxAttandeeHeader = sheet.createRow(iCurrentRow);
+		boxAttandeeHeader.createCell(1).setCellValue("STT");
+		boxAttandeeHeader.getCell(1).setCellStyle(styleBox);
+		
+		boxAttandeeHeader.createCell(2).setCellValue("Họ và tên");
+		boxAttandeeHeader.getCell(2).setCellStyle(styleBox);
+		
+		iCurrentRow++;
+		iCount = 1;
+		if(listMembers.size() > 0)
+		{
+			for (String member : listMembers) {
+				HSSFRow boxFisrtCatContent = sheet.createRow(iCurrentRow);
+				boxFisrtCatContent.createCell(1).setCellValue(iCount++);
+				boxFisrtCatContent.getCell(1).setCellStyle(styleContentBox);
+				
+				// Staff project
+				boxFisrtCatContent.createCell(2).setCellValue(member);
+				boxFisrtCatContent.getCell(2).setCellStyle(styleContentBox);
+				
+				iCurrentRow++;
 			}
 		}
 		

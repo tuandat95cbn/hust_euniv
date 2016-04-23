@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -133,6 +134,10 @@ public class ProjectTasksDAOImpl extends BaseDao implements ProjectTasksDAO {
 		}
 	}
     
+	/**
+	 * 
+	 */
+	@Override
 	public void editAProjectTask(ProjectTasks pt){
 		try{
 			begin();

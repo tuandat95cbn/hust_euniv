@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -1840,6 +1842,17 @@ public class nProjectController extends BaseWeb {
 				     * Get list of all Patents
 				     */
 				}
+				
+				HashSet<String> listMembers = new HashSet<>();
+				List<ProjectTasks> listProjectTasks = projectTasksService.getList();
+				if(listProjectTasks.size() > 0)
+				{
+					for (ProjectTasks projectTask : listProjectTasks) {
+						listMembers.add(projectTask.getStaffProject().getStaff_Name());
+					}
+				}
+				
+			    model.put("listMembers", listMembers);
 			    model.put("summaryThreadList", summaryThreadList);
 				model.put("yearOfPaper", yearForGenerating);
 				// return a view which will be resolved by an excel view resolver
