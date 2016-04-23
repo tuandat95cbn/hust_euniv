@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -1814,6 +1815,14 @@ public class nProjectController extends BaseWeb {
 				String threadStaff = threadValidExcell.getThreadStaff();
 				// Get list of Threads
 				
+				List<mStaff> staffs = staffService.listStaffs();
+				HashMap<String, mStaff> mCode2Staff = new HashMap<String, mStaff>();
+				for(mStaff st: staffs){
+					mCode2Staff.put(st.getStaff_Code(), st);
+				}
+				
+				
+				
 				System.out.println(name() + "::downloadExcelThread, threadFaculty = " + threadFaculty + 
 						", threadStaff = " + threadStaff);
 				List<mThreads> threadsList = threadService.loadThreadsListForReporting(threadCategory, 
@@ -1826,14 +1835,36 @@ public class nProjectController extends BaseWeb {
 					{
 						String leaderFaculty = threadService.getFacultyName(threads.getStaff().getStaff_Faculty_Code());
 						String leaderDepartment = threadService.getDepartmentName(threads.getStaff().getStaff_Department_Code());
+						mStaff staff = mCode2Staff.get(threads.getPROJ_User_Code());
+						List<ProjectTasks> tasks = projectTasksService.loadAProjectTaskByProjectCode(threads.getPROJ_Code());
+						
+						int totalBudget = threads.getPROJ_BudgetMaterial();
+						
+						HashSet<String> members = new HashSet<String>();
+						for(ProjectTasks pTask: tasks){
+							String mCode = pTask.getPRJTSK_StaffCode();
+							totalBudget += pTask.getPRJTSK_Cost();
+							if(!mCode.equals(staff.getStaff_User_Code()))
+								members.add(mCode);
+						}
+						
 						
 						//String sFacultyname = threadService.
 						List<String> summaryThread = new ArrayList<>();
-						summaryThread.add(threads.getPROJ_User_Code());
+						//summaryThread.add(threads.getPROJ_User_Code());
+						String memberList = staff.getStaff_Name();
+						if(members.size() > 0){
+							memberList += " (Thành viên: ";
+							for(String st: members)
+								memberList += st + ", ";
+							memberList += ")";
+						}
+						summaryThread.add(memberList);
 						summaryThread.add(leaderFaculty);
 						summaryThread.add(leaderDepartment);
 						summaryThread.add(threads.getPROJ_Name());
-						summaryThread.add(Integer.toString(threads.getPROJ_TotalBudget()));
+						//summaryThread.add(Integer.toString(threads.getPROJ_TotalBudget()));
+						summaryThread.add(Integer.toString(totalBudget));
 						summaryThread.add(threads.getPROJ_Content());
 						summaryThread.add(threads.getPROJ_Result());
 						summaryThreadList.add(summaryThread);
@@ -1841,6 +1872,7 @@ public class nProjectController extends BaseWeb {
 				    /**
 				     * Get list of all Patents
 				     */
+					 
 				}
 				
 				HashSet<String> listMembers = new HashSet<>();
