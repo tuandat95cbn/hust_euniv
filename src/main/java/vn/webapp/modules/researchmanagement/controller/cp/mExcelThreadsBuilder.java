@@ -20,6 +20,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.jsoup.Jsoup;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
+import vn.webapp.libraries.Money2StringConvertor;
 import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 
 public class mExcelThreadsBuilder extends AbstractExcelView{
@@ -164,10 +165,14 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 	    styleContentBox.setBorderTop(CellStyle.BORDER_THIN);
 	    styleContentBox.setTopBorderColor(IndexedColors.BLACK.getIndex());
 	    styleContentBox.setFont(fontContent);
-	    
+	    styleContentBox.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
 		int iCount = 1;
 		iCurrentRow++;
 		int iTotalBudget = 0;
+		//for (List<String> oThread : summaryThreadList) { 
+		//	iTotalBudget += Integer.parseInt(oThread.get(4));
+		//}
+		
 		String sContent = "";
 		for (List<String> oThread : summaryThreadList) { 
 			
@@ -194,7 +199,9 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 				boxFisrtCatContent.getCell(5).setCellStyle(styleContentBox);
 				
 				// Budget
-				boxFisrtCatContent.createCell(6).setCellValue(oThread.get(4));
+				String stdBudget = Money2StringConvertor.addDot2Moyney(oThread.get(4));
+				//boxFisrtCatContent.createCell(6).setCellValue(oThread.get(4));
+				boxFisrtCatContent.createCell(6).setCellValue(stdBudget);
 				boxFisrtCatContent.getCell(6).setCellStyle(styleContentBox);
 				
 				// Empty column
@@ -216,7 +223,9 @@ public class mExcelThreadsBuilder extends AbstractExcelView{
 				boxNoTotal.createCell(iNo).setCellValue("Tổng cộng");
 				boxNoTotal.getCell(iNo).setCellStyle(styleBox);
 			}else if (iNo == 6){
-				boxNoTotal.createCell(iNo).setCellValue(iTotalBudget);
+				String stdBudget = Money2StringConvertor.addDot2Moyney(iTotalBudget + ""); 
+				//boxNoTotal.createCell(iNo).setCellValue(iTotalBudget);
+				boxNoTotal.createCell(iNo).setCellValue(stdBudget);
 				boxNoTotal.getCell(iNo).setCellStyle(styleBox);
 			}else{
 				boxNoTotal.createCell(iNo).setCellValue("");

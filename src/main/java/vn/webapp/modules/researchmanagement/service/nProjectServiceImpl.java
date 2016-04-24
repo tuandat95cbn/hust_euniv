@@ -1056,7 +1056,7 @@ public class nProjectServiceImpl implements nProjectService {
 				for(mStaff oStaff : listStaff)
 				{
 					staffCodeList.add(oStaff.getStaff_Code());
-					System.out.println(name() + "::loadThreadListForReporting, collect staff = " + oStaff.getStaff_Code());
+					//System.out.println(name() + "::loadThreadListForReporting, collect staff = " + oStaff.getStaff_Code());
 				}
 				List<mProjectStaffs> projectStaffLists = projectStaffsDAO.loadAProjectStaffInListStaffs(staffCodeList);
 				HashSet<String> projectCodeList = new HashSet<String>();
