@@ -820,7 +820,11 @@ public class nProjectController extends BaseWeb {
 	public String generatePDFProject(HttpServletRequest request, HttpServletResponse response, ModelMap model, @PathVariable("id") int projectId, HttpSession session) throws IOException, DocumentException {
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
-		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
+		
+		System.out.println(name() + "::generatePDFProject, projectID = " + projectId);
+		
+		//Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
+		Projects project = threadService.loadProjectsById(projectId);
 		
 		System.out.println(name() + "::generatePDFProject, project code = " + project.getPROJ_Code() + 
 				", userCode = " + project.getPROJ_User_Code() + ", name = " + project.getPROJ_Name());

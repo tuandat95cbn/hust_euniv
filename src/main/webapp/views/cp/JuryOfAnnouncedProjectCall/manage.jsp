@@ -54,14 +54,41 @@
 	                                </div>
 	                        
 	                                <div class="form-group">
+	                                	
+	                                	<select class="form-control" name="faculty" onchange="showDepartment(this);" >
+                                 		<option value="">Chọn Khoa/Viện</option>
+                                 		<c:forEach items="${listFaculty}" var="faculty">
+                                      	<option value="${faculty.faculty_Code}">${faculty.faculty_Name}</option>
+                                    	</c:forEach>
+                                 		</select>
+                                    	<br>
+                                    	<div id="department">
+	                                    	<select class="form-control" name="department">
+												<option value="">Chọn Bộ môn</option>
+	                                    	</select>
+                                    	</div>
+                                    	<br>
+                                    
 	                                    <label >Thành viên</label>
-	                                    <form:select path="JUSUPRJ_STAFFCODE" class="form-control" name="JUSUPRJ_STAFFCODE">
+	                                    <form:select path="JUSUPRJ_STAFFCODE" class="form-control" name="JUSUPRJ_STAFFCODE" id="staff">
 	                                        <option value="">chọn</option>	                                    	                                    
 	                                    	<c:forEach items="${staffList}" var="iStaff">
 		                                        <option value="${iStaff.staff_Code}">${iStaff.staff_Name}</option>
 	                                       	</c:forEach>
 	                                    </form:select>
 	                                    <form:errors path="JUSUPRJ_STAFFCODE" class="alert-danger"></form:errors>
+	                                     
+	                                    <%-- <div class="form-group">
+		                                	<label for="projectMembers">Thành viên</label>
+		                                	<div id="staff">
+		                                	<select class="form-control" id="members">
+		                                	<c:forEach items="${staffList}" var="aStaff">
+		                                    	<option value="${aStaff.staff_Code}">${aStaff.staff_Name}</option>
+		                                   	</c:forEach>
+		                                	</select>
+		                                	</div>
+		                            	</div> --%>
+		                             
 	                                </div>
 	                        
 	                                <div class="form-group">
@@ -158,5 +185,56 @@ function v_fRemoveJuryOfAnnouncedProjectCall(iJuryOfAnnouncedProjectCallId){
 	    return false;
 	}
 }
+
+function showDepartment(sFaculty)
+{
+	var sGeneratingUrl = "${baseUrl}/cpservice/getdepartments.html";
+	var sFacultyCode = sFaculty.options[sFaculty.selectedIndex].value;  
+	if (sFacultyCode.length > 0 ) { 
+		 $.ajax({
+				type: "POST",
+				url: sGeneratingUrl,
+				data: "sFacultyCode="+sFacultyCode,
+				cache: false,
+				beforeSend: function () { 
+					//$('#department').html('<img src="loader.gif" alt="" width="24" height="24">');
+				},
+				success: function(html) {    
+					console.log('html : ' + html);
+					$("#department").html( html );
+				}
+			});
+	}else{
+		var sDepartment = '<select class="form-control" name="department">';
+			sDepartment += '<option value="">Chọn Bộ môn</option>';
+			sDepartment +=  '</select>';
+		$("#department").html( sDepartment );
+		
+		var sStaffs = '<select class="form-control" name="staff">';
+			sStaffs += '<option value="">Chọn Thành viên</option>';
+			sStaffs +=  '</select>';
+		$("#staff").html( sStaffs );
+	}
+}
+
+function showStaff(sDepartment) {
+	var sGeneratingUrl = "${baseUrl}/cpservice/getsinglestaffs.html";
+	var sDepartmentCode = sDepartment.options[sDepartment.selectedIndex].value;
+	if (sDepartmentCode.length > 0 ) { 
+		 $.ajax({
+				type: "POST",
+				url: sGeneratingUrl,
+				data: "sDepartmentCode="+sDepartmentCode,
+				cache: false,
+				beforeSend: function () { 
+					//$('#staff').html('<img src="loader.gif" alt="" width="24" height="24">');
+				},
+				success: function(html) {    
+					$("#staff").html( html );
+				}
+			});
+	}
+}
+
 </script>
 
