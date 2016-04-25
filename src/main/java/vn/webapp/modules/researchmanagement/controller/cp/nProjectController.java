@@ -822,6 +822,9 @@ public class nProjectController extends BaseWeb {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
 		
+		System.out.println(name() + "::generatePDFProject, project code = " + project.getPROJ_Code() + 
+				", userCode = " + project.getPROJ_User_Code() + ", name = " + project.getPROJ_Name());
+		
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
