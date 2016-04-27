@@ -667,6 +667,17 @@ public class nProjectController extends BaseWeb {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
 		
+		List<mProjectComments> allCommentProjects = projectCommentsService.loadprojectCommentsList();
+		
+		String comments = "";
+		for(mProjectComments cm: allCommentProjects){
+			if(cm.getCOMPROJ_PRJCODE().equals(project.getPROJ_Code())){
+				
+				comments += "Ý kiến phản biện 1:\n" + cm.getCOMPROJ_COMMENT() + "\n";
+			}
+		}
+		
+		
 		// Get list of project calls
 	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
 							
@@ -678,6 +689,7 @@ public class nProjectController extends BaseWeb {
 			model.put("projectEdit", project);
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId);
+			model.put("comments", comments);
 			return "cp.editASumittedProject";
 		}
 		return "cp.notFound404";

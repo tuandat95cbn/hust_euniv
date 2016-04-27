@@ -67,7 +67,7 @@ public class StaffJurySubmittedProjects {
 		staffs.add("lan.nguyenthihoang@hust.edu.vn");
 		staffs.add("vinh.lathe@hust.edu.vn");
 		staffs.add("duc.nguyenhuu@hust.edu.vn");
-		
+		staffs.add("dung.phamquang@hust.edu.vn");
 		StaffJurySubmittedProjects A = new StaffJurySubmittedProjects();
 		A.addStaffSubmittedProjects(staffs);
 	}
