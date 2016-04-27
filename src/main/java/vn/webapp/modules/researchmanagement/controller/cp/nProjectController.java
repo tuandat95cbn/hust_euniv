@@ -762,7 +762,11 @@ public class nProjectController extends BaseWeb {
 			if(projectComments != null && projectComments.size() > 0)
 			{
 				projectComment1 =  projectComments.get(0);
-				projectComment2 =  projectComments.get(1);
+				if(projectComments.size() > 1)
+					projectComment2 =  projectComments.get(1);
+				else{
+					projectComment2 = new mProjectComments();
+				}
 			}
 			// Put journal list and topic category to view
 			model.put("projectComment1", projectComment1);
@@ -1528,6 +1532,8 @@ public class nProjectController extends BaseWeb {
 			if(projectBeingEditted != null){
 				String isConfirmed = request.getParameter("confirmed");
 				projectBeingEditted.setPROJ_Status_Code(projectFormEdit.getProjectStatusCode());
+				if(projectBeingEditted.getPROJ_Status_Code().equals("ACCEPT_REVISION")) 
+						projectBeingEditted.setPROJ_Locked1(0);
 				threadService.editAnApproveProject(projectBeingEditted);
 				return "redirect:" + this.baseUrl + "/cp/collect-comments.html";
 			}
