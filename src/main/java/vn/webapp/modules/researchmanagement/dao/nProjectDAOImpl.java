@@ -86,7 +86,7 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 		try {
 			begin();
 			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
-			criteria.add(Restrictions.eq("Projects.PROJ_ID", projectId));
+			criteria.add(Restrictions.eq("PROJ_ID", projectId));
 			Projects project = (Projects) criteria.uniqueResult();
 			commit();
 			return project;

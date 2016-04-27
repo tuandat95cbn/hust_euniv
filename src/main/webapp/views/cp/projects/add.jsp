@@ -86,7 +86,7 @@
 		                                <form:errors path="projectContent" class="alert-danger"></form:errors>
 	                            	 </div>
 	                                 <div class="form-group">
-	                                    <label for="projectResult">Sản phẩm chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
+	                                    <label for="projectResult">Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
 	                                    <form:textarea path="projectResult" name="projectResult" value="" class="form-control textarea" />
 	   									<form:errors path="projectResult" class="alert-danger"></form:errors>
 	                               	 </div>

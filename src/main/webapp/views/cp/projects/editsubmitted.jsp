@@ -95,6 +95,13 @@
 	            </div>
 	            <!-- /.panel -->
             </c:if>
+
+			<div class="panel panel-default">
+				<div class="panel-body">
+				${comments}
+				</div>
+			</div>
+            
             <div class="panel panel-default">
                 <div class="panel-heading">
                 	<c:choose>

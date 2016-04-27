@@ -448,9 +448,14 @@
         <put-attribute name="content" value="/views/cp/projects/listsubmitted.jsp" />
     </definition>
     
-    <definition name="cp.editASumittedProject" extends="layout.base">
+<!--     <definition name="cp.editASumittedProject" extends="layout.base">
         <put-attribute name="title" value="Edit a project" />                                 
         <put-attribute name="content" value="/views/cp/projects/editsubmitted.jsp" />
+    </definition>
+ -->
+    <definition name="cp.editASumittedProject" extends="layout.base">
+        <put-attribute name="title" value="Edit a project" />                                 
+        <put-attribute name="content" value="/views/cp/projects/viewcommentssubmitted.jsp" />
     </definition>
     
     <!-- Jury of announced project call -->    

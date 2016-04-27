@@ -40,9 +40,10 @@ import vn.webapp.modules.researchmanagement.model.mJuryRoleOfSubmittedProjects;
 //For jury of announced project call
 import vn.webapp.modules.researchmanagement.service.mJuryOfAnnouncedProjectCallService;
 import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
-
+import vn.webapp.modules.usermanagement.model.mFaculty;
 //For staff
 import vn.webapp.modules.usermanagement.model.mStaff;
+import vn.webapp.modules.usermanagement.service.mFacultyService;
 import vn.webapp.modules.usermanagement.service.mStaffService;
 
 //Validation
@@ -55,6 +56,9 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 
 	@Autowired
 	private mStaffService staffService;
+
+	@Autowired
+	private mFacultyService facultyService;
 
 	@Autowired
 	private mProjectCallsService projectCallsService;
@@ -110,6 +114,8 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 			projectCallHashMap.put(projectCallList.get(i).getPROJCALL_CODE(),projectCallList.get(i).getPROJCALL_NAME());
 		}
 		
+		List<mFaculty> listFaculty = facultyService.loadFacultyList();
+		
 		// Get staff list
 		List<mStaff> staffList = staffService.listStaffs();
 		
@@ -137,6 +143,7 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 		
 		model.put("projectCallList", projectCallList);
 		model.put("staffList", staffList);
+		model.put("listFaculty", listFaculty);
 		model.put("juryRoleOfSubmittedProjecsList", juryRoleOfSubmittedProjecsList);
 		model.put("juryOfAnnouncedProjectCallFormAdd", new mJuryOfAnnouncedProjectCallValidation());
 		model.put("juryOfAnnouncedProjectCallList", juryOfAnnouncedProjectCallList);

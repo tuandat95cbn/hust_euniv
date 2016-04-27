@@ -47,6 +47,7 @@
 										<td class="center">
 											<button type="button" onclick="v_fViewDetailAProjectCall(${project.PROJ_ID});" class="btn btn-info btn-xs" title="Edit"> Xem </button>
 											<br>
+											<button type="button" onclick="v_fViewDetailPDFAProject(${project.PROJ_ID});" class="btn btn-warning btn-xs" title="Edit"> PDF </button>
 										</td>
 									</tr>
 									
@@ -86,6 +87,10 @@ $(document).ready(function() {
 
 function v_fViewDetailAProjectCall(iProjectCallId){
 	var sViewDetailUrl = baseUrl + "/cp/add-comments-of-submitted-projects/"+iProjectCallId+".html";
+	window.location = sViewDetailUrl;
+}
+function v_fViewDetailPDFAProject(iProjectId){
+	var sViewDetailUrl = baseUrl + "/cp/generatepdf/"+iProjectId+".html";
 	window.location = sViewDetailUrl;
 }
 

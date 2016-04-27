@@ -664,6 +664,17 @@ public class nProjectController extends BaseWeb {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
 		
+		List<mProjectComments> allCommentProjects = projectCommentsService.loadprojectCommentsList();
+		
+		String comments = "";
+		for(mProjectComments cm: allCommentProjects){
+			if(cm.getCOMPROJ_PRJCODE().equals(project.getPROJ_Code())){
+				
+				comments += "Ý kiến phản biện 1:\n" + cm.getCOMPROJ_COMMENT() + "\n";
+			}
+		}
+		
+		
 		// Get list of project calls
 	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
 							
@@ -675,6 +686,7 @@ public class nProjectController extends BaseWeb {
 			model.put("projectEdit", project);
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId);
+			model.put("comments", comments);
 			return "cp.editASumittedProject";
 		}
 		return "cp.notFound404";
@@ -747,7 +759,11 @@ public class nProjectController extends BaseWeb {
 			if(projectComments != null && projectComments.size() > 0)
 			{
 				projectComment1 =  projectComments.get(0);
-				projectComment2 =  projectComments.get(1);
+				if(projectComments.size() > 1)
+					projectComment2 =  projectComments.get(1);
+				else{
+					projectComment2 = new mProjectComments();
+				}
 			}
 			// Put journal list and topic category to view
 			model.put("projectComment1", projectComment1);
@@ -817,7 +833,14 @@ public class nProjectController extends BaseWeb {
 	public String generatePDFProject(HttpServletRequest request, HttpServletResponse response, ModelMap model, @PathVariable("id") int projectId, HttpSession session) throws IOException, DocumentException {
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
-		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
+		
+		System.out.println(name() + "::generatePDFProject, projectID = " + projectId);
+		
+		//Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
+		Projects project = threadService.loadProjectsById(projectId);
+		
+		System.out.println(name() + "::generatePDFProject, project code = " + project.getPROJ_Code() + 
+				", userCode = " + project.getPROJ_User_Code() + ", name = " + project.getPROJ_Name());
 		
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -1506,6 +1529,8 @@ public class nProjectController extends BaseWeb {
 			if(projectBeingEditted != null){
 				String isConfirmed = request.getParameter("confirmed");
 				projectBeingEditted.setPROJ_Status_Code(projectFormEdit.getProjectStatusCode());
+				if(projectBeingEditted.getPROJ_Status_Code().equals("ACCEPT_REVISION")) 
+						projectBeingEditted.setPROJ_Locked1(0);
 				threadService.editAnApproveProject(projectBeingEditted);
 				return "redirect:" + this.baseUrl + "/cp/collect-comments.html";
 			}
