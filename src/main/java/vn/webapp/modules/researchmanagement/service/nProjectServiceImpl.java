@@ -17,13 +17,17 @@ import vn.webapp.modules.researchdeclarationmanagement.model.mAcademicYear;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
 import vn.webapp.modules.researchmanagement.dao.ProjectTasksDAO;
+import vn.webapp.modules.researchmanagement.dao.mCommentsOfSubmittedProjectsDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStaffsDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStatusDAO;
+import vn.webapp.modules.researchmanagement.dao.mStaffJuryOfSubmittedProjectDAO;
 import vn.webapp.modules.researchmanagement.dao.nProjectDAO;
 import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 import vn.webapp.modules.researchmanagement.model.Projects;
+import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
+import vn.webapp.modules.researchmanagement.model.mStaffJuryOfSubmittedProject;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 import vn.webapp.modules.usermanagement.dao.mDepartmentDAO;
 import vn.webapp.modules.usermanagement.dao.mFacultyDAO;
@@ -68,6 +72,12 @@ public class nProjectServiceImpl implements nProjectService {
 	@Autowired
 	private ProjectTasksDAO projectTasksDAO;
 
+	@Autowired
+	private mCommentsOfSubmittedProjectsDAO commentSubmittedProjectDAO;
+	
+	@Autowired
+	private mStaffJuryOfSubmittedProjectDAO staffJurySubmittedProjectDAO;
+	
 	@Autowired
 	private mAcademicYearDAO yearDAO;
 	
@@ -1160,7 +1170,16 @@ public class nProjectServiceImpl implements nProjectService {
 		
 		for(int i = 0; i < projects.size(); i++){
 			Projects p = projects.get(i);
+			// tblprojecttasks
 			List<ProjectTasks> projectTasks = projectTasksDAO.loadAProjectTaskByProjectCode(p.getPROJ_Code());
+			
+			// tblcommentssubmittedprojects
+			List<mStaffJuryOfSubmittedProject> staffJuryProjects = staffJurySubmittedProjectDAO.
+					loadListStaffJuryOfSubmittedProjectByProjectCode(p.getPROJ_Code());
+			
+			// tblstaffjurysubmittedprojects
+			List<mCommentsOfSubmittedProjects> commentsProject = commentSubmittedProjectDAO.
+					loadCommentsOfSubmittedProjectByProjectCode(p.getPROJ_Code());
 			
 			int ID = i+1;
 			String sID = "";
@@ -1170,14 +1189,30 @@ public class nProjectServiceImpl implements nProjectService {
 			String newCode = p.getPROJ_PRJCall_Code() + "-" + sID;
 			
 			mapOldCode2NewCode.put(p.getPROJ_Code(), newCode);
+			
+			
+			System.out.println(name() + "::generateProjectCodes, oldCode = " + p.getPROJ_Code() + ", new Code = " + newCode);
+			
 			p.setPROJ_Code(newCode);
 			threadDAO.editAProject(p);
-			System.out.println(name() + "::generateProjectCodes, oldCode = " + p.getPROJ_Code() + ", new Code = " + newCode);
+			
 			for(ProjectTasks pt: projectTasks){
 				pt.setPRJTSK_Proj_Code(newCode);
 				projectTasksDAO.editAProjectTask(pt);
 				System.out.println(name() + "::generateProjectCodes, --> updated projectTask " + pt.getPRJTSK_Code() + 
 						", new ProjectCode = " + newCode + ", staffCode = " + pt.getPRJTSK_StaffCode());
+			}
+			
+			for(mStaffJuryOfSubmittedProject sjsp: staffJuryProjects){
+				sjsp.setSTFJUPRJ_PRJCODE(newCode);
+				staffJurySubmittedProjectDAO.editStaffJuryOfSubmittedProject(sjsp);//.saveStaffJuryOfSubmittedProject(sjsp);
+				System.out.println(name() + "::generateProjectCodes update staffJurySubmittedProject newCode = " + newCode);
+			}
+			
+			for(mCommentsOfSubmittedProjects cm: commentsProject){
+				cm.setCOMPROJ_PRJCODE(newCode);
+				commentSubmittedProjectDAO.editCommentsOfSubmittedProjects(cm);//.saveCommentsOfSubmittedProjects(cm);
+				System.out.println(name() + "::generateProjectCodes, update commentSubmittedProject newCode = " + newCode);
 			}
 		}
 		

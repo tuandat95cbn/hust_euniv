@@ -17,7 +17,9 @@ public interface mStaffJuryOfSubmittedProjectDAO {
 	 * @return
 	 */
 	public List<mStaffJuryOfSubmittedProject> loadListStaffJuryOfSubmittedProjectByStaffCode(String STFJUPRJ_STAFFJURCODE);
-	
+
+	public List<mStaffJuryOfSubmittedProject> loadListStaffJuryOfSubmittedProjectByProjectCode(String STFJUPRJ_PROJCODE);
+
 	/**
 	 * Loading a staff jury of submitted project  by its id (getting a record from table : tbljurysubmittedprojectroles)
 	 * @param STFJUPRJ_ID

@@ -217,6 +217,7 @@ public class nProjectController extends BaseWeb {
 	}
 	@RequestMapping(value = "/threads", method = RequestMethod.GET)
 	public String topicsList(ModelMap model, HttpSession session) {
+		double t0 = System.currentTimeMillis();
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
 		List<mThreads> threadsList = threadService.loadThreadsListByStaff(userRole, userCode);
@@ -240,8 +241,10 @@ public class nProjectController extends BaseWeb {
 		model.put("threadStaffs", threadStaffs);
 		model.put("threads", status);
 		
+		double t = System.currentTimeMillis() - t0;
+		t = t*0.001;
 		System.out.println(name() + "::topicsList, threadsList.sz = " + threadsList.size() + ", threadFaculties = " + threadFaculties.size());
-		
+		System.out.println("time = " + t + " (s)");
 		return "cp.threads";
 	}
 

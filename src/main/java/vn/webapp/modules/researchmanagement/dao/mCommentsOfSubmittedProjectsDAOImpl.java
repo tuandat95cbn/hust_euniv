@@ -111,6 +111,25 @@ public class mCommentsOfSubmittedProjectsDAOImpl extends BaseDao implements mCom
 			close();
 		}
 	}
+	@Override
+	public List<mCommentsOfSubmittedProjects> loadCommentsOfSubmittedProjectByProjectCode(String COMPROJ_PRJCODE){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(mCommentsOfSubmittedProjects.class);
+			criteria.add(Restrictions.eq("COMPROJ_PRJCODE", COMPROJ_PRJCODE));
+			List<mCommentsOfSubmittedProjects> commentsOfSubmittedProjects = criteria.list();//(mCommentsOfSubmittedProjects) criteria.uniqueResult();
+			commit();
+			return commentsOfSubmittedProjects;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
 	
 	@Override
 	public List<mCommentsOfSubmittedProjects> loadListCommentsOfSubmittedProjectsByStaffCode(String COMPROJ_STAFFCODE){
