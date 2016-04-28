@@ -164,7 +164,7 @@
 	                        	
 	                            <div class="form-group">
 	                               	<label for="taskContent">Nội dung công việc</label>
-	                                <textarea id="taskContent" class="form-control"></textarea>
+	                                <textarea id="taskContent" class="form-control textarea"></textarea>
 	                           	 </div>
 	                             <button type="button" class="btn btn-primary btn-xs" onclick="v_fAddMember();">Thêm</button>
 	                        </div>
@@ -178,12 +178,12 @@
 	                                </select>
 	                            </div>
 	                           	 <div class="form-group">
-	                                <label for="memberWorkingDays">Số ngày công</label>
-	                                <input class="form-control" id="memberWorkingDays" placeholder="Working days" />
+	                                <label for="memberWorkingDays">*Số ngày công</label>
+	                                <input class="form-control" id="memberWorkingDays" value="0" placeholder="Working days" />
 	                             </div>
 	                             <div class="form-group">
-	                                <label for="taskBudget">Thành tiền</label>
-	                                <input class="form-control" id="taskBudget" placeholder="Fee" />
+	                                <label for="taskBudget">*Thành tiền</label>
+	                                <input class="form-control" id="taskBudget" value="0" placeholder="Fee" />
 	                             </div>
 	                        </div>
 	                        <!-- /.col-lg-6 (nested) -->
@@ -261,6 +261,8 @@ $(document).ready(function(){
 });
 
 function v_fAddMember(){
+	var patt = new RegExp("^[0-9]*$");
+	
 	var sMemberCode = $("select#members").find(":selected").val();
 	var sMemberName = $("select#members").find(":selected").text();
 	var sMemberRoleCode = $("#memberRole").find(":selected").val();
@@ -268,6 +270,19 @@ function v_fAddMember(){
 	var sTask = $("#taskContent").val();
 	var iMemberWorkingDays = $("#memberWorkingDays").val();
 	var iBudget = $("#taskBudget").val();
+	
+	if(iMemberWorkingDays == '' || iMemberWorkingDays == null){
+		alert("Bạn phải nhập số ngày công"); return;
+	}
+	if(iBudget == '' || iBudget == null){
+		alert("Bạn phải nhập thông tin Thành tiền"); return;
+	}
+	if(!patt.test(iMemberWorkingDays)){
+		alert("Số ngày công " + iMemberWorkingDays + " sai định dạng: chỉ chấp nhận chữ số"); return;
+	}
+	if(!patt.test(iBudget)){
+		alert("Thành tiền " + iBudget + " sai định dạng: chỉ chấp nhận chữ số"); return;
+	}
 	
 	var sAddedMember = "";
 	if(sMemberName != "" && sMemberCode != "")

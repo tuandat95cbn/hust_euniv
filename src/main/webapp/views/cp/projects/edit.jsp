@@ -250,12 +250,12 @@
 	                                </select>
 	                            </div>
 	                           	 <div class="form-group">
-	                                <label for="memberWorkingDays">Số ngày công</label>
-	                                <input class="form-control" id="memberWorkingDays" placeholder="Working days" />
+	                                <label for="memberWorkingDays">*Số ngày công</label>
+	                                <input class="form-control" id="memberWorkingDays" value="0" placeholder="Working days" />
 	                             </div>
 	                             <div class="form-group">
-	                                <label for="taskBudget">Thành tiền</label>
-	                                <input class="form-control" id="taskBudget" placeholder="Fee" />
+	                                <label for="taskBudget">*Thành tiền</label>
+	                                <input class="form-control" id="taskBudget" value = "0" placeholder="Fee" />
 	                             </div>
 	                        </div>
 	                        <!-- /.col-lg-6 (nested) -->
@@ -406,9 +406,18 @@ function v_fAddMember(){
 	var iMemberWorkingDays = $("#memberWorkingDays").val();
 	var iBudget = $("#taskBudget").val();
 	
+	if(iMemberWorkingDays == '' || iMemberWorkingDays == null){
+		alert("Bạn phải nhập số ngày công"); return;
+	}
+	
 	if(!patt.test(iMemberWorkingDays)){
 		alert("Số ngày công " + iMemberWorkingDays + " sai định dạng: chỉ chấp nhận chữ số"); return;
 	}
+	
+	if(iBudget == '' || iBudget == null){
+		alert("Bạn phải nhập thông tin Thành tiền"); return;
+	}
+	
 	if(!patt.test(iBudget)){
 		alert("Thành tiền " + iBudget + " sai định dạng: chỉ chấp nhận chữ số"); return;
 	}
