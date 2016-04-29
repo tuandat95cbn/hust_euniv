@@ -112,6 +112,9 @@ public class mJuryOfAnnouncedProjectCallServiceImpl implements mJuryOfAnnouncedP
 		return juryOfAnnouncedProjectCallDAO.deleteJuryOfAnnouncedProjectCall(juryOfAnnouncedProjectCall);
 	}
 	
+	public String name(){
+		return "mJuryOfAnnouncedProjectCallServiceImpl";
+	}
 	public List<mStaff> loadStaffsOfJuryOfAProjecCall(String projectCallCode){
 		List<mStaff> staffs = new ArrayList<mStaff>();
 		List<mStaff> allStaffs = staffDAO.listStaffs();
@@ -120,9 +123,14 @@ public class mJuryOfAnnouncedProjectCallServiceImpl implements mJuryOfAnnouncedP
 		for(mJuryOfAnnouncedProjectCall J: allJuryOfAnnouncedProjectCallList)
 			if(J.getJUSUPRJ_PRJCALLCODE().equals(projectCallCode))
 				S.add(J.getJUSUPRJ_STAFFCODE());
+		System.out.println(name() + "::loadStaffOfJuryOfAProjectCall, projectCallCode = " + 
+				projectCallCode + ", allJuryOfAnnoucedProjectCallList,sz = " + 
+				allJuryOfAnnouncedProjectCallList.size() + ", S = " + S);
 		for(mStaff st: allStaffs)
-			if(S.contains(st.getStaff_Code()))
+			if(S.contains(st.getStaff_Code())){
 				staffs.add(st);
+				System.out.println(name() + "::loadStaffOfJuryOfAProjectCall, add staff + " + st.getStaff_Code());
+			}
 		return staffs;
 	}
 }

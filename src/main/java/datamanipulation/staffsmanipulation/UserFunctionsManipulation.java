@@ -46,6 +46,19 @@ public class UserFunctionsManipulation {
 			ex.printStackTrace();
 		}
 	}
+	public void removeFunctionFromUserFunctions(String functionCode){
+		try{
+			Class.forName(DRIVER);
+			Connection cn = DriverManager.getConnection(PATH,"root","");
+			String sql = "delete from tbluserfunctions where USERFUNC_FUNCCODE = '" + functionCode + "'";
+			Statement st = cn.createStatement();
+			st.execute(sql);
+			
+			cn.close();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
 	public void removeUserFunctionsExcept(HashSet<String> userCodes){
 		ArrayList<UserInfo> users = getListUsers();
 		for(int i = 0; i < users.size(); i++){
@@ -135,7 +148,8 @@ public class UserFunctionsManipulation {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		UserFunctionsManipulation UFM = new UserFunctionsManipulation();
-		UFM.setUserFunctions();
+		//UFM.setUserFunctions();
+		UFM.removeFunctionFromUserFunctions("REVIEW-SUBMITTED-PROJECTS");
 		//UFM.resetUserFunctions();
 	}
 
