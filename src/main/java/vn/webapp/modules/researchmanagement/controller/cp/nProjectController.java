@@ -671,7 +671,9 @@ public class nProjectController extends BaseWeb {
 		Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
 		
 		List<mProjectComments> allCommentProjects = projectCommentsService.loadprojectCommentsList();
-		
+		if(project == null){
+			System.out.println(name() + "::editASubmittedProject BUG???");
+		}
 		String comments = "";
 		for(mProjectComments cm: allCommentProjects){
 			if(cm.getCOMPROJ_PRJCODE().equals(project.getPROJ_Code())){

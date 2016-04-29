@@ -561,7 +561,7 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			if (!userRole.equals("ROLE_ADMIN")) {
 				criteria.add(Restrictions.eq("PROJ_User_Code", userCode));
 			}
-			criteria.add(Restrictions.eq("PROJ_Locked1", 1));
+			//criteria.add(Restrictions.eq("PROJ_Locked1", 1));
 			Projects project = (Projects) criteria.uniqueResult();
 			commit();
 			return project;
