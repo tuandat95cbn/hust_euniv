@@ -240,7 +240,6 @@ public class nProjectController extends BaseWeb {
 		model.put("threadDepartments", threadDepartments);
 		model.put("threadStaffs", threadStaffs);
 		model.put("threads", status);
-		
 		double t = System.currentTimeMillis() - t0;
 		t = t*0.001;
 		System.out.println(name() + "::topicsList, threadsList.sz = " + threadsList.size() + ", threadFaculties = " + threadFaculties.size());
