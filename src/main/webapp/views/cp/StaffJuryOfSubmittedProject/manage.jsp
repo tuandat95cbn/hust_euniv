@@ -38,13 +38,25 @@
                     <c:if test="${err != null}">
 	                	<div class="alert alert-warning">${err}</div>
                     </c:if>     
+                    <div class="form-group">
+	                                    <label>Đợt gọi Đề tài </label>
+	                                    <select class="form-control" name="PROJCALL_CODE" onchange="showProjectsAndStaffsOfThisCall(this);">
+	                                        <option value="">chọn</option>	                                    	        	                                    	
+	                                    	<c:forEach items="${projectCallList}" var="iProjectCall">
+		                                        <option value="${iProjectCall.PROJCALL_CODE}">${iProjectCall.PROJCALL_NAME}</option>
+	                                       	</c:forEach>
+	                                    <select>
+	                                   <%--  <form:errors path="STFJUPRJ_PRJCODE" class="alert-danger"></form:errors> --%>
+	                                </div>
+	                                
                     <form:form action="${baseUrl}/cp/save-staff-jury-of-submitted-project.html" method="POST" commandName="staffJuryOfSubmittedProjectFormAdd" role="form" >
 	                    <div class="row">
 	                        <div class="col-lg-12">
-	                        
+	                        		
+	                                
 	                                <div class="form-group">
 	                                    <label>Đề tài </label>
-	                                    <form:select path="STFJUPRJ_PRJCODE" class="form-control" name="STFJUPRJ_PRJCODE">
+	                                    <form:select path="STFJUPRJ_PRJCODE" class="form-control" name="STFJUPRJ_PRJCODE" id="project-code">
 	                                        <option value="">chọn</option>	                                    	        	                                    	
 	                                    	<c:forEach items="${projectList}" var="iProject">
 		                                        <option value="${iProject.PROJ_Code}">${iProject.PROJ_Name}</option>
@@ -55,7 +67,7 @@
 	                        
 	                                <div class="form-group">
 	                                    <label >Thành viên</label>
-	                                    <form:select path="STFJUPRJ_STAFFJURCODE" class="form-control" name="STFJUPRJ_STAFFJURCODE">
+	                                    <form:select path="STFJUPRJ_STAFFJURCODE" class="form-control" name="STFJUPRJ_STAFFJURCODE" id="staff-code">
 	                                        <option value="">chọn</option>	                                    	                                    
 	                                    	<c:forEach items="${staffList}" var="iStaff">
 		                                        <option value="${iStaff.staff_Code}">${iStaff.staff_Name}</option>
@@ -145,6 +157,31 @@ function v_fRemoveStaffJuryOfSubmittedProject(iJuryOfAnnouncedProjectCallId){
 		window.location = sDeleteJuryOfAnnouncedProjectCallUrl;
 	} else {
 	    return false;
+	}
+}
+
+function showProjectsAndStaffsOfThisCall(projectCall){
+	var projectCallCode = projectCall.options[projectCall.selectedIndex].value;
+	//alert(projectCallCode);
+	if(projectCallCode.length > 0){
+		$.ajax({
+			type: "POST",
+			url: "${baseUrl}/cp/loadSubmittedProjectsAndJuryStaffs.html",
+			data: "projectcallcode=" + projectCallCode,
+			cache: false,
+			success: function(result){
+				console.log(result);
+				var sel_projects = document.getElementById("project-code");
+				var o = jQuery.parseJSON(result);
+				for(i = 0; i < o.projectLists.length; i++){
+					var name = o.projectLists[i].name;
+					var code = o.projectLists[i].code;
+					var opt = document.createElement('option');
+					opt.text = name; opt.value=code;
+					sel_projects.appendChild(opt);
+				}
+			}
+		});
 	}
 }
 </script>

@@ -26,7 +26,9 @@ public interface mCommentsOfSubmittedProjectsDAO{
 	 * @return
 	 */
 	public mCommentsOfSubmittedProjects loadCommentsOfSubmittedProjectByStaffCodeProjectCode(String COMPROJ_STAFFCODE, String COMPROJ_PRJCODE);
-	
+
+	public List<mCommentsOfSubmittedProjects> loadCommentsOfSubmittedProjectByProjectCode(String COMPROJ_PRJCODE);
+
 	/**
 	 * 
 	 * @param commentsOfSubmittedProjects

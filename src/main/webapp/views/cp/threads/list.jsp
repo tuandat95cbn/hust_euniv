@@ -76,8 +76,10 @@
 		                        </c:if>
 								<button type="button" id="filter" class="btn btn-primary filter">Chọn</button>
 								<button type="submit" class="btn btn-primary">Kết xuất Excel</button>
+								<!-- 
 								<button type="button" id="generateCode" class="btn btn-primary generateCode">Sinh Mã cho đề tài</button>
-							</div>
+								-->
+ 						</div>
 						</form:form>
 					</div>
 					<div class="dataTable_wrapper">
@@ -218,7 +220,7 @@ $(document).ready(function () {
     	var data = document.getElementById("project-call").value;
     	//var json = "{\"projectCallCode\":\"" + data + "\"}";
     	var json = "projectCallCode=" + data + "";
-    	alert(json);
+    	//alert(json);
     	
     	$.ajax({
 			type : "POST",
@@ -229,7 +231,8 @@ $(document).ready(function () {
 			timeout : 100000,
 			success : function(data) {
 				console.log("SUCCESS: ", data);
-				
+				alert("Sinh mã thành công");
+				//windows.location ${baseUrl}
 			},
 			error : function(e) {
 				console.log("ERROR: ", e);

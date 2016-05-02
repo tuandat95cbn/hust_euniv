@@ -201,10 +201,10 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 		try {
 			begin();
 			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
-			if (!userRole.equals("ROLE_ADMIN")) {
+			if (!userRole.equals("ROLE_ADMIN") || !userRole.equals("SUPER_ADMIN")) {
 				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
 			}
-			criteria.add(Restrictions.eq("projects.PROJ_Locked1", 1));
+			//criteria.add(Restrictions.eq("projects.PROJ_Locked1", 1));
 			criteria.addOrder(Order.desc("projects.PROJ_ID"));
 			List<Projects> projects = criteria.list();
 			commit();
@@ -561,7 +561,7 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			if (!userRole.equals("ROLE_ADMIN")) {
 				criteria.add(Restrictions.eq("PROJ_User_Code", userCode));
 			}
-			criteria.add(Restrictions.eq("PROJ_Locked1", 1));
+			//criteria.add(Restrictions.eq("PROJ_Locked1", 1));
 			Projects project = (Projects) criteria.uniqueResult();
 			commit();
 			return project;

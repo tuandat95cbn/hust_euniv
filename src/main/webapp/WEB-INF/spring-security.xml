@@ -25,6 +25,7 @@
         <session-management invalid-session-url = "/cp/auth/login.html" > 
             <concurrency-control max-sessions = "1" /> 
         </session-management>            
+
     </http>
     
     

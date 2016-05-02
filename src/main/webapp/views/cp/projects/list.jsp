@@ -16,9 +16,9 @@
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Danh sách đợt gọi đề tài</h1>
+			<h1 class="page-header">Chỉnh sửa thuyết minh đề tài sau phản biện</h1>
 			<p>
-				<button type="button" class="btn btn-primary btn-xs add">Thêm mới</button>
+				<!-- <button type="button" class="btn btn-primary btn-xs add">Thêm mới</button> -->
 			</p>
 		</div>
 		<!-- /.col-lg-12 -->
@@ -48,9 +48,9 @@
 										<td><c:out value="${count}"/></td>
 										<td><c:out value="${project.PROJ_Name}"/></td>
 										<td class="center">
-											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked1 == 1 ? "btn-warning" : "btn-info"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã gửi' : 'Chỉnh sửa'}">Info</button>
+											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked1 == 1 ? "btn-warning" : "btn-info"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã gửi' : 'Chỉnh sửa'}">Chỉnh sửa</button>
 											<br/>
-											<button type="button" id="removeTopic" onclick="v_fRemoveAProject(${project.PROJ_ID});" class="btn btn-danger btn-xs" title="Xóa đề tài">Remove</button>
+											<button type="button" id="removeTopic" onclick="v_fRemoveAProject(${project.PROJ_ID});" class="btn btn-danger btn-xs" title="Xóa đề tài">Xoá</button>
 										</td>
 									</tr>
 								</c:forEach>
