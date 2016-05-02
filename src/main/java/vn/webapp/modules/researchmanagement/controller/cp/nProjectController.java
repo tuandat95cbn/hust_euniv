@@ -1023,6 +1023,7 @@ public class nProjectController extends BaseWeb {
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___END_DATE___", sEndDate);
 		    	
 		    	// Replace project code
+		    	sProjectCode = "				";// HAVE NOT generate automatically project code, use BLANK
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_CODE___", sProjectCode);
 		    	
 		    	// Replace project leader's name

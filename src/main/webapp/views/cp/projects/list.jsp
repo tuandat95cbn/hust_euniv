@@ -18,7 +18,7 @@
 		<div class="col-lg-12">
 			<h1 class="page-header">Chỉnh sửa thuyết minh đề tài sau phản biện</h1>
 			<p>
-				<!-- <button type="button" class="btn btn-primary btn-xs add">Thêm mới</button> -->
+				<button type="button" class="btn btn-primary btn-xs add">Thêm mới</button>
 			</p>
 		</div>
 		<!-- /.col-lg-12 -->
