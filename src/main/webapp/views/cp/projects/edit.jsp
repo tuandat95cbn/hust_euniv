@@ -335,9 +335,10 @@
                     <input type="hidden" value="${projectEdit.PROJ_ID}" name="projectId" id="projectId" />
                     <input type="hidden" value="${projectEdit.PROJ_Code}" name="currentProjectCode" id="currentProjectCode" />
                     <button type="reset" class="btn btn-info cancel">Hủy</button>
-                    <c:if test="${projectEdit.PROJ_Locked1 == 1}">
-                    	<button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">Xuất PDF</button>
-                    </c:if>
+                    <%-- <c:if test="${projectEdit.PROJ_Locked1 == 1}">
+                     --%>
+                    <button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">View PDF</button>
+                    <%-- </c:if> --%>
                     <c:if test="${projectEdit.PROJ_Locked1 != 1}">
                     	<button type="reset" class="btn btn-danger" onclick="v_fSendProject(${projectEdit.PROJ_ID})">Gửi đề tài</button>
                     </c:if>
