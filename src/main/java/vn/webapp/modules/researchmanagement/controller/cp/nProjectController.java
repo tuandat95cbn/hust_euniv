@@ -996,7 +996,7 @@ public class nProjectController extends BaseWeb {
 				}
 				
 				String sProjectObjective	= (project.getPROJ_Objective() != null) ? project.getPROJ_Objective() : "PROJECT'S OBJECTIVE";
-				String sTasksBudgetWords	= Money2StringConvertor.convert2Text(Integer.toString(iTotalFee));
+				String sTasksBudgetWords	= Money2StringConvertor.convert2TextStartUpcase(Integer.toString(iTotalFee));
 				String sLeaderDegree 		= "";
 				String sLeaderRole 			= "Giảng viên";
 
@@ -1074,7 +1074,7 @@ public class nProjectController extends BaseWeb {
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET___", Integer.toString(iTotalFee));
 		    	
 		    	// Replace project total budget
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET_WORDS___", Money2StringConvertor.convert2Text(Integer.toString(iTotalFee)));
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET_WORDS___", Money2StringConvertor.convert2TextStartUpcase(Integer.toString(iTotalFee)));
 		    	
 		    	// Replace project tasks list
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TASKS_LIST___", sProjectTasksList);
