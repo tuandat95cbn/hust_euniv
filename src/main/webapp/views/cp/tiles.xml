@@ -481,5 +481,14 @@
         <put-attribute name="content" value="/views/cp/CommentsOfSubmittedProjects/addComment.jsp" />
     </definition> 
             
+    <definition name="cp.detailsCommentsSubmittedProjects" extends="layout.base">
+        <put-attribute name="title" value="List of projects to be reviewed " />                                 
+        <put-attribute name="content" value="/views/cp/CommentsOfSubmittedProjects/list_detailcommentsubmitted_projects.jsp" />
+    </definition>
+    
+    <definition name="cp.addADetailCommentProject" extends="layout.base">
+        <put-attribute name="title" value="Add comments for submitted projects " />                                 
+        <put-attribute name="content" value="/views/cp/CommentsOfSubmittedProjects/addCommentSubmittedProjects.jsp" />
+    </definition> 
 
 </tiles-definitions>

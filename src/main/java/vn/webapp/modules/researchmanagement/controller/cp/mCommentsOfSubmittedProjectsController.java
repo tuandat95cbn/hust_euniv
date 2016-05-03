@@ -123,9 +123,6 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 		
 		return "cp.addCommentsOfSubmittedProjects";
 	}
-	
-
-
 	 
 	@RequestMapping(value = "/save-comments-of-submitted-projects", method = RequestMethod.POST)
 	public String saveCommentsOfSubmittedProjects( HttpServletRequest request, @Valid @ModelAttribute("commentsOfSubmittedProjectsFormAdd") mCommentsOfSubmittedProjectsValidation commentsOfSubmittedProjectsValid, BindingResult result, ModelMap model, HttpSession session) {
@@ -202,6 +199,61 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 		}
 	}
 
-	 
+	/**
+	 * 
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/details-comment-submitted-projects", method = RequestMethod.GET)
+	public String detailsCommentsOfSubmittedProjectsList(ModelMap model, HttpSession session) {
+		
+		// Get current user name and role
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		
+		//List of staff juries of submitted projects whose reviewer is the current user
+		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadListStaffJuryOfSubmittedProjectByStaffCode(userCode);
+		
+		//List of projects 
+		List<Projects> projectList = new ArrayList<Projects>();
+		for(int i = 0; i < staffJuryOfSubmittedProjectList.size(); i++){
+			projectList.addAll(projectService.loadListProjectsByCode(staffJuryOfSubmittedProjectList.get(i).getSTFJUPRJ_PRJCODE()));
+		}
+		
+		// Put data back to view
+		model.put("projectList", projectList);
+		 
+		return "cp.detailsCommentsSubmittedProjects";
+	}
+	
+	/**
+	 * 
+	 * @param model
+	 * @param projectId
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/add-details-comments-submitted-projects/{id}", method = RequestMethod.GET)
+	public String addADetailCommentProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString(); 
+		System.out.println("mCommentOfSubmittedProjectController::addAProjectCall, userCode = " + userCode + ", userRole = " + userRole + ", projectId = " + projectId);
+		Projects project = projectService.loadAProjectByIdAndUserCode("ROLE_ADMIN", userCode, projectId);
+		
+		String sComment ="";
+		mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, project.getPROJ_Code());
+		if(commentsOfSubmittedProject != null){
+			sComment = commentsOfSubmittedProject.getCOMPROJ_COMMENT();
+		}
+		
+		System.out.println("sComment : " + sComment);
+		
+		model.put("project", project);
+		model.put("sComment", sComment);
+		model.put("commentsOfSubmittedProjectsFormAdd", new mCommentsOfSubmittedProjectsValidation());
+		
+		return "cp.addADetailCommentProject";
+	}
  
 }
