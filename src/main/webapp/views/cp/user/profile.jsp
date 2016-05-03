@@ -50,11 +50,11 @@
 				<!-- /.col-lg-4 -->
 				<div class="well">
 					<h4>Giới tính</h4>
-					<p class="value">${staffGender == "male" ? "Nam" : "Nữ"}</p>
+					<p class="value">${staffGender != "" ? (staffGender == "male" ? "Nam" : "Nữ") : "N/A"}</p>
 					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
 						<form:select path="staffGender" class="form-control" name="staffGender">
-	                       	<option value="male" <c:if test="${staffGender eq male}">selected</c:if>>Nam</option>
-	                       	<option value="female" <c:if test="${staffGender eq female}">selected</c:if>>Nữ</option>
+	                       	<option value="male" <c:if test='${staffGender == "male"}'> selected </c:if> >Nam</option>
+	                       	<option value="female" <c:if test='${staffGender == "female"}'> selected </c:if> >Nữ</option>
 	                    </form:select>
 	                    <form:errors path="staffGender" class="alert-danger"></form:errors>
 	                </div>
