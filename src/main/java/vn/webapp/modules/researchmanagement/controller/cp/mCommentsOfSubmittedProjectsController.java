@@ -32,10 +32,12 @@ import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 //For projects
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.service.nProjectService;
+import vn.webapp.modules.researchmanagement.validation.DetailCommentsSubmittedProjectsValidation;
 import vn.webapp.modules.researchmanagement.validation.mCommentsOfSubmittedProjectsValidation;
 import vn.webapp.modules.researchmanagement.validation.mJuryOfAnnouncedProjectCallValidation;
 import vn.webapp.modules.researchmanagement.validation.mProjectCallsValidation;
 import vn.webapp.modules.usermanagement.model.mStaff;
+import vn.webapp.modules.researchmanagement.model.DetailCommentSubmittedProjects;
 //For comments of submitted projects
 import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
@@ -238,22 +240,62 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 	public String addADetailCommentProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString(); 
-		System.out.println("mCommentOfSubmittedProjectController::addAProjectCall, userCode = " + userCode + ", userRole = " + userRole + ", projectId = " + projectId);
 		Projects project = projectService.loadAProjectByIdAndUserCode("ROLE_ADMIN", userCode, projectId);
-		
-		String sComment ="";
-		mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, project.getPROJ_Code());
-		if(commentsOfSubmittedProject != null){
-			sComment = commentsOfSubmittedProject.getCOMPROJ_COMMENT();
+		if(project != null)
+		{
+			DetailCommentSubmittedProjects detailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadDetailsCommentsOfSubmittedProjectsByProjectCode(project.getPROJ_Code());
+			String sComment ="";
+			mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, project.getPROJ_Code());
+			if(commentsOfSubmittedProject != null){
+				sComment = commentsOfSubmittedProject.getCOMPROJ_COMMENT();
+			}
+			
+			model.put("detailCommentSubmittedProjects", detailCommentSubmittedProjects);
 		}
-		
-		System.out.println("sComment : " + sComment);
-		
 		model.put("project", project);
-		model.put("sComment", sComment);
-		model.put("commentsOfSubmittedProjectsFormAdd", new mCommentsOfSubmittedProjectsValidation());
+		model.put("projectId", projectId);
+		model.put("detailCommentsSubmittedProjectsFormAdd", new DetailCommentsSubmittedProjectsValidation());
 		
 		return "cp.addADetailCommentProject";
+	}
+	
+	
+	@RequestMapping(value = "/save-detail-comments-submitted-projects", method = RequestMethod.POST)
+	public String saveDetailCommentsSubmittedProjects( HttpServletRequest request, @Valid @ModelAttribute("detailCommentsSubmittedProjectsFormAdd") DetailCommentsSubmittedProjectsValidation detailCommentsSubmittedProjectsFormAdd, 
+														BindingResult result, ModelMap model, HttpSession session) {
+
+		if (result.hasErrors()) {
+			return "cp.addADetailCommentProject";
+		} else {
+			// Prepare data for inserting DB
+			String userCode = session.getAttribute("currentUserCode").toString();
+			
+			int Eval_Motivation = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Motivation();
+			int Eval_Innovation = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Innovation();
+			int Eval_Applicability = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Applicability();
+			int Eval_RearchMethodology = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_RearchMethodology();
+			int Eval_ResearchContent = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_ResearchContent();
+			int Eval_Paper = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Paper();
+			int Eval_Product = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Product();
+			int Eval_Patent = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Patent();
+			int Eval_Graduate_Student = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Graduate_Student();
+			int Eval_Young_Rearcher = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Young_Rearcher();
+			int Eval_Education_Graduate = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Education_Graduate();
+			int Eval_Reasonable_Budget = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Reasonable_Budget();
+			String Eval_Classification = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Classification();
+		    String Eval_Conclusion = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Conclusion();
+			int projectId = detailCommentsSubmittedProjectsFormAdd.getProjectId();
+			
+			Projects project = projectService.loadProjectsById(projectId);
+			if(project != null)
+			{
+				commentsOfSubmittedProjectsService.saveDetailsCommentsOfSubmittedProjects(userCode, project.getPROJ_Code(), project.getPROJ_PRJCall_Code(), Eval_Motivation, Eval_Innovation, Eval_Applicability, 
+						Eval_RearchMethodology, Eval_ResearchContent, Eval_Paper, Eval_Product, Eval_Patent, Eval_Graduate_Student, Eval_Young_Rearcher, Eval_Education_Graduate, Eval_Reasonable_Budget, Eval_Classification, Eval_Conclusion, projectId);
+			}
+				
+		}
+			 
+		return "cp.listProjectsToBeReviewed";
 	}
  
 }

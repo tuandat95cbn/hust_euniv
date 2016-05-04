@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 
 import vn.webapp.libraries.DateUtil;
 
+import vn.webapp.modules.researchmanagement.dao.DetailCommentSubmittedProjectsDAO;
 //For comments of submitted projects 
 import vn.webapp.modules.researchmanagement.dao.mCommentsOfSubmittedProjectsDAO;
+import vn.webapp.modules.researchmanagement.model.DetailCommentSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;;
 
 
@@ -22,6 +24,9 @@ public class mCommentsOfSubmittedProjectsServiceImpl implements mCommentsOfSubmi
 
 	@Autowired
 	private mCommentsOfSubmittedProjectsDAO commentsOfSubmittedProjectsDAO;
+	
+	@Autowired
+	private DetailCommentSubmittedProjectsDAO detailCommentSubmittedProjectsDAO; 
 
 	/**
 	 * 
@@ -131,5 +136,61 @@ public class mCommentsOfSubmittedProjectsServiceImpl implements mCommentsOfSubmi
 	public int deleteCommentsOfSubmittedProjects(int COMPROJ_ID){
 		mCommentsOfSubmittedProjects commentsOfSubmittedProjects = commentsOfSubmittedProjectsDAO.loadCommentsOfSubmittedProjectsById(COMPROJ_ID);
 		return commentsOfSubmittedProjectsDAO.deleteCommentsOfSubmittedProjects(commentsOfSubmittedProjects);
+	}
+	
+	
+	/**
+	 * 
+	 */
+	@Override
+	public int saveDetailsCommentsOfSubmittedProjects(String StaffCode, String PRJCode, String PRJCallCode, int Eval_Motivation, int Eval_Innovation, int Eval_Applicability,int Eval_RearchMethodology,
+													     int Eval_ResearchContent, int Eval_Paper, int Eval_Product,
+													     int Eval_Patent, int Eval_Graduate_Student, int Eval_Young_Rearcher,
+													     int Eval_Education_Graduate, int Eval_Reasonable_Budget, String Eval_Classification,String Eval_Conclusion, int projectId)
+	{
+		try {
+			if (!"".equals(StaffCode) && !"".equals(PRJCode) && projectId > 0) {
+				DetailCommentSubmittedProjects detailCommentSubmittedProjects = new DetailCommentSubmittedProjects();
+				detailCommentSubmittedProjects.setCMTSUBPRJ_StaffCode(StaffCode);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_PRJCode(PRJCode);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_PRJCallCode(PRJCallCode);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Motivation(Eval_Motivation);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Innovation(Eval_Innovation);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Applicability(Eval_Applicability);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_RearchMethodology(Eval_RearchMethodology);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_ResearchContent(Eval_ResearchContent);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Paper(Eval_Paper);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Product(Eval_Product);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Patent(Eval_Patent);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Graduate_Student(Eval_Graduate_Student);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Young_Rearcher(Eval_Young_Rearcher);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Education_Graduate(Eval_Education_Graduate);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Reasonable_Budget(Eval_Reasonable_Budget);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Classification(Eval_Classification);
+				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Conclusion(Eval_Conclusion);
+				
+				int iInsertResult = detailCommentSubmittedProjectsDAO.saveDetailsCommentsOfSubmittedProjects(detailCommentSubmittedProjects);
+				
+				return iInsertResult;
+			}else{
+				return 0;
+			}
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return 0;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param iCommentsOfSubmittedProjectsId
+	 * @return
+	 */
+	public DetailCommentSubmittedProjects loadDetailsCommentsOfSubmittedProjectsByProjectCode(String sProjectCode){
+		try {
+			return detailCommentSubmittedProjectsDAO.loadDetailsCommentsOfSubmittedProjectsByProjectCode(sProjectCode);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

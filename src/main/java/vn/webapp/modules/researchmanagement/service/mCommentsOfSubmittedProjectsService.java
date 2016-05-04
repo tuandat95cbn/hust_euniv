@@ -2,6 +2,7 @@ package vn.webapp.modules.researchmanagement.service;
 
 import java.util.List;
 
+import vn.webapp.modules.researchmanagement.model.DetailCommentSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;
 
 public interface mCommentsOfSubmittedProjectsService {
@@ -54,4 +55,38 @@ public interface mCommentsOfSubmittedProjectsService {
 	 * @return
 	 */
 	public int deleteCommentsOfSubmittedProjects(int COMPROJ_ID);
+	
+	
+	/**
+	 * 
+	 * @param StaffCode
+	 * @param PRJCode
+	 * @param PRJCallCode
+	 * @param Eval_Motivation
+	 * @param Eval_Innovation
+	 * @param Eval_Applicability
+	 * @param Eval_RearchMethodology
+	 * @param Eval_ResearchContent
+	 * @param Eval_Paper
+	 * @param Eval_Product
+	 * @param Eval_Patent
+	 * @param Eval_Graduate_Student
+	 * @param Eval_Young_Rearcher
+	 * @param Eval_Education_Graduate
+	 * @param Eval_Reasonable_Budget
+	 * @param Eval_Classification
+	 * @param Eval_Conclusion
+	 * @return
+	 */
+	public int saveDetailsCommentsOfSubmittedProjects(String StaffCode, String PRJCode, String PRJCallCode, int Eval_Motivation, int Eval_Innovation, int Eval_Applicability,int Eval_RearchMethodology,
+													     int Eval_ResearchContent, int Eval_Paper, int Eval_Product,
+													     int Eval_Patent, int Eval_Graduate_Student, int Eval_Young_Rearcher,
+													     int Eval_Education_Graduate, int Eval_Reasonable_Budget, String Eval_Classification,String Eval_Conclusion, int projectId);
+	
+	/**
+	 * 
+	 * @param iCommentsOfSubmittedProjectsId
+	 * @return
+	 */
+	public DetailCommentSubmittedProjects loadDetailsCommentsOfSubmittedProjectsByProjectCode(String sProjectCode);
 }
