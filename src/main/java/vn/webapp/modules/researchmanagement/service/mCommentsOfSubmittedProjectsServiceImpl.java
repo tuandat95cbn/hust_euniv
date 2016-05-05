@@ -150,28 +150,53 @@ public class mCommentsOfSubmittedProjectsServiceImpl implements mCommentsOfSubmi
 	{
 		try {
 			if (!"".equals(StaffCode) && !"".equals(PRJCode) && projectId > 0) {
-				DetailCommentSubmittedProjects detailCommentSubmittedProjects = new DetailCommentSubmittedProjects();
-				detailCommentSubmittedProjects.setCMTSUBPRJ_StaffCode(StaffCode);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_PRJCode(PRJCode);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_PRJCallCode(PRJCallCode);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Motivation(Eval_Motivation);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Innovation(Eval_Innovation);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Applicability(Eval_Applicability);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_RearchMethodology(Eval_RearchMethodology);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_ResearchContent(Eval_ResearchContent);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Paper(Eval_Paper);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Product(Eval_Product);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Patent(Eval_Patent);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Graduate_Student(Eval_Graduate_Student);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Young_Rearcher(Eval_Young_Rearcher);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Education_Graduate(Eval_Education_Graduate);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Reasonable_Budget(Eval_Reasonable_Budget);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Classification(Eval_Classification);
-				detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Conclusion(Eval_Conclusion);
+				DetailCommentSubmittedProjects detailCommentSubmittedProjects = detailCommentSubmittedProjectsDAO.loadDetailsCommentsOfSubmittedProjectsByProjectCode("T201681");
+				if(detailCommentSubmittedProjects.getCMTSUBPRJ_PRJCode() != null)
+				{
+					detailCommentSubmittedProjects.setCMTSUBPRJ_StaffCode(StaffCode);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_PRJCode(PRJCode);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_PRJCallCode(PRJCallCode);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Motivation(Eval_Motivation);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Innovation(Eval_Innovation);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Applicability(Eval_Applicability);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_RearchMethodology(Eval_RearchMethodology);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_ResearchContent(Eval_ResearchContent);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Paper(Eval_Paper);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Product(Eval_Product);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Patent(Eval_Patent);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Graduate_Student(Eval_Graduate_Student);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Young_Rearcher(Eval_Young_Rearcher);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Education_Graduate(Eval_Education_Graduate);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Reasonable_Budget(Eval_Reasonable_Budget);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Classification(Eval_Classification);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Conclusion(Eval_Conclusion);
 				
-				int iInsertResult = detailCommentSubmittedProjectsDAO.saveDetailsCommentsOfSubmittedProjects(detailCommentSubmittedProjects);
+					detailCommentSubmittedProjectsDAO.editDetailsCommentsOfSubmittedProjects(detailCommentSubmittedProjects);
+					return 1;
+				}else{
+					detailCommentSubmittedProjects = new DetailCommentSubmittedProjects();
+					detailCommentSubmittedProjects.setCMTSUBPRJ_StaffCode(StaffCode);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_PRJCode(PRJCode);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_PRJCallCode(PRJCallCode);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Motivation(Eval_Motivation);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Innovation(Eval_Innovation);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Applicability(Eval_Applicability);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_RearchMethodology(Eval_RearchMethodology);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_ResearchContent(Eval_ResearchContent);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Paper(Eval_Paper);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Product(Eval_Product);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Patent(Eval_Patent);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Graduate_Student(Eval_Graduate_Student);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Young_Rearcher(Eval_Young_Rearcher);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Education_Graduate(Eval_Education_Graduate);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Reasonable_Budget(Eval_Reasonable_Budget);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Classification(Eval_Classification);
+					detailCommentSubmittedProjects.setCMTSUBPRJ_Eval_Conclusion(Eval_Conclusion);
+
+					int iInsertResult = detailCommentSubmittedProjectsDAO.saveDetailsCommentsOfSubmittedProjects(detailCommentSubmittedProjects);
+					return iInsertResult;
+				}
 				
-				return iInsertResult;
 			}else{
 				return 0;
 			}

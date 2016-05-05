@@ -287,15 +287,17 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 			int projectId = detailCommentsSubmittedProjectsFormAdd.getProjectId();
 			
 			Projects project = projectService.loadProjectsById(projectId);
-			if(project != null)
+			if(project.getPROJ_Code() != null)
 			{
 				commentsOfSubmittedProjectsService.saveDetailsCommentsOfSubmittedProjects(userCode, project.getPROJ_Code(), project.getPROJ_PRJCall_Code(), Eval_Motivation, Eval_Innovation, Eval_Applicability, 
 						Eval_RearchMethodology, Eval_ResearchContent, Eval_Paper, Eval_Product, Eval_Patent, Eval_Graduate_Student, Eval_Young_Rearcher, Eval_Education_Graduate, Eval_Reasonable_Budget, Eval_Classification, Eval_Conclusion, projectId);
-			}
 				
+				model.put("status", "Cập nhật thông tin thành công.");
+			}else{
+				model.put("err", "Lỗi cập nhật. Hãy thử lại với thông tin chính xác.");
+			}
+			return "cp.addADetailCommentProject";
 		}
-			 
-		return "cp.listProjectsToBeReviewed";
 	}
  
 }

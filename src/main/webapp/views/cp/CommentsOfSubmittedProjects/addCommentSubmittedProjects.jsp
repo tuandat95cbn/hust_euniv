@@ -35,7 +35,7 @@
                 <div class="panel-body">
                 	<c:if test="${status != null}">
 	                	<div class="alert alert-success">
-	                        ${status}. <a href="<c:url value="${baseUrl}/cp/details-comment-submitted-projects.html"/>" class="alert-link">Trở lại</a>.
+	                        ${status}<a href="<c:url value="${baseUrl}/cp/details-comment-submitted-projects.html"/>" class="alert-link">Trở lại</a>
 	                    </div>
                     </c:if>
                     <c:if test="${err != null}">
@@ -53,13 +53,13 @@
 	                                
 	                                <div class="form-group">
 	                                   	<label for="CMTSUBPRJ_Eval_Innovation">Tính mới</label>
-	                                   	<form:input path="CMTSUBPRJ_Eval_Innovation" class="form-control" name="CMTSUBPRJ_Eval_Innovation" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Motivation}" placeholder="Tính mới"></form:input>
+	                                   	<form:input path="CMTSUBPRJ_Eval_Innovation" class="form-control" name="CMTSUBPRJ_Eval_Innovation" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Innovation}" placeholder="Tính mới"></form:input>
 	                                   	<form:errors path="CMTSUBPRJ_Eval_Innovation" class="alert-danger"></form:errors>
 	                                </div>
 	                                
 	                                <div class="form-group">
 	                                   	<label for="CMTSUBPRJ_Eval_Applicability">Khả năng áp dụng/phát triển</label>
-	                                   	<form:input path="CMTSUBPRJ_Eval_Applicability" class="form-control" name="CMTSUBPRJ_Eval_Applicability" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Motivation}" placeholder="Khả năng áp dụng/phát triển"></form:input>
+	                                   	<form:input path="CMTSUBPRJ_Eval_Applicability" class="form-control" name="CMTSUBPRJ_Eval_Applicability" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Applicability}" placeholder="Khả năng áp dụng/phát triển"></form:input>
 	                                   	<form:errors path="CMTSUBPRJ_Eval_Applicability" class="alert-danger"></form:errors>
 	                                </div>
 	                        </div>
@@ -67,13 +67,13 @@
 	                        		<h2>Nội dung</h2>
 	                        		<div class="form-group">
 	                                   	<label for="CMTSUBPRJ_Eval_RearchMethodology">Phương pháp nghiên cứu</label>
-	                                   	<form:input path="CMTSUBPRJ_Eval_RearchMethodology" class="form-control" name="CMTSUBPRJ_Eval_RearchMethodology" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Motivation}" placeholder="Phương pháp nghiên cứu"></form:input>
+	                                   	<form:input path="CMTSUBPRJ_Eval_RearchMethodology" class="form-control" name="CMTSUBPRJ_Eval_RearchMethodology" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_RearchMethodology}" placeholder="Phương pháp nghiên cứu"></form:input>
 	                                   	<form:errors path="CMTSUBPRJ_Eval_RearchMethodology" class="alert-danger"></form:errors>
 	                                </div>
 	                                
 	                                <div class="form-group">
 	                                   	<label for="CMTSUBPRJ_Eval_ResearchContent">Các nội dung nghiên cứu chính</label>
-	                                   	<form:input path="CMTSUBPRJ_Eval_ResearchContent" class="form-control" name="CMTSUBPRJ_Eval_ResearchContent" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Motivation}" placeholder="Các nội dung nghiên cứu chính"></form:input>
+	                                   	<form:input path="CMTSUBPRJ_Eval_ResearchContent" class="form-control" name="CMTSUBPRJ_Eval_ResearchContent" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_ResearchContent}" placeholder="Các nội dung nghiên cứu chính"></form:input>
 	                                   	<form:errors path="CMTSUBPRJ_Eval_ResearchContent" class="alert-danger"></form:errors>
 	                                </div>
 	                        </div>
@@ -86,7 +86,7 @@
 	                        		<h2>Sản phẩm cụ thể</h2>
 	                        		<div class="form-group">
 	                                   	<label for="CMTSUBPRJ_Eval_Paper">Bài báo: Trong nước; Scopus, ISI (khuyến khích)</label>
-	                                   	<form:input path="CMTSUBPRJ_Eval_Paper" class="form-control" name="CMTSUBPRJ_Eval_Paper" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Motivation}" placeholder="Bài báo: Trong nước; Scopus, ISI (khuyến khích)"></form:input>
+	                                   	<form:input path="CMTSUBPRJ_Eval_Paper" class="form-control" name="CMTSUBPRJ_Eval_Paper" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Paper}" placeholder="Bài báo: Trong nước; Scopus, ISI (khuyến khích)"></form:input>
 	                                   	<form:errors path="CMTSUBPRJ_Eval_Paper" class="alert-danger"></form:errors>
 	                                </div>
 	                                
@@ -145,10 +145,10 @@
 	                        	<div class="form-group">
                                    <label for="CMTSUBPRJ_Eval_Classification">Phân loại</label>
                                    <form:select path="CMTSUBPRJ_Eval_Classification" class="form-control" name="CMTSUBPRJ_Eval_Classification">
-                                        <option value="A" <c:if test='${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Classification} == "A"}'> selected </c:if>  >Loại A</option>
-                                        <option value="B" <c:if test='${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Classification} == "B"}'> selected </c:if> >B</option>
-                                        <option value="C" <c:if test='${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Classification} == "C"}'> selected </c:if> >C</option>
-                                        <option value="F" <c:if test='${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Classification} == "F"}'> selected </c:if> >Loại</option>
+                                        <option value="A" <c:if test='${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Classification == "A"}'> selected </c:if> >A</option>
+                                        <option value="B" <c:if test='${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Classification == "B"}'> selected </c:if> >B</option>
+                                        <option value="C" <c:if test='${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Classification == "C"}'> selected </c:if> >C</option>
+                                        <option value="F" <c:if test='${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Classification == "F"}'> selected </c:if> >Loại</option>
                                    </form:select>
                                    <form:errors path="CMTSUBPRJ_Eval_Classification" class="alert-danger"></form:errors>
                                	</div>
