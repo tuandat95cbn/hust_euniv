@@ -241,17 +241,17 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString(); 
 		Projects project = projectService.loadAProjectByIdAndUserCode("ROLE_ADMIN", userCode, projectId);
+		DetailCommentSubmittedProjects detailCommentSubmittedProjects = new DetailCommentSubmittedProjects();
 		if(project != null)
 		{
-			DetailCommentSubmittedProjects detailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadDetailsCommentsOfSubmittedProjectsByProjectCode(project.getPROJ_Code());
+			detailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadDetailsCommentsOfSubmittedProjectsByProjectCode(project.getPROJ_Code());
 			String sComment ="";
 			mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, project.getPROJ_Code());
 			if(commentsOfSubmittedProject != null){
 				sComment = commentsOfSubmittedProject.getCOMPROJ_COMMENT();
 			}
-			
-			model.put("detailCommentSubmittedProjects", detailCommentSubmittedProjects);
 		}
+		model.put("detailCommentSubmittedProjects", detailCommentSubmittedProjects);
 		model.put("project", project);
 		model.put("projectId", projectId);
 		model.put("detailCommentsSubmittedProjectsFormAdd", new DetailCommentsSubmittedProjectsValidation());
@@ -264,7 +264,13 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 	public String saveDetailCommentsSubmittedProjects( HttpServletRequest request, @Valid @ModelAttribute("detailCommentsSubmittedProjectsFormAdd") DetailCommentsSubmittedProjectsValidation detailCommentsSubmittedProjectsFormAdd, 
 														BindingResult result, ModelMap model, HttpSession session) {
 
+		int projectId = detailCommentsSubmittedProjectsFormAdd.getProjectId();
+		String Eval_Conclusion = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Conclusion();
+		model.put("projectId", projectId);
+		model.put("conclusion", Eval_Conclusion);
 		if (result.hasErrors()) {
+			model.put("err", "Lỗi cập nhật. Hãy thử lại với thông tin chính xác.");
+			System.out.println(result.getFieldError());
 			return "cp.addADetailCommentProject";
 		} else {
 			// Prepare data for inserting DB
@@ -283,8 +289,6 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 			int Eval_Education_Graduate = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Education_Graduate();
 			int Eval_Reasonable_Budget = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Reasonable_Budget();
 			String Eval_Classification = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Classification();
-		    String Eval_Conclusion = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Conclusion();
-			int projectId = detailCommentsSubmittedProjectsFormAdd.getProjectId();
 			
 			Projects project = projectService.loadProjectsById(projectId);
 			if(project.getPROJ_Code() != null)
@@ -296,7 +300,7 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 			}else{
 				model.put("err", "Lỗi cập nhật. Hãy thử lại với thông tin chính xác.");
 			}
-			return "cp.addADetailCommentProject";
+			return "redirect:" + this.baseUrl + "/cp/details-comment-submitted-projects.html";
 		}
 	}
  

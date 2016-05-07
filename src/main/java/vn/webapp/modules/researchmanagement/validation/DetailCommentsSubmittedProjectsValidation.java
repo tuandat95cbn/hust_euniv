@@ -1,44 +1,58 @@
 package vn.webapp.modules.researchmanagement.validation;
 
+import javax.validation.constraints.Max;
+
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.format.annotation.NumberFormat.Style;
 
 public class DetailCommentsSubmittedProjectsValidation{
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
 	private int CMTSUBPRJ_Eval_Motivation;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_Innovation;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_Applicability;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_RearchMethodology;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_ResearchContent;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_Paper;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_Product;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_Patent;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_Graduate_Student;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_Young_Rearcher;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_Education_Graduate;
 	
 	@NumberFormat(style = Style.NUMBER)
+	@Max(value=99)
     private int CMTSUBPRJ_Eval_Reasonable_Budget;
 	
     private String CMTSUBPRJ_Eval_Classification;
