@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -52,9 +53,11 @@ import vn.webapp.modules.researchdeclarationmanagement.service.mJournalService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mPatentService;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectCategoryService;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectService;
+import vn.webapp.modules.researchmanagement.model.DetailCommentSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.ProjectParticipationRoles;
 import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 import vn.webapp.modules.researchmanagement.model.Projects;
+import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 import vn.webapp.modules.researchmanagement.model.mProjectComments;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
@@ -62,6 +65,7 @@ import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 import vn.webapp.modules.researchmanagement.service.ProjectParticipationRolesService;
 import vn.webapp.modules.researchmanagement.service.ProjectTasksService;
+import vn.webapp.modules.researchmanagement.service.mCommentsOfSubmittedProjectsService;
 import vn.webapp.modules.researchmanagement.service.mProjectCallsService;
 import vn.webapp.modules.researchmanagement.service.mProjectCommentsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStaffsService;
@@ -125,6 +129,9 @@ public class nProjectController extends BaseWeb {
 	
 	@Autowired
 	private mProjectCommentsService projectCommentsService;
+	
+	@Autowired
+	mCommentsOfSubmittedProjectsService commentsOfSubmittedProjectsService;
 
 	static final String status = "active";
 	
@@ -761,7 +768,7 @@ public class nProjectController extends BaseWeb {
 		model.put("projects", status);
 		if (project != null) {
 			List<mProjectComments> projectComments = projectCommentsService.loadAProjectCommentByProjectCode(project.getPROJ_Code());
-			mProjectComments projectComment1 = null;
+			/*mProjectComments projectComment1 = null;
 			mProjectComments projectComment2 = null;
 			if(projectComments != null && projectComments.size() > 0)
 			{
@@ -771,11 +778,22 @@ public class nProjectController extends BaseWeb {
 				else{
 					projectComment2 = new mProjectComments();
 				}
-			}
+			}*/
 			// Put journal list and topic category to view
-			model.put("projectComment1", projectComment1);
-			model.put("projectComment2", projectComment2);
+			//model.put("projectComment1", projectComment1);
+			//model.put("projectComment2", projectComment2);
+			
+			String projectCode = project.getPROJ_Code();
+			String summaryComment = "";
+			mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, projectCode);
+			if(commentsOfSubmittedProject != null){
+				summaryComment = (!"".equals(commentsOfSubmittedProject.getCOMPROJ_COMMENT())) ? commentsOfSubmittedProject.getCOMPROJ_COMMENT() : "";
+			}
+			
+			List<DetailCommentSubmittedProjects> listDetailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(projectCode);
+			model.put("listDetailCommentSubmittedProjects", listDetailCommentSubmittedProjects);
 			model.put("projectEdit", project);
+			model.put("summaryComment", summaryComment);
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId);
 			return "cp.projectcomments";
@@ -1523,7 +1541,7 @@ public class nProjectController extends BaseWeb {
 	 * @return
 	 */
 	 @RequestMapping(value = "/edit-a-projectcomment", method = RequestMethod.POST)
-	 public String updateAProjectComment(HttpServletRequest request, @Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit, BindingResult result, Map model, HttpSession session) {
+	 public String updateAProjectComment(HttpServletRequest request, @Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit, BindingResult result, Map model, HttpSession session, @RequestParam(value="summaryComment", required=false) String summaryComment) {
 		 String userRole 			 = session.getAttribute("currentUserRole").toString();
 		 String userCode 			 = session.getAttribute("currentUserCode").toString();
 		 int projectEditId 			 = projectFormEdit.getProjectId();
@@ -1539,7 +1557,18 @@ public class nProjectController extends BaseWeb {
 				projectBeingEditted.setPROJ_Status_Code(projectFormEdit.getProjectStatusCode());
 				if(projectBeingEditted.getPROJ_Status_Code().equals("ACCEPT_REVISION")) 
 						projectBeingEditted.setPROJ_Locked1(0);
+				
+				// Updating status for the project
 				threadService.editAnApproveProject(projectBeingEditted);
+				
+				// Adding comments
+				mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, projectBeingEditted.getPROJ_Code());
+				if(!"".equals(commentsOfSubmittedProject.getCOMPROJ_CODE())){
+					commentsOfSubmittedProjectsService.editCommentsOfSubmittedProjects(commentsOfSubmittedProject.getCOMPROJ_ID(), summaryComment);
+				}else{
+					String currentDate = DateUtil.s_fGetCurrentDateByFormat("");
+					commentsOfSubmittedProjectsService.saveCommentsOfSubmittedProjects(userCode, projectBeingEditted.getPROJ_Code(), summaryComment, currentDate, false);
+				}
 				return "redirect:" + this.baseUrl + "/cp/collect-comments.html";
 			}
 			return "cp.projectcomments";

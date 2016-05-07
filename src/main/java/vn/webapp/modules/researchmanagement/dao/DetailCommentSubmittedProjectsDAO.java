@@ -25,6 +25,13 @@ public interface DetailCommentSubmittedProjectsDAO{
 	 * @param iCommentsOfSubmittedProjectsId
 	 * @return
 	 */
-	public DetailCommentSubmittedProjects loadDetailsCommentsOfSubmittedProjectsByProjectCode(String sProjectCode);
+	public DetailCommentSubmittedProjects loadDetailsCommentsOfSubmittedProjectsByProjectCode(String sStaffCode, String sProjectCode);
+	
+	/**
+	 * 
+	 * @param sProjectCode
+	 * @return
+	 */
+	public List<DetailCommentSubmittedProjects> loadListDetailsCommentsOfSubmittedProjectsByProjectCode(String sProjectCode);
 
 }

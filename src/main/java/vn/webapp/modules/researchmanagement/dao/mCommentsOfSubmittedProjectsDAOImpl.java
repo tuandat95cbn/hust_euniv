@@ -160,7 +160,6 @@ public class mCommentsOfSubmittedProjectsDAOImpl extends BaseDao implements mCom
 	@Override
 	public void editCommentsOfSubmittedProjects(mCommentsOfSubmittedProjects commentsOfSubmittedProjects){
 		try {
-			System.out.println("Comments at DAO " + commentsOfSubmittedProjects.getCOMPROJ_COMMENT());
 			begin();
 			getSession().update(commentsOfSubmittedProjects);
 			commit();

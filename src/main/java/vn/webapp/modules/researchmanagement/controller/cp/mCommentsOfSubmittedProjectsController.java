@@ -244,7 +244,7 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 		DetailCommentSubmittedProjects detailCommentSubmittedProjects = new DetailCommentSubmittedProjects();
 		if(project != null)
 		{
-			detailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadDetailsCommentsOfSubmittedProjectsByProjectCode(project.getPROJ_Code());
+			detailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadDetailsCommentsOfSubmittedProjectsByProjectCode(userCode, project.getPROJ_Code());
 			String sComment ="";
 			mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, project.getPROJ_Code());
 			if(commentsOfSubmittedProject != null){
@@ -270,7 +270,6 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 		model.put("conclusion", Eval_Conclusion);
 		if (result.hasErrors()) {
 			model.put("err", "Lỗi cập nhật. Hãy thử lại với thông tin chính xác.");
-			System.out.println(result.getFieldError());
 			return "cp.addADetailCommentProject";
 		} else {
 			// Prepare data for inserting DB

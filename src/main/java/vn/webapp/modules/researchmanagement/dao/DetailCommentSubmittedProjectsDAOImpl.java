@@ -70,12 +70,36 @@ public class DetailCommentSubmittedProjectsDAOImpl extends BaseDao implements De
 	 * 
 	 */
 	@Override
-	public DetailCommentSubmittedProjects loadDetailsCommentsOfSubmittedProjectsByProjectCode(String sProjectCode){
+	public DetailCommentSubmittedProjects loadDetailsCommentsOfSubmittedProjectsByProjectCode(String sStaffCode, String sProjectCode){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(DetailCommentSubmittedProjects.class);
+			criteria.add(Restrictions.eq("CMTSUBPRJ_StaffCode", sStaffCode));
+			criteria.add(Restrictions.eq("CMTSUBPRJ_PRJCode", sProjectCode));
+			DetailCommentSubmittedProjects commentsOfSubmittedProjects = (DetailCommentSubmittedProjects) criteria.uniqueResult();
+			commit();
+			return commentsOfSubmittedProjects;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<DetailCommentSubmittedProjects> loadListDetailsCommentsOfSubmittedProjectsByProjectCode(String sProjectCode){
 		try {
 			begin();
 			Criteria criteria = getSession().createCriteria(DetailCommentSubmittedProjects.class);
 			criteria.add(Restrictions.eq("CMTSUBPRJ_PRJCode", sProjectCode));
-			DetailCommentSubmittedProjects commentsOfSubmittedProjects = (DetailCommentSubmittedProjects) criteria.uniqueResult();
+			List<DetailCommentSubmittedProjects> commentsOfSubmittedProjects = criteria.list();
 			commit();
 			return commentsOfSubmittedProjects;
 		} catch (HibernateException e) {

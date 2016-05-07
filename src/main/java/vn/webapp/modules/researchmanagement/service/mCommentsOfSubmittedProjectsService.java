@@ -88,5 +88,12 @@ public interface mCommentsOfSubmittedProjectsService {
 	 * @param iCommentsOfSubmittedProjectsId
 	 * @return
 	 */
-	public DetailCommentSubmittedProjects loadDetailsCommentsOfSubmittedProjectsByProjectCode(String sProjectCode);
+	public DetailCommentSubmittedProjects loadDetailsCommentsOfSubmittedProjectsByProjectCode(String sStafftCode, String sProjectCode);
+	
+	/**
+	 * 
+	 * @param sProjectCode
+	 * @return
+	 */
+	public List<DetailCommentSubmittedProjects> loadListDetailsCommentsOfSubmittedProjectsByProjectCode(String sProjectCode);
 }

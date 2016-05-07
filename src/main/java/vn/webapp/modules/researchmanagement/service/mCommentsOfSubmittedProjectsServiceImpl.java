@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import vn.webapp.libraries.DateUtil;
-
 import vn.webapp.modules.researchmanagement.dao.DetailCommentSubmittedProjectsDAO;
 //For comments of submitted projects 
 import vn.webapp.modules.researchmanagement.dao.mCommentsOfSubmittedProjectsDAO;
@@ -150,7 +149,7 @@ public class mCommentsOfSubmittedProjectsServiceImpl implements mCommentsOfSubmi
 	{
 		try {
 			if (!"".equals(StaffCode) && !"".equals(PRJCode) && projectId > 0) {
-				DetailCommentSubmittedProjects detailCommentSubmittedProjects = detailCommentSubmittedProjectsDAO.loadDetailsCommentsOfSubmittedProjectsByProjectCode("T201681");
+				DetailCommentSubmittedProjects detailCommentSubmittedProjects = detailCommentSubmittedProjectsDAO.loadDetailsCommentsOfSubmittedProjectsByProjectCode(StaffCode, PRJCode);
 				if(detailCommentSubmittedProjects.getCMTSUBPRJ_PRJCode() != null)
 				{
 					detailCommentSubmittedProjects.setCMTSUBPRJ_StaffCode(StaffCode);
@@ -211,9 +210,22 @@ public class mCommentsOfSubmittedProjectsServiceImpl implements mCommentsOfSubmi
 	 * @param iCommentsOfSubmittedProjectsId
 	 * @return
 	 */
-	public DetailCommentSubmittedProjects loadDetailsCommentsOfSubmittedProjectsByProjectCode(String sProjectCode){
+	public DetailCommentSubmittedProjects loadDetailsCommentsOfSubmittedProjectsByProjectCode(String sStafftCode, String sProjectCode){
 		try {
-			return detailCommentSubmittedProjectsDAO.loadDetailsCommentsOfSubmittedProjectsByProjectCode(sProjectCode);
+			return detailCommentSubmittedProjectsDAO.loadDetailsCommentsOfSubmittedProjectsByProjectCode(sStafftCode, sProjectCode);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param iCommentsOfSubmittedProjectsId
+	 * @return
+	 */
+	public List<DetailCommentSubmittedProjects> loadListDetailsCommentsOfSubmittedProjectsByProjectCode(String sProjectCode){
+		try {
+			return detailCommentSubmittedProjectsDAO.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(sProjectCode);
 		} catch (Exception e) {
 			return null;
 		}

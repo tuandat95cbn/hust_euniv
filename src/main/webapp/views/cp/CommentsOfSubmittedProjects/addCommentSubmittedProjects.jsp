@@ -50,22 +50,31 @@
 			                        </div>
 				                        <!-- /.panel-heading -->
 				                        <div class="panel-body">
-			                        		<div class="form-group">
-			                                   	<label for="CMTSUBPRJ_Eval_Motivation">Tính cấp thiết</label>
-			                                   	<form:input path="CMTSUBPRJ_Eval_Motivation" class="form-control" name="CMTSUBPRJ_Eval_Motivation" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Motivation}" placeholder="Tính cấp thiết"></form:input>
-			                                   	<form:errors path="CMTSUBPRJ_Eval_Motivation" class="alert-danger"></form:errors>
+				                        	<div>
+					                        	<label for="CMTSUBPRJ_Eval_Motivation">Tính cấp thiết</label>
+				                        		<div class="form-group input-group">
+				                                   	<form:input path="CMTSUBPRJ_Eval_Motivation" class="form-control" name="CMTSUBPRJ_Eval_Motivation" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Motivation}" placeholder="Tính cấp thiết"></form:input>
+				                                   	<span class="input-group-addon">điểm</span>
+				                                </div>
+				                                <form:errors path="CMTSUBPRJ_Eval_Motivation" class="alert-danger"></form:errors>
 			                                </div>
 			                                
-			                                <div class="form-group">
-			                                   	<label for="CMTSUBPRJ_Eval_Innovation">Tính mới</label>
-			                                   	<form:input path="CMTSUBPRJ_Eval_Innovation" class="form-control" name="CMTSUBPRJ_Eval_Innovation" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Innovation}" placeholder="Tính mới"></form:input>
-			                                   	<form:errors path="CMTSUBPRJ_Eval_Innovation" class="alert-danger"></form:errors>
+			                                <div>
+				                                <label for="CMTSUBPRJ_Eval_Innovation">Tính mới</label>
+				                                <div class="form-group input-group">
+				                                   	<form:input path="CMTSUBPRJ_Eval_Innovation" class="form-control" name="CMTSUBPRJ_Eval_Innovation" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Innovation}" placeholder="Tính mới"></form:input>
+				                                   	<span class="input-group-addon">điểm</span>
+				                                </div>
+				                                <form:errors path="CMTSUBPRJ_Eval_Innovation" class="alert-danger"></form:errors>
 			                                </div>
 			                                
-			                                <div class="form-group">
-			                                   	<label for="CMTSUBPRJ_Eval_Applicability">Khả năng áp dụng/phát triển</label>
-			                                   	<form:input path="CMTSUBPRJ_Eval_Applicability" class="form-control" name="CMTSUBPRJ_Eval_Applicability" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Applicability}" placeholder="Khả năng áp dụng/phát triển"></form:input>
-			                                   	<form:errors path="CMTSUBPRJ_Eval_Applicability" class="alert-danger"></form:errors>
+			                                <div>
+				                                <label for="CMTSUBPRJ_Eval_Applicability">Khả năng áp dụng/phát triển</label>
+				                                <div class="form-group input-group">
+				                                   	<form:input path="CMTSUBPRJ_Eval_Applicability" class="form-control" name="CMTSUBPRJ_Eval_Applicability" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Applicability}" placeholder="Khả năng áp dụng/phát triển"></form:input>
+				                                   	<span class="input-group-addon">điểm</span>
+				                                </div>
+				                                <form:errors path="CMTSUBPRJ_Eval_Applicability" class="alert-danger"></form:errors>
 			                                </div>
 			                           </div>
 			                      </div>
@@ -77,16 +86,22 @@
 			                        </div>
 				                        <!-- /.panel-heading -->
 				                        <div class="panel-body">
-			                        		<div class="form-group">
-			                                   	<label for="CMTSUBPRJ_Eval_RearchMethodology">Phương pháp nghiên cứu</label>
-			                                   	<form:input path="CMTSUBPRJ_Eval_RearchMethodology" class="form-control" name="CMTSUBPRJ_Eval_RearchMethodology" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_RearchMethodology}" placeholder="Phương pháp nghiên cứu"></form:input>
-			                                   	<form:errors path="CMTSUBPRJ_Eval_RearchMethodology" class="alert-danger"></form:errors>
+				                        	<div>
+					                        	<label for="CMTSUBPRJ_Eval_RearchMethodology">Phương pháp nghiên cứu</label>
+				                        		<div class="form-group input-group">
+				                                   	<form:input path="CMTSUBPRJ_Eval_RearchMethodology" class="form-control" name="CMTSUBPRJ_Eval_RearchMethodology" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_RearchMethodology}" placeholder="Phương pháp nghiên cứu"></form:input>
+				                                   	<span class="input-group-addon">điểm</span>
+				                                </div>
+				                                <form:errors path="CMTSUBPRJ_Eval_RearchMethodology" class="alert-danger"></form:errors>
 			                                </div>
-			                                
-			                                <div class="form-group">
-			                                   	<label for="CMTSUBPRJ_Eval_ResearchContent">Các nội dung nghiên cứu chính</label>
-			                                   	<form:input path="CMTSUBPRJ_Eval_ResearchContent" class="form-control" name="CMTSUBPRJ_Eval_ResearchContent" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_ResearchContent}" placeholder="Các nội dung nghiên cứu chính"></form:input>
-			                                   	<form:errors path="CMTSUBPRJ_Eval_ResearchContent" class="alert-danger"></form:errors>
+
+											<div>
+												<label for="CMTSUBPRJ_Eval_ResearchContent">Các nội dung nghiên cứu chính</label>			                                
+				                                <div class="form-group  input-group">
+				                                   	<form:input path="CMTSUBPRJ_Eval_ResearchContent" class="form-control" name="CMTSUBPRJ_Eval_ResearchContent" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_ResearchContent}" placeholder="Các nội dung nghiên cứu chính"></form:input>
+				                                   	<span class="input-group-addon">điểm</span>
+				                                </div>
+				                                <form:errors path="CMTSUBPRJ_Eval_ResearchContent" class="alert-danger"></form:errors>
 			                                </div>
 			                            </div>
 			                    </div>
@@ -103,22 +118,31 @@
 			                        </div>
 				                        <!-- /.panel-heading -->
 				                        <div class="panel-body">
-			                        		<div class="form-group">
-			                                   	<label for="CMTSUBPRJ_Eval_Paper">Bài báo: Trong nước; Scopus, ISI (khuyến khích)</label>
-			                                   	<form:input path="CMTSUBPRJ_Eval_Paper" class="form-control" name="CMTSUBPRJ_Eval_Paper" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Paper}" placeholder="Bài báo: Trong nước; Scopus, ISI (khuyến khích)"></form:input>
-			                                   	<form:errors path="CMTSUBPRJ_Eval_Paper" class="alert-danger"></form:errors>
+				                        	<div>
+					                        	<label for="CMTSUBPRJ_Eval_Paper">Bài báo: Trong nước; Scopus, ISI (khuyến khích)</label>
+				                        		<div class="form-group input-group">
+				                                   	<form:input path="CMTSUBPRJ_Eval_Paper" class="form-control" name="CMTSUBPRJ_Eval_Paper" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Paper}" placeholder="Bài báo: Trong nước; Scopus, ISI (khuyến khích)"></form:input>
+				                                   	<span class="input-group-addon">điểm</span>
+				                                </div>
+				                                <form:errors path="CMTSUBPRJ_Eval_Paper" class="alert-danger"></form:errors>
 			                                </div>
 			                                
-			                                <div class="form-group">
-			                                   	<label for="CMTSUBPRJ_Eval_Product">Sản phẩm/thiết bị có địa chỉ ứng dụng cụ thể</label>
-			                                   	<form:input path="CMTSUBPRJ_Eval_Product" class="form-control" name="CMTSUBPRJ_Eval_Product" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Product}" placeholder="Sản phẩm/thiết bị có địa chỉ ứng dụng cụ thể"></form:input>
-			                                   	<form:errors path="CMTSUBPRJ_Eval_Product" class="alert-danger"></form:errors>
+			                                <div>
+				                                <label for="CMTSUBPRJ_Eval_Product">Sản phẩm/thiết bị có địa chỉ ứng dụng cụ thể</label>
+				                                <div class="form-group input-group">
+				                                   	<form:input path="CMTSUBPRJ_Eval_Product" class="form-control" name="CMTSUBPRJ_Eval_Product" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Product}" placeholder="Sản phẩm/thiết bị có địa chỉ ứng dụng cụ thể"></form:input>
+				                                   	<span class="input-group-addon">điểm</span>
+				                                </div>
+				                                <form:errors path="CMTSUBPRJ_Eval_Product" class="alert-danger"></form:errors>
 			                                </div>
 			                                
-			                                <div class="form-group">
-			                                   	<label for="CMTSUBPRJ_Eval_Patent">SHTT</label>
-			                                   	<form:input path="CMTSUBPRJ_Eval_Patent" class="form-control" name="CMTSUBPRJ_Eval_Patent" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Patent}" placeholder="SHTT"></form:input>
-			                                   	<form:errors path="CMTSUBPRJ_Eval_Patent" class="alert-danger"></form:errors>
+			                                <div>
+				                                <label for="CMTSUBPRJ_Eval_Patent">SHTT</label>
+				                                <div class="form-group input-group">
+				                                   	<form:input path="CMTSUBPRJ_Eval_Patent" class="form-control" name="CMTSUBPRJ_Eval_Patent" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Patent}" placeholder="SHTT"></form:input>
+				                                   	<span class="input-group-addon">điểm</span>
+				                                </div>
+				                                <form:errors path="CMTSUBPRJ_Eval_Patent" class="alert-danger"></form:errors>
 			                                </div>
 		                                </div>
 		                        </div>
@@ -130,28 +154,40 @@
 			                        </div>
 			                        <!-- /.panel-heading -->
 			                        <div class="panel-body">
-		                        		<div class="form-group">
-		                                   	<label for="CMTSUBPRJ_Eval_Graduate_Student">Học viên sau đại học, NCS  (cùng hướng NC luận văn)</label>
-		                                   	<form:input path="CMTSUBPRJ_Eval_Graduate_Student" class="form-control" name="CMTSUBPRJ_Eval_Graduate_Student" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Graduate_Student}" placeholder="Học viên sau đại học, NCS  (cùng hướng NC luận văn)"></form:input>
-		                                   	<form:errors path="CMTSUBPRJ_Eval_Graduate_Student" class="alert-danger"></form:errors>
+			                        	<div>
+				                        	<label for="CMTSUBPRJ_Eval_Graduate_Student">Học viên sau đại học, NCS  (cùng hướng NC luận văn)</label>
+			                        		<div class="form-group input-group">
+			                                   	<form:input path="CMTSUBPRJ_Eval_Graduate_Student" class="form-control" name="CMTSUBPRJ_Eval_Graduate_Student" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Graduate_Student}" placeholder="Học viên sau đại học, NCS  (cùng hướng NC luận văn)"></form:input>
+			                                   	<span class="input-group-addon">điểm</span>
+			                                </div>
+			                                <form:errors path="CMTSUBPRJ_Eval_Graduate_Student" class="alert-danger"></form:errors>
 		                                </div>
 		                                
-		                                <div class="form-group">
-		                                   	<label for="CMTSUBPRJ_Eval_Young_Rearcher">Cán bộ trẻ <= 35</label>
-		                                   	<form:input path="CMTSUBPRJ_Eval_Young_Rearcher" class="form-control" name="CMTSUBPRJ_Eval_Young_Rearcher" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Young_Rearcher}" placeholder="Cán bộ trẻ <= 35"></form:input>
-		                                   	<form:errors path="CMTSUBPRJ_Eval_Young_Rearcher" class="alert-danger"></form:errors>
+		                                <div>
+			                                <label for="CMTSUBPRJ_Eval_Young_Rearcher">Cán bộ trẻ <= 35</label>
+			                                <div class="form-group input-group">
+			                                   	<form:input path="CMTSUBPRJ_Eval_Young_Rearcher" class="form-control" name="CMTSUBPRJ_Eval_Young_Rearcher" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Young_Rearcher}" placeholder="Cán bộ trẻ <= 35"></form:input>
+			                                   	<span class="input-group-addon">điểm</span>
+			                                </div>
+			                                <form:errors path="CMTSUBPRJ_Eval_Young_Rearcher" class="alert-danger"></form:errors>
 		                                </div>
-		                                
-		                                <div class="form-group">
-		                                   	<label for="CMTSUBPRJ_Eval_Education_Graduate">Tham gia đào tạo NCS, ThS</label>
-		                                   	<form:input path="CMTSUBPRJ_Eval_Education_Graduate" class="form-control" name="CMTSUBPRJ_Eval_Education_Graduate" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Education_Graduate}" placeholder="Tham gia đào tạo NCS, ThS"></form:input>
-		                                   	<form:errors path="CMTSUBPRJ_Eval_Education_Graduate" class="alert-danger"></form:errors>
+
+										<div>
+											<label for="CMTSUBPRJ_Eval_Education_Graduate">Tham gia đào tạo NCS, ThS</label>		                                
+			                                <div class="form-group input-group">
+			                                   	<form:input path="CMTSUBPRJ_Eval_Education_Graduate" class="form-control" name="CMTSUBPRJ_Eval_Education_Graduate" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Education_Graduate}" placeholder="Tham gia đào tạo NCS, ThS"></form:input>
+			                                   	<span class="input-group-addon">điểm</span>
+			                                </div>
+			                                <form:errors path="CMTSUBPRJ_Eval_Education_Graduate" class="alert-danger"></form:errors>
 		                                </div>
-		                                
-		                                <div class="form-group">
-		                                   	<label for="CMTSUBPRJ_Eval_Reasonable_Budget">Kinh phí phù hợp</label>
-		                                   	<form:input path="CMTSUBPRJ_Eval_Reasonable_Budget" class="form-control" name="CMTSUBPRJ_Eval_Reasonable_Budget" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Reasonable_Budget}" placeholder="Kinh phí phù hợp"></form:input>
-		                                   	<form:errors path="CMTSUBPRJ_Eval_Reasonable_Budget" class="alert-danger"></form:errors>
+
+										<div>
+											<label for="CMTSUBPRJ_Eval_Reasonable_Budget">Kinh phí phù hợp</label>		                                
+			                                <div class="form-group input-group">
+			                                   	<form:input path="CMTSUBPRJ_Eval_Reasonable_Budget" class="form-control" name="CMTSUBPRJ_Eval_Reasonable_Budget" value="${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Reasonable_Budget}" placeholder="Kinh phí phù hợp"></form:input>
+			                                   	<span class="input-group-addon">điểm</span>
+			                                </div>
+			                                <form:errors path="CMTSUBPRJ_Eval_Reasonable_Budget" class="alert-danger"></form:errors>
 		                                </div>
 			                        </div>
 			                        <!-- /.panel-body -->
