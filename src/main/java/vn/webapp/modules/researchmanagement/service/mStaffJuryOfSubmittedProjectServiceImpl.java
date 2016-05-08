@@ -55,14 +55,18 @@ public class mStaffJuryOfSubmittedProjectServiceImpl implements mStaffJuryOfSubm
 	public int saveStaffJuryOfSubmittedProject(String STFJUPRJ_STAFFJURCODE,String STFJUPRJ_PRJCODE) {
 		if (STFJUPRJ_STAFFJURCODE.length() >= 1 && STFJUPRJ_PRJCODE.length() >= 1) {
 			
-			mStaffJuryOfSubmittedProject staffJury = new mStaffJuryOfSubmittedProject();
-			
-			staffJury.setSTFJUPRJ_PRJCODE(STFJUPRJ_PRJCODE);
-			staffJury.setSTFJUPRJ_STAFFJURCODE(STFJUPRJ_STAFFJURCODE);
-			staffJury.setSTFJUPRJ_CODE(STFJUPRJ_PRJCODE + "-" + STFJUPRJ_STAFFJURCODE);
-			
-			int resultSaveStaffJuryOfSubmittedProject = staffJuryOfSubmittedProjectDAO.saveStaffJuryOfSubmittedProject(staffJury);
-			return resultSaveStaffJuryOfSubmittedProject;
+			mStaffJuryOfSubmittedProject staffJury = staffJuryOfSubmittedProjectDAO.loadAStaffJuryOfSubmittedProjectByStaffAndProjectCode(STFJUPRJ_STAFFJURCODE, STFJUPRJ_PRJCODE);
+			if(staffJury != null)
+			{
+				return 1;
+			}else{
+				staffJury = new mStaffJuryOfSubmittedProject();
+				staffJury.setSTFJUPRJ_PRJCODE(STFJUPRJ_PRJCODE);
+				staffJury.setSTFJUPRJ_STAFFJURCODE(STFJUPRJ_STAFFJURCODE);
+				staffJury.setSTFJUPRJ_CODE(STFJUPRJ_PRJCODE + "-" + STFJUPRJ_STAFFJURCODE);
+				int resultSaveStaffJuryOfSubmittedProject = staffJuryOfSubmittedProjectDAO.saveStaffJuryOfSubmittedProject(staffJury);
+				return resultSaveStaffJuryOfSubmittedProject;
+			}
 		}
 		return 0;
 	}

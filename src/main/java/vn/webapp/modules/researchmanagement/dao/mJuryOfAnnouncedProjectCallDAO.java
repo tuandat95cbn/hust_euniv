@@ -46,4 +46,11 @@ public interface mJuryOfAnnouncedProjectCallDAO {
 	 * @param juryOfAnnouncedProjectCall
 	 */
 	public void editJuryOfAnnouncedProjectCall(mJuryOfAnnouncedProjectCall juryOfAnnouncedProjectCall);
+	
+	/**
+	 * 
+	 * @param projectCallCode
+	 * @return
+	 */
+	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByProjectCallCode(String projectCallCode);
 }

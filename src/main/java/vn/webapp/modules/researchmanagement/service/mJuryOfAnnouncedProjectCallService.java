@@ -58,4 +58,11 @@ public interface mJuryOfAnnouncedProjectCallService {
 	 */
 	public List<mStaff> loadStaffsOfJuryOfAProjecCall(String projectCallCode);
 	
+	/**
+	 * 
+	 * @param projectCallCode
+	 * @return
+	 */
+	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByProjectCallCode(String projectCallCode);
+	
 }

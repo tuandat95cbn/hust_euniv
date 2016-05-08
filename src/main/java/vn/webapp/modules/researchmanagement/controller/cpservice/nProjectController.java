@@ -22,12 +22,15 @@ import vn.webapp.controller.BaseRest;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectCategoryService;
 import vn.webapp.modules.researchmanagement.model.Projects;
+import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mThreads;
+import vn.webapp.modules.researchmanagement.service.mJuryOfAnnouncedProjectCallService;
 import vn.webapp.modules.researchmanagement.service.mProductService;
 import vn.webapp.modules.researchmanagement.service.mProjectStaffsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStatusService;
 import vn.webapp.modules.researchmanagement.service.nProjectService;
+import vn.webapp.modules.usermanagement.model.mStaff;
 import vn.webapp.modules.usermanagement.service.mStaffService;
 
 @Controller("cpmServiceProject")
@@ -50,6 +53,12 @@ public class nProjectController extends BaseRest {
 	
 	@Autowired
 	private tProjectCategoryService tProjectCategoryService;
+	
+	@Autowired
+	private nProjectService projectService;
+	
+	@Autowired
+	private mJuryOfAnnouncedProjectCallService juryOfAnnouncedProjectCallService ;
     
 	public String name() {
 		return "cpservice/nProjectController";
@@ -231,5 +240,59 @@ public class nProjectController extends BaseRest {
 			}
 		}
 		return sStatusName;
+	}
+	
+	/**
+	 * 
+	 * @param sProjectCallCode
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getprojectslist", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
+	public String getProjectsList(@RequestParam(value = "sProjectCallCode", defaultValue = "0") String sProjectCallCode) {
+		String sReturn = "";
+		System.out.println("");
+		// Get department lists
+		if(!"".equals(sProjectCallCode))
+		{
+			// Get all projects in project calls whose present is the current present
+			List<Projects> projectList = projectService.loadProjectByProjectCallId(sProjectCallCode);
+			sReturn = "<select size='20' multiple class='form-control' path='STFJUPRJ_PRJCODE' name='STFJUPRJ_PRJCODE' id='STFJUPRJ_PRJCODE'>";
+			if(projectList != null){
+				for(Projects project : projectList)
+				{
+					sReturn += "<option value='"+project.getPROJ_Code()+"'>"+project.getPROJ_Code() + " - " +project.getPROJ_Name()+"</option>";
+				}
+			}else{
+				sReturn += "<option value=''>Chọn</option>";
+			}
+			sReturn += "</select>";
+		}
+		return sReturn;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/getstaffslist", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
+	public String getStaffsList(@RequestParam(value = "sProjectCallCode", defaultValue = "0") String sProjectCallCode) {
+		String sReturn = "";
+		System.out.println("");
+		// Get department lists
+		if(!"".equals(sProjectCallCode))
+		{
+			// Get all projects in project calls whose present is the current present
+			List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCall = juryOfAnnouncedProjectCallService.loadListJuryOfAnnouncedProjectCallByProjectCallCode(sProjectCallCode);
+			sReturn = "<select class='form-control' path='STFJUPRJ_STAFFJURCODE' name='STFJUPRJ_STAFFJURCODE' id='STFJUPRJ_STAFFJURCODE'>";
+			if(juryOfAnnouncedProjectCall != null){
+				for(mJuryOfAnnouncedProjectCall iteam : juryOfAnnouncedProjectCall)
+				{
+					sReturn += "<option value='"+iteam.getJUSUPRJ_STAFFCODE()+"'>"+iteam.getJUSUPRJ_STAFFCODE()+"</option>";
+				}
+			}else{
+				sReturn += "<option value=''>Chọn</option>";
+			}
+			sReturn += "</select>";
+		}
+		return sReturn;
 	}
 }

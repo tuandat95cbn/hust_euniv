@@ -1,6 +1,7 @@
 package vn.webapp.modules.researchmanagement.dao;
 
 import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
@@ -8,6 +9,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import vn.webapp.dao.BaseDao;
 import vn.webapp.modules.researchmanagement.model.mStaffJuryOfSubmittedProject;
 import vn.webapp.modules.researchmanagement.model.mJuryRoleOfSubmittedProjects;
@@ -134,6 +136,7 @@ public class mStaffJuryOfSubmittedProjectDAOImpl extends BaseDao implements mSta
 	/**
 	 * 
 	 */
+	@Override
 	public mStaffJuryOfSubmittedProject loadAStaffJuryOfSubmittedProjectById(int STFJUPRJ_ID){
 		try {
 			begin();
@@ -156,6 +159,7 @@ public class mStaffJuryOfSubmittedProjectDAOImpl extends BaseDao implements mSta
 	/**
 	 * 
 	 */
+	@Override
 	public void editStaffJuryOfSubmittedProject(mStaffJuryOfSubmittedProject staffJuryOfSubmittedProject){
 		try {
 			begin();
@@ -165,6 +169,30 @@ public class mStaffJuryOfSubmittedProjectDAOImpl extends BaseDao implements mSta
 			e.printStackTrace();
 			rollback();
 			close();
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public mStaffJuryOfSubmittedProject loadAStaffJuryOfSubmittedProjectByStaffAndProjectCode(String STFJUPRJ_STAFFJURCODE, String STFJUPRJ_PROJCODE){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(mStaffJuryOfSubmittedProject.class);
+			criteria.add(Restrictions.eq("STFJUPRJ_STAFFJURCODE", STFJUPRJ_STAFFJURCODE));
+			criteria.add(Restrictions.eq("STFJUPRJ_PRJCODE", STFJUPRJ_PROJCODE));
+			mStaffJuryOfSubmittedProject staffJuryOfSubmittedProject = (mStaffJuryOfSubmittedProject) criteria.uniqueResult();
+			commit();
+			return staffJuryOfSubmittedProject;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
 		} finally {
 			flush();
 			close();

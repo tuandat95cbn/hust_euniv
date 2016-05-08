@@ -1,6 +1,7 @@
 package vn.webapp.modules.researchmanagement.dao;
 
 import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
@@ -8,6 +9,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import vn.webapp.dao.BaseDao;
 import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
 import vn.webapp.modules.researchmanagement.model.mJuryRoleOfSubmittedProjects;
@@ -46,6 +48,10 @@ public class mJuryOfAnnouncedProjectCallDAOImpl extends BaseDao implements mJury
 			close();
 		}		
 	}
+	
+	/**
+	 * 
+	 */
 	@Override
 	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByPresentCode(String JUSUPRJ_STAFFCODE){
 		try {
@@ -146,6 +152,29 @@ public class mJuryOfAnnouncedProjectCallDAOImpl extends BaseDao implements mJury
 			e.printStackTrace();
 			rollback();
 			close();
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByProjectCallCode(String projectCallCode){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(mJuryOfAnnouncedProjectCall.class);
+			criteria.add(Restrictions.eq("JUSUPRJ_PRJCALLCODE", projectCallCode));
+			List<mJuryOfAnnouncedProjectCall> projectCallList = criteria.list();
+			commit();
+			return projectCallList;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
 		} finally {
 			flush();
 			close();

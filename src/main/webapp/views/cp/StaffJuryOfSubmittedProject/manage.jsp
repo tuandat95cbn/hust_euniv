@@ -39,51 +39,45 @@
 	                	<div class="alert alert-warning">${err}</div>
                     </c:if>     
                     <div class="form-group">
-	                                    <label>Đợt gọi Đề tài </label>
-	                                    <select class="form-control" name="PROJCALL_CODE" onchange="showProjectsAndStaffsOfThisCall(this);">
-	                                        <option value="">chọn</option>	                                    	        	                                    	
-	                                    	<c:forEach items="${projectCallList}" var="iProjectCall">
-		                                        <option value="${iProjectCall.PROJCALL_CODE}">${iProjectCall.PROJCALL_NAME}</option>
-	                                       	</c:forEach>
-	                                    <select>
-	                                   <%--  <form:errors path="STFJUPRJ_PRJCODE" class="alert-danger"></form:errors> --%>
-	                                </div>
+                        <label>Đợt gọi Đề tài </label>
+                        <select class="form-control" name="PROJCALL_CODE" onchange="showProjectsOfThisCall(this); showStaffsOfThisCall(this);">
+                            <option value="">Chọn</option>	                                    	        	                                    	
+                        	<c:forEach items="${projectCallList}" var="iProjectCall">
+                             <option value="${iProjectCall.PROJCALL_CODE}">${iProjectCall.PROJCALL_NAME}</option>
+                           	</c:forEach>
+                        <select>
+                       <%--  <form:errors path="STFJUPRJ_PRJCODE" class="alert-danger"></form:errors> --%>
+                    </div>
 	                                
                     <form:form action="${baseUrl}/cp/save-staff-jury-of-submitted-project.html" method="POST" commandName="staffJuryOfSubmittedProjectFormAdd" role="form" >
 	                    <div class="row">
 	                        <div class="col-lg-12">
-	                        		
-	                                
-	                                <div class="form-group">
-	                                    <label>Đề tài </label>
-	                                    <form:select path="STFJUPRJ_PRJCODE" class="form-control" name="STFJUPRJ_PRJCODE" id="project-code">
-	                                        <option value="">chọn</option>	                                    	        	                                    	
-	                                    	<c:forEach items="${projectList}" var="iProject">
-		                                        <option value="${iProject.PROJ_Code}">${iProject.PROJ_Name}</option>
-	                                       	</c:forEach>
-	                                    </form:select>
-	                                    <form:errors path="STFJUPRJ_PRJCODE" class="alert-danger"></form:errors>
-	                                </div>
-	                        
-	                                <div class="form-group">
-	                                    <label >Thành viên</label>
-	                                    <form:select path="STFJUPRJ_STAFFJURCODE" class="form-control" name="STFJUPRJ_STAFFJURCODE" id="staff-code">
-	                                        <option value="">chọn</option>	                                    	                                    
-	                                    	<c:forEach items="${staffList}" var="iStaff">
-		                                        <option value="${iStaff.staff_Code}">${iStaff.staff_Name}</option>
-	                                       	</c:forEach>
-	                                    </form:select>
-	                                    <form:errors path="STFJUPRJ_STAFFJURCODE" class="alert-danger"></form:errors>
-	                                </div>
-	                        
-	                                
-	    
+                                <div class="form-group">
+                                    <label >Thành viên</label>
+                                    <div id="staff-list">
+	                                    <select path="STFJUPRJ_STAFFJURCODE" class="form-control" name="STFJUPRJ_STAFFJURCODE" id="STFJUPRJ_STAFFJURCODE">
+	                                        <option value="">Chọn</option>	                                    	        	                                    	
+	                                    </select>
+                                    </div>
+                                    <form:errors path="STFJUPRJ_STAFFJURCODE" class="alert-danger"></form:errors>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Đề tài </label>
+                                    <div id="project-list">
+	                                    <select path="STFJUPRJ_PRJCODE" class="form-control" name="STFJUPRJ_PRJCODE" id="STFJUPRJ_PRJCODE">
+	                                        <option value="">Chọn</option>	                                    	        	                                    	
+	                                    </select>
+                                    </div>
+                                    <form:errors path="STFJUPRJ_PRJCODE" class="alert-danger"></form:errors>
+                                </div>
+                                <div class="form-group">                                	
 									<!-- button type="button" id="filter" class="btn btn-primary filter">Lọc</button -->
 	                                <button type="submit" class="btn btn-primary" id="addAStaffJuryOfSubmittedProject">Lưu</button>
 	                                <!-- <button type="reset" class="btn btn-primary">Clear</button> -->
-	                                <button type="reset" class="btn btn-primary cancel">Hủy</button>
+	                                <!-- <button type="reset" class="btn btn-primary cancel">Hủy</button> -->
+                                </div>
 	                        </div>
-	                        
 	                    </div>
 	                    <!-- /.row (nested) -->
                     </form:form>
@@ -141,7 +135,9 @@ $(document).ready(function() {
                           ]
     });
     
-    
+    $('button.cancel').click(function(){
+		window.location = baseUrl+"/cp/assign-jury-submitted-projects.html";
+	});
     
     $('.add').click(function(){
     	window.location = baseUrl+"/cp/add-a-projectcall.html";
@@ -160,7 +156,7 @@ function v_fRemoveStaffJuryOfSubmittedProject(iJuryOfAnnouncedProjectCallId){
 	}
 }
 
-function showProjectsAndStaffsOfThisCall(projectCall){
+/* function showProjectsAndStaffsOfThisCallOld(projectCall){
 	var projectCallCode = projectCall.options[projectCall.selectedIndex].value;
 	//alert(projectCallCode);
 	if(projectCallCode.length > 0){
@@ -182,6 +178,54 @@ function showProjectsAndStaffsOfThisCall(projectCall){
 				}
 			}
 		});
+	}
+} */
+
+function showProjectsOfThisCall(projectCall) {
+	var projectCallCode = projectCall.options[projectCall.selectedIndex].value;
+	var sGeneratingUrl = "${baseUrl}/cpservice/getprojectslist.html";
+	if(projectCallCode.length > 0){
+		$.ajax({
+			type: "POST",
+			url: sGeneratingUrl,
+			data: "sProjectCallCode="+projectCallCode,
+			cache: false,
+			beforeSend: function () { 
+				//$('#staff').html('<img src="loader.gif" alt="" width="24" height="24">');
+			},
+			success: function(html) {    
+				$("#project-list").html( html );
+			}
+		});
+	}else{
+		var html = '<select path="STFJUPRJ_PRJCODE" class="form-control" name="STFJUPRJ_PRJCODE" id="STFJUPRJ_PRJCODE">';
+        html += '<option value="">Chọn</option>';
+    	html += '</select>';
+		$("#project-list").html(html);
+	}
+}
+
+function showStaffsOfThisCall(projectCall) {
+	var projectCallCode = projectCall.options[projectCall.selectedIndex].value;
+	var sGeneratingUrl = "${baseUrl}/cpservice/getstaffslist.html";
+	if(projectCallCode.length > 0){
+		$.ajax({
+			type: "POST",
+			url: sGeneratingUrl,
+			data: "sProjectCallCode="+projectCallCode,
+			cache: false,
+			beforeSend: function () { 
+				//$('#staff').html('<img src="loader.gif" alt="" width="24" height="24">');
+			},
+			success: function(html) {    
+				$("#staff-list").html( html );
+			}
+		});
+	}else{
+		var html = '<select path="STFJUPRJ_STAFFJURCODE" class="form-control" name="STFJUPRJ_STAFFJURCODE" id="STFJUPRJ_STAFFJURCODE">';
+        html += '<option value="">Chọn</option>';
+    	html += '</select>';
+		$("#staff-list").html(html);
 	}
 }
 </script>

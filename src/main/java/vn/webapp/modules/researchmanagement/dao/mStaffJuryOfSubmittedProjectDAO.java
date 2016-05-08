@@ -46,4 +46,12 @@ public interface mStaffJuryOfSubmittedProjectDAO {
 	 * @param juryOfAnnouncedProjectCall
 	 */
 	public void editStaffJuryOfSubmittedProject(mStaffJuryOfSubmittedProject staffJuryOfSubmittedProject);
+	
+	/**
+	 * 
+	 * @param STFJUPRJ_STAFFJURCODE
+	 * @param STFJUPRJ_PROJCODE
+	 * @return
+	 */
+	public mStaffJuryOfSubmittedProject loadAStaffJuryOfSubmittedProjectByStaffAndProjectCode(String STFJUPRJ_STAFFJURCODE, String STFJUPRJ_PROJCODE);
 }
