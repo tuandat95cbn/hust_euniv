@@ -290,7 +290,8 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 			String Eval_Classification = detailCommentsSubmittedProjectsFormAdd.getCMTSUBPRJ_Eval_Classification();
 			
 			Projects project = projectService.loadProjectsById(projectId);
-			if(project.getPROJ_Code() != null)
+			if(project != null)
+			//if(project.getPROJ_Code() != null)
 			{
 				commentsOfSubmittedProjectsService.saveDetailsCommentsOfSubmittedProjects(userCode, project.getPROJ_Code(), project.getPROJ_PRJCall_Code(), Eval_Motivation, Eval_Innovation, Eval_Applicability, 
 						Eval_RearchMethodology, Eval_ResearchContent, Eval_Paper, Eval_Product, Eval_Patent, Eval_Graduate_Student, Eval_Young_Rearcher, Eval_Education_Graduate, Eval_Reasonable_Budget, Eval_Classification, Eval_Conclusion, projectId);

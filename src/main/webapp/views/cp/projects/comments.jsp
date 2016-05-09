@@ -88,6 +88,14 @@
 				                                	<li>Kinh phí phù hợp: <b>${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Reasonable_Budget}</b></li>
 				                                </ul>
 				                            </div>
+				                            
+				                            <div class="tab-content">
+				                                <div class="tab-pane fade in active" ><b>Kết luận :</b></div>
+				                                <ul>
+				                                	<li><b>${detailCommentSubmittedProjects.CMTSUBPRJ_Eval_Conclusion}</b></li>
+				                                	
+				                                </ul>
+				                            </div>
 				                        </div>
 				                    </div>
 			                    </c:forEach>

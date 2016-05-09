@@ -20,6 +20,8 @@ h2{
 font-size:13pt;
 }
 
+.header-title{font-weight: bold;}
+
 .part-title{
    font-weight: bold;
    font-size: 10pt;
@@ -79,20 +81,33 @@ table#wrapper {
 	padding : 2px 5px;
 }
 
+.center{
+	margin : auto;
+	text-align: center;
+	align: center;
+}
+
+
+
+#header{
+	float: left;
+	clear: both;
+	width: 300px;
+}
 </style>
 <body>
 	<div id="wrapper-head">
 		<!-- Header -->
 		<div id="header">
-			<h3>BỘ GIÁO DỤC VÀ ĐÀO TẠO</h3>
-			<h3 class="part-title">TRƯỜNG ĐẠI HỌC BÁCH KHOA HÀ NỘI</h3>
-			<span>---------------------------------</span>
+			<h3 class="center">BỘ GIÁO DỤC VÀ ĐÀO TẠO</h3>
+			<h3 class="center part-title">TRƯỜNG ĐẠI HỌC BÁCH KHOA HÀ NỘI</h3>
+			<h3 class="center">---------------------------------</h3>
 		</div>
 		<!-- End Header -->
 		
 		<div id="title">
-			<h2>THUYẾT MINH ĐỀ TÀI</h2>
-			<h4>NGHIÊN CỨU KHOA HỌC VÀ CÔNG NGHỆ CẤP TRƯỜNG NĂM ___YEAR___</h4>
+			<h2 class="header-title">THUYẾT MINH ĐỀ TÀI</h2>
+			<h4 class="header-title">NGHIÊN CỨU KHOA HỌC VÀ CÔNG NGHỆ CẤP TRƯỜNG NĂM ___YEAR___</h4>
 		</div>
 		<table id="wrapper">
 			<tr>
@@ -123,7 +138,7 @@ table#wrapper {
 								<li>
 									<ul class="template">
 										<li>Họ và tên: &nbsp;<b> ___LEAD_NAME___ </b>&nbsp;&nbsp;&nbsp;&nbsp;</li>
-										<li>Học vị: &nbsp; ___DEGREE___ &nbsp;&nbsp;&nbsp;&nbsp;</li>
+										<li>Học vị: &nbsp; ___DEGREE___ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
 										<li>Chức vụ: &nbsp; ___ROLE___ &nbsp;&nbsp;&nbsp;&nbsp;</li>
 									</ul>
 								</li>
@@ -234,15 +249,15 @@ table#wrapper {
 							
 							<tr>
 								<td colspan="3"><div class="content">Tổng cộng:</div></td>
-								<td><div class="content">___TOTAL_MEMBERS_WORKINGDAYS___</div></td>
-								<td><div class="content">___TOTAL_MEMBERS_FEE___</div></td>
+								<td><div class="content center">___TOTAL_MEMBERS_WORKINGDAYS___</div></td>
+								<td><div class="content center">___TOTAL_MEMBERS_FEE___</div></td>
 								<td><div class="content"></div></td>
 							</tr>
 						</table>
 						<div class="content">
-							<span class="part-title content">11.2. Chi mua vật tư, nguyên, nhiên, vật liệu, tài liệu, tư liệu, … : ___MATERIAL_FEE___ </span>
+							<span class="part-title content">11.2. Chi mua vật tư, nguyên, nhiên, vật liệu, tài liệu, tư liệu, … : ___MATERIAL_FEE___ VNĐ</span>
 						</div>
-						<div class="content">Tổng cộng (mục 11.1 + 11.2) : ___TOTAL_TASKS_BUDGET___</div>
+						<div class="content">Tổng cộng (mục 11.1 + 11.2) : ___TOTAL_TASKS_BUDGET___ VNĐ</div>
 						<div class="content">Tổng số tiền bằng chữ: ___TOTAL_TASKS_BUDGET_WORDS___ đồng</div>
 					</div>
 				</td>
@@ -250,15 +265,15 @@ table#wrapper {
 			<tr>
 				<td colspan='5'>
 					<div class="session" id="conclusion">
-						<div id="conclusion-left" style="float: left; clear: left;">
+						<div id="conclusion-left" style="float: left; clear: left;  width: 220px; text-align: center;">
 							<span class="cnt-bottom">Ngày.......tháng.......năm ___YEAR_SIGN___ </span>
 							<br />
-							<span class="part-title">HIỆU TRƯỞNG</span>
+							<span class="part-title center">HIỆU TRƯỞNG</span>
 							<br /><br /><br />
 						</div>
 						
-						<div id="conclusion-right" style="float: right; clear: both;">
-							<span class="cnt-bottom">Hà Nội, Ngày.......tháng........năm ___YEAR_SIGN___ </span>
+						<div id="conclusion-right" style="float: right; clear: both; width: 250px; text-align: center;">
+							<span class="cnt-bottom">Hà Nội, ngày.......tháng........năm ___YEAR_SIGN___ </span>
 							<br />
 							<span class="part-title">Chủ nhiệm đề tài</span>
 							<br /><br /><br />

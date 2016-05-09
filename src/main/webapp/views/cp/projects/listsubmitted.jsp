@@ -24,7 +24,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
-				<div class="panel-heading"> Chỉnh sửa thuyết minh đề tài sau phản biện</div>
+				<div class="panel-heading">Danh sách thuyết minh đã được đánh giá phản biện</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					<div class="dataTable_wrapper">

@@ -33,6 +33,30 @@ public class DetailCommentSubmittedProjects implements Serializable{
     private int CMTSUBPRJ_Eval_Reasonable_Budget;
     private String CMTSUBPRJ_Eval_Classification;
     private String CMTSUBPRJ_Eval_Conclusion;
+    
+    public String toString(){
+    	String s = "";
+    	s += "Mục tiêu:\n";
+    	s += "\tTính cấp thiết: " + CMTSUBPRJ_Eval_Motivation + "\n";
+    	s += "\tTính mới: " + CMTSUBPRJ_Eval_Innovation + "\n";
+    	s += "\tKhả năng áp dụng/phát triển: " + CMTSUBPRJ_Eval_Applicability + "\n";
+    	
+    	s += "Nội dung:\n";
+    	s += "\tPhương pháp nghiên cứu: " + CMTSUBPRJ_Eval_RearchMethodology + "\n";
+    	s += "\tCác nội dung nghiên cứu: " + CMTSUBPRJ_Eval_ResearchContent + "\n";
+    	
+    	s += "Sản phẩm cụ thể:\n";
+    	s += "\tBài báo trong nước, ngoài nước, Scopus, ISI (Khuyến khích): " + CMTSUBPRJ_Eval_Paper + "\n";
+    	s += "\tSản phẩm/thiết bị có địa chỉ ứng dụng cụ thể: " + CMTSUBPRJ_Eval_Product + "\n";
+    	s += "\tSHTT: " + CMTSUBPRJ_Eval_Patent + "\n";
+    	
+    	s += "Các ưu tiên khác:\n";
+    	s += "\tHọc viên sau đại học, NCS (cùng hướng NC luận văn): " + CMTSUBPRJ_Eval_Graduate_Student + "\n";
+    	s += "\tCán bộ trẻ (nhỏ hơn hoặc bằng 35 tuổi): " +  CMTSUBPRJ_Eval_Young_Rearcher + "\n";
+    	s += "\tTham gia đào tạo NCS, thạc sỹ: " + CMTSUBPRJ_Eval_Education_Graduate + "\n";
+    	s += "\tKinh phí phù hợp: " + CMTSUBPRJ_Eval_Reasonable_Budget + "\n";
+    	return s;
+    }
 	public int getCMTSUBPRJ_ID() {
 		return CMTSUBPRJ_ID;
 	}

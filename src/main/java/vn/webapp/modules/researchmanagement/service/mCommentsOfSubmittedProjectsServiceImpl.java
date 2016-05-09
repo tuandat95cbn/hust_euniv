@@ -150,7 +150,8 @@ public class mCommentsOfSubmittedProjectsServiceImpl implements mCommentsOfSubmi
 		try {
 			if (!"".equals(StaffCode) && !"".equals(PRJCode) && projectId > 0) {
 				DetailCommentSubmittedProjects detailCommentSubmittedProjects = detailCommentSubmittedProjectsDAO.loadDetailsCommentsOfSubmittedProjectsByProjectCode(StaffCode, PRJCode);
-				if(detailCommentSubmittedProjects.getCMTSUBPRJ_PRJCode() != null)
+				//if(detailCommentSubmittedProjects.getCMTSUBPRJ_PRJCode() != null)
+				if(detailCommentSubmittedProjects != null)
 				{
 					detailCommentSubmittedProjects.setCMTSUBPRJ_StaffCode(StaffCode);
 					detailCommentSubmittedProjects.setCMTSUBPRJ_PRJCode(PRJCode);
@@ -200,7 +201,8 @@ public class mCommentsOfSubmittedProjectsServiceImpl implements mCommentsOfSubmi
 				return 0;
 			}
 		} catch (Exception e) {
-			System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
+			//System.out.println("Exception: " + e.getMessage());
 			return 0;
 		}
 	}

@@ -676,32 +676,37 @@ public class nProjectController extends BaseWeb {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
 		
-		List<mProjectComments> allCommentProjects = projectCommentsService.loadprojectCommentsList();
-		if(project == null){
-			System.out.println(name() + "::editASubmittedProject BUG???");
-		}
-		String comments = "";
-		for(mProjectComments cm: allCommentProjects){
-			if(cm.getCOMPROJ_PRJCODE().equals(project.getPROJ_Code())){
-				
-				comments += "Ý kiến phản biện 1:\n" + cm.getCOMPROJ_COMMENT() + "\n";
-			}
+		List<mStaff> staffs = staffService.listStaffs();
+		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
+		for(mStaff st: staffs){
+			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
 		}
 		
-		
+		List<DetailCommentSubmittedProjects> detailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(project.getPROJ_Code());
+		for(DetailCommentSubmittedProjects cm: detailCommentSubmittedProjects){
+			cm.setCMTSUBPRJ_StaffCode(mStaffCode2Name.get(cm.getCMTSUBPRJ_StaffCode()));
+		}
 		// Get list of project calls
 	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
 							
      	// Put data back to view
 		model.put("projectCallsList", projectCallsList);
+		model.put("detailCommentSubmittedProjectsList", detailCommentSubmittedProjects);
 		model.put("projects", status);
 		if (project != null) {
+			// Get summary comment
+			String summaryComment = "";
+			mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, project.getPROJ_Code());
+			if(commentsOfSubmittedProject != null){
+				summaryComment = (!"".equals(commentsOfSubmittedProject.getCOMPROJ_COMMENT())) ? commentsOfSubmittedProject.getCOMPROJ_COMMENT() : "";
+			}
+			
 			// Put journal list and topic category to view
 			model.put("projectEdit", project);
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId);
-			model.put("comments", comments);
-			return "cp.editASumittedProject";
+			model.put("summaryComment", summaryComment);
+			return "cp.viewDetailCommentASumittedProject";
 		}
 		return "cp.notFound404";
 	}
@@ -760,6 +765,11 @@ public class nProjectController extends BaseWeb {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
 		
+		List<mStaff> staffs = staffService.listStaffs();
+		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
+		for(mStaff st: staffs){
+			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
+		}
 		// Get list of project calls
 	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
 							
@@ -791,6 +801,12 @@ public class nProjectController extends BaseWeb {
 			}
 			
 			List<DetailCommentSubmittedProjects> listDetailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(projectCode);
+			for(DetailCommentSubmittedProjects cm: listDetailCommentSubmittedProjects){
+				String staffCode = cm.getCMTSUBPRJ_StaffCode();
+				cm.setCMTSUBPRJ_StaffCode(mStaffCode2Name.get(staffCode));
+			}
+			System.out.println(name() + "::editCommentProject listDetailComments.sz = " + listDetailCommentSubmittedProjects.size());
+
 			model.put("listDetailCommentSubmittedProjects", listDetailCommentSubmittedProjects);
 			model.put("projectEdit", project);
 			model.put("summaryComment", summaryComment);
@@ -986,8 +1002,8 @@ public class nProjectController extends BaseWeb {
 						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(0)+"</div></td>";
 						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(3)+"</div></td>";
 						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(4)+"</div></td>";
-						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(5)+"</div></td>";
-						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(6)+"</div></td>";
+						sProjectTasksList 			+= "<td><div class='content  center'>"+projectTask.get(5)+"</div></td>";
+						sProjectTasksList 			+= "<td align='center'><div class='content center'>"+Money2StringConvertor.addDot2Moyney(projectTask.get(6))+"</div></td>";
 						sProjectTasksList 			+= "<td><div class='content'></div></td>";
 						sProjectTasksList 			+= "</tr>";
 
@@ -1019,7 +1035,6 @@ public class nProjectController extends BaseWeb {
 				String sLeaderRole 			= "Giảng viên";
 
 				String sProjectApplicability = "IN REAL LIFE...";
-
 				ClassLoader classLoader = getClass().getClassLoader();
 				// Getting content from template file
 		    	File o_FontFile = new File(classLoader.getResource(nProjectController._sHTMLTemplate).getFile());
@@ -1089,7 +1104,7 @@ public class nProjectController extends BaseWeb {
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PROJECT_RESULT___", sProjectResult);
 		    	
 		    	// Replace project total budget
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET___", Integer.toString(iTotalFee));
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET___", Money2StringConvertor.addDot2Moyney(Integer.toString(iTotalFee)));
 		    	
 		    	// Replace project total budget
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_BUDGET_WORDS___", Money2StringConvertor.convert2TextStartUpcase(Integer.toString(iTotalFee)));
@@ -1101,13 +1116,13 @@ public class nProjectController extends BaseWeb {
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_MEMBERS_WORKINGDAYS___", Integer.toString(iTotalWorkingDays));
 		    	
 		    	// Replace project members fees
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_MEMBERS_FEE___", Integer.toString(iTotalTaskFees));
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_MEMBERS_FEE___", Money2StringConvertor.addDot2Moyney(Integer.toString(iTotalTaskFees)));
 
 		    	// Replace project material fee
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___MATERIAL_FEE___", Integer.toString(iBudgetMaterial));
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___MATERIAL_FEE___", Money2StringConvertor.addDot2Moyney(Integer.toString(iBudgetMaterial)));
 		    	
 		    	// Replace project tasks budget
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET___", Integer.toString(iTotalFee));
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET___", Money2StringConvertor.addDot2Moyney(Integer.toString(iTotalFee)));
 		    	
 		    	// Replace project tasks budget
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___TOTAL_TASKS_BUDGET_WORDS___", sTasksBudgetWords);
@@ -1563,7 +1578,8 @@ public class nProjectController extends BaseWeb {
 				
 				// Adding comments
 				mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, projectBeingEditted.getPROJ_Code());
-				if(!"".equals(commentsOfSubmittedProject.getCOMPROJ_CODE())){
+				//if(!"".equals(commentsOfSubmittedProject.getCOMPROJ_CODE())){
+				if(commentsOfSubmittedProject != null){
 					commentsOfSubmittedProjectsService.editCommentsOfSubmittedProjects(commentsOfSubmittedProject.getCOMPROJ_ID(), summaryComment);
 				}else{
 					String currentDate = DateUtil.s_fGetCurrentDateByFormat("");
