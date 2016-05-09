@@ -248,10 +248,10 @@ public class mUserServiceImpl implements mUserService, UserDetailsService{
         
         // Set Staff to update
         mStaff staff = staffDAO.getStaffById(staffId);
-        staff.setStaff_Name(username);
+        //staff.setStaff_Name(username);
         staff.setStaff_User_Code(sUserCode);
         staff.setStaff_Code(sUserCode);
-        staff.setStaff_AsciiName(sUserCode);
+        //staff.setStaff_AsciiName(sUserCode);
         staff.setStaff_Department_Code(userDepartment);
         
         staffDAO.editAStaff(staff);

@@ -78,7 +78,15 @@ public class mStaffController extends BaseWeb {
 		   model.put("staffFacultyName", staff.getDepartment().getFaculty().getFaculty_Name());		   
 		   model.put("staffGender", staff.getStaff_Gender());
 		   model.put("staffDateOfBirth", staff.getStaff_DateOfBirth());
-		   model.put("academicRank", staff.getAcademicRank());	   
+		   //model.put("academicRank", staff.getAcademicRank());
+		   if(staff.getAcademicRank() != null){
+		   model.put("academicRankCode", staff.getAcademicRank().getAcademicRank_Code());
+		   model.put("academicRankName", staff.getAcademicRank().getAcademicRank_VNName());
+		   }else{
+			   model.put("academicRankCode", "");
+			   model.put("academicRankName", "");
+			      
+		   }
 		   
 	   }
 	   model.put("departmentList", departmentList);
@@ -112,6 +120,8 @@ public class mStaffController extends BaseWeb {
 	  String staffFacultyCode = staffFormEdit.getStaffFaculty();
 	  String staffAcademicRankCode = staffFormEdit.getStaffAcademicRank();
 		  
+	  System.out.println("mStaffController::saveStaffInfo, staffAcademicRankCode = " + staffAcademicRankCode);
+
 	  model.put("staffEmail", staffEmail);
 	  model.put("staffName", staffName);
 	  model.put("staffPhone", staffPhone);
@@ -123,7 +133,11 @@ public class mStaffController extends BaseWeb {
 	  model.put("staffFacultyCode", staffFacultyCode);
 	  model.put("staffDepartmentCode", staffDepartment);
 	
-	  model.put("academicRank", academicRankService.loadByCode(staffAcademicRankCode));
+	  //mAcademicRank academicRank = academicRankService.loadByCode(staffAcademicRankCode);
+	  //model.put("academicRank", academicRankService.loadByCode(staffAcademicRankCode));
+	  model.put("academicRankCode", staffAcademicRankCode);
+	  //model.put("academicRankName", academicRank.getAcademicRank_VNName());
+	  
 	  if(result.hasErrors()) {
 		  model.put("error", 1);
 		  return "cp.profile";
@@ -141,7 +155,7 @@ public class mStaffController extends BaseWeb {
     	 		model.put("staffFacultyName", staff.getDepartment().getFaculty().getFaculty_Name());
     	 		model.put("staffDepartmentName", staff.getDepartment().getDepartment_Name());
     	 		model.put("staffCategory", staff.getStaffCategory().getStaff_Category_Name());
-    	 			  
+    	 		model.put("academicRankName", academicRank.getAcademicRank_VNName());	  
     	 	}
     	 	return "cp.profile";
 	  }

@@ -109,7 +109,10 @@ public class mStaffServiceImpl implements mStaffService {
     	staff.setStaff_Faculty_Code(userFacultyCode);
     	staff.setStaff_Gender(staffGender);
     	staff.setStaff_DateOfBirth(staffDateOfBirth);
-    	staff.setAcademicRank(academicRank);
+    	//staff.setAcademicRank(academicRank);
+    	staff.setStaff_AcademicRank(academicRank.getAcademicRank_Code());
+    	//System.out.println("mStaffService::editAStaff, academicRank = " + staff.getAcademicRank().getAcademicRank_Code());
+    	
     	staffDAO.editAStaff(staff);
     }
     

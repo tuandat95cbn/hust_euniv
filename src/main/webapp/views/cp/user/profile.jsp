@@ -86,12 +86,13 @@
 				
 				<div class="well">
 					<h4>Học hàm học vị</h4>
-					<p class="value">${academicRank.academicRank_VNName}</p>
+					<%-- <p class="value">${academicRank.academicRank_VNName}</p> --%>
+					<p class="value">${academicRankName}</p>
 					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
 						<div id="default_academicRank">
 							<form:select id="staffAcademicRank" path="staffAcademicRank" class="form-control" name="staffAcademicRank">
 							<c:forEach items="${academicRankList}" var="acaRank">
-	                       		<option value="${acaRank.academicRank_Code}" <c:if test="${academicRank.academicRank_Code eq acaRank.academicRank_Code}">selected</c:if>>${acaRank.academicRank_VNName}</option>
+	                       		<option value="${acaRank.academicRank_Code}" <c:if test="${academicRankCode eq acaRank.academicRank_Code}">selected</c:if>>${acaRank.academicRank_VNName}</option>
 	                       	</c:forEach>							
 	                    </form:select>
 	                    <form:errors path="staffAcademicRank" class="alert-danger"></form:errors>
