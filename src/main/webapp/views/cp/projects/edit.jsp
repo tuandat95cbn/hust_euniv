@@ -83,12 +83,12 @@
                                <c:choose>
 								<c:when test="${projectEdit.PROJ_Locked1 != 1}">
 	                               	<div class="form-group">
-	                                	<label for="projectResult">Nội dung</label>
+	                                	<label for="projectResult">9. Nội dung nghiên cứu</label>
 		                                <textarea path="projectContent"  name="projectContent" id="projectContent" class="form-control textarea">${projectEdit.PROJ_Content}</textarea>
 		                                <form:errors path="projectContent" class="alert-danger"></form:errors>
 	                            	</div>
 		                            	<div class="form-group">
-	                                    <label for="projectResult">Sản phẩm chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
+	                                    <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
 	                                    <textarea path="projectResult"  name="projectResult" id="projectResult" class="form-control textarea">${projectEdit.PROJ_Result}</textarea>
 	   									<form:errors path="projectResult" class="alert-danger"></form:errors>
 	                               	</div>
@@ -101,7 +101,7 @@
 							    <c:otherwise>
 							        <div class="panel panel-default">
 				                        <div class="panel-heading">
-				                            <label for="projectResult">Nội dung</label>
+				                            <label for="projectResult">9. Nội dung nghiên cứu</label>
 				                        </div>
 				                        <div class="panel-body">
 				                            <div class="tab-content">
@@ -111,7 +111,7 @@
 				                    </div>
 				                    <div class="panel panel-default">
 				                        <div class="panel-heading">
-				                            <label for="projectResult">Sản phẩm chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
+				                            <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
 				                        </div>
 				                        <div class="panel-body">
 				                            <div class="tab-content">
@@ -140,17 +140,17 @@
                                <c:choose>
 								<c:when test="${projectEdit.PROJ_Locked1 != 1}">
 									<div class="form-group">
-	                                    <label for="projectSurvey">Tổng quan tình hình thực hiện đề tài</label>
+	                                    <label for="projectSurvey">6. Tổng quan tình hình nghiên cứu thuộc lĩnh vực của đề tài ở trong và ngoài nước</label>
 	                                    <textarea path="projectSurvey" name="projectSurvey" id="projectSurvey" class="form-control textarea">${projectEdit.PROJ_Survey}</textarea>
 	   									<form:errors path="projectSurvey" class="alert-danger"></form:errors>
 	                               	</div>
 	                                <div class="form-group">
-	                                    <label for="projectMotivation">Tính cấp thiết đề tài</label>
+	                                    <label for="projectMotivation">7. Tính cấp thiết đề tài</label>
 	                                    <textarea path="projectMotivation" name="projectMotivation" id="projectMotivation" class="form-control textarea">${projectEdit.PROJ_Motivation}</textarea>
 	    								<form:errors path="projectMotivation" class="alert-danger"></form:errors>
 	                                </div>
 	                                <div class="form-group">
-	                                    <label for="projectObjective">Mục tiêu</label>
+	                                    <label for="projectObjective">8. Mục tiêu của đề tài</label>
 	                                    <textarea path="projectObjective" name="projectObjective" id="projectObjective" class="form-control textarea">${projectEdit.PROJ_Objective}</textarea>
 	   									<form:errors path="projectObjective" class="alert-danger"></form:errors>
 	                               	</div>
@@ -158,7 +158,7 @@
 							    <c:otherwise>
 							    	<div class="panel panel-default">
 				                        <div class="panel-heading">
-				                            <label for="projectResult">Tổng quan tình hình thực hiện đề tài</label>
+				                            <label for="projectResult">6. Tổng quan tình hình nghiên cứu thuộc lĩnh vực của đề tài ở trong và ngoài nước</label>
 				                        </div>
 				                        <div class="panel-body">
 				                            <div class="tab-content">
@@ -168,7 +168,7 @@
 				                    </div>
 							        <div class="panel panel-default">
 				                        <div class="panel-heading">
-				                            <label for="projectResult">Tính cấp thiết đề tài</label>
+				                            <label for="projectResult">7. Tính cấp thiết đề tài</label>
 				                        </div>
 				                        <div class="panel-body">
 				                            <div class="tab-content">
@@ -178,7 +178,7 @@
 				                    </div>
 				                    <div class="panel panel-default">
 				                        <div class="panel-heading">
-				                            <label for="projectResult">Mục tiêu</label>
+				                            <label for="projectResult">8. Mục tiêu của đề tài</label>
 				                        </div>
 				                        <div class="panel-body">
 				                            <div class="tab-content">

@@ -81,12 +81,12 @@
 	                                    <form:errors path="falcutyAddress" class="alert-danger"></form:errors>
 	                                </div>
 	                                <div class="form-group">
-	                                	<label for="projectResult">Nội dung</label>
+	                                	<label for="projectResult">9. Nội dung nghiên cứu</label>
 		                                <form:textarea path="projectContent"  name="projectContent" class="form-control textarea"/>
 		                                <form:errors path="projectContent" class="alert-danger"></form:errors>
 	                            	 </div>
 	                                 <div class="form-group">
-	                                    <label for="projectResult">Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
+	                                    <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
 	                                    <form:textarea path="projectResult" name="projectResult" value="" class="form-control textarea" />
 	   									<form:errors path="projectResult" class="alert-danger"></form:errors>
 	                               	 </div>
@@ -98,21 +98,21 @@
 		                        </div>
 		                        <div class="col-lg-6">
 		                        	<div class="form-group">
-	                                    <label for="projectLeader">Chủ nhiệm đề tài</label>
+	                                    <label for="projectLeader">4. Chủ nhiệm đề tài</label>
 	                                    <input path="projectLeader" class="form-control" disabled name="projectLeader" value="${currentUserName}" />
 	                                </div>
 	                                <div class="form-group">
-	                                    <label for="projectSurvey">Tổng quan tình hình thực hiện đề tài</label>
+	                                    <label for="projectSurvey">6. Tổng quan tình hình nghiên cứu thuộc lĩnh vực của đề tài ở trong và ngoài nước</label>
 	                                    <form:textarea path="projectSurvey" name="projectSurvey" value="" class="form-control textarea" />
 	   									<form:errors path="projectSurvey" class="alert-danger"></form:errors>
 	                               	 </div>
 	                                <div class="form-group">
-	                                    <label for="projectMotivation">Tính cấp thiết đề tài</label>
+	                                    <label for="projectMotivation">7. Tính cấp thiết đề tài</label>
 	                                    <form:textarea path="projectMotivation" name="projectMotivation" class="form-control textarea"/>
 	    								<form:errors path="projectMotivation" class="alert-danger"></form:errors>
 	                                </div>
 	                                <div class="form-group">
-	                                    <label for="projectObjective">Mục tiêu</label>
+	                                    <label for="projectObjective">8. Mục tiêu của đề tài</label>
 	                                    <form:textarea path="projectObjective" name="projectObjective" value="" class="form-control textarea" />
 	   									<form:errors path="projectObjective" class="alert-danger"></form:errors>
 	                               	 </div>
@@ -164,7 +164,8 @@
 	                        	
 	                            <div class="form-group">
 	                               	<label for="taskContent">Nội dung công việc</label>
-	                                <textarea id="taskContent" class="form-control textarea"></textarea>
+	                                <!-- <textarea id="taskContent" class="form-control textarea"></textarea> -->
+									<textarea id="taskContent" class="form-control"></textarea>
 	                           	 </div>
 	                             <button type="button" class="btn btn-primary btn-xs" onclick="v_fAddMember();">Thêm</button>
 	                        </div>
