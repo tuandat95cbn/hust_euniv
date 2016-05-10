@@ -243,6 +243,7 @@ public class nProjectServiceImpl implements nProjectService {
 			String sThreadDepartment, String sThreadStaff) {
 
 		try {
+			/*
 			System.out.println("nProjectsService.filterThreadsListNoPagination, userRole = " + userRole +
 					", userCode = " + userCode + 
 					", sThreadStatus = " + sThreadStatus +
@@ -251,7 +252,7 @@ public class nProjectServiceImpl implements nProjectService {
 					", sThreadFaculty + " + sThreadFaculty +
 					", sThreadDepartment + " + sThreadDepartment+
 					", sThreadStaff = " + sThreadStaff);
-			
+			*/
 			List<mTopicCategory> projectCategories = tProjectCategoryDAO.getList();
 			HashSet<String> categories = new HashSet<String>();
 			if (sThreadCategory != null && !sThreadCategory.equals("")) {
@@ -353,7 +354,7 @@ public class nProjectServiceImpl implements nProjectService {
 				System.out.println("ThreadServiceImpl::filterThreadsList --> "+ t.getPROJ_Name() + "\t" + t.getPROJ_Status_Code());
 			}*/
 
-			System.out.println("nProjectService::filterThreadListNoPagination, allThreads = " + allThreads.size());
+			//System.out.println("nProjectService::filterThreadListNoPagination, allThreads = " + allThreads.size());
 			
 			List<mProjectStaffs> allProjectStaffs = projectStaffsDAO.listAll();
 			/*for (mProjectStaffs ps : allProjectStaffs) {
@@ -380,11 +381,11 @@ public class nProjectServiceImpl implements nProjectService {
 						)
 					threadCodes.add(t.getPROJ_Code());
 			}
-			System.out.println("nProjectService::filterThreadListNoPagination, staffCodes = " + staffCodes);
-			System.out.println("nProjectService::filterThreadListNoPagination, statusCodes = " + statusCodes);
-			System.out.println("nProjectService::filterThreadListNoPagination, categories = " + categories);
-			System.out.println("nProjectService::filterThreadListNoPagination, threadCodes = " + threadCodes);
-			System.out.println("nProjectService::filterThreadListNoPagination, facultyCodes = " + facultyCodes);
+			//System.out.println("nProjectService::filterThreadListNoPagination, staffCodes = " + staffCodes);
+			//System.out.println("nProjectService::filterThreadListNoPagination, statusCodes = " + statusCodes);
+			//System.out.println("nProjectService::filterThreadListNoPagination, categories = " + categories);
+			//System.out.println("nProjectService::filterThreadListNoPagination, threadCodes = " + threadCodes);
+			//System.out.println("nProjectService::filterThreadListNoPagination, facultyCodes = " + facultyCodes);
 
 			/*System.out.println("ThreadServiceImpl::filterThreads, prepare filtering, categories = ");
 			for (String ct : categories) System.out.println(ct);
@@ -392,12 +393,13 @@ public class nProjectServiceImpl implements nProjectService {
 
 			List<mThreads> FL = new ArrayList<mThreads>();
 			for (mThreads t : allThreads) {
+				/*
 				System.out.println("ThreadServiceImpl::filterThreads, consider project "+ t.getPROJ_Code() + ", Name = " + 
 			t.getPROJ_Name()+ 
 						", category "+ t.getPROJ_ProjCat_Code() + ", userCode = " + t.getPROJ_User_Code() + 
 						", login UserCode = " + userCode + ", statusCode = " + t.getPROJ_Status_Code() +
 						", facultyCode = " + t.getPROJ_FacultyCode());
-				
+				*/
 				if (threadCodes.contains(t.getPROJ_Code())
 						//&& yearCodes.contains(t.getPROJ_AcaYear_Code())
 						&& statusCodes.contains(t.getPROJ_Status_Code())){
@@ -409,19 +411,20 @@ public class nProjectServiceImpl implements nProjectService {
 					
 					if(ok){
 						FL.add(t);
-						System.out.println("ThreadServiceImpl::filterThreads -> ACCEPT "+ t.getPROJ_Name());
+						//System.out.println("ThreadServiceImpl::filterThreads -> ACCEPT "+ t.getPROJ_Name());
 					}
 				}
 			}
 
-			System.out.println("ThreadServiceImpl::filterThreads -> TOTAL ACCEPT "+ FL.size());
+			//System.out.println("ThreadServiceImpl::filterThreads -> TOTAL ACCEPT "+ FL.size());
 
 			return FL;
 			// return threadDAO.filerThreadsList(userRole, userCode, iStartItem,
 			// iNumberOfItems, sThreadStatus, sThreadCategory, sThreadYear,
 			// sThreadFaculty, sThreadDepartment, sThreadStaff);
 		} catch (Exception e) {
-			System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
+			//System.out.println("Exception: " + e.getMessage());
 			return null;
 		}
 	}
@@ -628,7 +631,8 @@ public class nProjectServiceImpl implements nProjectService {
 			// iNumberOfItems, sThreadStatus, sThreadCategory, sThreadYear,
 			// sThreadFaculty, sThreadDepartment, sThreadStaff);
 		} catch (Exception e) {
-			System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
+			//System.out.println("Exception: " + e.getMessage());
 			return null;
 		}
 	}

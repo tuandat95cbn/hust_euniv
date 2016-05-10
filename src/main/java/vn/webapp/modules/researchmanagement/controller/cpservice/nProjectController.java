@@ -78,7 +78,7 @@ public class nProjectController extends BaseRest {
     @RequestMapping(value = "threads", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
     public String dataTable1(HttpServletRequest  request, HttpSession session ) {
     	double t0 = System.currentTimeMillis();
-    	System.out.println(name() + "::dataTable1.....");
+    	//System.out.println(name() + "::dataTable1.....");
     	// Get main user info
     	String userCode = session.getAttribute("currentUserCode").toString();
     	String userRole = session.getAttribute("currentUserRole").toString();
@@ -105,12 +105,12 @@ public class nProjectController extends BaseRest {
     	int iTotalItems = threadService.countItems(userRole, userCode, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
 		//List<Threads> threads = threadService.filerThreadsList(userRole, userCode, 0, 100000000, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
     	t0 = System.currentTimeMillis();
-    	List<mThreads> threads = threadService.filerThreadsListNoPagination(userRole, userCode, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
-		iTotalItems = threads.size();
+    	//List<mThreads> threads = threadService.filerThreadsListNoPagination(userRole, userCode, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
+		//iTotalItems = threads.size();
 		
 		double t = System.currentTimeMillis() - t0;
 		t = t *0.001;
-		System.out.println("cpservice/ThreadController::dataTable1, iTotalItems = " + iTotalItems + " year = " + sThreadYear);
+		//System.out.println("cpservice/ThreadController::dataTable1, iTotalItems = " + iTotalItems + " year = " + sThreadYear);
     	System.out.println("nProjectController::dataTable1, exe time = " + t + " s");
     	
     	//Search functionality: Returns filtered list based on search parameter
@@ -167,8 +167,12 @@ public class nProjectController extends BaseRest {
 			iStartItem = 0;
 			iNumberOfItemsOnPage = 10;
 		}
+		double t0 = System.currentTimeMillis(); 
     	List<mThreads> threadsList = threadService.filerThreadsList(userRole, userCode, iStartItem, iNumberOfItemsOnPage, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
-		
+    	double t= System.currentTimeMillis() - t0;
+    	t = t*0.001;
+    	System.out.println(name() + "::createPaginationData, time for threadService.filterThreadsList = " + t);
+    	
 		List<mThreadsList> threadShow = new ArrayList<mThreadsList>();
 		String sCateName = "";
 		String sStatusName = "";
@@ -206,7 +210,7 @@ public class nProjectController extends BaseRest {
 	{
 		List<mTopicCategory> topicCategory = tProjectCategoryService.list();
 		String sCateName = "";
-		System.out.println("nProjectController::getCateName(" + sCateCode +"), topicCategory = " + topicCategory.size());
+		//System.out.println("nProjectController::getCateName(" + sCateCode +"), topicCategory = " + topicCategory.size());
 		if(!topicCategory.equals(""))
 		{
 			for(mTopicCategory category : topicCategory)
