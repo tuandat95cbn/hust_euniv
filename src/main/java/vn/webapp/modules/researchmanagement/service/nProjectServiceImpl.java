@@ -29,6 +29,7 @@ import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mStaffJuryOfSubmittedProject;
 import vn.webapp.modules.researchmanagement.model.mThreads;
+import vn.webapp.modules.researchmanagement.model.xProjects;
 import vn.webapp.modules.usermanagement.dao.mDepartmentDAO;
 import vn.webapp.modules.usermanagement.dao.mFacultyDAO;
 import vn.webapp.modules.usermanagement.dao.mStaffDAO;
@@ -1225,6 +1226,18 @@ public class nProjectServiceImpl implements nProjectService {
 				System.out.println(name() + "::generateProjectCodes, update commentSubmittedProject newCode = " + newCode);
 			}
 		}
-		
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<xProjects> loadListSubmittedProjectsForSummary(){
+		try {
+			return projectDAO.loadListSubmittedProjectsForSummary();
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
 	}
 }

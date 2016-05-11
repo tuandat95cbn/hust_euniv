@@ -43,6 +43,7 @@ import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
 import vn.webapp.modules.researchmanagement.model.mJuryRoleOfSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
+import vn.webapp.modules.researchmanagement.model.xProjects;
 import vn.webapp.modules.researchmanagement.service.mCommentsOfSubmittedProjectsService;
 
 //For staff juries of submitted projects
@@ -259,7 +260,15 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 		return "cp.addADetailCommentProject";
 	}
 	
-	
+	/**
+	 * 
+	 * @param request
+	 * @param detailCommentsSubmittedProjectsFormAdd
+	 * @param result
+	 * @param model
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping(value = "/save-detail-comments-submitted-projects", method = RequestMethod.POST)
 	public String saveDetailCommentsSubmittedProjects( HttpServletRequest request, @Valid @ModelAttribute("detailCommentsSubmittedProjectsFormAdd") DetailCommentsSubmittedProjectsValidation detailCommentsSubmittedProjectsFormAdd, 
 														BindingResult result, ModelMap model, HttpSession session) {
@@ -302,6 +311,37 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 			}
 			return "redirect:" + this.baseUrl + "/cp/details-comment-submitted-projects.html";
 		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/submitted-projects-result-summary", method = RequestMethod.GET)
+	public String CommentsOfSubmittedProjectsResultSummaryList(ModelMap model, HttpSession session) {
+		
+		// Get current user name and role
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		
+		//List of staff juries of submitted projects whose reviewer is the current user
+		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadListStaffJuryOfSubmittedProjectByStaffCode(userCode);
+		
+		List<xProjects> xProjects = projectService.loadListSubmittedProjectsForSummary();
+		
+		//List of projects 
+		List<Projects> projectList = new ArrayList<Projects>();
+		for(int i = 0; i < staffJuryOfSubmittedProjectList.size(); i++){
+			projectList.addAll(projectService.loadListProjectsByCode(staffJuryOfSubmittedProjectList.get(i).getSTFJUPRJ_PRJCODE()));
+		}
+		
+		// Put data back to view
+		model.put("projectList", xProjects);
+		 
+		return "cp.commentsSubmittedProjectsResultSummary";
 	}
  
 }

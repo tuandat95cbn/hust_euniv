@@ -17,6 +17,7 @@ import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 import vn.webapp.modules.researchmanagement.model.mThreads;
+import vn.webapp.modules.researchmanagement.model.xProjects;
 
 @Repository("nProjectDAO")
 @SuppressWarnings({ "unchecked" })
@@ -740,6 +741,28 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 			criteria.add(Restrictions.eq("PROJ_PRJCall_Code", PROJ_PRJCall_Code));
 			
 			List<Projects> projectList = criteria.list();
+			commit();
+			return projectList;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<xProjects> loadListSubmittedProjectsForSummary(){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(xProjects.class, "projects");
+			List<xProjects> projectList = criteria.list();
 			commit();
 			return projectList;
 		} catch (HibernateException e) {
