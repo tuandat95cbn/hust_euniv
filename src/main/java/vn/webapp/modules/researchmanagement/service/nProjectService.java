@@ -5,6 +5,7 @@ import java.util.List;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mThreads;
+import vn.webapp.modules.researchmanagement.model.xProjects;
 
 public interface nProjectService {
 	/**
@@ -318,5 +319,16 @@ public interface nProjectService {
 	 */
 	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code);
 	
+	/**
+	 * 
+	 * @param projectCallCode
+	 */
 	public void generateProjectCodes(String projectCallCode);
+	
+	/**
+	 * 
+	 * @param PROJ_Code
+	 * @return
+	 */
+	public List<xProjects> loadListSubmittedProjectsForSummary();
 }

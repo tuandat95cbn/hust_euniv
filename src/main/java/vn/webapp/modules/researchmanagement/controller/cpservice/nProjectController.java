@@ -280,7 +280,6 @@ public class nProjectController extends BaseRest {
 	@RequestMapping(value = "/getstaffslist", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
 	public String getStaffsList(@RequestParam(value = "sProjectCallCode", defaultValue = "0") String sProjectCallCode) {
 		String sReturn = "";
-		System.out.println("");
 		// Get department lists
 		if(!"".equals(sProjectCallCode))
 		{

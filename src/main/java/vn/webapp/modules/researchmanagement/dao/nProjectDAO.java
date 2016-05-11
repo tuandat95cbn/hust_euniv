@@ -5,6 +5,7 @@ import java.util.List;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mThreads;
+import vn.webapp.modules.researchmanagement.model.xProjects;
 
 public interface nProjectDAO {
 	/**
@@ -205,5 +206,12 @@ public interface nProjectDAO {
 	 * @return
 	 */
 	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code);
+	
+	/**
+	 * 
+	 * @param PROJ_Code
+	 * @return
+	 */
+	public List<xProjects> loadListSubmittedProjectsForSummary();
 
 }
