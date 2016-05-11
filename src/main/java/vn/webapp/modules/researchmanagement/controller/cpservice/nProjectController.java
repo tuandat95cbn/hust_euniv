@@ -74,6 +74,7 @@ public class nProjectController extends BaseRest {
 		return json;
 	}
 	
+	
     @ResponseBody
     @RequestMapping(value = "threads", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
     public String dataTable1(HttpServletRequest  request, HttpSession session ) {
@@ -159,6 +160,15 @@ public class nProjectController extends BaseRest {
      * @param sProductCategory
      * @return
      */
+
+	private List<mThreadsList> listProjectsMultiCriteria(String userRole,String userCode, Integer iStartItem, Integer iNumberOfItemsOnPage, String sThreadStatus, 
+			String sThreadCategory, String sThreadYear, String sThreadFaculty, String sThreadDepartment, String sThreadStaff) {
+		List<mThreadsList> projects = new ArrayList<mThreadsList>();
+		
+	
+		return projects;
+	}
+	
 	private List<mThreadsList> createPaginationData(String userRole,String userCode, Integer iStartItem, Integer iNumberOfItemsOnPage, String sThreadStatus, 
 			String sThreadCategory, String sThreadYear, String sThreadFaculty, String sThreadDepartment, String sThreadStaff) {
 		// Get list products

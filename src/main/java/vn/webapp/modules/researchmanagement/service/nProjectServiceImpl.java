@@ -236,6 +236,10 @@ public class nProjectServiceImpl implements nProjectService {
 	 * @param String
 	 * @return object
 	 */
+	public List<mThreads> listAll(){
+		return threadDAO.listAll();
+	}
+	
 	@Override
 	public List<mThreads> filerThreadsListNoPagination(String userRole, String userCode,
 			String sThreadStatus,
@@ -445,6 +449,8 @@ public class nProjectServiceImpl implements nProjectService {
 				+ ", sThreadSatff = " + sThreadStaff);*/
 		try {
 			List<mThreads> FL = filerThreadsListNoPagination(userRole, userCode, sThreadStatus, sThreadCategory, sThreadYear, sThreadFaculty, sThreadDepartment, sThreadStaff);
+			//List<mThreads> FL = listAll();
+			
 			ArrayList<mThreads> pFL = new ArrayList<mThreads>();// extract from iStartItem to iStartItems + iNumberItems - 1
 			int iEndItem = iStartItem + iNumberOfItems < FL.size() ? iStartItem + iNumberOfItems : FL.size();
 			for(int i = iStartItem; i < iEndItem; i++){

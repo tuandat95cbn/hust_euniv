@@ -98,6 +98,8 @@ public interface nProjectDAO {
 	 * @param sThreadStaff
 	 * @return
 	 */
+	public List<mThreads> listAll();
+
 	public List<mThreads> filerThreadsList(String userRole, String userCode, String sThreadStatus, String sThreadCategory, String sThreadYear, String sThreadFaculty, String sThreadDepartment, String sThreadStaff);
 	
 	/**

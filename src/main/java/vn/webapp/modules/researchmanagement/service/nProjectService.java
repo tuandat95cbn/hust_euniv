@@ -109,6 +109,8 @@ public interface nProjectService {
 	 * @param sThreadStaff
 	 * @return
 	 */
+	public List<mThreads> listAll();
+
 	public List<mThreads> filerThreadsList(String userRole, String userCode, Integer iStartItem, Integer iNumberOfItems, String sThreadStatus, String sThreadCategory, String sThreadYear, String sThreadFaculty, String sThreadDepartment, String sThreadStaff);
 	
 	/**

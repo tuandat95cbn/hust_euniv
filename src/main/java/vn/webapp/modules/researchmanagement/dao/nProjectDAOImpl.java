@@ -281,6 +281,25 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 	/**
 	 * 
 	 */
+	public List<mThreads> listAll(){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(mThreads.class);
+			criteria.setFirstResult(0);
+			List<mThreads> threads = criteria.list();
+			commit();
+			return threads;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+		
+	}
 	@Override
 	public List<mThreads> filerThreadsList(String userRole, String userCode, Integer iStartItem, Integer iNumberOfItems, 
 			String sThreadStatus, String sThreadCategory, String sThreadYear, String sThreadFaculty, 
