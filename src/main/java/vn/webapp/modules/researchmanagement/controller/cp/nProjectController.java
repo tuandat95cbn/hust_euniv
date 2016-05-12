@@ -238,12 +238,34 @@ public class nProjectController extends BaseWeb {
 	 * @param model
 	 * @return
 	 */
+	
+	public List<Projects> listProjectsWithFullInformation(String userRole, String userCode){
+		List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+		List<mStaff> staffs = staffService.listStaffs();
+		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
+		for(mStaff st: staffs){
+			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
+		}
+		HashMap<String, String> mProjectCallCode2Name = new HashMap<String, String>();
+		List<mProjectCalls> projectCalls = projectCallsService.loadProjectCallsList();
+		for(mProjectCalls pc: projectCalls){
+			mProjectCallCode2Name.put(pc.getPROJCALL_CODE(), pc.getPROJCALL_NAME());
+		}
+		
+		for(Projects p: projectsList){
+			p.setPROJ_User_Code(mStaffCode2Name.get(p.getPROJ_User_Code()));
+			p.setPROJ_PRJCall_Code(mProjectCallCode2Name.get(p.getPROJ_PRJCall_Code()));
+		}
+		return projectsList;
+	}
 	@RequestMapping(value = "/collect-comments", method = RequestMethod.GET)
 	public String getProjectsForShowingComments(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-		List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
-
+		
+		//List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+		List<Projects> projectsList = listProjectsWithFullInformation(userRole, userCode);
+		
 		model.put("projectsList", projectsList);
 		model.put("projects", status);
 		return "cp.listcomments";

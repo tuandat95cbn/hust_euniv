@@ -33,8 +33,10 @@
 							<thead>
 								<tr>
 									<th>STT</th>
-									<th>Mã loạt đề tài</th>
-									<th>Edit</th>
+									<th>Tên đề tài</th>
+									<th>Chủ nhiệm</th>
+									<th>Đợt gọi</th>
+									<th>Xem và phê duyệt</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -44,6 +46,8 @@
 										<c:set var="count" value="${count + 1}" scope="page"/> 
 										<td><c:out value="${count}"/></td>
 										<td><c:out value="${project.PROJ_Name}"/></td>
+										<td><c:out value="${project.PROJ_User_Code}"/></td>
+										<td><c:out value="${project.PROJ_PRJCall_Code}"/></td>
 										<td class="center">
 											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn ${(project.PROJ_Status_Code == 'APPROVED') ? 'btn-warning' : (project.PROJ_Status_Code == 'REJECT' ? 'btn-danger' : 'btn-primary')} btn-xs" title="${(project.PROJ_Status_Code == 'APPROVED') ? 'Đã chấp nhận' : (project.PROJ_Status_Code == 'REJECT' ? 'Đã bị loại' : 'Chỉnh sửa')}">Xem và phê duyệt</button>
 										</td>
