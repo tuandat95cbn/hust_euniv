@@ -72,6 +72,7 @@ import vn.webapp.modules.researchmanagement.service.mProjectStaffsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStatusService;
 import vn.webapp.modules.researchmanagement.service.nProjectService;
 import vn.webapp.modules.researchmanagement.validation.ProjectsValidation;
+import vn.webapp.modules.researchmanagement.validation.mProjectExcellStatisticsValidation;
 import vn.webapp.modules.researchmanagement.validation.mThreadApproveValidation;
 import vn.webapp.modules.researchmanagement.validation.mThreadExcellValidation;
 import vn.webapp.modules.researchmanagement.validation.mThreadValidation;
@@ -162,6 +163,41 @@ public class nProjectController extends BaseWeb {
 		return "cp.projectsList";
 	}
 	
+	@RequestMapping(value = "/list-projects-statisitcs", method = RequestMethod.GET)
+	public String getListProjectsStatistics(ModelMap model, HttpSession session) {
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		List<mStaff> staffs = staffService.listStaffs();
+		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
+		for(mStaff st: staffs){
+			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
+		}
+		List<mProjectCalls> prjCalls = projectCallsService.loadProjectCallsList();
+		HashMap<String, String> mProjectCallCode2Name = new HashMap<String, String>();
+		for(mProjectCalls pc: prjCalls){
+			mProjectCallCode2Name.put(pc.getPROJCALL_CODE(), pc.getPROJCALL_NAME());
+		}
+		
+		List<mProjectStatus> status = projectStatusService.list();
+		HashMap<String, String> mStatusCode2Name = new HashMap<String, String>();
+		for(mProjectStatus ps: status){
+			mStatusCode2Name.put(ps.getPROJSTAT_Code(), ps.getPROJSTAT_Description());
+		}
+		
+		List<mThreads> projectsList = threadService.listAll();// threadService.loadProjectsListByStaff(userRole, userCode);
+		for(mThreads t: projectsList){
+			t.setPROJ_PRJCall_Code(mProjectCallCode2Name.get(t.getPROJ_PRJCall_Code()));
+			t.setPROJ_User_Code(mStaffCode2Name.get(t.getPROJ_User_Code()));
+			t.setPROJ_Status_Code(mStatusCode2Name.get(t.getPROJ_Status_Code()));
+		}
+		System.out.println(name() + "::getListProjectsStatistics, userCode = " + userCode + ", userRole = " + userRole);
+		
+		model.put("projectsList", projectsList);
+		model.put("projectCallsList", prjCalls);
+		model.put("projects", status);
+		return "cp.projectsListStatisitics";
+	}
+
 	/**
 	 * 
 	 * @param model
@@ -1883,10 +1919,115 @@ public class nProjectController extends BaseWeb {
 		   
 	   }
 	   
+		@RequestMapping(value = "/projectExcell-statistics", method = RequestMethod.POST)
+		public ModelAndView downloadExcelThreadsStatistics(@Valid @ModelAttribute("threadExcellForm") 
+		mProjectExcellStatisticsValidation projectValidExcell, BindingResult result, Map model, HttpSession session) {
+			//List<mAcademicYear> patentReportingAcademicDateList = academicYearService.list();
+			List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+			String projectCallCode = projectValidExcell.getProjectCallCode();
+			
+			model.put("projectCallsList", projectCallsList);
+		   // model.put("reportingAcademicDate", patentReportingAcademicDateList);
+		    // create some sample data
+			 if(result.hasErrors()) {
+		          return new ModelAndView("cp.threads");
+		     }else
+		     {
+		    	/**
+		    	 * Get list of all Projects (Topics)
+		    	 */
+				//String yearForGenerating = threadValidExcell.getThreadYear();
+				//String threadCategory = threadValidExcell.getThreadCatCode();
+				//String threadStatus = threadValidExcell.getThreadStatus();
+				//String threadFaculty = threadValidExcell.getThreadFaculty();
+				//String threadDepartment = threadValidExcell.getThreadDepartment();
+				//String threadStaff = threadValidExcell.getThreadStaff();
+				// Get list of Threads
+				
+				List<mStaff> staffs = staffService.listStaffs();
+				HashMap<String, mStaff> mCode2Staff = new HashMap<String, mStaff>();
+				for(mStaff st: staffs){
+					mCode2Staff.put(st.getStaff_Code(), st);
+				}
+				
+				
+				
+				System.out.println(name() + "::downloadExcelThreadsStatistics, projectCallCode = " + projectCallCode);
+
+				//List<mThreads> threadsList = threadService.loadThreadsListForReporting(threadCategory, 
+				//		threadStatus, threadFaculty, threadDepartment, threadStaff, yearForGenerating);
+				List<mThreads> threadsList = threadService.listAll();
+				
+				List<List<String>> summaryThreadList = new ArrayList<>();
+				if(threadsList != null)
+				{
+					for(mThreads threads : threadsList)
+					{
+						String leaderFaculty = threadService.getFacultyName(threads.getStaff().getStaff_Faculty_Code());
+						String leaderDepartment = threadService.getDepartmentName(threads.getStaff().getStaff_Department_Code());
+						mStaff staff = mCode2Staff.get(threads.getPROJ_User_Code());
+						List<ProjectTasks> tasks = projectTasksService.loadAProjectTaskByProjectCode(threads.getPROJ_Code());
+						
+						int totalBudget = threads.getPROJ_BudgetMaterial();
+						
+						HashSet<String> members = new HashSet<String>();
+						for(ProjectTasks pTask: tasks){
+							String mCode = pTask.getPRJTSK_StaffCode();
+							totalBudget += pTask.getPRJTSK_Cost();
+							if(!mCode.equals(staff.getStaff_User_Code()))
+								members.add(mCode);
+						}
+						
+						
+						//String sFacultyname = threadService.
+						List<String> summaryThread = new ArrayList<>();
+						//summaryThread.add(threads.getPROJ_User_Code());
+						String memberList = staff.getStaff_Name();
+						if(members.size() > 0){
+							memberList += " (Thành viên: ";
+							for(String st: members)
+								memberList += st + ", ";
+							memberList += ")";
+						}
+						summaryThread.add(memberList);
+						summaryThread.add(leaderFaculty);
+						summaryThread.add(leaderDepartment);
+						summaryThread.add(threads.getPROJ_Name());
+						//summaryThread.add(Integer.toString(threads.getPROJ_TotalBudget()));
+						summaryThread.add(Integer.toString(totalBudget));
+						summaryThread.add(threads.getPROJ_Content());
+						summaryThread.add(threads.getPROJ_Result());
+						summaryThreadList.add(summaryThread);
+					}
+				    /**
+				     * Get list of all Patents
+				     */
+					 
+				}
+				
+				HashSet<String> listMembers = new HashSet<>();
+				List<ProjectTasks> listProjectTasks = projectTasksService.getList();
+				if(listProjectTasks.size() > 0)
+				{
+					for (ProjectTasks projectTask : listProjectTasks) {
+						listMembers.add(projectTask.getStaffProject().getStaff_Name());
+					}
+				}
+				
+			    model.put("listMembers", listMembers);
+			    model.put("summaryThreadList", summaryThreadList);
+				model.put("yearOfPaper", "1111");
+				// return a view which will be resolved by an excel view resolver
+				return new ModelAndView("excelThreadsView");
+		     }
+		}
+
 	   /**
 		 * Handle request to download an Excel 97-2003 document 
 		 */
-		@RequestMapping(value = "/threadsExcell", method = RequestMethod.POST)
+
+	   
+	   @RequestMapping(value = "/threadsExcell", method = RequestMethod.POST)
 		public ModelAndView downloadExcelThreads(@Valid @ModelAttribute("threadExcellForm") mThreadExcellValidation threadValidExcell, BindingResult result, Map model, HttpSession session) {
 			List<mAcademicYear> patentReportingAcademicDateList = academicYearService.list();
 			List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
