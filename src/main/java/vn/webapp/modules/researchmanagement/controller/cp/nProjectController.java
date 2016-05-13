@@ -162,7 +162,15 @@ public class nProjectController extends BaseWeb {
 		model.put("projects", status);
 		return "cp.projectsList";
 	}
+
+	@RequestMapping(value = "/list-projects-statisitcs-params", method = RequestMethod.GET)
+	public String getListProjectsStatisticsParams(ModelMap model, HttpSession session) {
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
 	
+		return "cp.projectsListStatisiticsParams";
+	}
+
 	@RequestMapping(value = "/list-projects-statisitcs", method = RequestMethod.GET)
 	public String getListProjectsStatistics(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();

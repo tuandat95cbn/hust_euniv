@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import vn.webapp.controller.BaseWeb;
 import vn.webapp.modules.researchdeclarationmanagement.model.mPapers;
+import vn.webapp.modules.usermanagement.model.Role;
 import vn.webapp.modules.usermanagement.model.mDepartment;
 import vn.webapp.modules.usermanagement.model.mEditFunctions;
 import vn.webapp.modules.usermanagement.model.mFaculty;
@@ -35,6 +36,7 @@ import vn.webapp.modules.usermanagement.model.mFunction;
 import vn.webapp.modules.usermanagement.model.mStaff;
 import vn.webapp.modules.usermanagement.model.mUser;
 import vn.webapp.modules.usermanagement.model.mUsers;
+import vn.webapp.modules.usermanagement.service.RoleService;
 import vn.webapp.modules.usermanagement.service.mDepartmentService;
 import vn.webapp.modules.usermanagement.service.mFacultyService;
 import vn.webapp.modules.usermanagement.service.mFuncsPermissionService;
@@ -54,6 +56,9 @@ public class mUserController extends BaseWeb {
     private mUserService userService;
 	
 	@Autowired
+	private RoleService roleService;
+	
+	@Autowired
     private mFacultyService facultyService;
 	
 	@Autowired
@@ -70,7 +75,9 @@ public class mUserController extends BaseWeb {
 	 * Set Super admin acc
 	 */
     static final String SUPER_ADMIN = "SUPER_ADMIN";
-    
+    static final String ROLE_ADMIN = "ROLE_ADMIN";
+    static final String ROLE_USER = "ROLE_USER";
+    static final String ROLE_ADMIN_RESEARCH_MANAGEMENT_FACULTY = "ROLE_ADMIN_RESEARCH_MANAGEMENT_FACULTY";
     /**
      * Set staff category code
      */
@@ -81,16 +88,21 @@ public class mUserController extends BaseWeb {
     * @param model
     * @return
     */
+    public String name(){
+    	return "mUserController";
+	}
    @RequestMapping(value = "/users", method = RequestMethod.GET)
    public String listUsers(ModelMap model, HttpSession session) {
    	//DataPage<Users> usersData = userService.list();
    	//List<Users> usersList = usersData.getData();
    	List<mStaff> staffsList = new ArrayList<mStaff>();
    	String userRole = session.getAttribute("currentUserRole").toString();
-   	if(userRole.equals(mUserController.SUPER_ADMIN)){
+   	if(userRole.equals(mUserController.SUPER_ADMIN) ||
+   			userRole.equals(mUserController.ROLE_ADMIN)){
    		staffsList = staffService.listStaffs();
    	}else{
     	String currentUserFaculty = session.getAttribute("currentUserFaculty").toString();
+    	System.out.println(name() + "::listUsers, facultyCode = " + currentUserFaculty);
     	staffsList = staffService.listStaffsByFalcuty(currentUserFaculty);
    	}
    	
@@ -195,7 +207,18 @@ public class mUserController extends BaseWeb {
 	   List<mFunction> funcsChildrenPermissionList = BaseWeb.mFuncsChildrenPermissionList;
 	   List<mFunction> funcsParentsPermissionList = BaseWeb.mFuncsParentsPermissionList;
 	   
-	   for (mFunction mFunction : funcsChildrenPermissionList) {
+	   List<Role> roles = roleService.list();
+	   if(!userRole.equals(mUserController.ROLE_ADMIN) && !userRole.equals(mUserController.SUPER_ADMIN)){
+		   Role sel_role = null;
+		   for(Role r: roles){
+			   if(r.getROLE_CODE().equals(user.get("userRole"))){
+				   sel_role = r; break;
+			   }
+		   }
+		   roles.clear();roles.add(sel_role);
+	   }
+	   
+		   for (mFunction mFunction : funcsChildrenPermissionList) {
 		   mEditFunctions temp = new mEditFunctions();
 		   temp.setFUNC_ID(mFunction.getFUNC_ID());
 		   temp.setFUNC_CODE(mFunction.getFUNC_CODE());
@@ -249,6 +272,7 @@ public class mUserController extends BaseWeb {
        model.put("users", status);
 	   model.put("currentUserName", session.getAttribute("currentUserName"));
 	   model.put("currentUserRole", session.getAttribute("currentUserRole"));
+	   model.put("roles",roles);
       return "cp.editAnUser";
   }
   

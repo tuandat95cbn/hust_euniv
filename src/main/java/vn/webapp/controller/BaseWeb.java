@@ -24,7 +24,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import vn.webapp.modules.usermanagement.model.mEditFunctions;
 import vn.webapp.modules.usermanagement.model.mFuncsPermission;
 import vn.webapp.modules.usermanagement.model.mFunction;
+import vn.webapp.modules.usermanagement.model.mStaff;
+import vn.webapp.modules.usermanagement.model.mUser;
+import vn.webapp.modules.usermanagement.service.mFacultyService;
 import vn.webapp.modules.usermanagement.service.mFuncsPermissionService;
+import vn.webapp.modules.usermanagement.service.mStaffService;
+import vn.webapp.modules.usermanagement.service.mUserService;
 
 public class BaseWeb {
 
@@ -35,6 +40,7 @@ public class BaseWeb {
     protected static String sUserCode;
     protected static String sUserName;
     protected static String sUserRole;
+    protected static String facultyCode;
     public static List<mFunction> mFuncsPermissionList;
     public static List<mFunction> mFuncsChildrenPermissionList;
     public static List<mFunction> mFuncsParentsPermissionList;
@@ -54,6 +60,9 @@ public class BaseWeb {
                             
     @Autowired
     private mFuncsPermissionService funcsPermissionService;
+    
+    @Autowired
+    private mStaffService staffService;
     
     public BaseWeb() {
 		// TODO Auto-generated constructor stub
@@ -101,6 +110,8 @@ public class BaseWeb {
      */
     @ModelAttribute
     public void addGlobalAttr(ModelMap map, HttpSession session) {
+    	
+    	
     	// set permission
     	this.setPermission(session);
     	
@@ -119,6 +130,12 @@ public class BaseWeb {
         // Get current username 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if(!"".equals(username)) map.put("username", username);
+        
+        mStaff staff = staffService.loadStaffByUserCode(username);
+        String facultyCode = staff.getStaff_Faculty_Code();
+        
+        map.put("facultyCode", facultyCode);
+        System.out.println("BaseWeb::addGlobalAttr, facultyCode = " + facultyCode);
         
         assetsUrl = baseUrl + "/assets";
         map.put("baseUrl", baseUrl);

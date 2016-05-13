@@ -13,7 +13,7 @@
     	<!-- <intercept-url pattern="/cp/users.html" access="hasRole('ROLE_ADMIN')" /> -->
         
         <!-- For many roles -->
-        <intercept-url pattern="/cp/users.html" access="hasAnyRole('ROLE_ADMIN', 'SUPER_ADMIN')" />
+        <intercept-url pattern="/cp/users.html" access="hasAnyRole('ROLE_ADMIN_RESEARCH_MANAGEMENT_FACULTY','ROLE_ADMIN', 'SUPER_ADMIN')" />
                
         <form-login login-page="/cp/auth/login.html" 
         			default-target-url="/cp/home.html"

@@ -152,13 +152,17 @@
                             <div class="form-group">
                                 <label>Role</label>
                                 <form:select path="role" class="form-control" name="role">
-                                     <c:if test="${currentUserRole eq 'ROLE_ADMIN' || currentUserRole eq 'SUPER_ADMIN'}">
+                                     <%-- <c:if test="${currentUserRole eq 'ROLE_ADMIN' || currentUserRole eq 'SUPER_ADMIN'}">
                                      	<option value="ROLE_ADMIN" <c:if test="${dataUser['userRole'] == 'ROLE_ADMIN'}">selected</c:if>>Quản trị</option>
                                      </c:if>
                                      <c:if test="${dataUser['userRole'] eq 'ROLE_USER' && currentUserName ne dataUser['username']}">
                                      	<option value="ROLE_USER" <c:if test="${dataUser['userRole'] == 'ROLE_USER'}">selected</c:if> >Người dùng</option>
-                                     </c:if>
+                                     </c:if> --%>
+                                     <c:forEach items="${roles}" var="role">
+				                       		<option value="${role.ROLE_CODE}" <c:if test="${dataUser['userRole'] eq role.ROLE_CODE}">selected</c:if>>${role.ROLE_NAME}</option>
+				                     </c:forEach>
                                 </form:select>
+                                
                             </div>
                             <div class="form-group">
                                 <label>Kích hoạt ?</label>
