@@ -45,12 +45,11 @@
 									<tr class="gradeX">
 										<c:set var="count" value="${count + 1}" scope="page"/>  
 										<td><c:out value="${count}"/></td>
-										<td><c:out value="${project.PROJ_Name}"/></td>
-										<td><c:out value="${project.staff.staff_Name}"/></td>
-										<td><c:out value="10"/></td>
-										<td><c:out value="${project.commentsOfSubmittedProjects.COMPROJ_COMMENT}"/></td>
+										<td><c:out value="${project[0]}"/></td>
+										<td><c:out value="${project[1]}"/></td>
+										<td><c:out value="${project[2]}"/></td>
+										<td><c:out value="${project[3] != '' ? project[3] : 'N/A'}"/></td>
 									</tr>
-									
 								</c:forEach>
 							</tbody>
 						</table>

@@ -61,7 +61,7 @@ public class xProjects implements Serializable{
     @JoinColumn(name = "PROJ_Code", referencedColumnName = "COMPROJ_PRJCODE", insertable=false, updatable=false)
     private mCommentsOfSubmittedProjects commentsOfSubmittedProjects;
     
-    @OneToMany(mappedBy="xprojects")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="xprojects", cascade = CascadeType.ALL)
     private Set<xDetailCommentSubmittedProjects> detailCommentSubmittedProjects;
 
 	public int getPROJ_ID() {

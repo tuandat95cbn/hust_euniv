@@ -38,7 +38,7 @@ public class xDetailCommentSubmittedProjects implements Serializable{
     private String CMTSUBPRJ_Eval_Classification;
     private String CMTSUBPRJ_Eval_Conclusion;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="CMTSUBPRJ_PRJCode", referencedColumnName = "PROJ_Code", insertable = false, updatable = false)
     public xProjects xprojects;
     

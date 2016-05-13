@@ -7,8 +7,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.text.DateFormat;
 import java.util.Calendar;
 
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -43,6 +46,7 @@ import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
 import vn.webapp.modules.researchmanagement.model.mJuryRoleOfSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
+import vn.webapp.modules.researchmanagement.model.xDetailCommentSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.xProjects;
 import vn.webapp.modules.researchmanagement.service.mCommentsOfSubmittedProjectsService;
 
@@ -331,6 +335,54 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadListStaffJuryOfSubmittedProjectByStaffCode(userCode);
 		
 		List<xProjects> xProjects = projectService.loadListSubmittedProjectsForSummary();
+		HashSet<List<String>> listProjectSummary = new HashSet<List<String>>();
+		try{
+		if(xProjects != null)
+		{
+			int i = 0;
+			for (xProjects oPrj : xProjects) {
+				List<String> listTemp = new ArrayList<String>();
+				int iAverageTotalPoints = 1;
+				Set<xDetailCommentSubmittedProjects> detailCommentsSubmittedProjectList = oPrj.getDetailCommentSubmittedProjects();
+				if(detailCommentsSubmittedProjectList != null){
+					int iTotalPoints = 0;
+					int iIterator = 0;
+					for (xDetailCommentSubmittedProjects xDetailCommentSubmittedProjects : detailCommentsSubmittedProjectList) {
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_Applicability();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_Education_Graduate();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_Graduate_Student();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_Innovation();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_Motivation();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_Paper();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_Patent();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_Product();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_RearchMethodology();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_Reasonable_Budget();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_ResearchContent();
+						iTotalPoints += xDetailCommentSubmittedProjects.getCMTSUBPRJ_Eval_Young_Rearcher();
+						iIterator++;
+					}
+					iAverageTotalPoints = (iIterator > 0) ? iTotalPoints/iIterator : 0;
+				}
+				listTemp.add(oPrj.getPROJ_Name()); // Project Name
+				listTemp.add(oPrj.getStaff().getStaff_Name()); // Staff Name
+				listTemp.add(Integer.toString(iAverageTotalPoints)); // Averange Name
+				String sCommentTemp = "";
+				if(oPrj.getCommentsOfSubmittedProjects() != null)
+				{
+					sCommentTemp = Jsoup.parse(oPrj.getCommentsOfSubmittedProjects().getCOMPROJ_COMMENT()).text(); 
+				}
+				listTemp.add(sCommentTemp); // Comment
+				
+				// Add element to the list
+				listProjectSummary.add(listTemp);
+				i++;
+			}
+		}
+		}catch(Exception e)
+		{
+			System.out.println("XXX : " + e.getMessage());
+		}
 		
 		//List of projects 
 		List<Projects> projectList = new ArrayList<Projects>();
@@ -339,8 +391,7 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 		}
 		
 		// Put data back to view
-		model.put("projectList", xProjects);
-		 
+		model.put("projectList", listProjectSummary);
 		return "cp.commentsSubmittedProjectsResultSummary";
 	}
  
