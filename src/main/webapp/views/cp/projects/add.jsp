@@ -52,10 +52,21 @@
 	                                    <form:errors path="projectCallCode" class="alert-danger"></form:errors>
 	                                </div>
 	                                <div class="form-group">
+	                                    <label>Chọn lĩnh vực đề tài*</label>
+	                                    <form:select path="projectResearchFieldCode" class="form-control" name="projectResearchFieldCode">
+	                                    	<c:forEach items="${projectResearchFieldList}" var="proj_field">
+		                                        <option value="${proj_field.PRJRSHF_Code}">${proj_field.PRJRSHF_Name}</option>
+	                                       	</c:forEach>
+	                                    </form:select>
+	                                    <form:errors path="projectResearchFieldCode" class="alert-danger"></form:errors>
+	                                </div>
+	                                
+	                                <div class="form-group">
 	                                    <label for="projectName">Tên đề tài*</label>
 	                                    <form:input path="projectName" class="form-control" name="projectName" placeholder="Project Name"></form:input>
 	    								<form:errors path="projectName" class="alert-danger"></form:errors>
 	                                </div>
+	                                
 	                                <div class="form-group">
 	                                    <label for="projectStartDate">Thời gian bắt đầu</label>
 	                                    <form:input path="projectStartDate" class="form-control" name="projectStartDate" readonly="true" placeholder="Project Start Date"></form:input>

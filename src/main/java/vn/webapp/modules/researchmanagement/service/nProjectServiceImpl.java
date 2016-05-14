@@ -740,7 +740,8 @@ public class nProjectServiceImpl implements nProjectService {
 	@Override
 	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,
 			String projectContent,String projectMotivation,String projectResult,int budgetMaterial, int totalBudget, String projectCode,
-			String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate, String projectCategory){
+			String facultyAdd,String projectSurvey,String projectObjective,
+			String startDate,String endDate, String projectCategory, String projectResearchFieldCode){
 		System.out.println("nProjectService::saveAProject, projectName = " + projectName + ", projectCode = " + projectCode);
 		if(userCode != "" && projectCode != "" && projectName != "" && projectCallCode != "")
 		{
@@ -760,6 +761,7 @@ public class nProjectServiceImpl implements nProjectService {
 			beInsertedProject.setPROJ_EndDate(endDate);
 			beInsertedProject.setPROJ_Objective(projectObjective);
 			beInsertedProject.setPROJ_ProjCat_Code(projectCategory);
+			beInsertedProject.setPROJ_ResearchFieldCode(projectResearchFieldCode);
 			int iInsertedProjectId = threadDAO.saveAProject(beInsertedProject);
 			if(iInsertedProjectId > 0 )
 			{
@@ -994,7 +996,7 @@ public class nProjectServiceImpl implements nProjectService {
 	 */
 	@Override
 	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, String projectMotivation, String projectResult, 
-								int budgetMaterial, String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject, int projectBudget){
+								int budgetMaterial, String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject, int projectBudget, String projectResearchFieldCode){
 		Projects project = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
 		if (project != null) {
 			if(bEditSumittedProject == true)
@@ -1021,6 +1023,7 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_FacultyCode(facultyAdd);
 				project.setPROJ_Objective(projectObjective);
 				project.setPROJ_Survey(projectSurvey);
+				project.setPROJ_ResearchFieldCode(projectResearchFieldCode);
 			}
 			threadDAO.editAProject(project);
 		}

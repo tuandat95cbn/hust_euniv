@@ -52,8 +52,17 @@ public class xProjects implements Serializable{
     private String PROJ_PRJCall_Code; // Mã đợt gọi đề tài
     private int PROJ_BudgetMaterial; // Chi mua vật tư nguyên vật liệu
     private int PROJ_BudgetMaterialChanged; // Chi mua vật tư nguyên vật liệu
+    private String PROJ_ResearchFieldCode;// ma linh vuc
     
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public String getPROJ_ResearchFieldCode() {
+		return PROJ_ResearchFieldCode;
+	}
+
+	public void setPROJ_ResearchFieldCode(String pROJ_ResearchFieldCode) {
+		PROJ_ResearchFieldCode = pROJ_ResearchFieldCode;
+	}
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "PROJ_User_Code", referencedColumnName = "Staff_User_Code", insertable=false, updatable=false)
     private mStaffThread staff;
     

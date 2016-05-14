@@ -206,9 +206,10 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 				juryOfAnnouncedProjectCallList.get(i).setJUSUPRJ_STAFFCODE(staffHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUSUPRJ_STAFFCODE()));
 				juryOfAnnouncedProjectCallList.get(i).setJUPSURJ_ROLECODE(roleHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUPSURJ_ROLECODE()));
 			}
-			
+			List<mFaculty> listFaculty = facultyService.loadFacultyList();
 			model.put("projectCallList", projectCallList);
 			model.put("staffList", staffList);
+			model.put("listFaculty", listFaculty);
 			model.put("juryRoleOfSubmittedProjecsList", juryRoleOfSubmittedProjecsList);
 			model.put("juryOfAnnouncedProjectCallFormAdd", new mJuryOfAnnouncedProjectCallValidation());
 			model.put("juryOfAnnouncedProjectCallList", juryOfAnnouncedProjectCallList);
@@ -261,9 +262,10 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 			juryOfAnnouncedProjectCallList.get(i).setJUSUPRJ_STAFFCODE(staffHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUSUPRJ_STAFFCODE()));
 			juryOfAnnouncedProjectCallList.get(i).setJUPSURJ_ROLECODE(roleHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUPSURJ_ROLECODE()));
 		}
-		
+		List<mFaculty> listFaculty = facultyService.loadFacultyList();
 		model.put("projectCallList", projectCallList);
 		model.put("staffList", staffList);
+		model.put("listFaculty", listFaculty);
 		model.put("juryRoleOfSubmittedProjecsList", juryRoleOfSubmittedProjecsList);
 		model.put("juryOfAnnouncedProjectCallFormAdd", new mJuryOfAnnouncedProjectCallValidation());
 		model.put("juryOfAnnouncedProjectCallList", juryOfAnnouncedProjectCallList);

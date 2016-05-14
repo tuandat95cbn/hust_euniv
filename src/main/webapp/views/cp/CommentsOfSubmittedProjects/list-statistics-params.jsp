@@ -186,7 +186,8 @@ $(document).ready(function () {
 });
 
 function v_fSubmitFilter(){
-	var sAction = "${baseUrl}/cp/list-projects-statisitcs";
+	//var sAction = "${baseUrl}/cp/list-projects-statisitcs";
+	var sAction = "${baseUrl}/cp/submitted-projects-result-summary.html";
 	//alert(sAction);
 	// Reset action url
 	$("form#formSubmit").attr("action",sAction);

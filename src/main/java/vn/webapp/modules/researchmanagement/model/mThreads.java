@@ -45,8 +45,17 @@ public class mThreads implements Serializable{
     private String PROJ_PRJCall_Code;
     private int PROJ_BudgetMaterial;
     private int PROJ_BudgetMaterialChanged;
+    private String PROJ_ResearchFieldCode;
     
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public String getPROJ_ResearchFieldCode() {
+		return PROJ_ResearchFieldCode;
+	}
+
+	public void setPROJ_ResearchFieldCode(String pROJ_ResearchFieldCode) {
+		PROJ_ResearchFieldCode = pROJ_ResearchFieldCode;
+	}
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "PROJ_User_Code", referencedColumnName = "Staff_User_Code", insertable=false, updatable=false)
     private mStaffThread staff;
     

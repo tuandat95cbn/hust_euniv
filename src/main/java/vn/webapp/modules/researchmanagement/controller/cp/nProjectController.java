@@ -55,6 +55,7 @@ import vn.webapp.modules.researchdeclarationmanagement.service.tProjectCategoryS
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectService;
 import vn.webapp.modules.researchmanagement.model.DetailCommentSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.ProjectParticipationRoles;
+import vn.webapp.modules.researchmanagement.model.ProjectResearchField;
 import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;
@@ -64,6 +65,7 @@ import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 import vn.webapp.modules.researchmanagement.service.ProjectParticipationRolesService;
+import vn.webapp.modules.researchmanagement.service.ProjectResearchFieldService;
 import vn.webapp.modules.researchmanagement.service.ProjectTasksService;
 import vn.webapp.modules.researchmanagement.service.mCommentsOfSubmittedProjectsService;
 import vn.webapp.modules.researchmanagement.service.mProjectCallsService;
@@ -135,6 +137,10 @@ public class nProjectController extends BaseWeb {
 	@Autowired
 	mCommentsOfSubmittedProjectsService commentsOfSubmittedProjectsService;
 
+	@Autowired
+	ProjectResearchFieldService projectResearchFieldService;
+	
+	
 	static final String status = "active";
 	
 	public static final String _sHTMLTemplate = "html/template.html";
@@ -193,7 +199,9 @@ public class nProjectController extends BaseWeb {
 	}
 
 	@RequestMapping(value = "/list-projects-statisitcs", method = RequestMethod.POST)
-	public String getListProjectsStatistics(ModelMap model, HttpSession session, HttpServletRequest request, @Valid @ModelAttribute("threadExcellForm") mThreadExcellValidation threadExcellForm) {
+	public String getListProjectsStatistics(ModelMap model, HttpSession session, 
+			HttpServletRequest request, 
+			@Valid @ModelAttribute("threadExcellForm") mThreadExcellValidation threadExcellForm) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String projectCallCode = (threadExcellForm.getThreadYear() != null) ? threadExcellForm.getThreadYear() : "";
@@ -202,11 +210,11 @@ public class nProjectController extends BaseWeb {
 		String departmentCode = (threadExcellForm.getThreadDepartment() != null) ? threadExcellForm.getThreadDepartment() : "";
 		String staffCode = (threadExcellForm.getThreadStaff() != null) ? threadExcellForm.getThreadStaff() : "";
 		
-		System.out.println(" projectCallCode : " + projectCallCode);
-		System.out.println(" statusCode : " + statusCode);
-		System.out.println(" facultyCode : " + facultyCode);
-		System.out.println(" departmentCode : " + departmentCode);
-		System.out.println(" staffCode : " + staffCode);
+		System.out.println(name() + "::getListProjectsStatistics projectCallCode : " + projectCallCode);
+		System.out.println(name() + "::getListProjectsStatistics statusCode : " + statusCode);
+		System.out.println(name() + "::getListProjectsStatistics facultyCode : " + facultyCode);
+		System.out.println(name() + "::getListProjectsStatistics departmentCode : " + departmentCode);
+		System.out.println(name() + "::getListProjectsStatistics staffCode : " + staffCode);
 		
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
@@ -565,6 +573,8 @@ public class nProjectController extends BaseWeb {
 		// Get list member roles
 		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
 		
+		List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
+		
 		// Put data back to view
 		model.put("staffList", staffList);
 		model.put("currentUserName", session.getAttribute("currentUserName").toString());
@@ -572,6 +582,8 @@ public class nProjectController extends BaseWeb {
 		model.put("listFaculty", listFaculty);
 		model.put("projectCallsList", projectCallsList);
 		model.put("projectsAddForm", new ProjectsValidation());
+		model.put("projectResearchFieldList", projectResearchFields);
+		
 		model.put("projects", status);
 		return "cp.addAProject";
 	}
@@ -601,6 +613,7 @@ public class nProjectController extends BaseWeb {
 			String userRole 			= session.getAttribute("currentUserRole").toString();
 			String userCode 			= session.getAttribute("currentUserCode").toString();
 			String projectCallCode 		= projectValid.getProjectCallCode();
+			String projectResearchFieldCode = projectValid.getProjectResearchFieldCode();
 			String projectName 			= projectValid.getProjectName();
 			String startDate 			= projectValid.getProjectStartDate();
 			String endDate				= projectValid.getProjectEndDate();
@@ -639,7 +652,8 @@ public class nProjectController extends BaseWeb {
 								
 						int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, 
 								projectContent, projectMotivation, projectResult, budgetMaterial, totalBudget, projectCode, facultyAdd, 
-								projectSurvey, projectObjective, startDate, endDate, projectCategory);
+								projectSurvey, projectObjective, startDate, endDate, 
+								projectCategory, projectResearchFieldCode);
 						if (i_InsertAProject > 0) {
 							model.put("status", "Thêm mới thành công!");
 							projectCode = projectCallCode + i_InsertAProject;
@@ -993,6 +1007,7 @@ public class nProjectController extends BaseWeb {
 		// Get list member roles
 		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
 
+		List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
 					
 		// Put data back to view
 		model.put("staffList", staffList);
@@ -1000,6 +1015,8 @@ public class nProjectController extends BaseWeb {
 		model.put("memberRolesList", memberRolesList);
 		model.put("listFaculty", listFaculty);
 		model.put("projectCallsList", projectCallsList);
+		model.put("projectResearchFieldList", projectResearchFields);
+		
 		model.put("projects", status);
 		if (project != null) {
 			// Put journal list and topic category to view
@@ -1593,6 +1610,7 @@ public class nProjectController extends BaseWeb {
 			// Prepare data for inserting DB
 			String projectName 			= projectFormEdit.getProjectName();
 			String projectCallCode 		= projectFormEdit.getProjectCallCode();
+			String projectResearchFieldCode 		= projectFormEdit.getProjectResearchFieldCode();
 			String projectContent 		= projectFormEdit.getProjectContent();
 			String projectMotivation 	= projectFormEdit.getProjectMotivation();
 			String projectResult 		= projectFormEdit.getProjectResult();
@@ -1606,6 +1624,9 @@ public class nProjectController extends BaseWeb {
 			String projectObjective		= projectFormEdit.getProjectObjective();
 			String currentProjectCode	= projectFormEdit.getCurrentProjectCode();
 			boolean bEditSumittedProject= false;
+			
+			System.out.println(name() + "::updateAProject, projectCallCode = " + projectCallCode + 
+					", projectResearchFieldCode = " + projectResearchFieldCode + ", projectCode = " + projectCode);
 			
 			mProjectCalls selectedProjectCall = projectCallsService.loadAProjectCallByCode(projectCallCode);
 			if("OPEN_FOR_SUBMISSION".equals(selectedProjectCall.getPROJCALL_STATUS())){
@@ -1624,7 +1645,7 @@ public class nProjectController extends BaseWeb {
 					
 					if(projectMembers.length > 0){
 						// Editing project info
-						threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject, totalBudget);
+						threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject, totalBudget, projectResearchFieldCode);
 						// Editting tasks info
 						threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget, currentProjectCode);
 						return "redirect:" + this.baseUrl + "/cp/list-projects.html";
@@ -1658,6 +1679,7 @@ public class nProjectController extends BaseWeb {
 				String userCode 			= session.getAttribute("currentUserCode").toString();
 				String projectName 			= projectFormEdit.getProjectName();
 				String projectCallCode 		= projectFormEdit.getProjectCallCode();
+				String projectResearchFieldCode = projectFormEdit.getProjectResearchFieldCode();
 				String projectContent 		= projectFormEdit.getProjectContent();
 				String projectMotivation 	= projectFormEdit.getProjectMotivation();
 				String projectResult 		= projectFormEdit.getProjectResult();
@@ -1671,7 +1693,11 @@ public class nProjectController extends BaseWeb {
 				String projectObjective		= projectFormEdit.getProjectObjective();
 				boolean bEditSumittedProject= true;
 				int projectMaterialBudget 	= 0;
-			 threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, projectMaterialBudget, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective,  bEditSumittedProject, projectBudget);
+			 threadService.editAProject(projectEditId, userRole, userCode, 
+					 projectCallCode, projectName, projectContent, projectMotivation, 
+					 projectResult, projectMaterialBudget, projectCode, 
+					 startDate, endDate, facultyAdd, projectSurvey, projectObjective, 
+					 bEditSumittedProject, projectBudget, projectResearchFieldCode);
 			 return "redirect:" + this.baseUrl + "/cp/modify-submitted-projects.html";
 		 }
 	 }
