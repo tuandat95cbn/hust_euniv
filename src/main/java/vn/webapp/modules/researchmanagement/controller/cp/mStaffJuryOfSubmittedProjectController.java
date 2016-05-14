@@ -64,7 +64,7 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 
 	@Autowired
 	private mStaffService staffService;
-
+	
 	@Autowired
 	private mStaffJuryOfSubmittedProjectService staffJuryOfSubmittedProjectService;
 	
@@ -73,7 +73,7 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 	
 	@Autowired
 	private mJuryOfAnnouncedProjectCallService juryOfAnnouncedProjectCall;
-	
+		
 	@Autowired
 	private mProjectCallsService projectCallsService;
 	
@@ -168,6 +168,11 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		// Get project call list
 		List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
 		
+		List<mStaff> staffs = staffService.listStaffs();
+		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
+		for(mStaff st: staffs){
+			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
+		}
 		
 		/*
 		System.out.println("User code : " + userCode);
@@ -217,15 +222,24 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		}
 		*/
 		
-		List<Projects> projectList = new ArrayList<Projects>();
-		List<mStaff> staffList = new ArrayList<mStaff>();
+		//List<Projects> projectList = new ArrayList<Projects>();
+		//List<mStaff> staffList = new ArrayList<mStaff>();
 		//List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = new ArrayList<mStaffJuryOfSubmittedProject>();
-				
-		model.put("projectList", projectList);
-		model.put("staffList", staffList);
+		List<mThreads> projects = projectService.listAll();
+		HashMap<String, String> mProjectCode2Name = new HashMap<String, String>();
+		for(mThreads prj: projects){
+			mProjectCode2Name.put(prj.getPROJ_Code(), prj.getPROJ_Name());
+		}
+		
+		model.put("projectList", projects);
+		model.put("staffList", staffs);
 	
 		model.put("staffJuryOfSubmittedProjectFormAdd", new mStaffJuryOfSubmittedProjectValidation());
 		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProject();
+		for(mStaffJuryOfSubmittedProject sjsp: staffJuryOfSubmittedProjectList){
+			sjsp.setSTFJUPRJ_PRJCODE(mProjectCode2Name.get(sjsp.getSTFJUPRJ_PRJCODE()));
+			sjsp.setSTFJUPRJ_STAFFJURCODE(mStaffCode2Name.get(sjsp.getSTFJUPRJ_STAFFJURCODE()));
+		}
 		
 		model.put("staffJuryOfSubmittedProjectList", staffJuryOfSubmittedProjectList);
 		model.put("projectCallList", projectCallList);
