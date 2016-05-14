@@ -202,7 +202,9 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 		try {
 			begin();
 			Criteria criteria = getSession().createCriteria(Projects.class, "projects");
-			if (!userRole.equals("ROLE_ADMIN") && !userRole.equals("SUPER_ADMIN")) {
+			if (!userRole.equals("ROLE_ADMIN") && 
+					!userRole.equals("SUPER_ADMIN") &&
+					!userRole.equals("ROLE_ADMIN_RESEARCH_MANAGEMENT_FACULTY")) {
 				criteria.add(Restrictions.eq("projects.PROJ_User_Code", userCode));
 			}
 			//criteria.add(Restrictions.eq("projects.PROJ_Locked1", 1));

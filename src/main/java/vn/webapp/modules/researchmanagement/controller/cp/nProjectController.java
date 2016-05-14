@@ -72,6 +72,7 @@ import vn.webapp.modules.researchmanagement.service.mProjectStaffsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStatusService;
 import vn.webapp.modules.researchmanagement.service.nProjectService;
 import vn.webapp.modules.researchmanagement.validation.ProjectsValidation;
+import vn.webapp.modules.researchmanagement.validation.mProjectCallsValidation;
 import vn.webapp.modules.researchmanagement.validation.mProjectExcellStatisticsValidation;
 import vn.webapp.modules.researchmanagement.validation.mThreadApproveValidation;
 import vn.webapp.modules.researchmanagement.validation.mThreadExcellValidation;
@@ -167,14 +168,46 @@ public class nProjectController extends BaseWeb {
 	public String getListProjectsStatisticsParams(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-	
+		
+		List<mThreads> threadsList = threadService.loadThreadsListByStaff(userRole, userCode);
+		// Get topic's category
+		List<mTopicCategory> threadCategory = tProjectCategoryService.list();
+		// Get list project statuses
+		List<mProjectStatus> threadStatuses = projectStatusService.list();
+		List<mFaculty> threadFaculties = facultyService.loadFacultyList();
+		List<mDepartment> threadDepartments = departmentService.loadDepartmentList();
+		List<mStaff> threadStaffs = staffService.listStaffs();
+		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+				
+		model.put("threadExcellForm", new mThreadExcellValidation());
+		model.put("threadsList", threadsList);
+		model.put("threadCategory", threadCategory);
+		model.put("threadStatuses", threadStatuses);
+		model.put("projectCallsList", projectCallsList);
+		model.put("threadFaculties", threadFaculties);
+		model.put("threadDepartments", threadDepartments);
+		model.put("threadStaffs", threadStaffs);
+		model.put("threads", status);
+
 		return "cp.projectsListStatisiticsParams";
 	}
 
-	@RequestMapping(value = "/list-projects-statisitcs", method = RequestMethod.GET)
-	public String getListProjectsStatistics(ModelMap model, HttpSession session) {
+	@RequestMapping(value = "/list-projects-statisitcs", method = RequestMethod.POST)
+	public String getListProjectsStatistics(ModelMap model, HttpSession session, HttpServletRequest request, @Valid @ModelAttribute("threadExcellForm") mThreadExcellValidation threadExcellForm) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
+		String projectCallCode = (threadExcellForm.getThreadYear() != null) ? threadExcellForm.getThreadYear() : "";
+		String statusCode = (threadExcellForm.getThreadStatus()  != null) ? threadExcellForm.getThreadStatus() : "";
+		String facultyCode = (threadExcellForm.getThreadFaculty() != null) ? threadExcellForm.getThreadFaculty() : "";
+		String departmentCode = (threadExcellForm.getThreadDepartment() != null) ? threadExcellForm.getThreadDepartment() : "";
+		String staffCode = (threadExcellForm.getThreadStaff() != null) ? threadExcellForm.getThreadStaff() : "";
+		
+		System.out.println(" projectCallCode : " + projectCallCode);
+		System.out.println(" statusCode : " + statusCode);
+		System.out.println(" facultyCode : " + facultyCode);
+		System.out.println(" departmentCode : " + departmentCode);
+		System.out.println(" staffCode : " + staffCode);
+		
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
 		for(mStaff st: staffs){
@@ -216,8 +249,11 @@ public class nProjectController extends BaseWeb {
 	public String getListSubmittedProjects(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-		List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+		String facultyCode = session.getAttribute("currentUserFaculty").toString();
+		System.out.println(name() + "::getListSubmittedProjects, facultyCode = " + facultyCode);
 
+		List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+		
 		model.put("projectsList", projectsList);
 		model.put("projects", status);
 		return "cp.submittedProjectsList";

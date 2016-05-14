@@ -76,9 +76,7 @@
 $(document).ready(function() {
     $('#dataTables-example').DataTable({
             responsive: false,
-            "aoColumnDefs": [
-                             { 'bSortable': false, 'aTargets': [2] }
-                          ]
+            
     });
 });
 
