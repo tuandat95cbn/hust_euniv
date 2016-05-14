@@ -225,7 +225,58 @@ public class nProjectController extends BaseWeb {
 			mStatusCode2Name.put(ps.getPROJSTAT_Code(), ps.getPROJSTAT_Description());
 		}
 		
-		List<mThreads> projectsList = threadService.listAll();// threadService.loadProjectsListByStaff(userRole, userCode);
+		List<mFaculty> faculties = facultyService.loadFacultyList();
+		
+		HashSet<String> setProjectCallCode = new HashSet<String>();
+		HashSet<String> setStaffCode = new HashSet<String>();
+		HashSet<String> setStatusCode = new HashSet<String>();
+		HashSet<String> setFacultyCode = new HashSet<String>();
+		
+		if(staffCode == "" || staffCode.equals("")){
+			for(mStaff st: staffs){
+				setStaffCode.add(st.getStaff_Code());
+			}
+		}else{
+			setStaffCode.add(staffCode);
+		}
+		
+		if(projectCallCode == "" || projectCallCode.equals("")){
+			for(mProjectCalls pc: prjCalls){
+				setProjectCallCode.add(pc.getPROJCALL_CODE());
+			}
+		}else{
+			setProjectCallCode.add(projectCallCode);
+		}
+		
+		if(statusCode == "" || statusCode.equals("")){
+			for(mProjectStatus ps: status){
+				setStatusCode.add(ps.getPROJSTAT_Code());
+			}
+		}else{
+			setStatusCode.add(statusCode);
+		}
+		
+		if(facultyCode == "" || facultyCode.equals("")){
+			for(mFaculty f: faculties){
+				setFacultyCode.add(f.getFaculty_Code());
+			}
+		}else{
+			setFacultyCode.add(facultyCode);
+		}
+		
+		List<mThreads> allProjectsList = threadService.listAll();// threadService.loadProjectsListByStaff(userRole, userCode);
+		
+		List<mThreads> projectsList = new ArrayList<mThreads>();
+		for(mThreads t: allProjectsList){
+			if(setProjectCallCode.contains(t.getPROJ_PRJCall_Code())
+					&& setStatusCode.contains(t.getPROJ_Status_Code())
+					&& setFacultyCode.contains(t.getPROJ_FacultyCode())
+					&& setStaffCode.contains(t.getPROJ_User_Code())
+					)
+				projectsList.add(t);
+			
+		}
+		
 		for(mThreads t: projectsList){
 			t.setPROJ_PRJCall_Code(mProjectCallCode2Name.get(t.getPROJ_PRJCall_Code()));
 			t.setPROJ_User_Code(mStaffCode2Name.get(t.getPROJ_User_Code()));
