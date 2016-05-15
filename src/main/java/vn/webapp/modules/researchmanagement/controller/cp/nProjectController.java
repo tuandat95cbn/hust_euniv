@@ -1060,11 +1060,25 @@ public class nProjectController extends BaseWeb {
 	    
 		// Get list of project calls
 	    List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+	    
+	    
      	// Put data back to view
 		model.put("projectCallsList", projectCallsList);
 		model.put("projects", status);
 		if (project != null) {
 			// Put journal list and topic category to view
+			
+			// replace content by the content collected from project tasks
+			List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
+			String content = "<ul>\n";
+			for(ProjectTasks pt: projectTasks){
+				content += "<li>" + pt.getPRJTSK_Task() + "</li>\n";
+			}
+			content += "</ul>";
+			System.out.println(name() + "::generatePDFProject, collect content = " + content);
+			project.setPROJ_Content(content);
+			
+			
 			model.put("projectEdit", project);
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId);
@@ -1174,7 +1188,7 @@ public class nProjectController extends BaseWeb {
 						sProjectTasksList 			+= "<td><div class='content'>"+projectTask.get(4)+"</div></td>";
 						sProjectTasksList 			+= "<td><div class='content  center'>"+projectTask.get(5)+"</div></td>";
 						sProjectTasksList 			+= "<td align='center'><div class='content center'>"+Money2StringConvertor.addDot2Moyney(projectTask.get(6))+"</div></td>";
-						sProjectTasksList 			+= "<td><div class='content'></div></td>";
+						//sProjectTasksList 			+= "<td><div class='content'></div></td>";
 						sProjectTasksList 			+= "</tr>";
 
 						iTotalWorkingDays			+= Integer.parseInt(projectTask.get(5));
