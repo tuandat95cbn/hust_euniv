@@ -151,6 +151,8 @@ public class UserFunctionsManipulation {
 		//UFM.setUserFunctions();
 		UFM.removeFunctionFromUserFunctions("REVIEW-SUBMITTED-PROJECTS");
 		//UFM.resetUserFunctions();
+		
+		System.out.println("DONE.....");
 	}
 
 }

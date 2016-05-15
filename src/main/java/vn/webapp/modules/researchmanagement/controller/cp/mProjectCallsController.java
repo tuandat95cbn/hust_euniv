@@ -128,8 +128,15 @@ public class mProjectCallsController extends BaseWeb {
 	 * @param session
 	 * @return String
 	 */
+	public String name(){
+		return "mProjectCallController";
+	}
 	@RequestMapping(value = "save-a-projectcall", method = RequestMethod.POST)
-	public String saveAProjectCall( HttpServletRequest request, @Valid @ModelAttribute("projectCallFormAdd") mProjectCallsValidation projectCallValid, BindingResult result, Map model, HttpSession session) {
+	public String saveAProjectCall( HttpServletRequest request, 
+			@Valid @ModelAttribute("projectCallFormAdd") mProjectCallsValidation projectCallValid, 
+			BindingResult result, Map model, HttpSession session) {
+		
+		String userCode = (String)session.getAttribute("currentUserCode");
 		
 		// Get topic's category
 		List<mTopicCategory> topicCategory = tProjectCategoryService.list();
@@ -146,8 +153,11 @@ public class mProjectCallsController extends BaseWeb {
 			if(projectCalls == null){
 				String PROJCALL_PROJCATCODE = projectCallValid.getProjectCallCatCode();
 				String PROJCALL_DATE 		= DateUtil.s_fConvertDateFormatType1(projectCallValid.getProjectCallDate());
-				String sPROJCALL_CODE 		= "T"+DateUtil.s_fGetCurrentDate();
+				String sPROJCALL_CODE 		= projectCallValid.getProjectCallCode();//"T"+DateUtil.s_fGetCurrentDate();
 				String sPROJCALL_STATUS 	= projectCallValid.getProjectCallStatus();
+				System.out.println(name() + "::saveAProjectCall, userCode = " + userCode + 
+						", projectCallCode = " + sPROJCALL_CODE + 
+						", projectCallName = " + PROJCALL_NAME);
 				int i_InsertAProjectCall 	= projectCallsService.saveAProjectCall(sPROJCALL_CODE, PROJCALL_PROJCATCODE, PROJCALL_NAME, PROJCALL_DATE, sPROJCALL_STATUS);
 				if (i_InsertAProjectCall > 0) {
 					model.put("status", "Lưu thành công");
@@ -194,6 +204,8 @@ public class mProjectCallsController extends BaseWeb {
 		// Get topic's category
 			List<mTopicCategory> topicCategory = tProjectCategoryService.list();
 
+		String userCode = (String)session.getAttribute("currentUserCode");
+		
 		 // Put data back to view
 		 model.put("topicCategory", topicCategory);
 		 model.put("projectcalls", status);
@@ -204,7 +216,9 @@ public class mProjectCallsController extends BaseWeb {
 			 // Prepare data for inserting DB
 			 int iPROJCALL_ID				= projectCallValid.getProjectCallId();
 			 String sPROJCALL_NAME 			= projectCallValid.getProjectCallName();
-			 int iIsExisting = projectCallsService.checkingExistProjectCallByName(iPROJCALL_ID, sPROJCALL_NAME);
+			 String sPROJCALL_CODE = projectCallValid.getProjectCallCode();//"T"+o_fFormatDateByFormat.getYear()+iPROJCALL_ID;
+			 
+			 int iIsExisting = projectCallsService.checkingExistProjectCallByName(iPROJCALL_ID, sPROJCALL_NAME, sPROJCALL_CODE);
 			 if(iIsExisting == 0)
 			 {
 				 String sPROJCALL_DATE 			= DateUtil.s_fConvertDateFormatType1(projectCallValid.getProjectCallDate());
@@ -212,7 +226,11 @@ public class mProjectCallsController extends BaseWeb {
 				 String sPROJCALL_STATUS		= projectCallValid.getProjectCallStatus();
 				 
 				 LocalDate o_fFormatDateByFormat = DateUtil.o_fFormatDateByFormatType1(projectCallValid.getProjectCallDate());
-				 String sPROJCALL_CODE = "T"+o_fFormatDateByFormat.getYear()+iPROJCALL_ID;
+				 
+
+					System.out.println(name() + "::updateAProjectCall, userCode = " + userCode + 
+							", projectCallCode = " + sPROJCALL_CODE + 
+							", projectCallName = " + sPROJCALL_NAME);
 
 				 projectCallsService.editAProjectCall(iPROJCALL_ID, sPROJCALL_CODE, sPROJCALL_PROJCATCODE, sPROJCALL_NAME, sPROJCALL_DATE, sPROJCALL_STATUS);
 				 model.put("status", "Chỉnh sửa thành công.");

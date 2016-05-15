@@ -47,7 +47,7 @@ public interface mProjectCallsService {
 	 * @param sPROJCALL_NAME
 	 * @return
 	 */
-	public int checkingExistProjectCallByName(int projectCallId, String sPROJCALL_NAME);
+	public int checkingExistProjectCallByName(int projectCallId, String sPROJCALL_NAME, String sPROJCALL_CODE);
 
 	/**
 	 * 

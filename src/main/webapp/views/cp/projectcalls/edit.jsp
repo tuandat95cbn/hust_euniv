@@ -46,6 +46,12 @@
 	    								<form:errors path="projectCallName" class="alert-danger"></form:errors>
 	                                </div>
 	                                <div class="form-group">
+	                                    <label for="topicName">Mã đợt gọi đề tài*</label>
+	                                    <form:input path="projectCallCode" class="form-control" name="projectCallCode" value="${projectCalls.PROJCALL_CODE}" placeholder="Project Call Code"></form:input>
+	    								<form:errors path="projectCallCode" class="alert-danger"></form:errors>
+	                                </div>
+	                                
+	                                <div class="form-group" style="visibility:hidden">
 	                                    <label>Nhóm*</label>
 	                                    <form:select path="projectCallCatCode" class="form-control" name="projectCallCatCode">
 	                                    	<c:forEach items="${topicCategory}" var="topicCat">

@@ -136,9 +136,15 @@ public class mProjectCallsServiceImpl implements mProjectCallsService {
 	 * 
 	 */
 	@Override
-	public int checkingExistProjectCallByName(int projectCallId, String sPROJCALL_NAME){
+	public int checkingExistProjectCallByName(int projectCallId, String sPROJCALL_NAME, String sPROJCALL_CODE){
 		try {
-			return projectCallsDAO.checkingExistProjectCallByName(projectCallId, sPROJCALL_NAME);
+			//return projectCallsDAO.checkingExistProjectCallByName(projectCallId, sPROJCALL_NAME);
+			List<mProjectCalls> projectCalls = projectCallsDAO.loadProjectCallsList();
+			for(mProjectCalls pc: projectCalls)if(pc.getPROJCALL_ID() != projectCallId){
+				if(pc.getPROJCALL_CODE().equals(sPROJCALL_CODE)) return 1;
+				if(pc.getPROJCALL_NAME().equals(sPROJCALL_NAME)) return 1;
+			}
+			return 0;
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 			return 0;

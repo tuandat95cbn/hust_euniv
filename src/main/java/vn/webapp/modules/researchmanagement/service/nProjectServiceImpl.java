@@ -16,12 +16,14 @@ import vn.webapp.modules.researchdeclarationmanagement.dao.tProjectDAO;
 import vn.webapp.modules.researchdeclarationmanagement.model.mAcademicYear;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
+import vn.webapp.modules.researchmanagement.dao.DetailCommentSubmittedProjectsDAO;
 import vn.webapp.modules.researchmanagement.dao.ProjectTasksDAO;
 import vn.webapp.modules.researchmanagement.dao.mCommentsOfSubmittedProjectsDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStaffsDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStatusDAO;
 import vn.webapp.modules.researchmanagement.dao.mStaffJuryOfSubmittedProjectDAO;
 import vn.webapp.modules.researchmanagement.dao.nProjectDAO;
+import vn.webapp.modules.researchmanagement.model.DetailCommentSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;
@@ -75,6 +77,9 @@ public class nProjectServiceImpl implements nProjectService {
 
 	@Autowired
 	private mCommentsOfSubmittedProjectsDAO commentSubmittedProjectDAO;
+	
+	@Autowired
+	private DetailCommentSubmittedProjectsDAO detailCommentsSubmittedProjectDAO;
 	
 	@Autowired
 	private mStaffJuryOfSubmittedProjectDAO staffJurySubmittedProjectDAO;
@@ -1195,6 +1200,8 @@ public class nProjectServiceImpl implements nProjectService {
 			List<mCommentsOfSubmittedProjects> commentsProject = commentSubmittedProjectDAO.
 					loadCommentsOfSubmittedProjectByProjectCode(p.getPROJ_Code());
 			
+			List<DetailCommentSubmittedProjects> detailComments = detailCommentsSubmittedProjectDAO.loadAll();
+			
 			int ID = i+1;
 			String sID = "";
 			if(ID < 10) sID = "00" + ID; 
@@ -1227,6 +1234,12 @@ public class nProjectServiceImpl implements nProjectService {
 				cm.setCOMPROJ_PRJCODE(newCode);
 				commentSubmittedProjectDAO.editCommentsOfSubmittedProjects(cm);//.saveCommentsOfSubmittedProjects(cm);
 				System.out.println(name() + "::generateProjectCodes, update commentSubmittedProject newCode = " + newCode);
+			}
+			
+			for(DetailCommentSubmittedProjects dcp: detailComments){
+				dcp.setCMTSUBPRJ_PRJCode(newCode);
+				detailCommentsSubmittedProjectDAO.editDetailsCommentsOfSubmittedProjects(dcp);
+				System.out.println(name() + "::generateProjectCodes update detailCommentsSubmittedProject newCode = " + newCode);
 			}
 		}
 	}

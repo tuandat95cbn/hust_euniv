@@ -36,21 +36,21 @@
 							<thead>
 								<tr>
 									<th>Tên</th>
-									<th>Mã loạt đề tài</th>
+									<th>Mã đợt gọi đề tài</th>
 									<th>Thời gian</th>
-									<th>Edit</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 								<c:forEach items="${projectCallsList}" var="projectCall">
 									<tr class="gradeX">
 										<td><c:out value="${projectCall.PROJCALL_NAME}"/></td>
-										<td><c:out value="${projectCall.PROJCALL_PROJCATCODE}"/></td>
+										<td><c:out value="${projectCall.PROJCALL_CODE}"/></td>
 										<td><c:out value="${projectCall.PROJCALL_DATE}"/></td>
 										<td class="center">
-											<button type="button" onclick="v_fViewDetailAProjectCall(${projectCall.PROJCALL_ID});" class="btn btn-info btn-xs" title="Edit">Info</button>
+											<button type="button" onclick="v_fViewDetailAProjectCall(${projectCall.PROJCALL_ID});" class="btn btn-info btn-xs" title="Edit">Chi tiết</button>
 											<br/>
-											<button type="button" id="removeTopic" onclick="v_fRemoveAProjectCall(${projectCall.PROJCALL_ID});" class="btn btn-danger btn-xs" title="Remove">Remove</button>
+											<button type="button" id="removeTopic" onclick="v_fRemoveAProjectCall(${projectCall.PROJCALL_ID});" class="btn btn-danger btn-xs" title="Remove">Xoá</button>
 										</td>
 									</tr>
 								</c:forEach>

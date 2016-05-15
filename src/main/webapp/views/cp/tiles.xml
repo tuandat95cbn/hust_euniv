@@ -47,6 +47,11 @@
         <put-attribute name="title" value="List all users" />                                 
         <put-attribute name="content" value="/views/cp/user/list.jsp" />
     </definition>
+
+    <definition name="cp.generateProjectCodeParams" extends="layout.base">
+        <put-attribute name="title" value="Create an user" />                                 
+        <put-attribute name="content" value="/views/cp/projects/generate-project-code-params.jsp" />
+    </definition>
     
     <definition name="cp.addAnUser" extends="layout.base">
         <put-attribute name="title" value="Create an user" />                                 

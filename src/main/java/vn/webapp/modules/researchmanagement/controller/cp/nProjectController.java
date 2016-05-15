@@ -170,6 +170,34 @@ public class nProjectController extends BaseWeb {
 		return "cp.projectsList";
 	}
 
+	@RequestMapping(value = "/generate-project-code-params.html", method = RequestMethod.GET)
+	public String generateProjectCodeParams(ModelMap model, HttpSession session) {
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		
+		List<mThreads> threadsList = threadService.loadThreadsListByStaff(userRole, userCode);
+		// Get topic's category
+		List<mTopicCategory> threadCategory = tProjectCategoryService.list();
+		// Get list project statuses
+		List<mProjectStatus> threadStatuses = projectStatusService.list();
+		List<mFaculty> threadFaculties = facultyService.loadFacultyList();
+		List<mDepartment> threadDepartments = departmentService.loadDepartmentList();
+		List<mStaff> threadStaffs = staffService.listStaffs();
+		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+				
+		model.put("threadExcellForm", new mThreadExcellValidation());
+		model.put("threadsList", threadsList);
+		model.put("threadCategory", threadCategory);
+		model.put("threadStatuses", threadStatuses);
+		model.put("projectCallsList", projectCallsList);
+		model.put("threadFaculties", threadFaculties);
+		model.put("threadDepartments", threadDepartments);
+		model.put("threadStaffs", threadStaffs);
+		model.put("threads", status);
+
+		return "cp.generateProjectCodeParams";
+	}
+
 	@RequestMapping(value = "/list-projects-statisitcs-params", method = RequestMethod.GET)
 	public String getListProjectsStatisticsParams(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
@@ -196,6 +224,108 @@ public class nProjectController extends BaseWeb {
 		model.put("threads", status);
 
 		return "cp.projectsListStatisiticsParams";
+	}
+
+	@RequestMapping(value = "/generate-project-code", method = RequestMethod.POST)
+	public String generateProjectCodes(ModelMap model, HttpSession session, 
+			HttpServletRequest request, 
+			@Valid @ModelAttribute("threadExcellForm") mThreadExcellValidation threadExcellForm) {
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		String projectCallCode = (threadExcellForm.getThreadYear() != null) ? threadExcellForm.getThreadYear() : "";
+		String statusCode = (threadExcellForm.getThreadStatus()  != null) ? threadExcellForm.getThreadStatus() : "";
+		String facultyCode = (threadExcellForm.getThreadFaculty() != null) ? threadExcellForm.getThreadFaculty() : "";
+		String departmentCode = (threadExcellForm.getThreadDepartment() != null) ? threadExcellForm.getThreadDepartment() : "";
+		String staffCode = (threadExcellForm.getThreadStaff() != null) ? threadExcellForm.getThreadStaff() : "";
+		
+		System.out.println(name() + "::generateProjectCodes projectCallCode : " + projectCallCode);
+		System.out.println(name() + "::generateProjectCodes statusCode : " + statusCode);
+		System.out.println(name() + "::generateProjectCodes facultyCode : " + facultyCode);
+		System.out.println(name() + "::generateProjectCodes departmentCode : " + departmentCode);
+		System.out.println(name() + "::generateProjectCodes staffCode : " + staffCode);
+		
+		threadService.generateProjectCodes(projectCallCode);
+		
+		List<mStaff> staffs = staffService.listStaffs();
+		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
+		for(mStaff st: staffs){
+			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
+		}
+		List<mProjectCalls> prjCalls = projectCallsService.loadProjectCallsList();
+		HashMap<String, String> mProjectCallCode2Name = new HashMap<String, String>();
+		for(mProjectCalls pc: prjCalls){
+			mProjectCallCode2Name.put(pc.getPROJCALL_CODE(), pc.getPROJCALL_NAME());
+		}
+		
+		List<mProjectStatus> status = projectStatusService.list();
+		HashMap<String, String> mStatusCode2Name = new HashMap<String, String>();
+		for(mProjectStatus ps: status){
+			mStatusCode2Name.put(ps.getPROJSTAT_Code(), ps.getPROJSTAT_Description());
+		}
+		
+		List<mFaculty> faculties = facultyService.loadFacultyList();
+		
+		HashSet<String> setProjectCallCode = new HashSet<String>();
+		HashSet<String> setStaffCode = new HashSet<String>();
+		HashSet<String> setStatusCode = new HashSet<String>();
+		HashSet<String> setFacultyCode = new HashSet<String>();
+		
+		if(staffCode == "" || staffCode.equals("")){
+			for(mStaff st: staffs){
+				setStaffCode.add(st.getStaff_Code());
+			}
+		}else{
+			setStaffCode.add(staffCode);
+		}
+		
+		if(projectCallCode == "" || projectCallCode.equals("")){
+			for(mProjectCalls pc: prjCalls){
+				setProjectCallCode.add(pc.getPROJCALL_CODE());
+			}
+		}else{
+			setProjectCallCode.add(projectCallCode);
+		}
+		
+		if(statusCode == "" || statusCode.equals("")){
+			for(mProjectStatus ps: status){
+				setStatusCode.add(ps.getPROJSTAT_Code());
+			}
+		}else{
+			setStatusCode.add(statusCode);
+		}
+		
+		if(facultyCode == "" || facultyCode.equals("")){
+			for(mFaculty f: faculties){
+				setFacultyCode.add(f.getFaculty_Code());
+			}
+		}else{
+			setFacultyCode.add(facultyCode);
+		}
+		
+		List<mThreads> allProjectsList = threadService.listAll();// threadService.loadProjectsListByStaff(userRole, userCode);
+		
+		List<mThreads> projectsList = new ArrayList<mThreads>();
+		for(mThreads t: allProjectsList){
+			if(setProjectCallCode.contains(t.getPROJ_PRJCall_Code())
+					&& setStatusCode.contains(t.getPROJ_Status_Code())
+					&& setFacultyCode.contains(t.getPROJ_FacultyCode())
+					&& setStaffCode.contains(t.getPROJ_User_Code())
+					)
+				projectsList.add(t);
+			
+		}
+		
+		for(mThreads t: projectsList){
+			t.setPROJ_PRJCall_Code(mProjectCallCode2Name.get(t.getPROJ_PRJCall_Code()));
+			t.setPROJ_User_Code(mStaffCode2Name.get(t.getPROJ_User_Code()));
+			t.setPROJ_Status_Code(mStatusCode2Name.get(t.getPROJ_Status_Code()));
+		}
+		System.out.println(name() + "::getListProjectsStatistics, userCode = " + userCode + ", userRole = " + userRole);
+		
+		model.put("projectsList", projectsList);
+		model.put("projectCallsList", prjCalls);
+		model.put("projects", status);
+		return "cp.projectsListStatisitics";
 	}
 
 	@RequestMapping(value = "/list-projects-statisitcs", method = RequestMethod.POST)
@@ -1216,7 +1346,7 @@ public class nProjectController extends BaseWeb {
 				String sProjectObjective	= (project.getPROJ_Objective() != null) ? project.getPROJ_Objective() : "PROJECT'S OBJECTIVE";
 				String sTasksBudgetWords	= Money2StringConvertor.convert2TextStartUpcase(Integer.toString(iTotalFee));
 				String sLeaderDegree 		= "";
-				String sLeaderRole 			= "Giảng viên";
+				String sLeaderRole 			= "";//"Giảng viên";
 
 				String sProjectApplicability = "IN REAL LIFE...";
 				ClassLoader classLoader = getClass().getClassLoader();
@@ -1264,7 +1394,7 @@ public class nProjectController extends BaseWeb {
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___EMAIL___", sLeaderEmail);
 		    	
 		    	// Replace project leader's private phone no
-		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PRIVATE_PHONENO___", sLeaderPhoneNo);
+		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___PRIVATE_PHONENO___", "");//sLeaderPhoneNo);
 		    	
 		    	// Replace project leader's mobile phone
 		    	sTemplateContent = FileUtil.sReplaceAll(sTemplateContent, "___MOBILE___", sLeaderPhoneNo);

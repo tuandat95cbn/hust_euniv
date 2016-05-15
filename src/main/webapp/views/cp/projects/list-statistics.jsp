@@ -54,6 +54,7 @@
 							<thead>
 								<tr>
 									<th>STT</th>
+									<th>Mã đề tài</th>
 									<th>Tên đề tài</th>
 									<th>Chủ nhiệm</th>
 									<th>Đợt gọi</th>
@@ -67,6 +68,7 @@
 									<tr class="gradeX">
 										<c:set var="count" value="${count + 1}" scope="page"/> 
 										<td><c:out value="${count}"/></td>
+										<td><c:out value="${project.PROJ_Code}"/></td>
 										<td><c:out value="${project.PROJ_Name}"/></td>
 										<td><c:out value="${project.PROJ_User_Code}"/></td>
 										<td><c:out value="${project.PROJ_PRJCall_Code}"/></td>
@@ -105,9 +107,9 @@
 $(document).ready(function() {
     $('#dataTables-example').DataTable({
             responsive: false,
-            "aoColumnDefs": [
-                             { 'bSortable': false, 'aTargets': [2] }
-                          ]
+            //"aoColumnDefs": [
+             //                { 'bSortable': false, 'aTargets': [2] }
+               //           ]
     });
     
     $('.add').click(function(){
