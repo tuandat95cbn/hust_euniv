@@ -11,6 +11,8 @@ public interface mCommentsOfSubmittedProjectsService {
 	 */
 	public List<mCommentsOfSubmittedProjects> loadAllCommentsOfSubmittedProjects();
 	
+	public List<mCommentsOfSubmittedProjects> loadCommentsOfSubmittedProjectByProjectCode(String COMPROJ_PRJCODE);
+	
 	/**
 	 * 
 	 * @param COMPROJ_STAFFCODE

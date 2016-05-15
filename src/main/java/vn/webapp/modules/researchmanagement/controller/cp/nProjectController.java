@@ -971,7 +971,8 @@ public class nProjectController extends BaseWeb {
 
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
-		Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
+		//Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
+		Projects project = threadService.loadProjectsById(projectId);
 		
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
@@ -1060,7 +1061,9 @@ public class nProjectController extends BaseWeb {
 
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
-		Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
+		
+		//Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
+		Projects project = threadService.loadProjectsById(projectId);
 		
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
@@ -1092,9 +1095,16 @@ public class nProjectController extends BaseWeb {
 			
 			String projectCode = project.getPROJ_Code();
 			String summaryComment = "";
-			mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, projectCode);
+			
+			//mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, projectCode);
+			List<mCommentsOfSubmittedProjects> commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByProjectCode(projectCode);
+			
 			if(commentsOfSubmittedProject != null){
-				summaryComment = (!"".equals(commentsOfSubmittedProject.getCOMPROJ_COMMENT())) ? commentsOfSubmittedProject.getCOMPROJ_COMMENT() : "";
+				for(mCommentsOfSubmittedProjects cm: commentsOfSubmittedProject){
+					//summaryComment = (!"".equals(commentsOfSubmittedProject.getCOMPROJ_COMMENT())) ? commentsOfSubmittedProject.getCOMPROJ_COMMENT() : "";
+					summaryComment = (!"".equals(cm.getCOMPROJ_COMMENT())) ? cm.getCOMPROJ_COMMENT() : "";
+				}
+				
 			}
 			
 			List<DetailCommentSubmittedProjects> listDetailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(projectCode);
@@ -1102,7 +1112,7 @@ public class nProjectController extends BaseWeb {
 				String staffCode = cm.getCMTSUBPRJ_StaffCode();
 				cm.setCMTSUBPRJ_StaffCode(mStaffCode2Name.get(staffCode));
 			}
-			System.out.println(name() + "::editCommentProject listDetailComments.sz = " + listDetailCommentSubmittedProjects.size());
+			System.out.println(name() + "::editCommentProject listDetailComments.sz = " + listDetailCommentSubmittedProjects.size() + ", summaryComments = " + summaryComment);
 
 			model.put("listDetailCommentSubmittedProjects", listDetailCommentSubmittedProjects);
 			model.put("projectEdit", project);
@@ -1883,10 +1893,17 @@ public class nProjectController extends BaseWeb {
 		 String userRole 			 = session.getAttribute("currentUserRole").toString();
 		 String userCode 			 = session.getAttribute("currentUserCode").toString();
 		 int projectEditId 			 = projectFormEdit.getProjectId();
-		 Projects projectBeingEditted = threadService.loadASumittedProjectByIdAndUserCode(userRole, userCode, projectEditId);
+		 
+		 System.out.println(name() + "::updateAProjectComments, userCode = " + userCode + ", project Id = " + projectEditId + 
+				 ", summaryComments = " + summaryComment);
+		 
+		 //Projects projectBeingEditted = threadService.loadASumittedProjectByIdAndUserCode(userRole, userCode, projectEditId);
+		 Projects projectBeingEditted = threadService.loadProjectsById(projectEditId);
 		 model.put("projectEdit", projectBeingEditted);
 		 model.put("projects", status);
 		 if (result.hasErrors()) {
+			 System.out.println(name() + "::updateAProjectComments, userCode = " + userCode + ", project Id = " + projectEditId +
+					 ", result.hasErrors --> return cp.projectcomments");
 			 return "cp.projectcomments";
 		 }else
 		 {
@@ -1900,15 +1917,21 @@ public class nProjectController extends BaseWeb {
 				threadService.editAnApproveProject(projectBeingEditted);
 				
 				// Adding comments
-				mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, projectBeingEditted.getPROJ_Code());
+				//mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, projectBeingEditted.getPROJ_Code());
+				List<mCommentsOfSubmittedProjects> commentsOfSubmittedProjects = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByProjectCode(projectBeingEditted.getPROJ_Code());
+				
 				//if(!"".equals(commentsOfSubmittedProject.getCOMPROJ_CODE())){
-				if(commentsOfSubmittedProject != null){
+				if(commentsOfSubmittedProjects != null){
+					System.out.println(name() + "::updateAProjectComment, commentsOfSubmittedProjects.sz = " + commentsOfSubmittedProjects.size() + ", new SummaryCommments = " + summaryComment);
+					mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjects.get(0);
 					commentsOfSubmittedProjectsService.editCommentsOfSubmittedProjects(commentsOfSubmittedProject.getCOMPROJ_ID(), summaryComment);
 				}else{
 					String currentDate = DateUtil.s_fGetCurrentDateByFormat("");
 					commentsOfSubmittedProjectsService.saveCommentsOfSubmittedProjects(userCode, projectBeingEditted.getPROJ_Code(), summaryComment, currentDate, false);
 				}
 				return "redirect:" + this.baseUrl + "/cp/collect-comments.html";
+			}else{
+				System.out.println(name() + "::updateAProjectComments, project Id = " + projectEditId + ", NOT EXIST!!!!!!!");
 			}
 			return "cp.projectcomments";
 		 }

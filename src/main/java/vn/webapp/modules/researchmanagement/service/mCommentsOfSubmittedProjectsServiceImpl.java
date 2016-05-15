@@ -35,11 +35,19 @@ public class mCommentsOfSubmittedProjectsServiceImpl implements mCommentsOfSubmi
 		try {
 			return commentsOfSubmittedProjectsDAO.loadAllCommentsOfSubmittedProjects();
 		} catch (Exception e) {
-			System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 	}
 
+	public List<mCommentsOfSubmittedProjects> loadCommentsOfSubmittedProjectByProjectCode(String COMPROJ_PRJCODE){
+		try {
+			return commentsOfSubmittedProjectsDAO.loadCommentsOfSubmittedProjectByProjectCode(COMPROJ_PRJCODE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	/**
 	 * 
 	 */
@@ -115,7 +123,7 @@ public class mCommentsOfSubmittedProjectsServiceImpl implements mCommentsOfSubmi
 	public void editCommentsOfSubmittedProjects(int COMPROJ_ID, String COMPROJ_COMMENT){
 		try {
 			mCommentsOfSubmittedProjects commentsOfSubmittedProjects = commentsOfSubmittedProjectsDAO.loadCommentsOfSubmittedProjectsById(COMPROJ_ID);
-			System.out.println("Comments at service " + commentsOfSubmittedProjects.getCOMPROJ_COMMENT());
+			//System.out.println("Comments at service " + commentsOfSubmittedProjects.getCOMPROJ_COMMENT());
 			
 			if (commentsOfSubmittedProjects != null) {
 				commentsOfSubmittedProjects.setCOMPROJ_COMMENT(COMPROJ_COMMENT);
@@ -123,7 +131,8 @@ public class mCommentsOfSubmittedProjectsServiceImpl implements mCommentsOfSubmi
 				commentsOfSubmittedProjectsDAO.editCommentsOfSubmittedProjects(commentsOfSubmittedProjects);
 			}
 		} catch (Exception e) {
-			System.out.println("Exception: " + e.getMessage());
+			//System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

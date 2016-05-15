@@ -1200,7 +1200,7 @@ public class nProjectServiceImpl implements nProjectService {
 			List<mCommentsOfSubmittedProjects> commentsProject = commentSubmittedProjectDAO.
 					loadCommentsOfSubmittedProjectByProjectCode(p.getPROJ_Code());
 			
-			List<DetailCommentSubmittedProjects> detailComments = detailCommentsSubmittedProjectDAO.loadAll();
+			List<DetailCommentSubmittedProjects> detailComments = detailCommentsSubmittedProjectDAO.loadByProjectCode(p.getPROJ_Code());
 			
 			int ID = i+1;
 			String sID = "";
