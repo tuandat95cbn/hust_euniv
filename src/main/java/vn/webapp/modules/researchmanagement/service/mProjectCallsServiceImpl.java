@@ -21,6 +21,7 @@ import vn.webapp.modules.researchmanagement.dao.mProjectCallsDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStaffsDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStatusDAO;
 import vn.webapp.modules.researchmanagement.dao.nProjectDAO;
+import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
@@ -39,6 +40,12 @@ public class mProjectCallsServiceImpl implements mProjectCallsService {
 	@Autowired
 	private mProjectCallsDAO projectCallsDAO;
 
+	@Autowired
+	private nProjectService projectService;
+	
+	@Autowired
+	private mJuryOfAnnouncedProjectCallService juryOfAnnouncedProjectCallService;
+	
 	/**
 	 * Get a list Threads by user code
 	 * 
@@ -158,17 +165,47 @@ public class mProjectCallsServiceImpl implements mProjectCallsService {
 	 * @param int
 	 * @return null
 	 */
+	public String name(){
+		return "mProjectCallServiceImpl";
+	}
 	@Override
 	public void editAProjectCall(int iProjectCallId, String sPROJCALL_CODE, String PROJCALL_PROJCATCODE, String PROJCALL_NAME, String PROJCALL_DATE, String sPROJCALL_STATUS){
 		try {
 			mProjectCalls projectCalls = projectCallsDAO.loadAProjectCallById(iProjectCallId);
 			if (projectCalls != null) {
+				String oldProjectCallCode = projectCalls.getPROJCALL_CODE();
+				
 				projectCalls.setPROJCALL_CODE(sPROJCALL_CODE);
 				projectCalls.setPROJCALL_DATE(PROJCALL_DATE);
 				projectCalls.setPROJCALL_PROJCATCODE(PROJCALL_PROJCATCODE);
 				projectCalls.setPROJCALL_NAME(PROJCALL_NAME);
 				projectCalls.setPROJCALL_STATUS(sPROJCALL_STATUS);
 				projectCallsDAO.editAProjectCall(projectCalls);
+				
+				// update projectCallCode of all related tables if old and new projectCallCode are different
+				if(!oldProjectCallCode.equals(sPROJCALL_CODE)){
+					
+					// update project code of tblprojects
+					List<mThreads> projects = projectService.listAll();
+					for(mThreads t: projects)if(t.getPROJ_PRJCall_Code().equals(oldProjectCallCode)){
+						t.setPROJ_PRJCall_Code(sPROJCALL_CODE);
+						projectService.saveAThread(t);
+						System.out.println(name() + "::editAProjectCall, update projectCallCode of project " + t.getPROJ_Code() + ", new projectCallCode = " + t.getPROJ_PRJCall_Code());
+					}
+					
+					
+					List<mJuryOfAnnouncedProjectCall> juries = 
+							juryOfAnnouncedProjectCallService.
+							loadListJuryOfAnnouncedProjectCallByProjectCallCode(oldProjectCallCode);
+					
+					for(mJuryOfAnnouncedProjectCall jpc: juries){
+						jpc.setJUSUPRJ_PRJCALLCODE(sPROJCALL_CODE);
+						juryOfAnnouncedProjectCallService.editJuryOfAnnouncedProjectCall(jpc);
+						
+						System.out.println(name() + "::editAProjectCall, update projectCallCode of project " + jpc.getJUSUPRJ_STAFFCODE() + ", new JuryOfAnnouncedProjecCall = " + jpc.getJUSUPRJ_PRJCALLCODE());
+					}
+					
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());

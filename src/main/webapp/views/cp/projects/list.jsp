@@ -16,7 +16,8 @@
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Đăng ký đề xuất đề tài</h1>
+			<!-- <h1 class="page-header">Đăng ký đề xuất đề tài</h1> -->
+			<h1 class="page-header"></h1>
 			<p>
 				<button type="button" class="btn btn-primary btn-xs add">Thêm mới</button> 
 			</p>

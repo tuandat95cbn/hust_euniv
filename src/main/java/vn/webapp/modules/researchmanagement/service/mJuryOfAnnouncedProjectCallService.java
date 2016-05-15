@@ -44,6 +44,8 @@ public interface mJuryOfAnnouncedProjectCallService {
 	 */
 	public void editJuryOfAnnouncedProjectCall(int JUSUPRJ_ID, String JUSUPRJ_STAFFCODE,String JUSUPRJ_PRJCALLCODE,String JUPSURJ_ROLECODE);
 	
+	public void editJuryOfAnnouncedProjectCall(mJuryOfAnnouncedProjectCall jpc);
+	
 	/**
 	 * Deleting a jury of announced project call by its id (deleting a record from its id in table: tbljurysubmittedprojects)
 	 * @param JUSUPRJ_ID

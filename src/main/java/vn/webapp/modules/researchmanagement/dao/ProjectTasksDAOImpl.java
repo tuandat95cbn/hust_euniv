@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -71,6 +72,7 @@ public class ProjectTasksDAOImpl extends BaseDao implements ProjectTasksDAO {
 			begin();
 			Criteria criteria = getSession().createCriteria(ProjectTasks.class);
 			criteria.add(Restrictions.eq("PRJTSK_Proj_Code", sProjectCode));
+			criteria.addOrder(Order.asc("PRJTSK_ID"));
 			List<ProjectTasks> projectTasks = criteria.list();
 			commit();
 			return projectTasks;

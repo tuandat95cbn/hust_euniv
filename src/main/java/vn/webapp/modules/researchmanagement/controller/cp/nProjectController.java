@@ -1136,7 +1136,8 @@ public class nProjectController extends BaseWeb {
 
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
-		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
+		//Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
+		Projects project = threadService.loadProjectsById(projectId);
 		
 		// Get list of project calls
 		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
@@ -1312,7 +1313,8 @@ public class nProjectController extends BaseWeb {
 				int iTotalFee				= iBudgetMaterial;
 				//List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(sProjectCode);
 				List<List<String>> projectTasks = projectTasksService.getProjectTaskByProjectCode(sProjectCode);
-				HashSet<List<String>> memberNameList = new HashSet<>();
+				//HashSet<List<String>> memberNameList = new HashSet<>();
+				ArrayList<List<String>> memberNameList = new ArrayList<>();
 				if(projectTasks != null)
 				{
 					for (List<String> projectTask : projectTasks) {

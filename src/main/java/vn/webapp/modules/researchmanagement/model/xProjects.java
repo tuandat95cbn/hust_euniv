@@ -314,6 +314,7 @@ public class xProjects implements Serializable{
 		this.commentsOfSubmittedProjects = commentsOfSubmittedProjects;
 	}
 
+	
 	public Set<xDetailCommentSubmittedProjects> getDetailCommentSubmittedProjects() {
 		return detailCommentSubmittedProjects;
 	}

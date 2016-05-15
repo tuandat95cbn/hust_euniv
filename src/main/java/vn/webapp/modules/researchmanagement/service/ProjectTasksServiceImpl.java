@@ -123,6 +123,11 @@ public class ProjectTasksServiceImpl implements ProjectTasksService {
 
 						projectTasksList.add(aProjectTask);
 					}
+					System.out.println(name() + "::getProjectTaskByProjectCode, list members = ");
+					for(int i = 0; i < projectTasksList.size(); i++){
+						System.out.println(projectTasksList.get(i).get(0) + "\t" + projectTasksList.get(i).get(1));
+					}
+					//System.exit(-1);
 					return projectTasksList;
 				}
 			}
@@ -131,5 +136,8 @@ public class ProjectTasksServiceImpl implements ProjectTasksService {
 			System.out.println("Exception: " + e.getMessage());
 			return null;
 		}
+    }
+    public String name(){
+    	return "ProjectTasksServiceImpl";
     }
 }

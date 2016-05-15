@@ -59,7 +59,7 @@
 									<th>Chủ nhiệm</th>
 									<th>Đợt gọi</th>
 									<th>Trạng thái</th>
-									<!-- <th>Chỉnh sửa</th> -->
+									<th>Chi tiết</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -74,11 +74,16 @@
 										<td><c:out value="${project.PROJ_PRJCall_Code}"/></td>
 										<td><c:out value="${project.PROJ_Status_Code}"/></td>
 										
-										<%-- <td class="center">
-											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked1 == 1 ? "btn-warning" : "btn-info"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã gửi' : 'Chỉnh sửa'}">Chỉnh sửa</button>
+										<td class="center">
+											<%-- 
+											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked1 == 1 ? "btn-warning" : "btn-info"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã gửi' : 'Chỉnh sửa'}">View PDF</button>
+											 --%>
+											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn btn-info">Thuyết minh PDF</button> 
 											<br/>
+										<%-- 	
 											<button type="button" id="removeTopic" onclick="v_fRemoveAProject(${project.PROJ_ID});" class="btn btn-danger btn-xs" title="Xóa đề tài">Xoá</button>
-										</td> --%>
+										 --%>
+										</td>
 										
 									</tr>
 								</c:forEach>
@@ -118,8 +123,11 @@ $(document).ready(function() {
 });
 
 function v_fViewDetailAProject(iProjectId){
-	var sViewDetailUrl = baseUrl + "/cp/aprojectdetail/"+iProjectId+".html";
-	window.location = sViewDetailUrl;
+	//var sViewDetailUrl = baseUrl + "/cp/aprojectdetail/"+iProjectId+".html";
+	//window.location = sViewDetailUrl;
+	
+	var sGeneratePdfUrl = baseUrl + "/cp/generatepdf/"+iProjectId+".html";
+	window.location = sGeneratePdfUrl;
 }
 
 

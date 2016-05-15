@@ -17,7 +17,7 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Chỉnh sửa đề tài</h1>
+            <h1 class="page-header">Chỉnh sửa đợt gọi đề tài</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -26,7 +26,7 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Chỉnh sửa đề tài
+                    Chỉnh sửa đợt đề tài
                 </div>
                 <div class="panel-body">
                 	<c:if test="${status != null}">
@@ -45,7 +45,7 @@
 	                                    <form:input path="projectCallName" class="form-control" name="projectCallName" value="${projectCalls.PROJCALL_NAME}" placeholder="Project Call Name"></form:input>
 	    								<form:errors path="projectCallName" class="alert-danger"></form:errors>
 	                                </div>
-	                                <div class="form-group">
+	                                <div class="form-group" style="visibility:hidden">
 	                                    <label for="topicName">Mã đợt gọi đề tài*</label>
 	                                    <form:input path="projectCallCode" class="form-control" name="projectCallCode" value="${projectCalls.PROJCALL_CODE}" placeholder="Project Call Code"></form:input>
 	    								<form:errors path="projectCallCode" class="alert-danger"></form:errors>

@@ -97,6 +97,10 @@ public class nProjectServiceImpl implements nProjectService {
 	 * @param String
 	 * @return object
 	 */
+	
+	public int saveAThread(mThreads thread){
+		return projectDAO.saveAThread(thread);
+	}
 	@Override
 	public List<mThreads> loadThreadsListByStaff(String userRole, String userCode) {
 		try {
@@ -1252,7 +1256,8 @@ public class nProjectServiceImpl implements nProjectService {
 		try {
 			return projectDAO.loadListSubmittedProjectsForSummary();
 		} catch (Exception e) {
-			System.out.println("Exception: " + e.getMessage());
+			//System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 	}

@@ -99,10 +99,14 @@ public class mJuryOfAnnouncedProjectCallServiceImpl implements mJuryOfAnnouncedP
 				juryOfAnnouncedProjectCallDAO.editJuryOfAnnouncedProjectCall(juryOfAnnouncedProjectCall);
 			}
 		} catch (Exception e) {
-			System.out.println("Exception: " + e.getMessage());
+			//System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
+	public void editJuryOfAnnouncedProjectCall(mJuryOfAnnouncedProjectCall jpc){
+		juryOfAnnouncedProjectCallDAO.editJuryOfAnnouncedProjectCall(jpc);
+	}
 	/**
 	 * 
 	 */

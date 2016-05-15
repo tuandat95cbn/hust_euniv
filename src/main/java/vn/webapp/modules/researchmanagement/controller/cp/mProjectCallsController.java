@@ -233,6 +233,7 @@ public class mProjectCallsController extends BaseWeb {
 							", projectCallName = " + sPROJCALL_NAME);
 
 				 projectCallsService.editAProjectCall(iPROJCALL_ID, sPROJCALL_CODE, sPROJCALL_PROJCATCODE, sPROJCALL_NAME, sPROJCALL_DATE, sPROJCALL_STATUS);
+				 
 				 model.put("status", "Chỉnh sửa thành công.");
 			 }else{
 				 model.put("err", "Đợt gọi đề tài đã tồn tại");

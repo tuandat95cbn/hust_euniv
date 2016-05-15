@@ -506,6 +506,10 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 		//List<xProjects> xProjects = projectService.loadListSubmittedProjectsForSummary();
 		List<xProjects> allxProjects = projectService.loadListSubmittedProjectsForSummary();
 		List<xProjects> xProjects = new ArrayList<xProjects>();
+		if(allxProjects == null){
+			System.out.println(name() + "::CommentsOfSubmittedProjectsResultSummaryList, allxProject is null");
+			
+		}else
 		for(xProjects t: allxProjects){
 			if(setProjectCallCode.contains(t.getPROJ_PRJCall_Code())
 					&& setStatusCode.contains(t.getPROJ_Status_Code())

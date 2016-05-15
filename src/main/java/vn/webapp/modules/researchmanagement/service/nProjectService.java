@@ -14,6 +14,9 @@ public interface nProjectService {
 	 * @param userCode
 	 * @return
 	 */
+	
+	public int saveAThread(mThreads thread); 
+	
 	public List<mThreads> loadThreadsListByStaff(String userRole, String userCode);
 	
 	/**
