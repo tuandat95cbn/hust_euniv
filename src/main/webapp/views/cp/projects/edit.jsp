@@ -66,21 +66,33 @@
                                    <form:input path="projectName" class="form-control" name="projectName" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_Name}" placeholder="Project Name"></form:input>
    								<form:errors path="projectName" class="alert-danger"></form:errors>
                                </div>
+                               <c:choose>
+									<c:when test="${projectEdit.PROJ_Locked1 != 1}">
+										<div class="form-group">
+		                                   <label for="projectOtherFees">Kinh phí vật tư, vật liệu,…</label>
+		                                   <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_BudgetMaterial}" placeholder="Other Fees"></form:input>
+		  									<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
+		                              	</div>
+		                            </c:when>
+	                              	<c:otherwise>
+	                              		<div class="panel panel-default">
+					                        <div class="panel-heading">
+					                            <label for="projectResult">Kinh phí vật tư, vật liệu,…</label>
+					                        </div>
+					                        <div class="panel-body">
+					                            <div class="tab-content">
+					                                <div class="tab-pane fade in active">${projectEdit.PROJ_BudgetMaterial}</div>
+					                            </div>
+					                        </div>
+					                    </div>
+	                              	</c:otherwise>
+	                           </c:choose>
+                        </div>
+                        <div class="col-lg-6">
                               <div class="form-group">
-                                   <label for="projectStartDate">Thời gian bắt đầu</label>
-                                   <form:input path="projectStartDate" class="form-control" readonly="true" name="projectStartDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_StartDate}" placeholder="Project Start Date"></form:input>
-   								<form:errors path="projectStartDate" class="alert-danger"></form:errors>
+                                   <label for="projectLeader">Chủ nhiệm đề tài</label>
+                                   <input path="projectLeader" class="form-control" disabled name="projectLeader" value="${currentUserName}" />
                                </div>
-                               <div class="form-group">
-                                   <label for="projectEndDate">Thời gian hoàn thành</label>
-                                   <form:input path="projectEndDate" class="form-control" readonly="true" name="projectEndDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_EndDate}" placeholder="Project End Date"></form:input>
-   								<form:errors path="projectEndDate" class="alert-danger"></form:errors>
-                               </div>
-                               <%-- <div class="form-group">
-                                   <label for="projectBudget">Kinh phí (triệu VNĐ)</label>
-                                   <form:input path="projectBudget" class="form-control" name="projectBudget" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_TotalBudget}" placeholder="Budget"></form:input>
-   								<form:errors path="projectBudget" class="alert-danger"></form:errors>
-                               </div> --%>
                                <div class="form-group">
                                    <label>Đơn vị*</label>
                                    <form:select path="falcutyAddress" class="form-control" name="falcutyAddress">
@@ -90,121 +102,132 @@
                                    </form:select>
                                    <form:errors path="falcutyAddress" class="alert-danger"></form:errors>
                                </div>
-                               <c:choose>
-								<c:when test="${projectEdit.PROJ_Locked1 != 1}">
-	                               	<div class="form-group">
-	                                	<label for="projectResult">9. Nội dung nghiên cứu</label>
-		                                <textarea path="projectContent"  name="projectContent" id="projectContent" class="form-control textarea">${projectEdit.PROJ_Content}</textarea>
-		                                <form:errors path="projectContent" class="alert-danger"></form:errors>
-	                            	</div>
-		                            	<div class="form-group">
-	                                    <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
-	                                    <textarea path="projectResult"  name="projectResult" id="projectResult" class="form-control textarea">${projectEdit.PROJ_Result}</textarea>
-	   									<form:errors path="projectResult" class="alert-danger"></form:errors>
-	                               	</div>
-	                               	<div class="form-group">
-	                                    <label for="projectOtherFees">Kinh phí vật tư, vật liệu,…</label>
-	                                    <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_BudgetMaterial}" placeholder="Other Fees"></form:input>
-	   									<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
-	                               	</div>
-							    </c:when>    
-							    <c:otherwise>
-							        <div class="panel panel-default">
-				                        <div class="panel-heading">
-				                            <label for="projectResult">9. Nội dung nghiên cứu</label>
-				                        </div>
-				                        <div class="panel-body">
-				                            <div class="tab-content">
-				                                <div class="tab-pane fade in active">${projectEdit.PROJ_Content}</div>
-				                            </div>
-				                        </div>
-				                    </div>
-				                    <div class="panel panel-default">
-				                        <div class="panel-heading">
-				                            <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
-				                        </div>
-				                        <div class="panel-body">
-				                            <div class="tab-content">
-				                                <div class="tab-pane fade in active">${projectEdit.PROJ_Result}</div>
-				                            </div>
-				                        </div>
-				                    </div>
-				                    <div class="panel panel-default">
-				                        <div class="panel-heading">
-				                            <label for="projectResult">Kinh phí vật tư, vật liệu,…</label>
-				                        </div>
-				                        <div class="panel-body">
-				                            <div class="tab-content">
-				                                <div class="tab-pane fade in active">${projectEdit.PROJ_BudgetMaterial}</div>
-				                            </div>
-				                        </div>
-				                    </div>
-							    </c:otherwise>
-							</c:choose>
-                        </div>
-                        <div class="col-lg-6">
-                              	<div class="form-group">
-                                   <label for="projectLeader">Chủ nhiệm đề tài</label>
-                                   <input path="projectLeader" class="form-control" disabled name="projectLeader" value="${currentUserName}" />
+								<div class="form-group">
+                                   	<label for="projectStartDate">Thời gian bắt đầu</label>
+                                   	<form:input path="projectStartDate" class="form-control" readonly="true" name="projectStartDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_StartDate}" placeholder="Project Start Date"></form:input>
+   									<form:errors path="projectStartDate" class="alert-danger"></form:errors>
+                                </div>
+                               <div class="form-group">
+                                   	<label for="projectEndDate">Thời gian hoàn thành</label>
+                                   	<form:input path="projectEndDate" class="form-control" readonly="true" name="projectEndDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_EndDate}" placeholder="Project End Date"></form:input>
+   									<form:errors path="projectEndDate" class="alert-danger"></form:errors>
                                </div>
-                               <c:choose>
-								<c:when test="${projectEdit.PROJ_Locked1 != 1}">
-									<div class="form-group">
-	                                    <label for="projectSurvey">6. Tổng quan tình hình nghiên cứu thuộc lĩnh vực của đề tài ở trong và ngoài nước</label>
-	                                    <textarea path="projectSurvey" name="projectSurvey" id="projectSurvey" class="form-control textarea">${projectEdit.PROJ_Survey}</textarea>
-	   									<form:errors path="projectSurvey" class="alert-danger"></form:errors>
-	                               	</div>
-	                                <div class="form-group">
-	                                    <label for="projectMotivation">7. Tính cấp thiết đề tài</label>
-	                                    <textarea path="projectMotivation" name="projectMotivation" id="projectMotivation" class="form-control textarea">${projectEdit.PROJ_Motivation}</textarea>
-	    								<form:errors path="projectMotivation" class="alert-danger"></form:errors>
-	                                </div>
-	                                <div class="form-group">
-	                                    <label for="projectObjective">8. Mục tiêu của đề tài</label>
-	                                    <textarea path="projectObjective" name="projectObjective" id="projectObjective" class="form-control textarea">${projectEdit.PROJ_Objective}</textarea>
-	   									<form:errors path="projectObjective" class="alert-danger"></form:errors>
-	                               	</div>
-							    </c:when>    
-							    <c:otherwise>
-							    	<div class="panel panel-default">
-				                        <div class="panel-heading">
-				                            <label for="projectResult">6. Tổng quan tình hình nghiên cứu thuộc lĩnh vực của đề tài ở trong và ngoài nước</label>
-				                        </div>
-				                        <div class="panel-body">
-				                            <div class="tab-content">
-				                                <div class="tab-pane fade in active" id="home">${projectEdit.PROJ_Survey}</div>
-				                            </div>
-				                        </div>
-				                    </div>
-							        <div class="panel panel-default">
-				                        <div class="panel-heading">
-				                            <label for="projectResult">7. Tính cấp thiết đề tài</label>
-				                        </div>
-				                        <div class="panel-body">
-				                            <div class="tab-content">
-				                                <div class="tab-pane fade in active" id="home">${projectEdit.PROJ_Motivation}</div>
-				                            </div>
-				                        </div>
-				                    </div>
-				                    <div class="panel panel-default">
-				                        <div class="panel-heading">
-				                            <label for="projectResult">8. Mục tiêu của đề tài</label>
-				                        </div>
-				                        <div class="panel-body">
-				                            <div class="tab-content">
-				                                <div class="tab-pane fade in active" id="home">${projectEdit.PROJ_Objective}</div>
-				                            </div>
-				                        </div>
-				                    </div>
-							    </c:otherwise>
-							</c:choose>
+                               	<%-- <div class="form-group">
+                                   <label for="projectBudget">Kinh phí (triệu VNĐ)</label>
+                                   <form:input path="projectBudget" class="form-control" name="projectBudget" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_TotalBudget}" placeholder="Budget"></form:input>
+   								<form:errors path="projectBudget" class="alert-danger"></form:errors>
+                               </div> --%>
                         </div>
                         <!-- /.col-lg-6 (nested) -->
                     </div>
                     <!-- /.row (nested) -->
                 </div>
                 <!-- /.panel-body -->
+                <div class="panel-body">
+                	<c:choose>
+						<c:when test="${projectEdit.PROJ_Locked1 != 1}">
+							<div class="form-group">
+                                   <label for="projectSurvey">6. Tổng quan tình hình nghiên cứu thuộc lĩnh vực của đề tài ở trong và ngoài nước</label>
+                                   <textarea path="projectSurvey" name="projectSurvey" id="projectSurvey" class="form-control textarea">${projectEdit.PROJ_Survey}</textarea>
+  									<form:errors path="projectSurvey" class="alert-danger"></form:errors>
+                              	</div>
+                               <div class="form-group">
+                                   <label for="projectMotivation">7. Tính cấp thiết đề tài</label>
+                                   <textarea path="projectMotivation" name="projectMotivation" id="projectMotivation" class="form-control textarea">${projectEdit.PROJ_Motivation}</textarea>
+   								<form:errors path="projectMotivation" class="alert-danger"></form:errors>
+                               </div>
+                               <div class="form-group">
+                                   <label for="projectObjective">8. Mục tiêu của đề tài</label>
+                                   <textarea path="projectObjective" name="projectObjective" id="projectObjective" class="form-control textarea">${projectEdit.PROJ_Objective}</textarea>
+  									<form:errors path="projectObjective" class="alert-danger"></form:errors>
+                              	</div>
+					    </c:when>    
+					    <c:otherwise>
+					    	<div class="panel panel-default">
+		                        <div class="panel-heading">
+		                            <label for="projectResult">6. Tổng quan tình hình nghiên cứu thuộc lĩnh vực của đề tài ở trong và ngoài nước</label>
+		                        </div>
+		                        <div class="panel-body">
+		                            <div class="tab-content">
+		                                <div class="tab-pane fade in active" id="home">${projectEdit.PROJ_Survey}</div>
+		                            </div>
+		                        </div>
+		                    </div>
+					        <div class="panel panel-default">
+		                        <div class="panel-heading">
+		                            <label for="projectResult">7. Tính cấp thiết đề tài</label>
+		                        </div>
+		                        <div class="panel-body">
+		                            <div class="tab-content">
+		                                <div class="tab-pane fade in active" id="home">${projectEdit.PROJ_Motivation}</div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                    <div class="panel panel-default">
+		                        <div class="panel-heading">
+		                            <label for="projectResult">8. Mục tiêu của đề tài</label>
+		                        </div>
+		                        <div class="panel-body">
+		                            <div class="tab-content">
+		                                <div class="tab-pane fade in active" id="home">${projectEdit.PROJ_Objective}</div>
+		                            </div>
+		                        </div>
+		                    </div>
+					    </c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test="${projectEdit.PROJ_Locked1 != 1}">
+                              	<div class="form-group">
+                               	<label for="projectResult">9. Nội dung nghiên cứu</label>
+                                <textarea path="projectContent"  name="projectContent" id="projectContent" class="form-control textarea">${projectEdit.PROJ_Content}</textarea>
+                                <form:errors path="projectContent" class="alert-danger"></form:errors>
+                           	</div>
+                           	<div class="form-group">
+                                  <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
+                                  <textarea path="projectResult"  name="projectResult" id="projectResult" class="form-control textarea">${projectEdit.PROJ_Result}</textarea>
+ 									<form:errors path="projectResult" class="alert-danger"></form:errors>
+                             	</div>
+					    </c:when>    
+					    <c:otherwise>
+					        <div class="panel panel-default">
+		                        <div class="panel-heading">
+		                            <label for="projectResult">9. Nội dung nghiên cứu</label>
+		                        </div>
+		                        <div class="panel-body">
+		                            <div class="tab-content">
+		                                <div class="tab-pane fade in active">${projectEdit.PROJ_Content}</div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                    <div class="panel panel-default">
+		                        <div class="panel-heading">
+		                            <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
+		                        </div>
+		                        <div class="panel-body">
+		                            <div class="tab-content">
+		                                <div class="tab-pane fade in active">${projectEdit.PROJ_Result}</div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                    <div class="panel panel-default">
+		                        <div class="panel-heading">
+		                            <label for="projectResult">Kinh phí vật tư, vật liệu,…</label>
+		                        </div>
+		                        <div class="panel-body">
+		                            <div class="tab-content">
+		                                <div class="tab-pane fade in active">${projectEdit.PROJ_BudgetMaterial}</div>
+		                            </div>
+		                        </div>
+		                    </div>
+					    </c:otherwise>
+					</c:choose>
+                </div>
+            </div>
                 
+            <div class="panel panel-default">
+            	<div class="panel-heading">
+                    Thành viên tham gia
+                </div>
                 <div class="panel-body">
                 	<c:if test="${projectEdit.PROJ_Locked1 != 1}">
 	                    <div class="row">
@@ -338,23 +361,26 @@
 	                        <!-- /.panel-body -->
 	                    </div>
                     </div>
-                   	<!-- Buttons -->
-                  	<c:if test="${projectEdit.PROJ_Locked1 != 1}">
-                    	<button type="submit" class="btn btn-primary">Lưu</button>
-                    </c:if>
-                    <input type="hidden" value="${projectEdit.PROJ_ID}" name="projectId" id="projectId" />
-                    <input type="hidden" value="${projectEdit.PROJ_Code}" name="currentProjectCode" id="currentProjectCode" />
-                    <button type="reset" class="btn btn-info cancel">Hủy</button>
-                    <%-- <c:if test="${projectEdit.PROJ_Locked1 == 1}">
-                     --%>
-                    <button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">View PDF</button>
-                    <%-- </c:if> --%>
-                    <c:if test="${projectEdit.PROJ_Locked1 != 1}">
-                    	<button type="reset" class="btn btn-danger" onclick="v_fSendProject(${projectEdit.PROJ_ID})">Gửi đề tài</button>
-                    </c:if>
+                   	
                 </div>
                 <!-- /.panel-body -->
-            </div>
+	        </div>
+	        <div class="panel panel-default">
+	        	<!-- Buttons -->
+               	 <c:if test="${projectEdit.PROJ_Locked1 != 1}">
+                 	<button type="submit" class="btn btn-primary">Lưu</button>
+                 </c:if>
+                 <input type="hidden" value="${projectEdit.PROJ_ID}" name="projectId" id="projectId" />
+                 <input type="hidden" value="${projectEdit.PROJ_Code}" name="currentProjectCode" id="currentProjectCode" />
+                 <button type="reset" class="btn btn-info cancel">Hủy</button>
+                 <%-- <c:if test="${projectEdit.PROJ_Locked1 == 1}">
+                  --%>
+                 <button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">View PDF</button>
+                 <%-- </c:if> --%>
+                 <c:if test="${projectEdit.PROJ_Locked1 != 1}">
+                 	<button type="reset" class="btn btn-danger" onclick="v_fSendProject(${projectEdit.PROJ_ID})">Gửi đề tài</button>
+                 </c:if>
+	        </div>
             <!-- /.panel -->
             </form:form>
         </div>
