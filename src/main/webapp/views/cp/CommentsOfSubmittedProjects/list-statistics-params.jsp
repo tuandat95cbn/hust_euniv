@@ -37,47 +37,47 @@
 	                        <div class="panel-heading">
 	                            <b>Thông tin chung</b>
 	                        </div>
-		                        <!-- /.panel-heading -->
-		                        <div class="panel-body">
-		                        	<div>
-			                        	<label for="CMTSUBPRJ_Eval_Motivation">Chọn nhóm</label>
-		                        		<div class="form-group">
-		                                   	<form:select class="form-control"  path="threadCatCode">
-												<option value="" >Chọn nhóm</option>
-					                        	<c:forEach items="${threadCategory}" var="threadCat">
-				                                 	<option value="${threadCat.PROJCAT_Code}">${threadCat.PROJCAT_Name}</option>
-				                               	</c:forEach>
-					                        </form:select>
-		                                </div>
+	                        <!-- /.panel-heading -->
+	                        <div class="panel-body">
+	                        	<div>
+		                        	<label for="CMTSUBPRJ_Eval_Motivation">Chọn nhóm</label>
+	                        		<div class="form-group">
+	                                   	<form:select class="form-control"  path="threadCatCode">
+											<option value="" >Chọn nhóm</option>
+				                        	<c:forEach items="${threadCategory}" var="threadCat">
+			                                 	<option value="${threadCat.PROJCAT_Code}">${threadCat.PROJCAT_Name}</option>
+			                               	</c:forEach>
+				                        </form:select>
 	                                </div>
-	                                
-	                                <div>
-		                                <label for="CMTSUBPRJ_Eval_Innovation">Chọn trạng thái</label>
-		                                <div class="form-group">
-		                                   	 <form:select class="form-control" path="threadStatus">
-					                        	<option value="" >Chọn trạng thái</option>
-					                        	<c:forEach items="${threadStatuses}" var="threadStat">
-				                                 	<option value="${threadStat.PROJSTAT_Code}">${threadStat.PROJSTAT_Description}</option>
-				                               	</c:forEach>
-					                        </form:select>
-		                                </div>
+                                </div>
+                                
+                                <div>
+	                                <label for="CMTSUBPRJ_Eval_Innovation">Chọn trạng thái</label>
+	                                <div class="form-group">
+	                                   	 <form:select class="form-control" path="threadStatus">
+				                        	<option value="" >Chọn trạng thái</option>
+				                        	<c:forEach items="${threadStatuses}" var="threadStat">
+			                                 	<option value="${threadStat.PROJSTAT_Code}">${threadStat.PROJSTAT_Description}</option>
+			                               	</c:forEach>
+				                        </form:select>
 	                                </div>
-	                                
-	                                <div>
-		                                <label for="CMTSUBPRJ_Eval_Applicability">Chọn đợt gọi đề tài</label>
-		                                <div class="form-group">
-		                                   	<form:select class="form-control" id="project-call"  path="threadYear">
-					                        	<!-- 
-					                        	<option value="" >Chọn đợt gọi đề tài</option>
-					                        	 -->
-					                        	<c:forEach items="${projectCallsList}" var="projectCall">
-				                                 	<option value="${projectCall.PROJCALL_CODE}">${projectCall.PROJCALL_NAME}</option>
-				                               	</c:forEach>
-					                        </form:select>
-		                                </div>
+                                </div>
+                                
+                                <div>
+	                                <label for="CMTSUBPRJ_Eval_Applicability">Chọn đợt gọi đề tài</label>
+	                                <div class="form-group">
+	                                   	<form:select class="form-control" id="project-call"  path="threadYear">
+				                        	<!-- 
+				                        	<option value="" >Chọn đợt gọi đề tài</option>
+				                        	 -->
+				                        	<c:forEach items="${projectCallsList}" var="projectCall">
+			                                 	<option value="${projectCall.PROJCALL_CODE}">${projectCall.PROJCALL_NAME}</option>
+			                               	</c:forEach>
+				                        </form:select>
 	                                </div>
-	                           </div>
-	                      </div>
+                                </div>
+                           </div>
+                       </div>
                        </div>
                        <div class="col-lg-6">
                        	<div class="panel panel-default">

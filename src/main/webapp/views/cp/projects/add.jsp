@@ -29,7 +29,7 @@
         	<form:form action="${baseUrl}/cp/save-a-project.html" method="POST" commandName="projectsAddForm" role="form" enctype="multipart/form-data">
 	            <div class="panel panel-default">
 	                <div class="panel-heading">
-	                    Thêm mới đề tài
+	                    Thông tin chung
 	                </div>
 	                <div class="panel-body">
 	                	<c:if test="${status != null}">
@@ -40,102 +40,109 @@
 	                    <c:if test="${err != null}">
 		                	<div class="alert alert-warning">${err}</div>
 	                    </c:if>
-		                    <div class="row">
-		                        <div class="col-lg-6">
-		                        	<div class="form-group">
-	                                    <label>Chọn đợt đề tài*</label>
-	                                    <form:select path="projectCallCode" class="form-control" name="projectCallCode">
-	                                    	<c:forEach items="${projectCallsList}" var="projectCall">
-		                                        <option value="${projectCall.PROJCALL_CODE}">${projectCall.PROJCALL_NAME}</option>
-	                                       	</c:forEach>
-	                                    </form:select>
-	                                    <form:errors path="projectCallCode" class="alert-danger"></form:errors>
-	                                </div>
-	                                <div class="form-group">
-	                                    <label>Chọn lĩnh vực đề tài*</label>
-	                                    <form:select path="projectResearchFieldCode" class="form-control" name="projectResearchFieldCode">
-	                                    	<c:forEach items="${projectResearchFieldList}" var="proj_field">
-		                                        <option value="${proj_field.PRJRSHF_Code}">${proj_field.PRJRSHF_Name}</option>
-	                                       	</c:forEach>
-	                                    </form:select>
-	                                    <form:errors path="projectResearchFieldCode" class="alert-danger"></form:errors>
-	                                </div>
-	                                
-	                                <div class="form-group">
-	                                    <label for="projectName">Tên đề tài*</label>
-	                                    <form:input path="projectName" class="form-control" name="projectName" placeholder="Project Name"></form:input>
-	    								<form:errors path="projectName" class="alert-danger"></form:errors>
-	                                </div>
-	                                
-	                                <div class="form-group">
-	                                    <label for="projectStartDate">Thời gian bắt đầu</label>
-	                                    <form:input path="projectStartDate" class="form-control" name="projectStartDate" readonly="true" placeholder="Project Start Date"></form:input>
-	    								<form:errors path="projectStartDate" class="alert-danger"></form:errors>
-	                                </div>
-	                                <div class="form-group">
-	                                    <label for="projectEndDate">Thời gian hoàn thành</label>
-	                                    <form:input path="projectEndDate" class="form-control" name="projectEndDate" readonly="true" placeholder="Project End Date"></form:input>
-	    								<form:errors path="projectEndDate" class="alert-danger"></form:errors>
-	                                </div>
-	                                <%-- <div class="form-group">
-	                                    <label for="projectBudget">Kinh phí (triệu VNĐ)</label>
-	                                    <form:input path="projectBudget" class="form-control" name="projectBudget" placeholder="Budget"></form:input>
-	    								<form:errors path="projectBudget" class="alert-danger"></form:errors>
-	                                </div> --%>
-	                                <div class="form-group">
-	                                    <label>Đơn vị*</label>
-	                                    <form:select path="falcutyAddress" class="form-control" name="falcutyAddress">
-	                                    	<c:forEach items="${listFaculty}" var="faculty">
-	                                        	<option value="${faculty.faculty_Code}">${faculty.faculty_Name}</option>
-                                       		</c:forEach>
-	                                    </form:select>
-	                                    <form:errors path="falcutyAddress" class="alert-danger"></form:errors>
-	                                </div>
-	                                <div class="form-group">
-	                                	<label for="projectResult">9. Nội dung nghiên cứu</label>
-		                                <form:textarea path="projectContent"  name="projectContent" class="form-control textarea"/>
-		                                <form:errors path="projectContent" class="alert-danger"></form:errors>
-	                            	 </div>
-	                                 <div class="form-group">
-	                                    <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
-	                                    <form:textarea path="projectResult" name="projectResult" value="" class="form-control textarea" />
-	   									<form:errors path="projectResult" class="alert-danger"></form:errors>
-	                               	 </div>
-	                               	 <div class="form-group">
-	                                    <label for="budgetMaterial">Kinh phí vật tư, vật liệu,…</label>
-	                                    <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" placeholder="Other Fees"></form:input>
-	   									<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
-	                               	 </div>
-		                        </div>
-		                        <div class="col-lg-6">
-		                        	<div class="form-group">
-	                                    <label for="projectLeader">4. Chủ nhiệm đề tài</label>
-	                                    <input path="projectLeader" class="form-control" disabled name="projectLeader" value="${currentUserName}" />
-	                                </div>
-	                                <div class="form-group">
-	                                    <label for="projectSurvey">6. Tổng quan tình hình nghiên cứu thuộc lĩnh vực của đề tài ở trong và ngoài nước</label>
-	                                    <form:textarea path="projectSurvey" name="projectSurvey" value="" class="form-control textarea" />
-	   									<form:errors path="projectSurvey" class="alert-danger"></form:errors>
-	                               	 </div>
-	                                <div class="form-group">
-	                                    <label for="projectMotivation">7. Tính cấp thiết đề tài</label>
-	                                    <form:textarea path="projectMotivation" name="projectMotivation" class="form-control textarea"/>
-	    								<form:errors path="projectMotivation" class="alert-danger"></form:errors>
-	                                </div>
-	                                <div class="form-group">
-	                                    <label for="projectObjective">8. Mục tiêu của đề tài</label>
-	                                    <form:textarea path="projectObjective" name="projectObjective" value="" class="form-control textarea" />
-	   									<form:errors path="projectObjective" class="alert-danger"></form:errors>
-	                               	 </div>
-		                        </div>
-		                        <!-- /.col-lg-6 (nested) -->
-		                    </div>
-		                    <!-- /.row (nested) -->
-	                    
+	                    <div class="row">
+	                        <div class="col-lg-6">
+	                        	<div class="form-group">
+                                    <label>Chọn đợt đề tài*</label>
+                                    <form:select path="projectCallCode" class="form-control" name="projectCallCode">
+                                    	<c:forEach items="${projectCallsList}" var="projectCall">
+	                                        <option value="${projectCall.PROJCALL_CODE}">${projectCall.PROJCALL_NAME}</option>
+                                       	</c:forEach>
+                                    </form:select>
+                                    <form:errors path="projectCallCode" class="alert-danger"></form:errors>
+                                </div>
+                                <div class="form-group">
+                                    <label for="projectName">Tên đề tài*</label>
+                                    <form:input path="projectName" class="form-control" name="projectName" placeholder="Project Name"></form:input>
+    								<form:errors path="projectName" class="alert-danger"></form:errors>
+                                </div>
+                                <div class="form-group">
+                                    <label>Chọn lĩnh vực đề tài*</label>
+                                    <form:select path="projectResearchFieldCode" class="form-control" name="projectResearchFieldCode">
+                                    	<c:forEach items="${projectResearchFieldList}" var="proj_field">
+	                                        <option value="${proj_field.PRJRSHF_Code}">${proj_field.PRJRSHF_Name}</option>
+                                       	</c:forEach>
+                                    </form:select>
+                                    <form:errors path="projectResearchFieldCode" class="alert-danger"></form:errors>
+                                </div>
+                                <%-- <div class="form-group">
+                                    <label for="projectBudget">Kinh phí (triệu VNĐ)</label>
+                                    <form:input path="projectBudget" class="form-control" name="projectBudget" placeholder="Budget"></form:input>
+    								<form:errors path="projectBudget" class="alert-danger"></form:errors>
+                                </div> --%>
+                               	<div class="form-group">
+                                    <label for="budgetMaterial">Kinh phí vật tư, vật liệu,…</label>
+                                    <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" placeholder="Other Fees"></form:input>
+   									<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
+                               	</div>
+	                        </div>
+	                        <div class="col-lg-6">
+	                        	<div class="form-group">
+                                    <label for="projectLeader">Chủ nhiệm đề tài</label>
+                                    <input path="projectLeader" class="form-control" disabled name="projectLeader" value="${currentUserName}" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Đơn vị*</label>
+                                    <form:select path="falcutyAddress" class="form-control" name="falcutyAddress">
+                                    	<c:forEach items="${listFaculty}" var="faculty">
+                                        	<option value="${faculty.faculty_Code}">${faculty.faculty_Name}</option>
+                                      		</c:forEach>
+                                    </form:select>
+                                    <form:errors path="falcutyAddress" class="alert-danger"></form:errors>
+                                </div>
+                                <div class="form-group">
+                                    <label for="projectStartDate">Thời gian bắt đầu</label>
+                                    <form:input path="projectStartDate" class="form-control" name="projectStartDate" readonly="true" placeholder="Project Start Date"></form:input>
+    								<form:errors path="projectStartDate" class="alert-danger"></form:errors>
+                                </div>
+                                <div class="form-group">
+                                    <label for="projectEndDate">Thời gian hoàn thành</label>
+                                    <form:input path="projectEndDate" class="form-control" name="projectEndDate" readonly="true" placeholder="Project End Date"></form:input>
+    								<form:errors path="projectEndDate" class="alert-danger"></form:errors>
+                                </div>
+	                        </div>
+	                        <!-- /.col-lg-6 (nested) -->
+	                    </div>
+	                    <!-- /.row (nested) -->
+	                </div>
+	                <div class="panel-body">
+		                <div class="row">
+		                	<div class="col-lg-12">
+		                		<div class="form-group">
+                                    <label for="projectSurvey">6. Tổng quan tình hình nghiên cứu thuộc lĩnh vực của đề tài ở trong và ngoài nước</label>
+                                    <form:textarea path="projectSurvey" name="projectSurvey" value="" class="form-control textarea" />
+   									<form:errors path="projectSurvey" class="alert-danger"></form:errors>
+                               	 </div>
+                                <div class="form-group">
+                                    <label for="projectMotivation">7. Tính cấp thiết đề tài</label>
+                                    <form:textarea path="projectMotivation" name="projectMotivation" class="form-control textarea"/>
+    								<form:errors path="projectMotivation" class="alert-danger"></form:errors>
+                                </div>
+                                <div class="form-group">
+                                    <label for="projectObjective">8. Mục tiêu của đề tài</label>
+                                    <form:textarea path="projectObjective" name="projectObjective" value="" class="form-control textarea" />
+   									<form:errors path="projectObjective" class="alert-danger"></form:errors>
+                               	 </div>
+                               	 <div class="form-group">
+                                	<label for="projectResult">9. Nội dung nghiên cứu</label>
+	                                <form:textarea path="projectContent"  name="projectContent" class="form-control textarea"/>
+	                                <form:errors path="projectContent" class="alert-danger"></form:errors>
+                            	 </div>
+                                 <div class="form-group">
+                                    <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
+                                    <form:textarea path="projectResult" name="projectResult" value="" class="form-control textarea" />
+   									<form:errors path="projectResult" class="alert-danger"></form:errors>
+                               	 </div>
+		                	</div>
+		                </div>
 	                </div>
 	                <!-- /.panel-body -->
-	                
-	                <div class="panel-body">
+	            </div>
+	            <div class="panel panel-default">
+	            	<div class="panel-heading">
+	                    Thành viên tham gia
+	                </div>
+	            	<div class="panel-body">
 	                    <div class="row">
 	                        <div class="col-lg-6">
 	                        	<label for="threadResult">Thành viên tham gia*</label>
@@ -232,10 +239,12 @@
 		                        <!-- /.panel-body -->
 		                    </div>
 	                    </div>
-	                    <button type="submit" class="btn btn-primary">Lưu</button>
-                        <button type="reset" class="btn btn-primary cancel">Hủy</button>
 	                </div>
 	                <!-- /.panel-body -->
+	            </div>
+	            <div class="panel panel-default">
+	            	<button type="submit" class="btn btn-primary">Lưu</button>
+                    <button type="reset" class="btn btn-primary cancel">Hủy</button>
 	            </div>
             </form:form>
             <!-- /.panel -->
