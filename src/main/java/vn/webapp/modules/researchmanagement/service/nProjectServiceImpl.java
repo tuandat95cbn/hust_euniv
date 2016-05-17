@@ -748,10 +748,9 @@ public class nProjectServiceImpl implements nProjectService {
 	 */
 	@Override
 	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,
-			String projectContent,String projectMotivation,String projectResult,int budgetMaterial, int totalBudget, String projectCode,
-			String facultyAdd,String projectSurvey,String projectObjective,
-			String startDate,String endDate, String projectCategory, String projectResearchFieldCode){
-		System.out.println("nProjectService::saveAProject, projectName = " + projectName + ", projectCode = " + projectCode);
+								String projectContent,String projectMotivation,String projectResult,int budgetMaterial, int totalBudget, String projectCode,
+								String facultyAdd,String projectSurvey,String projectObjective,
+								String startDate,String endDate, String projectCategory, String projectResearchFieldCode, String sourceFile){
 		if(userCode != "" && projectCode != "" && projectName != "" && projectCallCode != "")
 		{
 			Projects beInsertedProject = new Projects();
@@ -771,6 +770,7 @@ public class nProjectServiceImpl implements nProjectService {
 			beInsertedProject.setPROJ_Objective(projectObjective);
 			beInsertedProject.setPROJ_ProjCat_Code(projectCategory);
 			beInsertedProject.setPROJ_ResearchFieldCode(projectResearchFieldCode);
+			beInsertedProject.setPROJ_SourceFile(sourceFile);
 			int iInsertedProjectId = threadDAO.saveAProject(beInsertedProject);
 			if(iInsertedProjectId > 0 )
 			{

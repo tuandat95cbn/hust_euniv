@@ -62,6 +62,8 @@ public class ProjectsValidation{
 	@NotEmpty
 	private String projectResearchFieldCode;
 	
+	private MultipartFile projectFileUpload;
+	
 	public String getProjectResearchFieldCode() {
 		return projectResearchFieldCode;
 	}
@@ -244,5 +246,13 @@ public class ProjectsValidation{
 
 	public void setProjectStatusCode(String projectStatusCode) {
 		this.projectStatusCode = projectStatusCode;
+	}
+
+	public MultipartFile getProjectFileUpload() {
+		return projectFileUpload;
+	}
+
+	public void setProjectFileUpload(MultipartFile projectFileUpload) {
+		this.projectFileUpload = projectFileUpload;
 	}
 }

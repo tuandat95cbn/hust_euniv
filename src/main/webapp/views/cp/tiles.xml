@@ -276,13 +276,20 @@
     </definition>
 
     <definition name="cp.addAProject" extends="layout.base">
-        <put-attribute name="title" value="Create a project" />                                 
-        <put-attribute name="content" value="/views/cp/projects/add.jsp" />
+        <put-attribute name="title" value="Create a project" />    
+        <!-- Old form -->                             
+        <!-- <put-attribute name="content" value="/views/cp/projects/add.jsp" /> -->
+        
+        <!-- New form -->
+        <put-attribute name="content" value="/views/cp/projects/add-upload.jsp" />
     </definition>
     
     <definition name="cp.editAProject" extends="layout.base">
-        <put-attribute name="title" value="Edit a project" />                                 
-        <put-attribute name="content" value="/views/cp/projects/edit.jsp" />
+        <put-attribute name="title" value="Edit a project" />              
+        <!-- Old form -->                   
+        <!-- <put-attribute name="content" value="/views/cp/projects/edit.jsp" /> -->
+        <!-- New form -->
+        <put-attribute name="content" value="/views/cp/projects/edit-upload.jsp" />
     </definition>
     
     <definition name="cp.projectsapprove" extends="layout.base">

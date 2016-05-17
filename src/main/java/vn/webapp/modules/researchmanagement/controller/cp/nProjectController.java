@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -714,7 +715,7 @@ public class nProjectController extends BaseWeb {
 		model.put("projectsAddForm", new ProjectsValidation());
 		model.put("projectResearchFieldList", projectResearchFields);
 		
-		model.put("projects", status);
+		model.put("projects", status); 
 		return "cp.addAProject";
 	}
 	
@@ -775,15 +776,56 @@ public class nProjectController extends BaseWeb {
 					
 					if(projectMembers.length > 0)
 					{
+						/**
+			    	    * Uploading file
+			    	    */
+						MultipartFile paperSourceUploadFile = projectValid.getProjectFileUpload();
+						String fileName = paperSourceUploadFile.getOriginalFilename();
+						String paperSourceUploadFileSrc = "";
+						try {
+							//Creating Date in java with today's date.
+							Date currentDate = new Date();
+							SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
+							String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+							
+							byte[] bytes = paperSourceUploadFile.getBytes();
+							String uploadDir = "/uploads"+File.separator+userCode+File.separator+"projects";
+							String realPathtoUploads  = request.getServletContext().getRealPath(uploadDir);
+							File dir = new File(realPathtoUploads );
+							if (!dir.exists()){
+				        	   dir.mkdirs();
+							}
+							
+							// Set name file
+							fileName = "thuyetminh-"+sCurrentDate+fileName;
+							File serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
+							
+							// Save data into file
+							BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+							stream.write(bytes);
+							stream.close();
+							
+							// Set name for saving into DB
+							if(serverFile.exists()){
+			            	   paperSourceUploadFileSrc = fileName;
+							}
+						}catch(IOException e)
+						{
+							System.out.println("Can not upload file");
+						}catch(Exception e)
+						{
+							System.out.println(e.getStackTrace());
+						}
+				    	   
 						int totalBudget = budgetMaterial;
 						for(int i = 0; i < projectMemberBudget.length; i++){
 							totalBudget += Integer.valueOf(projectMemberBudget[i]);
 						}
 								
 						int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, 
-								projectContent, projectMotivation, projectResult, budgetMaterial, totalBudget, projectCode, facultyAdd, 
-								projectSurvey, projectObjective, startDate, endDate, 
-								projectCategory, projectResearchFieldCode);
+																			projectContent, projectMotivation, projectResult, budgetMaterial, totalBudget, projectCode, facultyAdd, 
+																			projectSurvey, projectObjective, startDate, endDate, 
+																			projectCategory, projectResearchFieldCode, paperSourceUploadFileSrc);
 						if (i_InsertAProject > 0) {
 							model.put("status", "Thêm mới thành công!");
 							projectCode = projectCallCode + i_InsertAProject;
@@ -1163,7 +1205,7 @@ public class nProjectController extends BaseWeb {
 			// Put journal list and topic category to view
 			model.put("projectEdit", project);
 			model.put("projectFormEdit", new ProjectsValidation());
-			model.put("projectId", projectId);
+			model.put("projectId", projectId); 
 			
 			List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
 			model.put("projectTasks", projectTasks);
@@ -1781,9 +1823,6 @@ public class nProjectController extends BaseWeb {
 			String currentProjectCode	= projectFormEdit.getCurrentProjectCode();
 			boolean bEditSumittedProject= false;
 			
-			System.out.println(name() + "::updateAProject, projectCallCode = " + projectCallCode + 
-					", projectResearchFieldCode = " + projectResearchFieldCode + ", projectCode = " + projectCode);
-			
 			mProjectCalls selectedProjectCall = projectCallsService.loadAProjectCallByCode(projectCallCode);
 			if("OPEN_FOR_SUBMISSION".equals(selectedProjectCall.getPROJCALL_STATUS())){
 				try{
@@ -1800,6 +1839,56 @@ public class nProjectController extends BaseWeb {
 					}
 					
 					if(projectMembers.length > 0){
+							/**
+				    	    * Uploading file
+				    	    */
+							MultipartFile paperSourceUploadFile = projectFormEdit.getProjectFileUpload();
+							String fileName = paperSourceUploadFile.getOriginalFilename();
+							String paperSourceUploadFileSrc = "";
+							try {
+								//Creating Date in java with today's date.
+								Date currentDate = new Date();
+								SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
+								String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+								
+								byte[] bytes = paperSourceUploadFile.getBytes();
+								String uploadDir = "/uploads"+File.separator+userCode+File.separator+"projects";
+								String realPathtoUploads  = request.getServletContext().getRealPath(uploadDir);
+								File dir = new File(realPathtoUploads );
+								if (!dir.exists()){
+					        	   dir.mkdirs();
+								}
+								
+								if(!"".equals(fileName)){
+									// Set name file
+									fileName = "thuyetminh-"+sCurrentDate+fileName;
+									File serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
+									
+									// Save data into file
+									BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+									stream.write(bytes);
+									stream.close();
+									
+									// Set name for saving into DB
+									if(serverFile.exists()){
+					            	   paperSourceUploadFileSrc = fileName;
+					            	   
+					            	   String oldFileName = project.getPROJ_SourceFile();
+					            	   if(!"".equals(oldFileName)){
+					   		   				File oldFile = new File(dir.getAbsolutePath()+ File.separator + oldFileName);
+					   		   				if(oldFile.exists())
+					   		   					oldFile.delete();
+					   		   			}
+									}
+								}
+							}catch(IOException e)
+							{
+								System.out.println("Can not upload file");
+							}catch(Exception e)
+							{
+								System.out.println(e.getStackTrace());
+							}
+							
 						// Editing project info
 						threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject, totalBudget, projectResearchFieldCode);
 						// Editting tasks info
@@ -1807,6 +1896,8 @@ public class nProjectController extends BaseWeb {
 						return "redirect:" + this.baseUrl + "/cp/list-projects.html";
 					}
 				}catch (NullPointerException e) {
+					System.out.println(e.getMessage());
+					System.out.println(e.getStackTrace());
 					model.put("err", "Cần phải thêm thành viên vào đề tài.");
 				}
 			}else{
@@ -2165,12 +2256,28 @@ public class nProjectController extends BaseWeb {
 		 * @return
 		 */
 		 @RequestMapping(value = "/remove-a-project/{id}", method = RequestMethod.GET)
-		 public String removeAProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+		 public String removeAProject(HttpServletRequest request, ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
 			 String userCode = session.getAttribute("currentUserCode").toString();
 			 String userRole = session.getAttribute("currentUserRole").toString();
 			 Projects project = threadService.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
 			 model.put("projects", status);
 			 if(project != null){
+				 try{
+					 // Remove file 
+					 String fileSource = project.getPROJ_SourceFile();
+					 if(!"".equals(fileSource)){
+						String uploadDir = "/uploads"+File.separator+userCode+File.separator+"projects";
+						String realPathtoUploads  = request.getServletContext().getRealPath(uploadDir);
+						File dir = new File(realPathtoUploads );
+		   				File oldFile = new File(dir.getAbsolutePath()+ File.separator + fileSource);
+		   				if(oldFile.exists())
+		   					oldFile.delete();
+		   			 }
+				 }catch(Exception e)
+				 {
+					 System.out.println(e.getStackTrace());
+				 }
+				 // Remove data from DB
 				 threadService.removeAProject(projectId);
 				 threadService.removeProjectTasks(project.getPROJ_Code());
 				 List<Projects> projectsList = threadService.loadProjectsListByStaff(userRole, userCode);
