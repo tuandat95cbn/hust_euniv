@@ -48,6 +48,7 @@ import vn.webapp.libraries.DateUtil;
 import vn.webapp.libraries.FileUtil;
 import vn.webapp.libraries.Money2StringConvertor;
 import vn.webapp.modules.researchdeclarationmanagement.model.mAcademicYear;
+import vn.webapp.modules.researchdeclarationmanagement.model.mPapers;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 import vn.webapp.modules.researchdeclarationmanagement.service.mAcademicYearService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mJournalService;
@@ -159,6 +160,64 @@ public class nProjectController extends BaseWeb {
 	 * @param model
 	 * @return
 	 */
+    @RequestMapping(value = "/download-proposal/{id}", method = RequestMethod.GET)
+    public void downloadProposal(ModelMap model, @PathVariable("id") int projectId, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
+ 	   String userCode = session.getAttribute("currentUserCode").toString();
+ 	   String userRole = session.getAttribute("currentUserRole").toString();
+ 	   model.put("papers", status);
+ 	   //mPapers paper = paperService.loadAPaperByIdAndUserCode(userRole, userCode, paperId);
+ 	   Projects project = threadService.loadProjectsById(projectId);
+ 	   //if(paper.getPDECL_SourceFile() != null){
+ 	   System.out.println(name() + "::downloadProposal, userCode = " + userCode + ", userRole = " + userRole + ", projectId = " + projectId);
+ 	   if(project.getPROJ_SourceFile() != null){
+ 		   ServletContext context = request.getServletContext();
+ 		   
+ 		  //String fullfilename = establishFullFileNameForUpload(project.getPROJ_SourceFile(), userCode, request);
+ 		  String fullfilename = establishFullFileNameForDownload(project.getPROJ_SourceFile(), userCode, request);
+ 		   //File downloadFile = new File(paper.getPDECL_SourceFile());
+ 		   File downloadFile = new File(fullfilename);
+ 		   
+ 		  System.out.println(name() + "::downloadProposal, userCode = " + userCode + ", userRole = " + 
+ 		   userRole + ", projectId = " + projectId + ", path_filename = " +fullfilename);
+ 		   if(downloadFile.exists()){
+ 		       FileInputStream inputStream = new FileInputStream(downloadFile);
+ 		       
+ 		       //String mimeType = context.getMimeType(paper.getPDECL_SourceFile());
+ 		       String mimeType = context.getMimeType(project.getPROJ_SourceFile());
+ 		        if (mimeType == null) {
+ 		            // set to binary type if MIME mapping not found
+ 		            mimeType = "application/octet-stream";
+ 		        }
+ 		        
+ 		        // set content attributes for the response
+ 		        response.setContentType(mimeType);
+ 		        response.setContentLength((int) downloadFile.length());
+ 		        
+ 		        // set headers for the response
+ 		        String headerKey = "Content-Disposition";
+ 		        String headerValue = String.format("attachment; filename=\"%s\"", downloadFile.getName());
+ 		        response.setHeader(headerKey, headerValue);
+ 		        
+ 		        // get output stream of the response
+ 		        OutputStream outStream = response.getOutputStream();
+ 		 
+ 		        byte[] buffer = new byte[BUFFER_SIZE];
+ 		        int bytesRead = -1;
+ 		 
+ 		        // write bytes read from the input stream into the output stream
+ 		        while ((bytesRead = inputStream.read(buffer)) != -1) {
+ 		            outStream.write(buffer, 0, bytesRead);
+ 		        }
+ 		 
+ 		        inputStream.close();
+ 		        outStream.close();
+ 		   }else{
+ 			  System.out.println(name() + "::downloadProposal, userCode = " + userCode + ", userRole = " +
+ 		   userRole + ", projectId = " + projectId + ", file " + fullfilename + " does not exist!!!!!!!!");
+ 		   }
+ 	   }
+    }
+   
 	@RequestMapping(value = "/list-projects", method = RequestMethod.GET)
 	public String getListProjects(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
@@ -719,6 +778,38 @@ public class nProjectController extends BaseWeb {
 		return "cp.addAProject";
 	}
 	
+	private String establishFullFileNameForUpload(String filename, String userCode, HttpServletRequest request){
+		Date currentDate = new Date();
+		SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
+		String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+		
+		String uploadDir = "/uploads"+File.separator+userCode+File.separator+"projects";
+		String realPathtoUploads  = request.getServletContext().getRealPath(uploadDir);
+		File dir = new File(realPathtoUploads );
+		if (!dir.exists()){
+    	   dir.mkdirs();
+		}
+		
+		// Set name file
+		filename = "thuyetminh-"+sCurrentDate+filename;
+		String fullfilename = dir.getAbsolutePath()+ File.separator + filename;
+		return fullfilename;
+	}
+	private String establishFullFileNameForDownload(String filename, String userCode, HttpServletRequest request){
+		
+		String uploadDir = "/uploads"+File.separator+userCode+File.separator+"projects";
+		String realPathtoUploads  = request.getServletContext().getRealPath(uploadDir);
+		File dir = new File(realPathtoUploads );
+		if (!dir.exists()){
+    	   dir.mkdirs();
+		}
+		System.out.println(name() + "::establishFullFileNameForDownload(filename = " + filename + ", dir = " + dir.getAbsolutePath());
+		// Set name file
+		//filename = "thuyetminh-"+sCurrentDate+filename;
+		String fullfilename = dir.getAbsolutePath()+ File.separator + filename;
+		return fullfilename;
+	}
+
 	@RequestMapping(value = "save-a-project", method = RequestMethod.POST)
 	public String saveAProject( HttpServletRequest request, @Valid @ModelAttribute("projectsAddForm") ProjectsValidation projectValid, BindingResult result, Map model, HttpSession session) {
 		// Get list of project calls
@@ -797,9 +888,12 @@ public class nProjectController extends BaseWeb {
 							}
 							
 							// Set name file
-							fileName = "thuyetminh-"+sCurrentDate+fileName;
-							File serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
+							//fileName = "thuyetminh-"+sCurrentDate+fileName;
+							//String fullfilename = dir.getAbsolutePath()+ File.separator + fileName;
+							String fullfilename = establishFullFileNameForUpload(fileName, userCode, request);
 							
+							File serverFile = new File(fullfilename);
+							System.out.println(name() + "::saveAProject, upload file with fullfilename = " + fullfilename);
 							// Save data into file
 							BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
 							stream.write(bytes);
