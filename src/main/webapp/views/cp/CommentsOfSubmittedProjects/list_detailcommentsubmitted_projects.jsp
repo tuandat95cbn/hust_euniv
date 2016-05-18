@@ -46,6 +46,7 @@
 										<td><c:out value="${project.PROJ_Name}"/></td>
 										<td class="center">
 											<button type="button" onclick="v_fViewDetailAProjectCall(${project.PROJ_ID});" class="btn btn-info btn-xs" title="Edit"> Đánh giá </button>
+											<a href="<c:url value="${baseUrl}/cp/download-proposal/${project.PROJ_ID}.html"/>" title="Download file xác thực" class="btn btn-success btn-xs">Tải thuyết minh</a>
 										</td>
 									</tr>
 									

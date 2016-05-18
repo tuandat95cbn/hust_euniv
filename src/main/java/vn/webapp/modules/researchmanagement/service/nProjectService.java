@@ -259,8 +259,11 @@ public interface nProjectService {
 	 * @param projectCode
 	 * @param bEditSumittedProject
 	 */
-	public void editAProject(int projectId,String userRole,String userCode,String projectCallCode,String projectName,String projectContent, String projectMotivation,String projectResult,
-								int budgetMaterial,String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject, int totalBudget, String projectResearchFieldCode);
+	public void editAProject(int projectId,String userRole,String userCode,String projectCallCode,String projectName,
+			String projectContent, String projectMotivation,String projectResult,
+								int budgetMaterial,String projectCode,String startDate,String endDate,
+								String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject, 
+								int totalBudget, String projectResearchFieldCode, String sourceFileUpload);
 	
 	/**
 	 * 

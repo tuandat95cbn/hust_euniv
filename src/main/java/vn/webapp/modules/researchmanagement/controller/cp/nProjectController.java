@@ -168,17 +168,20 @@ public class nProjectController extends BaseWeb {
  	   //mPapers paper = paperService.loadAPaperByIdAndUserCode(userRole, userCode, paperId);
  	   Projects project = threadService.loadProjectsById(projectId);
  	   //if(paper.getPDECL_SourceFile() != null){
- 	   System.out.println(name() + "::downloadProposal, userCode = " + userCode + ", userRole = " + userRole + ", projectId = " + projectId);
+ 	   
+ 	  String userCodeOfProject = project.getPROJ_User_Code();
+ 	   System.out.println(name() + "::downloadProposal, userCodeOfProject = " + userCodeOfProject + ", userCode = " + userCode + ", userRole = " + userRole + ", projectId = " + projectId);
  	   if(project.getPROJ_SourceFile() != null){
  		   ServletContext context = request.getServletContext();
  		   
  		  //String fullfilename = establishFullFileNameForUpload(project.getPROJ_SourceFile(), userCode, request);
- 		  String fullfilename = establishFullFileNameForDownload(project.getPROJ_SourceFile(), userCode, request);
+ 		  String fullfilename = establishFullFileNameForDownload(project.getPROJ_SourceFile(), userCodeOfProject, request);
  		   //File downloadFile = new File(paper.getPDECL_SourceFile());
  		   File downloadFile = new File(fullfilename);
- 		   
+ 		  
+ 		 
  		  System.out.println(name() + "::downloadProposal, userCode = " + userCode + ", userRole = " + 
- 		   userRole + ", projectId = " + projectId + ", path_filename = " +fullfilename);
+ 		   userRole + ", userCodeOfProject = " + userCodeOfProject + ", projectId = " + projectId + ", path_filename = " +fullfilename);
  		   if(downloadFile.exists()){
  		       FileInputStream inputStream = new FileInputStream(downloadFile);
  		       
@@ -778,10 +781,14 @@ public class nProjectController extends BaseWeb {
 		return "cp.addAProject";
 	}
 	
-	private String establishFullFileNameForUpload(String filename, String userCode, HttpServletRequest request){
+	private String establishFileNameStoredDataBase(String filename){
 		Date currentDate = new Date();
 		SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
 		String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+		return "thuyetminh-"+sCurrentDate+filename;
+		
+	}
+	private String establishFullFileNameForUpload(String filename, String userCode, HttpServletRequest request){
 		
 		String uploadDir = "/uploads"+File.separator+userCode+File.separator+"projects";
 		String realPathtoUploads  = request.getServletContext().getRealPath(uploadDir);
@@ -791,7 +798,7 @@ public class nProjectController extends BaseWeb {
 		}
 		
 		// Set name file
-		filename = "thuyetminh-"+sCurrentDate+filename;
+		//filename = establishFileNameStoredDataBase(filename);//"thuyetminh-"+sCurrentDate+filename;
 		String fullfilename = dir.getAbsolutePath()+ File.separator + filename;
 		return fullfilename;
 	}
@@ -875,9 +882,11 @@ public class nProjectController extends BaseWeb {
 						String paperSourceUploadFileSrc = "";
 						try {
 							//Creating Date in java with today's date.
+							/*
 							Date currentDate = new Date();
 							SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
 							String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+							*/
 							
 							byte[] bytes = paperSourceUploadFile.getBytes();
 							String uploadDir = "/uploads"+File.separator+userCode+File.separator+"projects";
@@ -890,10 +899,12 @@ public class nProjectController extends BaseWeb {
 							// Set name file
 							//fileName = "thuyetminh-"+sCurrentDate+fileName;
 							//String fullfilename = dir.getAbsolutePath()+ File.separator + fileName;
+							
+							fileName = establishFileNameStoredDataBase(fileName);
 							String fullfilename = establishFullFileNameForUpload(fileName, userCode, request);
 							
 							File serverFile = new File(fullfilename);
-							System.out.println(name() + "::saveAProject, upload file with fullfilename = " + fullfilename);
+							System.out.println(name() + "::saveAProject, upload file with fileName (stored in DataBase) = " + fileName + ", fullfilename = " + fullfilename);
 							// Save data into file
 							BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
 							stream.write(bytes);
@@ -1941,9 +1952,11 @@ public class nProjectController extends BaseWeb {
 							String paperSourceUploadFileSrc = "";
 							try {
 								//Creating Date in java with today's date.
+								/*
 								Date currentDate = new Date();
 								SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
 								String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+								*/
 								
 								byte[] bytes = paperSourceUploadFile.getBytes();
 								String uploadDir = "/uploads"+File.separator+userCode+File.separator+"projects";
@@ -1955,14 +1968,28 @@ public class nProjectController extends BaseWeb {
 								
 								if(!"".equals(fileName)){
 									// Set name file
-									fileName = "thuyetminh-"+sCurrentDate+fileName;
-									File serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
+									//fileName = "thuyetminh-"+sCurrentDate+fileName;
+									//File serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
 									
+									//delete old file
+									String oldFullFileName = establishFullFileNameForDownload(project.getPROJ_SourceFile(), userCode, request);
+									File deleteFile = new File(oldFullFileName);
+									if(deleteFile.delete()){
+										System.out.println(name() + "::updateAProject delete old file " + oldFullFileName + " successfully");
+									}else{
+										System.out.println(name() + "::updateAProject delete old file " + oldFullFileName + " failed");
+									}
+									
+									fileName = establishFileNameStoredDataBase(fileName);
+									String fullFileName = establishFullFileNameForUpload(fileName, userCode, request);
+									File serverFile = new File(fullFileName);
+									System.out.println(name() + "::updateAProject, fileName = " + fileName + ", fullFileName = " + fullFileName);
 									// Save data into file
 									BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
 									stream.write(bytes);
 									stream.close();
 									
+									/* already done above
 									// Set name for saving into DB
 									if(serverFile.exists()){
 					            	   paperSourceUploadFileSrc = fileName;
@@ -1974,6 +2001,7 @@ public class nProjectController extends BaseWeb {
 					   		   					oldFile.delete();
 					   		   			}
 									}
+									*/
 								}
 							}catch(IOException e)
 							{
@@ -1984,7 +2012,10 @@ public class nProjectController extends BaseWeb {
 							}
 							
 						// Editing project info
-						threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, bEditSumittedProject, totalBudget, projectResearchFieldCode);
+						threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent,
+								projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd,
+								projectSurvey, projectObjective, bEditSumittedProject, totalBudget, 
+								projectResearchFieldCode, fileName);
 						// Editting tasks info
 						threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget, currentProjectCode);
 						return "redirect:" + this.baseUrl + "/cp/list-projects.html";
@@ -2010,6 +2041,7 @@ public class nProjectController extends BaseWeb {
 	 @RequestMapping(value = "/edit-a-submittedproject", method = RequestMethod.POST)
 	 public String updateASubmittedProject(HttpServletRequest request, @Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit, BindingResult result, Map model, HttpSession session) {
 
+		 System.out.println(name() + "::updateASubmittedProject --> NEED TO BE REVISED --> exit????"); System.exit(-1);
 		 model.put("projects", status);
 		 if (result.hasErrors()) {
 			 return "cp.editAProject";
@@ -2038,7 +2070,7 @@ public class nProjectController extends BaseWeb {
 					 projectCallCode, projectName, projectContent, projectMotivation, 
 					 projectResult, projectMaterialBudget, projectCode, 
 					 startDate, endDate, facultyAdd, projectSurvey, projectObjective, 
-					 bEditSumittedProject, projectBudget, projectResearchFieldCode);
+					 bEditSumittedProject, projectBudget, projectResearchFieldCode, "");
 			 return "redirect:" + this.baseUrl + "/cp/modify-submitted-projects.html";
 		 }
 	 }

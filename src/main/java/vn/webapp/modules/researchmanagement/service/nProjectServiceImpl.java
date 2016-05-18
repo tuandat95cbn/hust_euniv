@@ -1004,8 +1004,11 @@ public class nProjectServiceImpl implements nProjectService {
 	 * 
 	 */
 	@Override
-	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, String projectContent, String projectMotivation, String projectResult, 
-								int budgetMaterial, String projectCode,String startDate,String endDate,String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject, int projectBudget, String projectResearchFieldCode){
+	public void editAProject(int projectId, String userRole, String userCode, String projectCallCode, String projectName, 
+			String projectContent, String projectMotivation, String projectResult, 
+								int budgetMaterial, String projectCode,String startDate,String endDate,String facultyAdd,
+								String projectSurvey,String projectObjective, boolean bEditSumittedProject, int projectBudget,
+								String projectResearchFieldCode, String sourceFileUpload){
 		Projects project = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
 		if (project != null) {
 			if(bEditSumittedProject == true)
@@ -1033,6 +1036,7 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_Objective(projectObjective);
 				project.setPROJ_Survey(projectSurvey);
 				project.setPROJ_ResearchFieldCode(projectResearchFieldCode);
+				project.setPROJ_SourceFile(sourceFileUpload);
 			}
 			threadDAO.editAProject(project);
 		}
