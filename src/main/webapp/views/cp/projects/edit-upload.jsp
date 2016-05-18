@@ -88,7 +88,7 @@
 	                              	</c:otherwise>
 	                           </c:choose>
 	                           <div class="form-group">
-                                    <label for="projectFileUpload">File đề tài*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;">(File size is 20 MB maximum)</i></label>
+                                    <label for="projectFileUpload">Upload File thuyết minh đề tài*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;">(File size is 20 MB maximum)</i></label>
                                     <form:input path="projectFileUpload" name="projectFileUpload" type="file" placeholder="Source File"></form:input>
     								<form:errors path="projectFileUpload" class="alert-danger"></form:errors>
                                 </div>
