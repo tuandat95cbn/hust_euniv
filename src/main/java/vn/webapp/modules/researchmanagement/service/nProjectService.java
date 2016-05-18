@@ -169,7 +169,7 @@ public interface nProjectService {
 	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,
 							String projectContent,String projectMotivation,String projectResult,int budgetMaterial, int totalBudget,
 							String projectCode,String facultyAdd,String projectSurvey,String projectObjective,String startDate,
-							String endDate, String projectCategory, String projectResearchFieldCode, String sourceFile);
+							String endDate, String projectCategory, String projectResearchFieldCode, String sourceFile, String[] projectResearchFieldCodeList);
 	
 	/**
 	 * Saving member tasks for each project

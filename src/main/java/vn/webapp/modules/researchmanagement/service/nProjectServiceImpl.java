@@ -18,6 +18,7 @@ import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
 import vn.webapp.modules.researchmanagement.dao.DetailCommentSubmittedProjectsDAO;
 import vn.webapp.modules.researchmanagement.dao.ProjectTasksDAO;
+import vn.webapp.modules.researchmanagement.dao.ProjectsProjectResearchFieldDAO;
 import vn.webapp.modules.researchmanagement.dao.mCommentsOfSubmittedProjectsDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStaffsDAO;
 import vn.webapp.modules.researchmanagement.dao.mProjectStatusDAO;
@@ -26,6 +27,7 @@ import vn.webapp.modules.researchmanagement.dao.nProjectDAO;
 import vn.webapp.modules.researchmanagement.model.DetailCommentSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 import vn.webapp.modules.researchmanagement.model.Projects;
+import vn.webapp.modules.researchmanagement.model.ProjectsProjectResearchField;
 import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mProjectStaffs;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
@@ -86,6 +88,9 @@ public class nProjectServiceImpl implements nProjectService {
 	
 	@Autowired
 	private mAcademicYearDAO yearDAO;
+	
+	@Autowired
+	private ProjectsProjectResearchFieldDAO projectsProjectResearchFieldDAO;
 	
 	static private String PROJECT_LEADER = "PROJECT_LEADER";
 	
@@ -749,8 +754,8 @@ public class nProjectServiceImpl implements nProjectService {
 	@Override
 	public int saveAProject(String userRole, String userCode,String projectCallCode,String projectName,
 								String projectContent,String projectMotivation,String projectResult,int budgetMaterial, int totalBudget, String projectCode,
-								String facultyAdd,String projectSurvey,String projectObjective,
-								String startDate,String endDate, String projectCategory, String projectResearchFieldCode, String sourceFile){
+								String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate, String projectCategory, 
+								String projectResearchFieldCode, String sourceFile, String[] projectResearchFieldCodeList){
 		if(userCode != "" && projectCode != "" && projectName != "" && projectCallCode != "")
 		{
 			Projects beInsertedProject = new Projects();
@@ -774,6 +779,16 @@ public class nProjectServiceImpl implements nProjectService {
 			int iInsertedProjectId = threadDAO.saveAProject(beInsertedProject);
 			if(iInsertedProjectId > 0 )
 			{
+				// Save project search field to each project
+				if(projectResearchFieldCodeList.length > 0)
+				{
+					for (String string : projectResearchFieldCodeList) {
+						ProjectsProjectResearchField projectsProjectResearchField = new ProjectsProjectResearchField();
+						//projectsProjectResearchField.setPRJPRJRSHF_Code(pRJPRJRSHF_Code);
+						projectsProjectResearchFieldDAO.saveAProjectSearchField(projectsProjectResearchField);
+					}
+				}
+				
 				Projects beUpdatedProject = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, iInsertedProjectId);
 				projectCode = projectCallCode+iInsertedProjectId;
 				beUpdatedProject.setPROJ_Code(projectCode);

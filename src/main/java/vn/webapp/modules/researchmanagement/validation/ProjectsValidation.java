@@ -58,19 +58,9 @@ public class ProjectsValidation{
 	
 	@NotEmpty
 	private String projectCallCode;
-
-	@NotEmpty
-	private String projectResearchFieldCode;
 	
 	private MultipartFile projectFileUpload;
 	
-	public String getProjectResearchFieldCode() {
-		return projectResearchFieldCode;
-	}
-
-	public void setProjectResearchFieldCode(String projectResearchFieldCode) {
-		this.projectResearchFieldCode = projectResearchFieldCode;
-	}
 
 	public int getProjectId() {
 		return projectId;

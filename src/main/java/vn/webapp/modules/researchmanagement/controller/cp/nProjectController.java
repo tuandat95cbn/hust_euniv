@@ -827,13 +827,16 @@ public class nProjectController extends BaseWeb {
 		List<mStaff> staffList = staffService.listStaffs();
 		// Get list member roles
 		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
-					
+		// Get list project research field
+		List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
+		
 		// Put data back to view
 		model.put("staffList", staffList);
 		model.put("currentUserName", session.getAttribute("currentUserName").toString());
 		model.put("memberRolesList", memberRolesList);
 		model.put("listFaculty", listFaculty);
 		model.put("projectCallsList", projectCallsList);
+		model.put("projectResearchFieldList", projectResearchFields);
 		model.put("projects", status);
 		if (result.hasErrors()) {
 			return "cp.addAProject";
@@ -842,7 +845,6 @@ public class nProjectController extends BaseWeb {
 			String userRole 			= session.getAttribute("currentUserRole").toString();
 			String userCode 			= session.getAttribute("currentUserCode").toString();
 			String projectCallCode 		= projectValid.getProjectCallCode();
-			String projectResearchFieldCode = projectValid.getProjectResearchFieldCode();
 			String projectName 			= projectValid.getProjectName();
 			String startDate 			= projectValid.getProjectStartDate();
 			String endDate				= projectValid.getProjectEndDate();
@@ -856,6 +858,7 @@ public class nProjectController extends BaseWeb {
 			String projectCode 			= "PROJECT-CODE-" + projectCallCode;
 			String currentProjectCode 	= projectCode;
 			String projectCategory 		= "";
+			String projectResearchFieldCode = ""; // This field in the table tplprojects will be empty
 			
 			mProjectCalls selectedProjectCall = projectCallsService.loadAProjectCallByCode(projectCallCode);
 			if("OPEN_FOR_SUBMISSION".equals(selectedProjectCall.getPROJCALL_STATUS())){
@@ -871,6 +874,7 @@ public class nProjectController extends BaseWeb {
 					String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
 					String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
 					String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
+					String[] projectResearchFieldCodeList = request.getParameterValues("projectResearchFieldList");
 					
 					if(projectMembers.length > 0)
 					{
@@ -930,7 +934,7 @@ public class nProjectController extends BaseWeb {
 						int i_InsertAProject = threadService.saveAProject(userRole, userCode, projectCallCode, projectName, 
 																			projectContent, projectMotivation, projectResult, budgetMaterial, totalBudget, projectCode, facultyAdd, 
 																			projectSurvey, projectObjective, startDate, endDate, 
-																			projectCategory, projectResearchFieldCode, paperSourceUploadFileSrc);
+																			projectCategory, projectResearchFieldCode, paperSourceUploadFileSrc, projectResearchFieldCodeList);
 						if (i_InsertAProject > 0) {
 							model.put("status", "Thêm mới thành công!");
 							projectCode = projectCallCode + i_InsertAProject;
@@ -1913,12 +1917,10 @@ public class nProjectController extends BaseWeb {
 			// Prepare data for inserting DB
 			String projectName 			= projectFormEdit.getProjectName();
 			String projectCallCode 		= projectFormEdit.getProjectCallCode();
-			String projectResearchFieldCode 		= projectFormEdit.getProjectResearchFieldCode();
 			String projectContent 		= projectFormEdit.getProjectContent();
 			String projectMotivation 	= projectFormEdit.getProjectMotivation();
 			String projectResult 		= projectFormEdit.getProjectResult();
 			int budgetMaterial 			= projectFormEdit.getBudgetMaterial();
-			
 			String projectCode 			= projectCallCode + projectEditId;
 			String startDate 			= projectFormEdit.getProjectStartDate();
 			String endDate				= projectFormEdit.getProjectEndDate();
@@ -1927,6 +1929,7 @@ public class nProjectController extends BaseWeb {
 			String projectObjective		= projectFormEdit.getProjectObjective();
 			String currentProjectCode	= projectFormEdit.getCurrentProjectCode();
 			boolean bEditSumittedProject= false;
+			String projectResearchFieldCode = "";
 			
 			mProjectCalls selectedProjectCall = projectCallsService.loadAProjectCallByCode(projectCallCode);
 			if("OPEN_FOR_SUBMISSION".equals(selectedProjectCall.getPROJCALL_STATUS())){
@@ -2052,7 +2055,6 @@ public class nProjectController extends BaseWeb {
 				String userCode 			= session.getAttribute("currentUserCode").toString();
 				String projectName 			= projectFormEdit.getProjectName();
 				String projectCallCode 		= projectFormEdit.getProjectCallCode();
-				String projectResearchFieldCode = projectFormEdit.getProjectResearchFieldCode();
 				String projectContent 		= projectFormEdit.getProjectContent();
 				String projectMotivation 	= projectFormEdit.getProjectMotivation();
 				String projectResult 		= projectFormEdit.getProjectResult();
@@ -2064,6 +2066,7 @@ public class nProjectController extends BaseWeb {
 				String facultyAdd			= projectFormEdit.getFalcutyAddress();
 				String projectSurvey 		= projectFormEdit.getProjectSurvey();
 				String projectObjective		= projectFormEdit.getProjectObjective();
+				String projectResearchFieldCode = "";
 				boolean bEditSumittedProject= true;
 				int projectMaterialBudget 	= 0;
 			 threadService.editAProject(projectEditId, userRole, userCode, 

@@ -53,15 +53,6 @@
                                    <form:errors path="projectCallCode" class="alert-danger"></form:errors>
                                </div>
                                <div class="form-group">
-	                                    <label>Chọn lĩnh vực đề tài*</label>
-	                                    <form:select path="projectResearchFieldCode" class="form-control" name="projectResearchFieldCode">
-	                                    	<c:forEach items="${projectResearchFieldList}" var="proj_field">
-		                                        <option value="${proj_field.PRJRSHF_Code}" <c:if test="${projectEdit.PROJ_ResearchFieldCode == proj_field.PRJRSHF_Code}">selected</c:if> >${proj_field.PRJRSHF_Name}</option>
-	                                       	</c:forEach>
-	                                    </form:select>
-	                                    <form:errors path="projectResearchFieldCode" class="alert-danger"></form:errors>
-	                                </div>
-                               <div class="form-group">
                                    <label for="projectName">Tên đề tài*</label>
                                    <form:input path="projectName" class="form-control" name="projectName" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_Name}" placeholder="Project Name"></form:input>
    									<form:errors path="projectName" class="alert-danger"></form:errors>
@@ -228,7 +219,26 @@
 					</c:choose>
                 </div>
             </div>
-                
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Chọn lĩnh vực đề tài*
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                               <div class="form-group">
+                                   <select multiple="true" size="5" class="form-control" name="projectResearchFieldCode">
+                                   	<c:forEach items="${projectResearchFieldList}" var="proj_field">
+                                        <option value="${proj_field.PRJRSHF_Code}">${proj_field.PRJRSHF_Name}</option>
+                                      	</c:forEach>
+                                   </select>
+                               </div>
+                        </div>
+                        <!-- /.col-lg-12 (nested) -->
+                    </div>
+                    <!-- /.row (nested) -->
+                </div>
+            </div>
             <div class="panel panel-default">
             	<div class="panel-heading">
                     Thành viên tham gia
