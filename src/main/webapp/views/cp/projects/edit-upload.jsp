@@ -227,10 +227,15 @@
                     <div class="row">
                         <div class="col-lg-12">
                                <div class="form-group">
-                                   <select multiple="true" size="5" class="form-control" name="projectResearchFieldCode">
-                                   	<c:forEach items="${projectResearchFieldList}" var="proj_field">
+                                   <select multiple="true" size="5" class="form-control" id="projectResearchFieldCodeList" name="projectResearchFieldCodeList">
+                                   	<%-- <c:forEach items="${projectResearchFieldList}" var="proj_field">
                                         <option value="${proj_field.PRJRSHF_Code}">${proj_field.PRJRSHF_Name}</option>
-                                      	</c:forEach>
+                                    </c:forEach> --%>
+                                    <c:if test="${listResearchFields != null}">
+	                                    <c:forEach items="${listResearchFields}" var="proj_field">
+	                                        <option value="${proj_field[0]}" <c:if test='${proj_field[2] == "SELECTED"}'>selected="selected"</c:if> >${proj_field[1]}</option>
+	                                    </c:forEach>
+                                    </c:if>
                                    </select>
                                </div>
                         </div>

@@ -756,7 +756,7 @@ public class nProjectServiceImpl implements nProjectService {
 								String projectContent,String projectMotivation,String projectResult,int budgetMaterial, int totalBudget, String projectCode,
 								String facultyAdd,String projectSurvey,String projectObjective,String startDate,String endDate, String projectCategory, 
 								String projectResearchFieldCode, String sourceFile, String[] projectResearchFieldCodeList){
-		if(userCode != "" && projectCode != "" && projectName != "" && projectCallCode != "")
+		if(!"".equals(userCode)&& !"".equals(projectCode) && !"".equals(projectName) && !"".equals(projectCallCode))
 		{
 			Projects beInsertedProject = new Projects();
 			beInsertedProject.setPROJ_User_Code(userCode);
@@ -779,21 +779,21 @@ public class nProjectServiceImpl implements nProjectService {
 			int iInsertedProjectId = threadDAO.saveAProject(beInsertedProject);
 			if(iInsertedProjectId > 0 )
 			{
-				// Save project search field to each project
-				if(projectResearchFieldCodeList.length > 0)
-				{
-					for (String string : projectResearchFieldCodeList) {
-						ProjectsProjectResearchField projectsProjectResearchField = new ProjectsProjectResearchField();
-						//projectsProjectResearchField.setPRJPRJRSHF_Code(pRJPRJRSHF_Code);
-						projectsProjectResearchFieldDAO.saveAProjectSearchField(projectsProjectResearchField);
-					}
-				}
-				
 				Projects beUpdatedProject = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, iInsertedProjectId);
 				projectCode = projectCallCode+iInsertedProjectId;
 				beUpdatedProject.setPROJ_Code(projectCode);
 				threadDAO.editAProject(beUpdatedProject);
 				
+				// Save project search field to each project
+				if(projectResearchFieldCodeList.length > 0)
+				{
+					for (String projectResearchField : projectResearchFieldCodeList) {
+						ProjectsProjectResearchField projectsProjectResearchField = new ProjectsProjectResearchField();
+						projectsProjectResearchField.setPRJPRJRSHF_PRJRSHFCode(projectResearchField);
+						projectsProjectResearchField.setPRJPRJRSHF_PROJCode(projectCode);
+						projectsProjectResearchFieldDAO.saveAProjectSearchField(projectsProjectResearchField);
+					}
+				}
 				return iInsertedProjectId;
 			}
 		}else{
@@ -1023,7 +1023,7 @@ public class nProjectServiceImpl implements nProjectService {
 			String projectContent, String projectMotivation, String projectResult, 
 								int budgetMaterial, String projectCode,String startDate,String endDate,String facultyAdd,
 								String projectSurvey,String projectObjective, boolean bEditSumittedProject, int projectBudget,
-								String projectResearchFieldCode, String sourceFileUpload){
+								String projectResearchFieldCode, String sourceFileUpload, String[] projectResearchFieldCodeList){
 		Projects project = threadDAO.loadAProjectByIdAndUserCode(userRole, userCode, projectId);
 		if (project != null) {
 			if(bEditSumittedProject == true)
@@ -1054,6 +1054,21 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_SourceFile(sourceFileUpload);
 			}
 			threadDAO.editAProject(project);
+			
+			if(projectResearchFieldCodeList.length > 0)
+			{
+				List<ProjectsProjectResearchField> currentList = projectsProjectResearchFieldDAO.loadProjectsProjectResearchFieldListByProjectCode(project.getPROJ_Code());
+				for (ProjectsProjectResearchField projectsProjectResearchField : currentList) {
+					projectsProjectResearchFieldDAO.removeAProjectSearchField(projectsProjectResearchField);
+				}
+				
+				for (String projectResearchField : projectResearchFieldCodeList) {
+					ProjectsProjectResearchField newList = new ProjectsProjectResearchField();
+					newList.setPRJPRJRSHF_PROJCode(project.getPROJ_Code());
+					newList.setPRJPRJRSHF_PRJRSHFCode(projectResearchField);
+					projectsProjectResearchFieldDAO.saveAProjectSearchField(newList);
+				}
+			}
 		}
 	}
 	
@@ -1278,6 +1293,34 @@ public class nProjectServiceImpl implements nProjectService {
 			//System.out.println("Exception: " + e.getMessage());
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<ProjectsProjectResearchField> loadProjectsProjectResearchFieldListByProjectCode(String sProjectCode){
+		try {
+			return projectsProjectResearchFieldDAO.loadProjectsProjectResearchFieldListByProjectCode(sProjectCode);
+		} catch (Exception e) {
+			//System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public int removeAProjectSearchField(ProjectsProjectResearchField projectsProjectResearchField){
+		try {
+			return projectsProjectResearchFieldDAO.removeAProjectSearchField(projectsProjectResearchField);
+		} catch (Exception e) {
+			//System.out.println("Exception: " + e.getMessage());
+			e.printStackTrace();
+			return 0;
 		}
 	}
 }

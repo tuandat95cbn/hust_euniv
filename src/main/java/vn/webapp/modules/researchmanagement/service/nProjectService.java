@@ -4,6 +4,7 @@ import java.util.List;
 
 import vn.webapp.modules.researchdeclarationmanagement.model.mTopics;
 import vn.webapp.modules.researchmanagement.model.Projects;
+import vn.webapp.modules.researchmanagement.model.ProjectsProjectResearchField;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 import vn.webapp.modules.researchmanagement.model.xProjects;
 
@@ -263,7 +264,7 @@ public interface nProjectService {
 			String projectContent, String projectMotivation,String projectResult,
 								int budgetMaterial,String projectCode,String startDate,String endDate,
 								String facultyAdd,String projectSurvey,String projectObjective, boolean bEditSumittedProject, 
-								int totalBudget, String projectResearchFieldCode, String sourceFileUpload);
+								int totalBudget, String projectResearchFieldCode, String sourceFileUpload, String[] projectResearchFieldCodeList);
 	
 	/**
 	 * 
@@ -339,4 +340,18 @@ public interface nProjectService {
 	 * @return
 	 */
 	public List<xProjects> loadListSubmittedProjectsForSummary();
+	
+	/**
+	 * 
+	 * @param sProjectCode
+	 * @return
+	 */
+	public List<ProjectsProjectResearchField> loadProjectsProjectResearchFieldListByProjectCode(String sProjectCode);
+	
+	/**
+	 * 
+	 * @param projectsProjectResearchField
+	 * @return
+	 */
+	public int removeAProjectSearchField(ProjectsProjectResearchField projectsProjectResearchField);
 }

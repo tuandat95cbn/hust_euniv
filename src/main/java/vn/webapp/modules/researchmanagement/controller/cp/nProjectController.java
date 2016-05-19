@@ -60,6 +60,7 @@ import vn.webapp.modules.researchmanagement.model.ProjectParticipationRoles;
 import vn.webapp.modules.researchmanagement.model.ProjectResearchField;
 import vn.webapp.modules.researchmanagement.model.ProjectTasks;
 import vn.webapp.modules.researchmanagement.model.Projects;
+import vn.webapp.modules.researchmanagement.model.ProjectsProjectResearchField;
 import vn.webapp.modules.researchmanagement.model.mCommentsOfSubmittedProjects;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 import vn.webapp.modules.researchmanagement.model.mProjectComments;
@@ -874,8 +875,8 @@ public class nProjectController extends BaseWeb {
 					String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
 					String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
 					String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
-					String[] projectResearchFieldCodeList = request.getParameterValues("projectResearchFieldList");
-					
+					String[] projectResearchFieldCodeList = request.getParameterValues("projectResearchFieldCodeList");
+						
 					if(projectMembers.length > 0)
 					{
 						/**
@@ -944,7 +945,8 @@ public class nProjectController extends BaseWeb {
 					}
 				}catch(NullPointerException e)
 				{
-					model.put("err", "Cần phải thêm thành viên vào đề tài.");
+					System.out.println(e.getMessage());
+					model.put("err", "Cần phải thêm thành viên và lĩnh vực vào đề tài.");
 				}
 			}else{
 				model.put("err", "Xin lỗi! Đợt gọi đề tài đã bị đóng.");
@@ -1299,25 +1301,51 @@ public class nProjectController extends BaseWeb {
 		// Get list member roles
 		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
 
-		List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
-					
-		// Put data back to view
-		model.put("staffList", staffList);
-		model.put("currentUserName", session.getAttribute("currentUserName").toString());
-		model.put("memberRolesList", memberRolesList);
-		model.put("listFaculty", listFaculty);
-		model.put("projectCallsList", projectCallsList);
-		model.put("projectResearchFieldList", projectResearchFields);
-		
 		model.put("projects", status);
 		if (project != null) {
-			// Put journal list and topic category to view
+			List<ProjectsProjectResearchField> selectedProjectResearchFields = threadService.loadProjectsProjectResearchFieldListByProjectCode(project.getPROJ_Code());
+			List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
+			List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
+			
+			List<List<String>> listResearchFields = new ArrayList<>();
+			
+			if(selectedProjectResearchFields.size() > 0 && projectResearchFields.size() > 0)
+			{
+				for (ProjectResearchField projectResearchField : projectResearchFields) {
+					List<String> tempList = new ArrayList<>();
+					tempList.add(projectResearchField.getPRJRSHF_Code());
+					tempList.add(projectResearchField.getPRJRSHF_Name());
+					for (ProjectsProjectResearchField selectedProjectResearchField : selectedProjectResearchFields) {
+						if(projectResearchField.getPRJRSHF_Code().equals(selectedProjectResearchField.getPRJPRJRSHF_PRJRSHFCode())){
+							tempList.add("SELECTED");
+						}else{
+							tempList.add("");
+						}
+					}
+					listResearchFields.add(tempList);
+				}
+			}else if(projectResearchFields.size() > 0)
+			{
+				for (ProjectResearchField projectResearchField : projectResearchFields) {
+					List<String> tempList = new ArrayList<>();
+					tempList.add(projectResearchField.getPRJRSHF_Code());
+					tempList.add(projectResearchField.getPRJRSHF_Name());
+					listResearchFields.add(tempList);
+				}
+			}
+			
+			// Put data back to view
+			model.put("listResearchFields", listResearchFields);
 			model.put("projectEdit", project);
 			model.put("projectFormEdit", new ProjectsValidation());
 			model.put("projectId", projectId); 
-			
-			List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
 			model.put("projectTasks", projectTasks);
+			model.put("staffList", staffList);
+			model.put("currentUserName", session.getAttribute("currentUserName").toString());
+			model.put("memberRolesList", memberRolesList);
+			model.put("listFaculty", listFaculty);
+			model.put("projectCallsList", projectCallsList);
+			model.put("projectResearchFieldList", projectResearchFields);
 			return "cp.editAProject";
 		}
 		return "cp.notFound404";
@@ -1940,6 +1968,7 @@ public class nProjectController extends BaseWeb {
 					String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
 					String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
 					String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
+					String[] projectResearchFieldCodeList = request.getParameterValues("projectResearchFieldCodeList");
 					
 					int totalBudget = budgetMaterial;
 					for(int i = 0; i < projectMemberBudget.length; i++){
@@ -2016,9 +2045,9 @@ public class nProjectController extends BaseWeb {
 							
 						// Editing project info
 						threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent,
-								projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd,
-								projectSurvey, projectObjective, bEditSumittedProject, totalBudget, 
-								projectResearchFieldCode, fileName);
+													projectMotivation, projectResult, budgetMaterial, projectCode, startDate, endDate, facultyAdd,
+													projectSurvey, projectObjective, bEditSumittedProject, totalBudget, 
+													projectResearchFieldCode, fileName, projectResearchFieldCodeList);
 						// Editting tasks info
 						threadService.saveMemberTasks(projectCode, projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays, projectMemberBudget, currentProjectCode);
 						return "redirect:" + this.baseUrl + "/cp/list-projects.html";
@@ -2026,7 +2055,7 @@ public class nProjectController extends BaseWeb {
 				}catch (NullPointerException e) {
 					System.out.println(e.getMessage());
 					System.out.println(e.getStackTrace());
-					model.put("err", "Cần phải thêm thành viên vào đề tài.");
+					model.put("err", "Cần phải thêm thành viên và lĩnh vực vào đề tài.");
 				}
 			}else{
 				model.put("err", "Xin lỗi! Đợt gọi đề tài đã bị đóng.");
@@ -2069,11 +2098,11 @@ public class nProjectController extends BaseWeb {
 				String projectResearchFieldCode = "";
 				boolean bEditSumittedProject= true;
 				int projectMaterialBudget 	= 0;
-			 threadService.editAProject(projectEditId, userRole, userCode, 
-					 projectCallCode, projectName, projectContent, projectMotivation, 
-					 projectResult, projectMaterialBudget, projectCode, 
-					 startDate, endDate, facultyAdd, projectSurvey, projectObjective, 
-					 bEditSumittedProject, projectBudget, projectResearchFieldCode, "");
+				String[] projectResearchFieldCodeList = null;
+				
+			 threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, 
+										 projectResult, projectMaterialBudget, projectCode, startDate, endDate, facultyAdd, projectSurvey, projectObjective, 
+										 bEditSumittedProject, projectBudget, projectResearchFieldCode, "", projectResearchFieldCodeList);
 			 return "redirect:" + this.baseUrl + "/cp/modify-submitted-projects.html";
 		 }
 	 }
@@ -2407,6 +2436,13 @@ public class nProjectController extends BaseWeb {
 					 System.out.println(e.getStackTrace());
 				 }
 				 // Remove data from DB
+				 List<ProjectsProjectResearchField> projectsProjectResearchFieldList =  threadService.loadProjectsProjectResearchFieldListByProjectCode(project.getPROJ_Code());
+				 if(projectsProjectResearchFieldList != null)
+				 {
+					 for (ProjectsProjectResearchField projectsProjectResearchField : projectsProjectResearchFieldList) {
+						 threadService.removeAProjectSearchField(projectsProjectResearchField);
+					 }
+				 }
 				 threadService.removeAProject(projectId);
 				 threadService.removeProjectTasks(project.getPROJ_Code());
 				 List<Projects> projectsList = threadService.loadProjectsListByStaff(userRole, userCode);
