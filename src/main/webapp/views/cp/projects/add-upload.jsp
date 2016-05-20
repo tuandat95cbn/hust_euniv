@@ -19,7 +19,7 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Thêm mới đề tài</h1>
+            <h1 class="page-header">Thêm mới đề xuất đề tài</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -61,15 +61,21 @@
                                     <form:input path="projectBudget" class="form-control" name="projectBudget" placeholder="Budget"></form:input>
     								<form:errors path="projectBudget" class="alert-danger"></form:errors>
                                 </div> --%>
-                               	<div class="form-group">
+                               	<%-- <div class="form-group">
                                     <label for="budgetMaterial">Kinh phí vật tư, vật liệu,…</label>
                                     <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" placeholder="Other Fees"></form:input>
    									<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
-                               	</div>
-                               	<div class="form-group">
+                               	</div> --%>
+                               	<%-- <div class="form-group">
                                     <label for="projectFileUpload">Upload File thuyết minh đề tài*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;">(File size is 20 MB maximum)</i></label>
                                     <form:input path="projectFileUpload" name="projectFileUpload" type="file" placeholder="Source File"></form:input>
     								<form:errors path="projectFileUpload" class="alert-danger"></form:errors>
+                                </div> --%>
+                                
+                                <div class="form-group">
+                                    <label for="projectStartDate">Thời gian bắt đầu</label>
+                                    <form:input path="projectStartDate" class="form-control" name="projectStartDate" readonly="true" placeholder="Project Start Date"></form:input>
+    								<form:errors path="projectStartDate" class="alert-danger"></form:errors>
                                 </div>
 	                        </div>
 	                        <div class="col-lg-6">
@@ -86,11 +92,7 @@
                                     </form:select>
                                     <form:errors path="falcutyAddress" class="alert-danger"></form:errors>
                                 </div>
-                                <div class="form-group">
-                                    <label for="projectStartDate">Thời gian bắt đầu</label>
-                                    <form:input path="projectStartDate" class="form-control" name="projectStartDate" readonly="true" placeholder="Project Start Date"></form:input>
-    								<form:errors path="projectStartDate" class="alert-danger"></form:errors>
-                                </div>
+                                
                                 <div class="form-group">
                                     <label for="projectEndDate">Thời gian hoàn thành</label>
                                     <form:input path="projectEndDate" class="form-control" name="projectEndDate" readonly="true" placeholder="Project End Date"></form:input>
@@ -137,7 +139,7 @@
 	            
 	            <div class="panel panel-default">
 	                <div class="panel-heading">
-	                    Chọn lĩnh vực đề tài*
+	                    Chọn lĩnh vực nghiên cứu của đề tài*  (Giữ phím Ctrl và nhấn chuột để chọn nhiều lĩnh vực nghiên cứu)
 	                </div>
 	                <div class="panel-body">
 	                    <div class="row">
@@ -158,11 +160,13 @@
 	            
 	            <div class="panel panel-default">
 	            	<div class="panel-heading">
-	                    Thành viên tham gia
+	                    Thành viên tham gia, vai trò, nội dung thực hiện, số ngày công và kinh phí tương ứng
 	                </div>
 	            	<div class="panel-body">
 	                    <div class="row">
 	                        <div class="col-lg-6">
+	                        
+	                        	<div class="panel panel-default">
 	                        	<label for="threadResult">Thành viên tham gia*</label>
                                  <select class="form-control" name="faculty" onchange="showDepartment(this);" >
                                  	<option value="">Chọn Khoa/Viện</option>
@@ -188,7 +192,7 @@
                                     <br>
                                     
 		                        	<div class="form-group">
-		                                <label for="projectMembers">Thành viên</label>
+		                                <label for="projectMembers">Chọn Thành viên</label>
 		                                <div id="staff">
 		                                <select class="form-control" id="members">
 		                                	<c:forEach items="${staffList}" var="aStaff">
@@ -197,7 +201,7 @@
 		                                </select>
 		                                </div>
 		                            </div>
-	                        	
+	                        	</div>
 	                            <div class="form-group">
 	                               	<label for="taskContent">Nội dung công việc</label>
 	                                <!-- <textarea id="taskContent" class="form-control textarea"></textarea> -->
@@ -219,7 +223,7 @@
 	                                <input class="form-control" id="memberWorkingDays" value="0" placeholder="Working days" />
 	                             </div>
 	                             <div class="form-group">
-	                                <label for="taskBudget">*Thành tiền</label>
+	                                <label for="taskBudget">*Thành tiền (VNĐ)</label>
 	                                <input class="form-control" id="taskBudget" value="0" placeholder="Fee" />
 	                             </div>
 	                        </div>
@@ -260,6 +264,20 @@
 	                </div>
 	                <!-- /.panel-body -->
 	            </div>
+	            
+	             <div class="panel panel-default">
+	             	<div class="form-group">
+                                    <label for="budgetMaterial">Kinh phí vật tư, vật liệu,… (VNĐ)</label>
+                                    <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" placeholder="Other Fees"></form:input>
+   									<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
+                    </div>
+	             	<div class="form-group">
+                                    <label for="projectFileUpload">Upload File thuyết minh đề tài*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;">(File size is 20 MB maximum)</i></label>
+                                    <form:input path="projectFileUpload" name="projectFileUpload" type="file" placeholder="Source File"></form:input>
+    								<form:errors path="projectFileUpload" class="alert-danger"></form:errors>
+                 	</div>
+	             </div>
+	             
 	            <div class="panel panel-default">
 	            	<button type="submit" class="btn btn-primary">Lưu</button>
                     <button type="reset" class="btn btn-primary cancel">Hủy</button>

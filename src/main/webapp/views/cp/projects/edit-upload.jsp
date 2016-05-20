@@ -19,7 +19,7 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <!-- <h1 class="page-header">Chỉnh sửa thuyết minh đề tài sau phản biện</h1> -->
+            <h1 class="page-header">Chỉnh sửa thông tin đề tài</h1>
             <h1 class="page-header"></h1>
         </div>
         <!-- /.col-lg-12 -->
@@ -30,7 +30,7 @@
         <form:form action="${baseUrl}/cp/edit-a-project.html" method="POST" commandName="projectFormEdit" role="form" enctype="multipart/form-data">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Chỉnh sửa đề tài
+                    Chỉnh sửa thông tin chung của đề tài
                 </div>
                 <div class="panel-body">
                 	<c:if test="${status != null}">
@@ -57,6 +57,7 @@
                                    <form:input path="projectName" class="form-control" name="projectName" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_Name}" placeholder="Project Name"></form:input>
    									<form:errors path="projectName" class="alert-danger"></form:errors>
                                </div>
+                               <%-- 
                                <c:choose>
 									<c:when test="${projectEdit.PROJ_Locked1 != 1}">
 										<div class="form-group">
@@ -82,7 +83,15 @@
                                     <label for="projectFileUpload">Upload File thuyết minh đề tài*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;">(File size is 20 MB maximum)</i></label>
                                     <form:input path="projectFileUpload" name="projectFileUpload" type="file" placeholder="Source File"></form:input>
     								<form:errors path="projectFileUpload" class="alert-danger"></form:errors>
+                                </div> 
+                                --%>
+                                
+                             	<div class="form-group">
+                                   	<label for="projectStartDate">Thời gian bắt đầu</label>
+                                   	<form:input path="projectStartDate" class="form-control" readonly="true" name="projectStartDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_StartDate}" placeholder="Project Start Date"></form:input>
+   									<form:errors path="projectStartDate" class="alert-danger"></form:errors>
                                 </div>
+                                   
                         	</div>
                         	<div class="col-lg-6">
                               <div class="form-group">
@@ -98,11 +107,11 @@
                                    </form:select>
                                    <form:errors path="falcutyAddress" class="alert-danger"></form:errors>
                                </div>
-								<div class="form-group">
+								<%-- <div class="form-group">
                                    	<label for="projectStartDate">Thời gian bắt đầu</label>
                                    	<form:input path="projectStartDate" class="form-control" readonly="true" name="projectStartDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_StartDate}" placeholder="Project Start Date"></form:input>
    									<form:errors path="projectStartDate" class="alert-danger"></form:errors>
-                                </div>
+                                </div> --%>
                                <div class="form-group">
                                    	<label for="projectEndDate">Thời gian hoàn thành</label>
                                    	<form:input path="projectEndDate" class="form-control" readonly="true" name="projectEndDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_EndDate}" placeholder="Project End Date"></form:input>
@@ -221,7 +230,7 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Chọn lĩnh vực đề tài*
+                    Chọn lĩnh vực đề tài* (Giữ phím Ctrl và nhấn chuột vào các mục trong danh sách lĩnh vực đề tài bên dưới để chọn nhiều lĩnh vực)
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -241,7 +250,7 @@
             </div>
             <div class="panel panel-default">
             	<div class="panel-heading">
-                    Thành viên tham gia
+                    Thành viên tham gia, vai trò, nội dung thực hiện, số ngày công và kinh phí tương ứng
                 </div>
                 <div class="panel-body">
                 	<c:if test="${projectEdit.PROJ_Locked1 != 1}">
@@ -272,7 +281,7 @@
                                     <br>
                                     
 		                        	<div class="form-group">
-		                                <label for="projectMembers">Thành viên</label>
+		                                <label for="projectMembers">Chọn Thành viên</label>
 		                                <div id="staff">
 		                                <select class="form-control" id="members">
 		                                	<c:forEach items="${staffList}" var="aStaff">
@@ -302,7 +311,7 @@
 	                                <input class="form-control" id="memberWorkingDays" value="0" placeholder="Working days" />
 	                             </div>
 	                             <div class="form-group">
-	                                <label for="taskBudget">*Thành tiền</label>
+	                                <label for="taskBudget">*Thành tiền (VNĐ)</label>
 	                                <input class="form-control" id="taskBudget" value = "0" placeholder="Fee" />
 	                             </div>
 	                        </div>
@@ -380,6 +389,38 @@
                 </div>
                 <!-- /.panel-body -->
 	        </div>
+	        
+	        
+	        <div class="panel panel-default">
+								<c:choose>
+									<c:when test="${projectEdit.PROJ_Locked1 != 1}">
+										<div class="form-group">
+		                                   <label for="projectOtherFees">Kinh phí vật tư, vật liệu,… (VNĐ)</label>
+		                                   <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_BudgetMaterial}" placeholder="Other Fees"></form:input>
+		  									<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
+		                              	</div>
+		                            </c:when>
+	                              	<c:otherwise>
+	                              		<div class="panel panel-default">
+					                        <div class="panel-heading">
+					                            <label for="projectResult">Kinh phí vật tư, vật liệu,… (VNĐ)</label>
+					                        </div>
+					                        <div class="panel-body">
+					                            <div class="tab-content">
+					                                <div class="tab-pane fade in active">${projectEdit.PROJ_BudgetMaterial}</div>
+					                            </div>
+					                        </div>
+					                    </div>
+	                              	</c:otherwise>
+	                           </c:choose>
+	                           <div class="form-group">
+                                    <label for="projectFileUpload">Upload File thuyết minh đề tài*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;">(File size is 20 MB maximum)</i></label>
+                                    <form:input path="projectFileUpload" name="projectFileUpload" type="file" placeholder="Source File"></form:input>
+    								<form:errors path="projectFileUpload" class="alert-danger"></form:errors>
+                                </div>
+	        
+	        </div>
+	        
 	        <div class="panel panel-default">
 	        	<!-- Buttons -->
                	 <c:if test="${projectEdit.PROJ_Locked1 != 1}">

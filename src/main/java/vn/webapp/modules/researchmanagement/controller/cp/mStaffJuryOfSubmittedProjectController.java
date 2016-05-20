@@ -164,9 +164,15 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		// Get current user name and role
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-
+		System.out.println(name() + "::addJuryOfSubmittedProjects"
+				+ ", userCode = " + userCode + ", userRole = " + userRole);
+		
 		// Get project call list
 		List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
+		HashMap<String, String> mProjectCallCode2Name = new HashMap<String, String>();
+		for(mProjectCalls pc: projectCallList){
+			mProjectCallCode2Name.put(pc.getPROJCALL_CODE(), pc.getPROJCALL_NAME());
+		}
 		
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
@@ -236,7 +242,10 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 	
 		model.put("staffJuryOfSubmittedProjectFormAdd", new mStaffJuryOfSubmittedProjectValidation());
 		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProject();
+		//System.out.println(name() + "::addJuryOfSubmittedProjects, staffJuryOfSubmittedProjectList.sz = " + staffJuryOfSubmittedProjectList.size());
 		for(mStaffJuryOfSubmittedProject sjsp: staffJuryOfSubmittedProjectList){
+			//System.out.println(name() + "::addJuryOfSubmittedProjects, set projectName " + 
+		//mProjectCode2Name.get(sjsp.getSTFJUPRJ_PRJCODE()) + " of code " + sjsp.getSTFJUPRJ_PRJCODE());
 			sjsp.setSTFJUPRJ_PRJCODE(mProjectCode2Name.get(sjsp.getSTFJUPRJ_PRJCODE()));
 			sjsp.setSTFJUPRJ_STAFFJURCODE(mStaffCode2Name.get(sjsp.getSTFJUPRJ_STAFFJURCODE()));
 		}

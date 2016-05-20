@@ -135,7 +135,7 @@ public class BaseWeb {
         String facultyCode = staff.getStaff_Faculty_Code();
         
         map.put("facultyCode", facultyCode);
-        System.out.println("BaseWeb::addGlobalAttr, facultyCode = " + facultyCode);
+        //System.out.println("BaseWeb::addGlobalAttr, facultyCode = " + facultyCode);
         
         assetsUrl = baseUrl + "/assets";
         map.put("baseUrl", baseUrl);
