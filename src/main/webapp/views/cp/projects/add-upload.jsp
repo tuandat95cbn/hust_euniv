@@ -145,7 +145,7 @@
 	                    <div class="row">
 	                        <div class="col-lg-12">
                                 <div class="form-group">
-                                    <select multiple="true" size="5" class="form-control" name="projectResearchFieldCode">
+                                    <select multiple="true" size="5" class="form-control" id="projectResearchFieldCodeList" name="projectResearchFieldCodeList">
                                     	<c:forEach items="${projectResearchFieldList}" var="proj_field">
 	                                        <option value="${proj_field.PRJRSHF_Code}">${proj_field.PRJRSHF_Name}</option>
                                        	</c:forEach>
