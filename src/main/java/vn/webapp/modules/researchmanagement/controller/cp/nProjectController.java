@@ -1292,6 +1292,7 @@ public class nProjectController extends BaseWeb {
 		//Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectId);
 		Projects project = threadService.loadProjectsById(projectId);
 		
+		System.out.println(name() + "::editAProject, userCode = " + userCode + ", userRole = " + userRole);
 		// Get list of project calls
 		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
 		// Get list faculty
@@ -1306,15 +1307,37 @@ public class nProjectController extends BaseWeb {
 			List<ProjectsProjectResearchField> selectedProjectResearchFields = threadService.loadProjectsProjectResearchFieldListByProjectCode(project.getPROJ_Code());
 			List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
 			List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
+		
+			System.out.println(name() + "::editAProject, userCode = " + userCode + ", userRole = " + userRole +
+					", projectResearchField.sz = " + projectResearchFields.size() + ", selectdeProjectResearchField.sz = " + 
+					selectedProjectResearchFields.size());
 			
 			List<List<String>> listResearchFields = new ArrayList<>();
-			
+			for (ProjectResearchField projectResearchField : projectResearchFields) {
+				List<String> tempList = new ArrayList<>();
+				tempList.add(projectResearchField.getPRJRSHF_Code());
+				tempList.add(projectResearchField.getPRJRSHF_Name());
+				boolean selected = false;
+				for (ProjectsProjectResearchField selectedProjectResearchField : selectedProjectResearchFields) {
+					if(projectResearchField.getPRJRSHF_Code().equals(selectedProjectResearchField.getPRJPRJRSHF_PRJRSHFCode())){
+						selected = true; break;
+					}
+				}
+				if(selected){
+					tempList.add("SELECTED");
+				}else{
+					tempList.add("");
+				}
+				listResearchFields.add(tempList);
+			}
+			/*
 			if(selectedProjectResearchFields.size() > 0 && projectResearchFields.size() > 0)
 			{
 				for (ProjectResearchField projectResearchField : projectResearchFields) {
 					List<String> tempList = new ArrayList<>();
 					tempList.add(projectResearchField.getPRJRSHF_Code());
 					tempList.add(projectResearchField.getPRJRSHF_Name());
+					boolean selected = false;
 					for (ProjectsProjectResearchField selectedProjectResearchField : selectedProjectResearchFields) {
 						if(projectResearchField.getPRJRSHF_Code().equals(selectedProjectResearchField.getPRJPRJRSHF_PRJRSHFCode())){
 							tempList.add("SELECTED");
@@ -1333,6 +1356,7 @@ public class nProjectController extends BaseWeb {
 					listResearchFields.add(tempList);
 				}
 			}
+			*/
 			
 			// Put data back to view
 			model.put("listResearchFields", listResearchFields);
