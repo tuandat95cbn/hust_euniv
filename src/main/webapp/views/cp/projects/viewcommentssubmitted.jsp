@@ -121,11 +121,14 @@
 									<c:when test="${projectEdit.PROJ_Status_Code != 'APPROVED' && projectEdit.PROJ_Status_Code != 'REJECT'}"> --%>
 					                    <div class="form-group">
 		                                   <label>Trạng thái phê duyệt : </label>
+		                                   ${projectEdit.PROJ_Status_Code}
+		                                   <%-- 
 			                                   <c:choose>
 				                                   <c:when test='${projectEdit.PROJ_Status_Code == "ACCEPT_REVISION"}'>  Phê duyệt nhưng cần chỉnh sửa  </c:when>
 				                                   <c:when test='${projectEdit.PROJ_Status_Code == "APPROVED"}'>Phê duyệt</c:when>
 				                                   <c:otherwise> Từ chối </c:otherwise>
 			                                   </c:choose>
+		                                    --%>
 		                                   </label>
 		                                </div>
 	                               	<%-- </c:when>    

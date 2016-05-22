@@ -557,7 +557,7 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 					sCommentTemp = Jsoup.parse(oPrj.getCommentsOfSubmittedProjects().getCOMPROJ_COMMENT()).text(); 
 				}
 				listTemp.add(sCommentTemp); // Comment
-				
+				listTemp.add(oPrj.getPROJ_ID() + "");
 				// Add element to the list
 				listProjectSummary.add(listTemp);
 				i++;
@@ -565,7 +565,8 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 		}
 		}catch(Exception e)
 		{
-			System.out.println("XXX : " + e.getMessage());
+			e.printStackTrace();
+			//System.out.println("XXX : " + e.getMessage());
 		}
 		
 		//List of projects 

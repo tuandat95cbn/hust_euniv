@@ -16,7 +16,7 @@
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Danh sách đề tài</h1>
+			<h1 class="page-header">Chọn tiêu chí thống kê</h1>
 			<p>
 				<!-- <button type="button" class="btn btn-primary btn-xs gen">Kết xuất danh sách</button> -->
 			</p>
@@ -27,7 +27,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
-				<div class="panel-heading">Danh sách đề tài</div>
+				<div class="panel-heading">Chọn tiêu chí thống kê</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					<form:form action="${baseUrl}/cp/threadsExcell" method="POST" id="formSubmit" commandName="threadExcellForm" role="form">

@@ -16,7 +16,7 @@
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Ý kiến phản biện</h1>
+			<h1 class="page-header">Xem ý kiến phản biện</h1>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
@@ -33,8 +33,9 @@
 							<thead>
 								<tr>
 									<th>STT</th>
-									<th>Mã loạt đề tài</th>
-									<th>Edit</th>
+									<th>Tên đề tài</th>
+									<th>Đợt gọi đề tài</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -44,8 +45,9 @@
 										<c:set var="count" value="${count + 1}" scope="page"/> 
 										<td><c:out value="${count}"/></td>
 										<td><c:out value="${project.PROJ_Name}"/></td>
+										<td><c:out value="${project.PROJ_PRJCall_Code}"/></td>
 										<td class="center">
-											<button type="button" onclick="v_fViewDetailASumittedProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked2 == 1 ? "btn-warning" : "btn-info"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã nộp' : 'Chỉnh sửa'}">Info</button>
+											<button type="button" onclick="v_fViewDetailASumittedProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked2 == 1 ? "btn-warning" : "btn-info"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã nộp' : 'Chỉnh sửa'}">Xem</button>
 										</td>
 									</tr>
 								</c:forEach>

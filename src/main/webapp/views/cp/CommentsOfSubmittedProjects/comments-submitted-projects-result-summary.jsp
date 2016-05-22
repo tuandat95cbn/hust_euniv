@@ -37,6 +37,7 @@
 									<th>Chủ nhiệm</th>
 									<th>Điểm trung bình</th>
 									<th>Ý kiến đánh giá</th>
+									<th>Chi tiết</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -49,6 +50,10 @@
 										<td><c:out value="${project[1]}"/></td>
 										<td><c:out value="${project[2]}"/></td>
 										<td><c:out value="${project[3] != '' ? project[3] : 'N/A'}"/></td>
+										<%-- <td><c:out value="${project[4]}"/></td> --%>
+										<td class="center">
+											<button type="button" onclick="v_fViewDetailASumittedProject(${project[4]});" class="btn btn-info"}/>Chi tiết</button>
+										</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -79,6 +84,11 @@ $(document).ready(function() {
             
     });
 });
+
+function v_fViewDetailASumittedProject(iProjectId){
+	var sViewDetailUrl = baseUrl + "/cp/submitedprojectdetail/"+iProjectId+".html";
+	window.location = sViewDetailUrl;
+}
 
 function v_fViewDetailAProjectCall(iProjectCallId){
 	var sViewDetailUrl = baseUrl + "/cp/add-details-comments-submitted-projects/"+iProjectCallId+".html";

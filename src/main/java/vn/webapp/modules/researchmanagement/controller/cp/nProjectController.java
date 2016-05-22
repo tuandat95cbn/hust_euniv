@@ -183,7 +183,7 @@ public class nProjectController extends BaseWeb {
  		 
  		  System.out.println(name() + "::downloadProposal, userCode = " + userCode + ", userRole = " + 
  		   userRole + ", userCodeOfProject = " + userCodeOfProject + ", projectId = " + projectId + ", path_filename = " +fullfilename);
- 		   if(downloadFile.exists()){
+ 		   if(downloadFile.exists() && !project.getPROJ_SourceFile().equals("")){
  		       FileInputStream inputStream = new FileInputStream(downloadFile);
  		       
  		       //String mimeType = context.getMimeType(paper.getPDECL_SourceFile());
@@ -227,7 +227,17 @@ public class nProjectController extends BaseWeb {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
 		List<Projects> projectsList = threadService.loadProjectsListByStaff(userRole, userCode);
+		//List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
 		System.out.println(name() + "::getListProjects, userCode = " + userCode + ", userRole = " + userRole);
+		
+		List<mProjectCalls> projectCalls = projectCallsService.loadProjectCallsList();
+		HashMap<String, String> mProjectCallCode2Name = new HashMap<String, String>();
+		for(mProjectCalls pc: projectCalls){
+			mProjectCallCode2Name.put(pc.getPROJCALL_CODE(), pc.getPROJCALL_NAME());
+		}
+		for(Projects p: projectsList){
+			p.setPROJ_PRJCall_Code(mProjectCallCode2Name.get(p.getPROJ_PRJCall_Code()));
+		}
 		
 		model.put("projectsList", projectsList);
 		model.put("projects", status);
@@ -505,7 +515,9 @@ public class nProjectController extends BaseWeb {
 		String facultyCode = session.getAttribute("currentUserFaculty").toString();
 		System.out.println(name() + "::getListSubmittedProjects, facultyCode = " + facultyCode);
 
-		List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+		//List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+		//List<Projects> projectsList = threadService.loadProjectsListByStaff(userRole, userCode);
+		List<Projects> projectsList = listProjectsWithFullInformation(userRole, userCode);
 		
 		model.put("projectsList", projectsList);
 		model.put("projects", status);
@@ -537,7 +549,8 @@ public class nProjectController extends BaseWeb {
 	 */
 	
 	public List<Projects> listProjectsWithFullInformation(String userRole, String userCode){
-		List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+		//List<Projects> projectsList = threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+		List<Projects> projectsList = threadService.loadProjectsListByStaff(userRole, userCode);
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
 		for(mStaff st: staffs){
@@ -1126,6 +1139,13 @@ public class nProjectController extends BaseWeb {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		//Projects project = threadService.loadASumittedProjectByIdAndUserCode(userRole,userCode, projectId);
 		Projects project = threadService.loadProjectsById(projectId);
+		
+		List<mProjectStatus> statuses = projectStatusService.list();
+		HashMap<String, String> mStatusCode2Name = new HashMap<String, String>();
+		for(mProjectStatus pt: statuses){
+			mStatusCode2Name.put(pt.getPROJSTAT_Code(), pt.getPROJSTAT_Description());
+		}
+		project.setPROJ_Status_Code(mStatusCode2Name.get(project.getPROJ_Status_Code()));
 		
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();

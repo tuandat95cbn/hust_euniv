@@ -28,7 +28,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
-				<div class="panel-heading">Danh sách đợt gọi đề tài</div>
+				<div class="panel-heading">Danh sách đề tài</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					<div class="dataTable_wrapper">
@@ -38,6 +38,7 @@
 								<tr>
 									<th>STT</th>
 									<th>Tên đề tài</th>
+									<th>Đợt gọi đề tài</th>
 									<th>Chỉnh sửa</th>
 								</tr>
 							</thead>
@@ -48,6 +49,7 @@
 										<c:set var="count" value="${count + 1}" scope="page"/> 
 										<td><c:out value="${count}"/></td>
 										<td><c:out value="${project.PROJ_Name}"/></td>
+										<td><c:out value="${project.PROJ_PRJCall_Code}"/></td>
 										<td class="center">
 											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked1 == 1 ? "btn-warning" : "btn-info"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã gửi' : 'Chỉnh sửa'}">Chỉnh sửa</button>
 											<a href="<c:url value="${baseUrl}/cp/download-proposal/${project.PROJ_ID}.html"/>" title="Download file xác thực" class="btn btn-success btn-xs">Tải thuyết minh</a>

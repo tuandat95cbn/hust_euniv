@@ -70,9 +70,9 @@
 										<%-- <td><c:out value="${paper.PDECL_PublicationConvertedHours}"/></td> --%>
 										<td><c:out value="${paper.PDECL_AuthorConvertedHours}"/></td>
 										<td class="center">
-											<button type="button" onclick="v_fViewDetailAPaper(${paper.PDECL_ID});" class="btn btn-info btn-xs" title="Edit">Info</button>
+											<button type="button" onclick="v_fViewDetailAPaper(${paper.PDECL_ID});" class="btn btn-info btn-xs" title="Edit">Chi tiết</button>
 											<br>
-											<button type="button" id="removePaper" onclick="v_fRemoveAPaper(${paper.PDECL_ID});" class="btn btn-danger btn-xs" title="Remove">Remove</button>
+											<button type="button" id="removePaper" onclick="v_fRemoveAPaper(${paper.PDECL_ID});" class="btn btn-danger btn-xs" title="Remove">Xoá</button>
 											<br>
 											<c:choose>
 					                            <c:when test="${paper.PDECL_SourceFile != '' && paper.PDECL_SourceFile != null}">
