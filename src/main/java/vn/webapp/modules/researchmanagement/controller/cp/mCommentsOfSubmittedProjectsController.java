@@ -44,6 +44,7 @@ import vn.webapp.modules.researchmanagement.validation.mCommentsOfSubmittedProje
 import vn.webapp.modules.researchmanagement.validation.mJuryOfAnnouncedProjectCallValidation;
 import vn.webapp.modules.researchmanagement.validation.mProjectCallsValidation;
 import vn.webapp.modules.researchmanagement.validation.mThreadExcellValidation;
+import vn.webapp.modules.usermanagement.controller.cp.mUserController;
 import vn.webapp.modules.usermanagement.model.mDepartment;
 import vn.webapp.modules.usermanagement.model.mFaculty;
 import vn.webapp.modules.usermanagement.model.mStaff;
@@ -394,13 +395,34 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 	public String getListProjectsStatisticsParams(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-		
+		String facultyCode = session.getAttribute("facultyCode").toString();
+
+		System.out
+				.println(name()
+						+ "::getListProjectsStatisticsParams, userCode = "
+						+ userCode + ", userRole = " + userRole
+						+ ", facultyCode = " + facultyCode);
 		List<mThreads> threadsList = threadService.loadThreadsListByStaff(userRole, userCode);
 		// Get topic's category
 		List<mTopicCategory> threadCategory = tProjectCategoryService.list();
 		// Get list project statuses
 		List<mProjectStatus> threadStatuses = projectStatusService.list();
-		List<mFaculty> threadFaculties = facultyService.loadFacultyList();
+		//List<mFaculty> threadFaculties = facultyService.loadFacultyList();
+		List<mFaculty> threadFaculties = new ArrayList<mFaculty>();
+		if (userRole.equals("ROLE_ADMIN") || userRole.equals("SUPER_ADMIN"))
+			threadFaculties = facultyService.loadFacultyList();
+		else if (userRole
+				.equals(mUserController.ROLE_ADMIN_RESEARCH_MANAGEMENT_FACULTY)) {
+			// threadFaculties = new ArrayList<mFaculty>();
+			mFaculty faculty = facultyService.loadAFacultyByCode(facultyCode);
+			if (faculty != null)
+				threadFaculties.add(faculty);
+			else {
+				System.out.println(name()
+						+ "::getListProjectsStatisticsParams, faculty "
+						+ facultyCode + " NOT EXIST!!!");
+			}
+		}
 		List<mDepartment> threadDepartments = departmentService.loadDepartmentList();
 		List<mStaff> threadStaffs = staffService.listStaffs();
 		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
@@ -491,12 +513,18 @@ public class mCommentsOfSubmittedProjectsController extends BaseWeb {
 			setStatusCode.add(statusCode);
 		}
 		
-		if(facultyCode == "" || facultyCode.equals("")){
-			for(mFaculty f: faculties){
-				setFacultyCode.add(f.getFaculty_Code());
+		if (userRole.equals(mUserController.ROLE_ADMIN)
+				|| userRole.equals(mUserController.SUPER_ADMIN)) {
+			if (facultyCode == "" || facultyCode.equals("")) {
+				for (mFaculty f : faculties) {
+					setFacultyCode.add(f.getFaculty_Code());
+				}
+			} else {
+				setFacultyCode.add(facultyCode);
 			}
-		}else{
-			setFacultyCode.add(facultyCode);
+		} else {
+			String userFacultyCode = session.getAttribute("facultyCode").toString();
+			setFacultyCode.add(userFacultyCode);
 		}
 		
 		

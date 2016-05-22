@@ -134,6 +134,7 @@ public class BaseWeb {
         mStaff staff = staffService.loadStaffByUserCode(username);
         String facultyCode = staff.getStaff_Faculty_Code();
         
+        session.setAttribute("facultyCode", facultyCode);
         map.put("facultyCode", facultyCode);
         //System.out.println("BaseWeb::addGlobalAttr, facultyCode = " + facultyCode);
         

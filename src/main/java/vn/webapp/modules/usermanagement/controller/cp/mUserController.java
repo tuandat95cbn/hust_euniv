@@ -74,10 +74,10 @@ public class mUserController extends BaseWeb {
 	/**
 	 * Set Super admin acc
 	 */
-    static final String SUPER_ADMIN = "SUPER_ADMIN";
-    static final String ROLE_ADMIN = "ROLE_ADMIN";
-    static final String ROLE_USER = "ROLE_USER";
-    static final String ROLE_ADMIN_RESEARCH_MANAGEMENT_FACULTY = "ROLE_ADMIN_RESEARCH_MANAGEMENT_FACULTY";
+    public static final String SUPER_ADMIN = "SUPER_ADMIN";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+    public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_ADMIN_RESEARCH_MANAGEMENT_FACULTY = "ROLE_ADMIN_RESEARCH_MANAGEMENT_FACULTY";
     /**
      * Set staff category code
      */
@@ -101,9 +101,11 @@ public class mUserController extends BaseWeb {
    			userRole.equals(mUserController.ROLE_ADMIN)){
    		staffsList = staffService.listStaffs();
    	}else{
+   		String facultyCode = session.getAttribute("facultyCode").toString();
     	String currentUserFaculty = session.getAttribute("currentUserFaculty").toString();
-    	System.out.println(name() + "::listUsers, facultyCode = " + currentUserFaculty);
-    	staffsList = staffService.listStaffsByFalcuty(currentUserFaculty);
+    	System.out.println(name() + "::listUsers, facultyCode = " + currentUserFaculty + ", facultyCode = " + facultyCode);
+    	//staffsList = staffService.listStaffsByFalcuty(currentUserFaculty);
+    	staffsList = staffService.listStaffsByFalcuty(facultyCode);
    	}
    	
    	//model.put("listUsers", usersList);

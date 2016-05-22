@@ -86,7 +86,7 @@
 	                        </div>
 		                        <!-- /.panel-heading -->
 		                        <div class="panel-body">
-		                        	<c:if test="${currentUserRole eq 'ROLE_ADMIN' || currentUserRole eq 'SUPER_ADMIN'}">
+		                        	<c:if test="${currentUserRole eq 'ROLE_ADMIN' || currentUserRole eq 'SUPER_ADMIN' ||currentUserRole eq 'ROLE_ADMIN_RESEARCH_MANAGEMENT_FACULTY'}">
 			                        	<div>
 				                        	<label for="CMTSUBPRJ_Eval_RearchMethodology">Chọn viện</label>
 			                        		<div class="form-group">
