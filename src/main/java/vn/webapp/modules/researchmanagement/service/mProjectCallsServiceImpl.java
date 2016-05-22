@@ -78,6 +78,8 @@ public class mProjectCallsServiceImpl implements mProjectCallsService {
 				
 				// Create 
 				int i_InsertedAProjectCallId = projectCallsDAO.saveAProjectCall(projectCalls);
+				
+				/*
 				mProjectCalls insertedProjectCalls = projectCallsDAO.loadAProjectCallById(i_InsertedAProjectCallId);
 				LocalDate o_fFormatDateByFormat = DateUtil.o_fFormatDateByFormatType2(sPROJCALL_DATE);
 				sPROJCALL_CODE = "T"+o_fFormatDateByFormat.getYear()+i_InsertedAProjectCallId;
@@ -87,6 +89,8 @@ public class mProjectCallsServiceImpl implements mProjectCallsService {
 				insertedProjectCalls.setPROJCALL_DATE(sPROJCALL_DATE);
 				
 				projectCallsDAO.editAProjectCall(insertedProjectCalls);
+				*/
+				
 				return 1;
 			}
 			return 0;

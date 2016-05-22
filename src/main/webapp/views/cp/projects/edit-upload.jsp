@@ -436,10 +436,12 @@
                  <button type="reset" class="btn btn-info cancel">Hủy</button>
                  <%-- <c:if test="${projectEdit.PROJ_Locked1 == 1}">
                   --%>
+<%-- 
                  <button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">View PDF</button>
+ --%>
                  <%-- </c:if> --%>
                  <c:if test="${projectEdit.PROJ_Locked1 != 1}">
-                 	<button type="reset" class="btn btn-danger" onclick="v_fSendProject(${projectEdit.PROJ_ID})">Gửi đề tài</button>
+                 	<button type="reset" class="btn btn-danger" onclick="v_fSendProject(${projectEdit.PROJ_ID})">Gửi đề xuất đề tài</button>
                  </c:if>
 	        </div>
             <!-- /.panel -->

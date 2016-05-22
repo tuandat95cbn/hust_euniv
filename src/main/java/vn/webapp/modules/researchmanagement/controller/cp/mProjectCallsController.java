@@ -137,10 +137,11 @@ public class mProjectCallsController extends BaseWeb {
 			BindingResult result, Map model, HttpSession session) {
 		
 		String userCode = (String)session.getAttribute("currentUserCode");
-		
+		System.out.println(name() + "::saveAProjectCall, userCode = " + userCode);
 		// Get topic's category
 		List<mTopicCategory> topicCategory = tProjectCategoryService.list();
 
+		
 		// Put data back to view
 		model.put("topicCategory", topicCategory);
 		model.put("projectcalls", status);
@@ -149,11 +150,22 @@ public class mProjectCallsController extends BaseWeb {
 		} else {
 			// Prepare data for inserting DB
 			String PROJCALL_NAME 		= projectCallValid.getProjectCallName();
+			String sPROJCALL_CODE 		= projectCallValid.getProjectCallCode();
 			mProjectCalls projectCalls = projectCallsService.loadAProjectCallByName(PROJCALL_NAME);
-			if(projectCalls == null){
+			
+			if(projectCalls != null){
+				model.put("err", "Đợt gọi đề tài " + PROJCALL_NAME + " đã tồn tại");
+				return "cp.addAProjectCall";
+			}
+			projectCalls = projectCallsService.loadAProjectCallByCode(sPROJCALL_CODE);
+			if(projectCalls != null){
+				model.put("err", "Mã Đợt gọi đề tài " + sPROJCALL_CODE + " đã tồn tại");
+				return "cp.addAProjectCall";
+			}
+			
 				String PROJCALL_PROJCATCODE = projectCallValid.getProjectCallCatCode();
 				String PROJCALL_DATE 		= DateUtil.s_fConvertDateFormatType1(projectCallValid.getProjectCallDate());
-				String sPROJCALL_CODE 		= projectCallValid.getProjectCallCode();//"T"+DateUtil.s_fGetCurrentDate();
+				//String sPROJCALL_CODE 		= projectCallValid.getProjectCallCode();//"T"+DateUtil.s_fGetCurrentDate();
 				String sPROJCALL_STATUS 	= projectCallValid.getProjectCallStatus();
 				System.out.println(name() + "::saveAProjectCall, userCode = " + userCode + 
 						", projectCallCode = " + sPROJCALL_CODE + 
@@ -164,9 +176,7 @@ public class mProjectCallsController extends BaseWeb {
 				}else{
 					model.put("err", "Lưu không thành công. Hãy thử lại.");
 				}
-			}else{
-				model.put("err", "Đợt gọi đề tài đã tồn tại");
-			}
+			
 			return "cp.addAProjectCall";
 		}
 	}
