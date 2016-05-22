@@ -44,7 +44,7 @@
 	                        
 	                                <div class="form-group">
 	                                    <label>Đợt gọi đề tài </label>
-	                                    <form:select path="JUSUPRJ_PRJCALLCODE" class="form-control" name="JUSUPRJ_PRJCALLCODE">
+	                                    <form:select path="JUSUPRJ_PRJCALLCODE" class="form-control" name="JUSUPRJ_PRJCALLCODE" onchange="changeProjectCall(this);">
 	                                        <option value="">chọn</option>	                                    	        	                                    	
 	                                    	<c:forEach items="${projectCallList}" var="iProjectCall">
 		                                        <option value="${iProjectCall.PROJCALL_CODE}">${iProjectCall.PROJCALL_NAME}</option>
@@ -121,7 +121,7 @@
 									<th title="Name of project call " > Đợt gọi đề tài </th>
 									<th title="Name of staff ">Thành viên </th>
 									<th title="Name of role ">Vai trò</th>
-									<th>Edit</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -236,5 +236,18 @@ function showStaff(sDepartment) {
 	}
 }
 
+function changeProjectCall(projectCallSelect){
+	var projectCallCode = projectCallSelect.options[projectCallSelect.selectedIndex].value;
+	//alert(projectCallCode);
+	$.ajax({
+		type:'POST',
+		url:"${baseUrl}/cp/getJuryOfProjectCall.html",
+		data: "projectCallCode=" + projectCallCode,
+		success: function(result){
+			alert(result);
+				$("#dataTables-example").html(result);
+		}
+	});
+}
 </script>
 

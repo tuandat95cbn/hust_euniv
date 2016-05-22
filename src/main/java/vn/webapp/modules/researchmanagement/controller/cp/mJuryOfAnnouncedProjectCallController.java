@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import vn.webapp.controller.BaseWeb;
 import vn.webapp.libraries.DateUtil;
@@ -96,7 +98,60 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 			
 		return "cp.listJuryOfAnnouncedProjectCall";
 	}
-
+	
+	public String name(){
+		return "mJuryOfAnnouncedProjectCallController";
+	}
+	@ResponseBody
+    @RequestMapping(value = "/getJuryOfProjectCall", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
+    public String getJuryOfAProjectCall(HttpServletRequest  request, HttpSession session, 
+    		@RequestParam(value = "projectCallCode", defaultValue = "0") String projectCallCode) {
+		String html = "";
+		System.out.println(name() + "::getJuryOfAProjectCall, projectCallCode = " + projectCallCode);
+		
+		List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList = 
+				juryOfAnnouncedProjectCallService.loadListJuryOfAnnouncedProjectCallByProjectCallCode(projectCallCode);
+		
+		List<mStaff> staffs = staffService.listStaffs();
+		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
+		for(mStaff st: staffs)
+			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
+		
+		html +=
+		"<thead>"
+		+ "<tr>"
+		+ "<th title=\"Name of project call \" > Đợt gọi đề tài </th>"
+		+	"<th title=\"Name of staff \">Thành viên </th>"
+		+	"<th title=\"Name of role \">Vai trò</th>"
+		+	"<th></th>"
+		+ "</tr>"
+		+ "</thead>";
+	
+		
+		html += "<tbody>";
+		for(mJuryOfAnnouncedProjectCall jury: juryOfAnnouncedProjectCallList){
+			html += "<tr class=\"gradeX\">";
+			
+			html += "<td><c:out value=\"" + projectCallCode + "\"/></td>";
+			html += "<td><c:out value=\"" + jury.getJUSUPRJ_STAFFCODE() + "\"/></td>";
+			html += "<td><c:out value=\"" + jury.getJUPSURJ_ROLECODE() + "\"/></td>";
+			
+			//html += "<td><c:out value=" + projectCallCode + "/></td>";
+			//html += "<td><c:out value=" + jury.getJUSUPRJ_STAFFCODE() + "/></td>";
+			//html += "<td><c:out value=" + jury.getJUPSURJ_ROLECODE() + "/></td>";
+			
+			html += "<td class=\"center\">"
+			+ "<button type=\"button\" id=\"removeJuryOfAnnouncedProjectCall\" onclick=\"v_fRemoveJuryOfAnnouncedProjectCall(" + jury.getJUSUPRJ_ID() + ");\" class=\"btn btn-danger btn-xs\" title=\"Remove\">Xoá</button>"
+			+ "<br>"
+			+ "</td>";
+			html += "</tr>";
+		}
+		html += "</tbody>";
+		
+		System.out.println(name() + "::getJuryOfAProjectCall, return html = " + html);
+		return html;
+	}
+	
 	/**
 	 * 
 	 * @param model
@@ -151,6 +206,7 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 		return "cp.addJuryOfAnnouncedProjectCall";
 	}
 
+	
 	
 	@RequestMapping(value = "/save-jury-of-announced-project-call", method = RequestMethod.POST)
 	public String saveJuryOfAnnouncedProjectCall( HttpServletRequest request, @Valid @ModelAttribute("juryOfAnnouncedProjectCallFormAdd") mJuryOfAnnouncedProjectCallValidation juryOfAnnouncedProjectCallValid, BindingResult result, ModelMap model, HttpSession session) {
