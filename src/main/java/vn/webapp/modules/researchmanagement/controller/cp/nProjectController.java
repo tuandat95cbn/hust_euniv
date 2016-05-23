@@ -647,9 +647,13 @@ public class nProjectController extends BaseWeb {
 		// threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
 		// List<Projects> projectsList =
 		// threadService.loadProjectsListByStaff(userRole, userCode);
+		double t0 = System.currentTimeMillis();
 		List<Projects> projectsList = listProjectsWithFullInformation(userRole,
 				userCode);
-
+		double t = System.currentTimeMillis() - t0;
+		t = t * 0.001;
+		System.out.println(name() + "::getListSubmittedProjects, time = " + t);
+		
 		model.put("projectsList", projectsList);
 		model.put("projects", status);
 		return "cp.submittedProjectsList";
@@ -686,11 +690,14 @@ public class nProjectController extends BaseWeb {
 		// threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
 		List<Projects> projectsList = threadService.loadProjectsListByStaff(
 				userRole, userCode);
+		/*
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
 		for (mStaff st : staffs) {
 			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
 		}
+		*/
+		
 		HashMap<String, String> mProjectCallCode2Name = new HashMap<String, String>();
 		List<mProjectCalls> projectCalls = projectCallsService
 				.loadProjectCallsList();
@@ -700,10 +707,13 @@ public class nProjectController extends BaseWeb {
 		}
 
 		for (Projects p : projectsList) {
-			p.setPROJ_User_Code(mStaffCode2Name.get(p.getPROJ_User_Code()));
+			mStaff st = staffService.loadStaffByUserCode(p.getPROJ_User_Code());
+			//p.setPROJ_User_Code(mStaffCode2Name.get(p.getPROJ_User_Code()));
+			p.setPROJ_User_Code(st.getStaff_Name());
 			p.setPROJ_PRJCall_Code(mProjectCallCode2Name.get(p
 					.getPROJ_PRJCall_Code()));
 		}
+		
 		return projectsList;
 	}
 
