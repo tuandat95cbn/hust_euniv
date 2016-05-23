@@ -31,21 +31,22 @@
 				</div>
 				
 				<div class="well">
-					<h4>Bộ môn</h4>
-					<p class="value">${staffDepartmentName}</p>
-					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
-						<div id="default_department">
-							<form:select path="staffDepartment" class="form-control" name="staffDepartment">
-								<c:forEach items="${departmentList}" var="department">
-		                       		<option value="${department.department_Code}" <c:if test="${staffDepartmentCode eq department.department_Code}">selected</c:if>>${department.department_Name}</option>
-		                       	</c:forEach>
-		                    </form:select>
-		                    <form:errors path="staffDepartment" class="alert-danger"></form:errors>
-	                    </div>
-	                    <div id="department"></div>
-                    </div>
+					<h4>Email</h4>
+					<p class="value">${staffEmail}</p>
+					<div ${error == 1 ? "class='form'" : "class='form hidden'"}>
+						<form:input path="staffEmail" class="form-control" name="staffEmail" type="text" placeholder="Email" value="${staffEmail}"></form:input>
+	    				<form:errors path="staffEmail" class="alert-danger"></form:errors>
+    				</div>
 				</div>
 				
+				<div class="well">
+					<h4>Ngày sinh</h4>
+					<p class="value">${staffDateOfBirth}</p>
+					<div ${error == 1 ? "class='form'" : "class='form hidden'"}>
+						<form:input path="staffDateOfBirth" class="form-control" name="staffDateOfBirth" type="text" placeholder="Ngày sinh" value="${staffDateOfBirth}"></form:input>
+	    				<form:errors path="staffDateOfBirth" class="alert-danger"></form:errors>
+    				</div>
+				</div>
 				
 				<!-- /.col-lg-4 -->
 				<div class="well">
@@ -59,28 +60,37 @@
 	                    <form:errors path="staffGender" class="alert-danger"></form:errors>
 	                </div>
 				</div>
-				<div class="well">
-					<h4>Ngày sinh</h4>
-					<p class="value">${staffDateOfBirth}</p>
-					<div ${error == 1 ? "class='form'" : "class='form hidden'"}>
-						<form:input path="staffDateOfBirth" class="form-control" name="staffDateOfBirth" type="text" placeholder="Ngày sinh" value="${staffDateOfBirth}"></form:input>
-	    				<form:errors path="staffDateOfBirth" class="alert-danger"></form:errors>
-    				</div>
-				</div>
 			</div>
 			
 			<div class="col-lg-5">
-			
 				<div class="well">
 					<h4>Khoa/Viện</h4>
 					<p class="value">${staffFacultyName}</p>
 					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
 						<form:select path="staffFaculty" class="form-control" name="staffFaculty" onchange="showDepartment(this);">
+							<option <c:if test="${error eq 1}"> selected </c:if> value="">Chọn Khoa/Viện</option>
 							<c:forEach items="${facultyList}" var="faculty">
-	                       		<option value="${faculty.faculty_Code}" <c:if test="${staffFacultyCode eq faculty.faculty_Code}">selected</c:if>>${faculty.faculty_Name}</option>
+	                       		<option value="${faculty.faculty_Code}" <c:if test="${staffFacultyCode eq faculty.faculty_Code && error != 1}">selected</c:if>>${faculty.faculty_Name}</option>
 	                       	</c:forEach>
 	                    </form:select>
 	                    <form:errors path="staffFaculty" class="alert-danger"></form:errors>
+                    </div>
+				</div>
+				
+				<div class="well">
+					<h4>Bộ môn</h4>
+					<p class="value">${staffDepartmentName}</p>
+					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
+						<div id="default_department">
+							<form:select path="staffDepartment" class="form-control" name="staffDepartment">
+								<option value="">Chọn Bộ môn</option>
+								<c:forEach items="${departmentList}" var="department">
+		                       		<option value="${department.department_Code}" <c:if test="${staffDepartmentCode eq department.department_Code}">selected</c:if>>${department.department_Name}</option>
+		                       	</c:forEach>
+		                    </form:select>
+		                    <form:errors path="staffDepartment" class="alert-danger"></form:errors>
+	                    </div>
+	                    <div id="department"></div>
                     </div>
 				</div>
 				
@@ -101,14 +111,6 @@
                     </div>
 				</div>
 				
-				<div class="well">
-					<h4>Email</h4>
-					<p class="value">${staffEmail}</p>
-					<div ${error == 1 ? "class='form'" : "class='form hidden'"}>
-						<form:input path="staffEmail" class="form-control" name="staffEmail" type="text" placeholder="Email" value="${staffEmail}"></form:input>
-	    				<form:errors path="staffEmail" class="alert-danger"></form:errors>
-    				</div>
-				</div>
 				<div class="well">
 					<h4>Điện thoại</h4>
 					<p class="value">${staffPhone}</p>

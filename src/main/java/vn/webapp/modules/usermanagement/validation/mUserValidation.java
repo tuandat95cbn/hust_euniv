@@ -12,7 +12,7 @@ public class mUserValidation {
 	/** Set rules for fields*/
     @NotEmpty
     //@Pattern(regexp="^[0-9a-zA-Z_.@]+$")
-    @Size(min = 1, max = 100)
+    @Size(min = 6, max = 100)
     private String username;
     
     @NotEmpty

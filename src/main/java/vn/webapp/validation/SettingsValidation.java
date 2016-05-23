@@ -21,7 +21,7 @@ import vn.webapp.validation.FieldMatch;
  */
 
 @FieldMatch.List({
-    @FieldMatch(first = "password", second = "rpassword", errorMessage = "The password and confirm must be match"),
+    @FieldMatch(first = "password", second = "rpassword", errorMessage = "Trường Mật khẩu và Nhập lại mật khẩu không khớp nhau"),
 })
 public class SettingsValidation {
 

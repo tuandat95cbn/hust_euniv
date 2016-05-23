@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ĐHBK Hà Nội</title>
+    <title>Hệ thống hỗ trợ quản lý Khoa học và Công nghệ, ĐHBK Hà Nội</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="<c:url value="/assets/libs/bootstrap/dist/css/bootstrap.min.css" />" rel="stylesheet" type="text/css" media="all" />
@@ -47,7 +47,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">ĐHBK Hà Nội</a>
+        <a class="navbar-brand" href="#">Hệ thống hỗ trợ quản lý Khoa học và Công nghệ, ĐHBK Hà Nội</a>
     </div>
 </nav>
 
@@ -56,7 +56,7 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">ĐHBK Hà Nội</h3>
+                        <h3 class="panel-title">Thông tin đăng nhập</h3>
                     </div>
                     <div class="panel-body">
                         <form role="form" name="f" action="<c:url value="/j_spring_security_check" />" method="POST">

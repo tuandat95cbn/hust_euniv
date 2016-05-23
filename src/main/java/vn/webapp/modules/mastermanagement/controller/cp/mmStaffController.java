@@ -310,8 +310,7 @@ public class mmStaffController extends BaseWeb {
 	 model.put("staffEmail", staffEmail);
 	 model.put("staffName", staffName);
 	 model.put("staffPhone", staffPhone);
-	 
-	 model.put("departmentList", departmentList);
+	
 	 if(result.hasErrors()) {
 		 model.put("error", 1);
 		 return "mm.profile";
@@ -334,6 +333,7 @@ public class mmStaffController extends BaseWeb {
 	    	 //staffService.editAStaff(staff);
 	    	 model.put("staffCategory", staff.getStaffCategory().getStaff_Category_Name());
 	    	 model.put("staffDepartementCode", staffDepartment);
+	    	 model.put("departmentList", departmentList);
     	 }
     	 return "mm.profile";
      }

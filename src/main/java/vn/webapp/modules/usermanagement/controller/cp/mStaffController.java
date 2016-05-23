@@ -125,7 +125,6 @@ public class mStaffController extends BaseWeb {
 	  model.put("staffEmail", staffEmail);
 	  model.put("staffName", staffName);
 	  model.put("staffPhone", staffPhone);
-	  model.put("departmentList", departmentList);
 	  model.put("facultyList", facultyList);
 	  model.put("academicRankList", academicRankService.list());
 	  model.put("staffDateOfBirth", staffDateOfBirth);
@@ -156,6 +155,8 @@ public class mStaffController extends BaseWeb {
     	 		model.put("staffDepartmentName", staff.getDepartment().getDepartment_Name());
     	 		model.put("staffCategory", staff.getStaffCategory().getStaff_Category_Name());
     	 		model.put("academicRankName", academicRank.getAcademicRank_VNName());	  
+    	 		model.put("departmentList", departmentList);
+    	 		model.put("error", 0);
     	 	}
     	 	return "cp.profile";
 	  }

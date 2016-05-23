@@ -12,7 +12,7 @@
 	    <meta name="description" content="">
 	    <meta name="author" content="">
 	
-	    <title>ĐHBK Hà Nội</title>
+	    <title>Hệ thống hỗ trợ quản lý Khoa học và Công nghệ, ĐHBK Hà Nội</title>
 	    
 		<link rel="Shortcut Icon" href="<c:url value="/assets/img/icon.ico"/>" />
 		
