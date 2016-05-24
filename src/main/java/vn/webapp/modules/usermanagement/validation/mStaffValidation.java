@@ -1,5 +1,7 @@
 package vn.webapp.modules.usermanagement.validation;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -45,6 +47,7 @@ public class mStaffValidation {
 		this.staffEmail = staffEmail;
 	}
 
+	@Pattern(regexp="^[0-9 ]+$")
 	public String getStaffPhone() {
 		return staffPhone;
 	}

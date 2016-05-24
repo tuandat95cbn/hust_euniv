@@ -10,6 +10,11 @@
 <!-- DataTables Responsive CSS -->
 <link href="<c:url value="/assets/libs/datatables-responsive/css/dataTables.responsive.css" />" rel="stylesheet">
 
+<!-- Jquery UI CSS -->
+<link href="<c:url value="/assets/css/jquery-ui.css" />" rel="stylesheet">
+
+<!-- jQuery UI -->
+<script src="<c:url value="/assets/js/jquery-ui.js"/>"></script>
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
@@ -26,6 +31,7 @@
 					<p class="value">${staffName}</p>
 					<div ${error == 1 ? "class='form'" : "class='form hidden'"}>
 						<form:input path="staffName" class="form-control" name="staffName" type="text" placeholder="Name" value="${staffName}"></form:input>
+	    				<input type="hidden" value="${staffName}" name="staffOldName" />
 	    				<form:errors path="staffName" class="alert-danger"></form:errors>
     				</div>
 				</div>
@@ -35,6 +41,7 @@
 					<p class="value">${staffEmail}</p>
 					<div ${error == 1 ? "class='form'" : "class='form hidden'"}>
 						<form:input path="staffEmail" class="form-control" name="staffEmail" type="text" placeholder="Email" value="${staffEmail}"></form:input>
+	    				<input type="hidden" value="${staffEmail}" name="staffOldEmail" />
 	    				<form:errors path="staffEmail" class="alert-danger"></form:errors>
     				</div>
 				</div>
@@ -43,7 +50,7 @@
 					<h4>Ngày sinh</h4>
 					<p class="value">${staffDateOfBirth}</p>
 					<div ${error == 1 ? "class='form'" : "class='form hidden'"}>
-						<form:input path="staffDateOfBirth" class="form-control" name="staffDateOfBirth" type="text" placeholder="Ngày sinh" value="${staffDateOfBirth}"></form:input>
+						<form:input path="staffDateOfBirth" readonly="true" id="staffDateOfBirth" class="form-control" name="staffDateOfBirth" type="text" placeholder="Ngày sinh" value="${staffDateOfBirth}"></form:input>
 	    				<form:errors path="staffDateOfBirth" class="alert-danger"></form:errors>
     				</div>
 				</div>
@@ -68,11 +75,12 @@
 					<p class="value">${staffFacultyName}</p>
 					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
 						<form:select path="staffFaculty" class="form-control" name="staffFaculty" onchange="showDepartment(this);">
-							<option <c:if test="${error eq 1}"> selected </c:if> value="">Chọn Khoa/Viện</option>
+							<option <c:if test="${resetFaculty eq 1}"> selected </c:if> value="">Chọn Khoa/Viện</option>
 							<c:forEach items="${facultyList}" var="faculty">
-	                       		<option value="${faculty.faculty_Code}" <c:if test="${staffFacultyCode eq faculty.faculty_Code && error != 1}">selected</c:if>>${faculty.faculty_Name}</option>
+	                       		<option value="${faculty.faculty_Code}" <c:if test="${staffFacultyCode eq faculty.faculty_Code && resetFaculty != 1}">selected</c:if>>${faculty.faculty_Name}</option>
 	                       	</c:forEach>
 	                    </form:select>
+	                    <input type="hidden" value="${staffFacultyName}" name="staffOldFacultyName" />
 	                    <form:errors path="staffFaculty" class="alert-danger"></form:errors>
                     </div>
 				</div>
@@ -88,6 +96,7 @@
 		                       		<option value="${department.department_Code}" <c:if test="${staffDepartmentCode eq department.department_Code}">selected</c:if>>${department.department_Name}</option>
 		                       	</c:forEach>
 		                    </form:select>
+		                    <input type="hidden" value="${staffDepartmentName}" name="staffOldDepartmentName" />
 		                    <form:errors path="staffDepartment" class="alert-danger"></form:errors>
 	                    </div>
 	                    <div id="department"></div>
@@ -105,6 +114,7 @@
 	                       		<option value="${acaRank.academicRank_Code}" <c:if test="${academicRankCode eq acaRank.academicRank_Code}">selected</c:if>>${acaRank.academicRank_VNName}</option>
 	                       	</c:forEach>							
 	                    </form:select>
+	                    <input type="hidden" value="${academicRankName}" name="staffOldAcademicRank" />
 	                    <form:errors path="staffAcademicRank" class="alert-danger"></form:errors>
 	                    </div>
 	                    <div id="academicRank"></div>
@@ -117,6 +127,7 @@
 					<div ${error == 1 ? "class='form'" : "class='form hidden'"} >
 						<form:input path="staffPhone" class="form-control" name="staffPhone" type="text" placeholder="Phone" value="${staffPhone}"></form:input>
 	    				<form:errors path="staffPhone" class="alert-danger"></form:errors>
+	    				<input type="hidden" value="${staffPhone}" name="staffOldPhone" />
     				</div>
 				</div>
 				
@@ -140,6 +151,22 @@
 </div>
 <!-- /#page-wrapper -->
 <script type="text/javascript">
+	$(document).ready(function() {
+		$('button.cancel').click(function() {
+			window.location = baseUrl + "/cp/users.html";
+		});
+		
+		$('#staffDateOfBirth').datepicker({
+			maxDate : 0,
+			changeMonth: true,
+	        changeYear: true,
+	        showButtonPanel: true,
+	        dateFormat : 'dd/mm/yy',
+	        stepMonths: 12,
+	        yearRange: "-50:+0"
+	    });
+	});
+	
 	function showDepartment(sFaculty)
 	{
 		var sGeneratingUrl = "${baseUrl}/cpservice/loaddepartments.html";
@@ -167,12 +194,6 @@
 			$("#department").html( sDepartment );
 		}
 	}
-
-	$(document).ready(function() {
-		$('button.cancel').click(function() {
-			window.location = baseUrl + "/cp/users.html";
-		})
-	});
 	
 	function v_fEditTheStaffInfo(the_i_Mode)
     {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -102,7 +103,7 @@ public class mStaffController extends BaseWeb {
    * @return
    */
   @RequestMapping(value = "/edit-staff-detail", method = RequestMethod.POST)
-  public String saveStaffInfo(@Valid @ModelAttribute("staffFormEdit") mStaffValidation staffFormEdit, BindingResult result,  Map model, HttpSession session) {
+  public String saveStaffInfo(HttpServletRequest request, @Valid @ModelAttribute("staffFormEdit") mStaffValidation staffFormEdit, BindingResult result,  Map model, HttpSession session) {
 
 	  String userRole = session.getAttribute("currentUserRole").toString();
 	  String currentUserFacultyCode = session.getAttribute("currentUserFaculty").toString();
@@ -119,25 +120,42 @@ public class mStaffController extends BaseWeb {
 	  String staffDateOfBirth = staffFormEdit.getStaffDateOfBirth();
 	  String staffFacultyCode = staffFormEdit.getStaffFaculty();
 	  String staffAcademicRankCode = staffFormEdit.getStaffAcademicRank();
-		  
-	  System.out.println("mStaffController::saveStaffInfo, staffAcademicRankCode = " + staffAcademicRankCode);
+	  
+	  // Re-edit in case of error
+	  String staffOldFacultyName = request.getParameter("staffOldFacultyName");
+	  String staffOldDepartmentName = request.getParameter("staffOldDepartmentName");
+	  String staffOldAcademicRank = request.getParameter("staffOldAcademicRank");
+	  String staffOldName = request.getParameter("staffOldName");
+	  String staffOldEmail = request.getParameter("staffOldEmail");
+	  String staffOldPhone = request.getParameter("staffOldPhone");
 
-	  model.put("staffEmail", staffEmail);
-	  model.put("staffName", staffName);
-	  model.put("staffPhone", staffPhone);
+	  model.put("staffEmail", (!"".equals(staffEmail)) ? staffEmail : staffOldEmail);
+	  model.put("staffName", (!"".equals(staffName)) ? staffName : staffOldName);
+	  model.put("staffPhone", (!"".equals(staffPhone)) ? staffPhone : staffOldPhone);
 	  model.put("facultyList", facultyList);
 	  model.put("academicRankList", academicRankService.list());
 	  model.put("staffDateOfBirth", staffDateOfBirth);
 	  model.put("staffGender", staffGender);
 	  model.put("staffFacultyCode", staffFacultyCode);
 	  model.put("staffDepartmentCode", staffDepartment);
-	
+	  model.put("departmentList", departmentList);
+	  
 	  //mAcademicRank academicRank = academicRankService.loadByCode(staffAcademicRankCode);
 	  //model.put("academicRank", academicRankService.loadByCode(staffAcademicRankCode));
 	  model.put("academicRankCode", staffAcademicRankCode);
 	  //model.put("academicRankName", academicRank.getAcademicRank_VNName());
 	  
 	  if(result.hasErrors()) {
+		  String errorName = result.getFieldError().getField();
+		  if("staffFaculty".equals(errorName) || "staffDepartment".equals(errorName))
+		  {
+			  model.put("resetFaculty", 1);
+		  }else{
+			  model.put("resetFaculty", 0);
+		  }
+		  model.put("staffFacultyName", staffOldFacultyName);
+		  model.put("staffDepartmentName", staffOldDepartmentName);
+		  model.put("academicRankName", staffOldAcademicRank);
 		  model.put("error", 1);
 		  return "cp.profile";
 	  }else
@@ -154,9 +172,7 @@ public class mStaffController extends BaseWeb {
     	 		model.put("staffFacultyName", staff.getDepartment().getFaculty().getFaculty_Name());
     	 		model.put("staffDepartmentName", staff.getDepartment().getDepartment_Name());
     	 		model.put("staffCategory", staff.getStaffCategory().getStaff_Category_Name());
-    	 		model.put("academicRankName", academicRank.getAcademicRank_VNName());	  
-    	 		model.put("departmentList", departmentList);
-    	 		model.put("error", 0);
+    	 		model.put("academicRankName", academicRank.getAcademicRank_VNName());
     	 	}
     	 	return "cp.profile";
 	  }
