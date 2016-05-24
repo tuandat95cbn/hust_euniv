@@ -16,7 +16,8 @@
 
 <!-- jQuery UI -->
 <script src="<c:url value="/assets/js/jquery-ui.js"/>"></script>
-<script src="<c:url value="/assets/libs/ckeditor/ckeditor.js"/>"></script>	   
+<script src="<c:url value="/assets/libs/ckeditor/ckeditor.js"/>"></script>
+<script src="<c:url value="/assets/js/jquery.form-validator.js"/>"></script>	   
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
@@ -56,7 +57,7 @@
                                
                                <div class="form-group">
                                    <label for="projectName">Tên đề tài*</label>
-                                   <form:input path="projectName" class="form-control" name="projectName" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_Name}" placeholder="Project Name"></form:input>
+                                   <form:input path="projectName" class="form-control" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" name="projectName" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_Name}" placeholder="Project Name"></form:input>
    									<form:errors path="projectName" class="alert-danger"></form:errors>
                                </div>
                                
@@ -319,11 +320,13 @@
 	                           	</div>
 	                           	 <div class="form-group">
 	                                <label for="memberWorkingDays">Số ngày công*</label>
-	                                <input class="form-control" id="memberWorkingDays" value="0" placeholder="Working days" />
+	                                <input class="form-control" data-validation="custom" data-validation-optional="true" data-validation-regexp="^(^[1-9][0-9]?)$" data-validation-error-msg="Giá trị phải là số nguyên"  id="memberWorkingDays" value="" placeholder="Working days" />
+	                                <div id="error-workingdays"></div>
 	                             </div>
 	                             <div class="form-group">
 	                                <label for="taskBudget">Thành tiền*<i class="hint-text"> (VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></label>
-	                                <input class="form-control" id="taskBudget" value = "0" placeholder="Fee" />
+	                                <input class="form-control" data-validation="custom" data-validation-optional="true" data-validation-regexp="^(^[1-9][0-9]?)$" data-validation-error-msg="Giá trị phải là số nguyên" id="taskBudget" value = "" placeholder="Fee" />
+	                                <div id="error-budget"></div>
 	                             </div>
 	                        </div>
 	                        <!-- /.col-lg-6 (nested) -->
@@ -485,6 +488,9 @@ $(document).ready(function(){
         dateFormat : 'dd/mm/yy',
         stepMonths: 12}); */
 	
+     // Validate in client 
+     $.validate();
+        
 	$('#projectStartDate').datepicker({
 	      defaultDate: "+1w",
 	      changeMonth: true,
@@ -534,20 +540,26 @@ function v_fAddMember(){
 	var iBudget = $("#taskBudget").val();
 	
 	if(iMemberWorkingDays == '' || iMemberWorkingDays == null){
-		alert("Bạn phải nhập số ngày công"); return;
-	}
-	
-	if(!patt.test(iMemberWorkingDays)){
-		alert("Số ngày công " + iMemberWorkingDays + " sai định dạng: chỉ chấp nhận chữ số"); return;
+		$("div#error-workingdays").html(
+				"<span class='help-block form-error'>Trường thông tin này là bắt buộc</span>"		
+		);
+		return;
+	}else{
+		$("div#error-workingdays").html();
 	}
 	
 	if(iBudget == '' || iBudget == null){
-		alert("Bạn phải nhập thông tin Thành tiền"); return;
+		$("div#error-budget").html(
+				"<span class='help-block form-error'>Trường thông tin này là bắt buộc</span>"		
+		);
+		return;
+	}else{
+		$("div#error-budget").html();
 	}
 	
-	if(!patt.test(iBudget)){
-		alert("Thành tiền " + iBudget + " sai định dạng: chỉ chấp nhận chữ số"); return;
-	}
+	var isErrorExisted= $("#add-member").find("span.form-error").text();
+	if(isErrorExisted != '')
+		return;
 	
 	var sAddedMember = "";
 	if(sMemberName != "" && sMemberCode != "")
