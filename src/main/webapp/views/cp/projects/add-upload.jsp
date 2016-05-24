@@ -223,7 +223,7 @@
 	                                <input class="form-control" id="memberWorkingDays" value="0" placeholder="Working days" />
 	                             </div>
 	                             <div class="form-group">
-	                                <label for="taskBudget">*Thành tiền (VNĐ)</label>
+	                                <label for="taskBudget">*Thành tiền (VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</label>
 	                                <input class="form-control" id="taskBudget" value="0" placeholder="Fee" />
 	                             </div>
 	                        </div>
@@ -267,7 +267,7 @@
 	            
 	             <div class="panel panel-default">
 	             	<div class="form-group">
-                                    <label for="budgetMaterial">Kinh phí vật tư, vật liệu,… (VNĐ)</label>
+                                    <label for="budgetMaterial">Kinh phí vật tư, vật liệu,… (VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</label>
                                     <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" placeholder="Other Fees"></form:input>
    									<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
                     </div>
