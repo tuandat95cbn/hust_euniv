@@ -1035,7 +1035,7 @@ public class nProjectController extends BaseWeb {
 				.getList();
 		// Get list project research field
 		List<ProjectResearchField> projectResearchFields = projectResearchFieldService
-				.list();
+				.list(); 
 
 		// Put data back to view
 		model.put("staffList", staffList);
@@ -1058,7 +1058,7 @@ public class nProjectController extends BaseWeb {
 			String projectName = projectValid.getProjectName();
 			String startDate = projectValid.getProjectStartDate();
 			String endDate = projectValid.getProjectEndDate();
-			int budgetMaterial = projectValid.getBudgetMaterial();
+			int budgetMaterial = (!"".equals(projectValid.getBudgetMaterial())) ? Integer.parseInt(projectValid.getBudgetMaterial()) : 0;
 			String facultyAdd = projectValid.getFalcutyAddress();
 			String projectContent = projectValid.getProjectContent();
 			String projectResult = projectValid.getProjectResult();
@@ -2439,7 +2439,7 @@ public class nProjectController extends BaseWeb {
 			String projectContent = projectFormEdit.getProjectContent();
 			String projectMotivation = projectFormEdit.getProjectMotivation();
 			String projectResult = projectFormEdit.getProjectResult();
-			int budgetMaterial = projectFormEdit.getBudgetMaterial();
+			int budgetMaterial = (!"".equals(projectFormEdit.getBudgetMaterial())) ? Integer.parseInt(projectFormEdit.getBudgetMaterial()) : 0;
 			String projectCode = projectCallCode + projectEditId;
 			String startDate = projectFormEdit.getProjectStartDate();
 			String endDate = projectFormEdit.getProjectEndDate();
@@ -2556,6 +2556,8 @@ public class nProjectController extends BaseWeb {
 								 * File.separator + oldFileName);
 								 * if(oldFile.exists()) oldFile.delete(); } }
 								 */
+							}else{
+								fileName = project.getPROJ_SourceFile();
 							}
 						} catch (IOException e) {
 							System.out.println("Can not upload file");

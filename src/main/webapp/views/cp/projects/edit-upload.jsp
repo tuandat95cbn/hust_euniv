@@ -393,6 +393,12 @@
 		                                    </c:choose>
 	                                    </tbody>
 	                                </table>
+	                                
+	                                <div id="error-member" >
+		                                <c:if test="${projectTasks == null}">
+			                               <input type="text" style="opacity: 0.0;" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc"  />
+			                            </c:if>
+		                            </div>
 	                            </div>
 	                            <!-- /.table-responsive -->
 	                        </div>
@@ -411,9 +417,9 @@
 								<c:choose>
 									<c:when test="${projectEdit.PROJ_Locked1 != 1}">
 										<div class="form-group">
-							                              <label for="projectOtherFees">Kinh phí vật tư, vật liệu,… (VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</label>
-							                              <form:input path="budgetMaterial" class="form-control" name="budgetMaterial" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_BudgetMaterial}" placeholder="Other Fees"></form:input>
-													<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
+		                              	<label for="projectOtherFees">Kinh phí vật tư, vật liệu,… <i class="hint-text">(VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></label>
+		                              	<form:input path="budgetMaterial" data-validation="custom" data-validation-optional="true" data-validation-regexp="^(^[1-9][0-9]?)$" data-validation-error-msg="Giá trị phải là số nguyên" class="form-control" name="budgetMaterial" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_BudgetMaterial}" placeholder="Other Fees"></form:input>
+										<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
 							             </div>
 							       </c:when>
 							       <c:otherwise>
@@ -430,8 +436,8 @@
 							       </c:otherwise>
 							  </c:choose>
 							      <div class="form-group">
-							          <label for="projectFileUpload">Upload File thuyết minh đề tài*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;">(File size is 20 MB maximum)</i></label>
-							          <form:input path="projectFileUpload" name="projectFileUpload" type="file" placeholder="Source File"></form:input>
+							          <label for="projectFileUpload">Upload File thuyết minh đề tài*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;"> (File chỉ cho phép định dạng doc, docx, pdf, xls và xlsx. Kích thước không vượt quá 20MB)</i></label>
+							          <form:input path="projectFileUpload" name="projectFileUpload" type="file" placeholder="Source File" data-validation="extension size" data-validation-allowing="doc,docx,pdf,xls,xlsx" data-validation-error-msg-extension="Định dạng file không đúng" data-validation-error-msg-mime="Định dạng file không đúng" data-validation-max-size="20M" data-validation-error-msg-size="Kích thước file không được vượt quá 20MB"></form:input>
 									  <form:errors path="projectFileUpload" class="alert-danger"></form:errors>
 							      </div>
 	        				</div>
@@ -489,7 +495,9 @@ $(document).ready(function(){
         stepMonths: 12}); */
 	
      // Validate in client 
-     $.validate();
+     $.validate({
+    	modules : 'file'
+     });
         
 	$('#projectStartDate').datepicker({
 	      defaultDate: "+1w",
@@ -579,10 +587,45 @@ function v_fAddMember(){
 		sAddedMember 	+= "<td><button type='button' onclick='v_fClearMember(this);' class='btn btn-warning btn-xs' title='Hủy' >Clear</button></td>";
 		sAddedMember 	+= "</tr>";
 		$("table#projectMemberList tbody").append(sAddedMember);
+		
+		//Remove required block
+		$("#error-member").html("");
 	}
 }
 
 function v_fClearMember(the_oElement){
+	var oNextSiblings = $(the_oElement).parents("tr").siblings();
+	var sCurrentElement = "";
+	var sHtml = "";
+	var sErrorHtml = "";
+	if(oNextSiblings.length > 0)
+	{
+		$(oNextSiblings).each(function(){
+			if($(this).children('td:first').html() != null || $(this).children('td:first').html() != "undefined" || $(this).children('td:first').html() != undefined)
+			{
+				// Do nothing
+			}else{
+				sHtml = "<tr class='no-records-found'>";
+				sHtml += "<td colspan='6' align='center'>Chưa có thành viên</td>";
+				sHtml += "</tr>";
+				
+				sErrorHtml = "<input type='text' style='opacity: 0.0;' data-validation='required' data-validation-error-msg='Trường thông tin này là bắt buộc'  />";
+				
+				$("#error-member").html(sErrorHtml);
+				$("#projectMemberList tbody").html(sHtml);
+			}
+		});	
+	}else{
+		sHtml = "<tr class='no-records-found'>";
+		sHtml += "<td colspan='6' align='center'>Chưa có thành viên</td>";
+		sHtml += "</tr>";
+		
+		sErrorHtml = "<input type='text' style='opacity: 0.0;' data-validation='required' data-validation-error-msg='Trường thông tin này là bắt buộc'  />";
+		
+		$("#error-member").html(sErrorHtml);
+		$("#projectMemberList tbody").html(sHtml);
+	}
+	// Remove current row
 	$(the_oElement).parents("tr").remove();
 }
 

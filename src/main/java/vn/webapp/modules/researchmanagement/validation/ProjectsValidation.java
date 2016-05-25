@@ -47,8 +47,7 @@ public class ProjectsValidation{
 	
 	private String falcutyAddress;
 	
-	@NumberFormat(style = Style.NUMBER)
-   	private int budgetMaterial;
+   	private String budgetMaterial;
 	
 	private int projectMemberWorkingDays;
 	
@@ -190,14 +189,6 @@ public class ProjectsValidation{
 		this.projectMemberRole = projectMemberRole;
 	}
 
-	public int getProjectOtherFees() {
-		return budgetMaterial;
-	}
-
-	public void setProjectOtherFees(int budgetMaterial) {
-		this.budgetMaterial = budgetMaterial;
-	}
-
 	public int getProjectMemberWorkingDays() {
 		return projectMemberWorkingDays;
 	}
@@ -212,14 +203,6 @@ public class ProjectsValidation{
 
 	public void setFalcutyAddress(String falcutyAddress) {
 		this.falcutyAddress = falcutyAddress;
-	}
-
-	public int getBudgetMaterial() {
-		return budgetMaterial;
-	}
-
-	public void setBudgetMaterial(int budgetMaterial) {
-		this.budgetMaterial = budgetMaterial;
 	}
 
 	public String getCurrentProjectCode() {
@@ -244,5 +227,13 @@ public class ProjectsValidation{
 
 	public void setProjectFileUpload(MultipartFile projectFileUpload) {
 		this.projectFileUpload = projectFileUpload;
+	}
+
+	public String getBudgetMaterial() {
+		return budgetMaterial;
+	}
+
+	public void setBudgetMaterial(String budgetMaterial) {
+		this.budgetMaterial = budgetMaterial;
 	}
 }
