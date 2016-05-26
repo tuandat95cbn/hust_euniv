@@ -51,9 +51,16 @@
 										<td><c:out value="${project.PROJ_Name}"/></td>
 										<td><c:out value="${project.PROJ_PRJCall_Code}"/></td>
 										<td class="center">
-											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked1 == 1 ? "btn-warning" : "btn-info"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã gửi' : 'Chỉnh sửa'}">Chi tiết</button>
+											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked1 == 1 ? "btn-warning" : "btn-primary"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã gửi' : 'Chỉnh sửa'}">Chi tiết</button>
 											<br/>
-											<a href="<c:url value="${baseUrl}/cp/download-proposal/${project.PROJ_ID}.html"/>" title="Download file xác thực" class="btn btn-success btn-xs">Tải thuyết minh</a>
+											<c:choose>
+												<c:when test='${project.PROJ_SourceFile != ""}'>
+													<a href="<c:url value="${baseUrl}/cp/download-proposal/${project.PROJ_ID}.html"/>" title="Download file xác thực" class="btn btn-success btn-xs">Tải thuyết minh</a>
+												</c:when>
+												<c:otherwise>
+													<a href="#" style="cursor: default;"title="Đề tài không có file xác thực" class="btn btn-warning btn-xs">Tải thuyết minh</a>
+												</c:otherwise>
+											</c:choose>
 											<br/>
 											<button type="button" id="removeTopic" onclick="v_fRemoveAProject(${project.PROJ_ID});" class="btn btn-danger btn-xs" title="Xóa đề tài">Xoá</button>
 										</td>

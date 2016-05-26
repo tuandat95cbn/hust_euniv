@@ -436,7 +436,7 @@
 							       </c:otherwise>
 							  </c:choose>
 							      <div class="form-group">
-							          <label for="projectFileUpload">Upload File thuyết minh đề tài*<i style="font-weight: normal; font-size: .9em; color: #bdbdbd;"> (File chỉ cho phép định dạng doc, docx, pdf, xls và xlsx. Kích thước không vượt quá 20MB)</i></label>
+							          <label for="projectFileUpload">Upload File thuyết minh đề tài* <i class="hint-text"> (File chỉ cho phép định dạng doc, docx, pdf, xls và xlsx. Kích thước không vượt quá 20MB)</i></label>
 							          <form:input path="projectFileUpload" name="projectFileUpload" type="file" placeholder="Source File" data-validation="extension size" data-validation-allowing="doc,docx,pdf,xls,xlsx" data-validation-error-msg-extension="Định dạng file không đúng" data-validation-error-msg-mime="Định dạng file không đúng" data-validation-max-size="20M" data-validation-error-msg-size="Kích thước file không được vượt quá 20MB"></form:input>
 									  <form:errors path="projectFileUpload" class="alert-danger"></form:errors>
 							      </div>
