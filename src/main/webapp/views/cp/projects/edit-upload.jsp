@@ -296,10 +296,12 @@
 	                                <label for="projectMembers">Chọn Thành viên*</label>
 	                                <div id="staff">
 	                                <select class="form-control" id="members">
+	                                	<option value="">Chọn thành viên</option>
 	                                	<c:forEach items="${staffList}" var="aStaff">
 	                                    	<option value="${aStaff.staff_Code}">${aStaff.staff_Name}</option>
 	                                   	</c:forEach>
 	                                </select>
+	                                <div id="error-members"></div>
 	                                </div>
 	                            </div>
 		                        <div class="form-group">
@@ -313,7 +315,7 @@
 	                            
 	                            <button type="button" class="btn btn-primary btn-xs" onclick="v_fAddMember();">Thêm</button>
 	                        </div>
-	                        <div class="col-lg-6">
+	                        <div class="col-lg-6" id="edit-member">
 	                        	<div class="form-group">
 	                               	<label for="taskContent">Nội dung công việc</label>
 	                                <textarea id="taskContent" class="form-control"></textarea>
@@ -546,28 +548,38 @@ function v_fAddMember(){
 	var sTask = $("#taskContent").val();
 	var iMemberWorkingDays = $("#memberWorkingDays").val();
 	var iBudget = $("#taskBudget").val();
+	var isVerified = true;
+	
+	if(sMemberCode == "")
+	{
+		$("div#error-members").addClass("has-error").html("<span class='help-block form-error'>Trường thông tin này là bắt buộc</span>");	
+		isVerified &= false;
+	}else{
+		$("div#error-members").removeClass("has-error").html("");
+	}
 	
 	if(iMemberWorkingDays == '' || iMemberWorkingDays == null){
-		$("div#error-workingdays").html(
-				"<span class='help-block form-error'>Trường thông tin này là bắt buộc</span>"		
-		);
-		return;
+		$("div#error-workingdays").addClass("has-error").html("<span class='help-block form-error'>Trường thông tin này là bắt buộc</span>");
+		isVerified &= false;
 	}else{
-		$("div#error-workingdays").html();
+		$("div#error-workingdays").removeClass("has-error").html("");
 	}
 	
 	if(iBudget == '' || iBudget == null){
-		$("div#error-budget").html(
-				"<span class='help-block form-error'>Trường thông tin này là bắt buộc</span>"		
-		);
-		return;
+		$("div#error-budget").addClass("has-error").html("<span class='help-block form-error'>Trường thông tin này là bắt buộc</span>");
+		isVerified &= false;
 	}else{
-		$("div#error-budget").html();
+		$("div#error-budget").removeClass("has-error").html("");
 	}
 	
-	var isErrorExisted= $("#add-member").find("span.form-error").text();
-	if(isErrorExisted != '')
-		return;
+	var isErrorExisted= $("#edit-member").find("span.form-error").text();
+	if(isErrorExisted != ''){
+		isVerified &= false;
+	}
+	
+	if(isVerified == false){
+		return ;
+	}
 	
 	var sAddedMember = "";
 	if(sMemberName != "" && sMemberCode != "")

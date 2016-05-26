@@ -54,11 +54,11 @@
 											<button type="button" onclick="v_fViewDetailAProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked1 == 1 ? "btn-warning" : "btn-primary"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã gửi' : 'Chỉnh sửa'}">Chi tiết</button>
 											<br/>
 											<c:choose>
-												<c:when test='${project.PROJ_SourceFile != ""}'>
+												<c:when test='${project.PROJ_SourceFile != "" && project.PROJ_SourceFile != null}'>
 													<a href="<c:url value="${baseUrl}/cp/download-proposal/${project.PROJ_ID}.html"/>" title="Download file xác thực" class="btn btn-success btn-xs">Tải thuyết minh</a>
 												</c:when>
 												<c:otherwise>
-													<a href="#" style="cursor: default;"title="Đề tài không có file xác thực" class="btn btn-warning btn-xs">Tải thuyết minh</a>
+													<a href="#" style="cursor: default;"title="Đề tài không có file xác thực" class="btn btn-warning btn-xs disabled">Tải thuyết minh</a>
 												</c:otherwise>
 											</c:choose>
 											<br/>
