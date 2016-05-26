@@ -8,7 +8,7 @@
 					                http://www.springframework.org/schema/security/spring-security-3.2.xsd">
     <!-- Old -->
     <!--finish security -->
-    <http use-expressions="true">
+    <http auto-config="true" use-expressions="true">
     	<!-- For one role -->
     	<!-- <intercept-url pattern="/cp/users.html" access="hasRole('ROLE_ADMIN')" /> -->
         
@@ -17,7 +17,7 @@
                
         <form-login login-page="/cp/auth/login.html" 
         			default-target-url="/cp/home.html"
-                    authentication-failure-url="/cp/auth/login.html" />
+                    authentication-failure-url="/cp/auth/accessdenied.html" />
                                  
         <logout logout-success-url="/cp/auth/login.html" 
         		logout-url="/j_spring_security_logout" />

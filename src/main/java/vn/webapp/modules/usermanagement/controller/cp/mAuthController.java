@@ -16,8 +16,20 @@ public class mAuthController {
      * @return 
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(ModelMap model, 
-            HttpServletRequest request) {                       
+    public String login(ModelMap model, HttpServletRequest request) {                       
+        return "signin";
+    }
+    
+    /**
+     * 
+     * @param model
+     * @param request     
+     * @return 
+     */
+    @RequestMapping(value = "/accessdenied", method = RequestMethod.GET) 
+    public String loginFailed(ModelMap model, HttpServletRequest request) {
+    	model.put("failed", 1);
+    	model.put("message", "Thông tin đăng nhập không chính xác. Vui lòng thử lại !");
         return "signin";
     }
 }

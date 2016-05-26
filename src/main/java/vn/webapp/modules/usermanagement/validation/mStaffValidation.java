@@ -32,7 +32,7 @@ public class mStaffValidation {
     private String staffDateOfBirth;
 
 	public String getStaffName() {
-		return staffName;
+		return staffName; 
 	}
 
 	public void setStaffName(String staffName) {

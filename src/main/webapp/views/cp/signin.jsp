@@ -59,13 +59,18 @@
                         <h3 class="panel-title">Thông tin đăng nhập</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" name="f" action="<c:url value="/j_spring_security_check" />" method="POST">
+                        <form role="form" name="form" action="<c:url value="/j_spring_security_check" />" method="POST">
                             <fieldset>
+                            	<c:if test="${1 == failed}">
+							        <div class="has-error">
+							        	<span class='help-block form-error'>Thông tin đăng nhập không chính xác.<br> Vui lòng thử lại !</span>
+							        </div>
+							    </c:if>
                                 <div class="form-group">
-									<input class="form-control" type="text" name="j_username" id="j_username" value="${username}" placeholder="Tên đăng nhập" autofocus />
+									<input class="form-control" type="text" name="j_username"  value="" placeholder="Tên đăng nhập" autofocus />
                                 </div>
                                 <div class="form-group">
-                                	<input class="form-control" type="password" name="j_password" id="j_password" value="${param.j_password }" placeholder="Mật khẩu" />
+                                	<input class="form-control" type="password" name="j_password"  placeholder="Mật khẩu" />
                                 </div>
                                 <!-- <div class="checkbox">
                                     <label>
@@ -73,11 +78,7 @@
                                     </label>
                                 </div>-->
                                 <!-- Change this to a button or input when using this as a form -->
-                                
                                 <input class="btn btn-lg btn-success btn-block" name="submit" type="submit" value="Đăng nhập"/>
-                                <div class="error_ntc">
-			                        <b>${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}</b>
-			                    </div>
                             </fieldset>
                         </form>
                     </div>
