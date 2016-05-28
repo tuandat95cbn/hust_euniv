@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                        		<div class="form-group">
-                                   <label>Chọn đợt đề tài*</label>
+                                   <label>Chọn đợt đề tài<c:if test="${projectEdit.PROJ_Locked1 != 1}">*</c:if></label>
                                    <form:select path="projectCallCode" class="form-control" name="projectCallCode" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}">
                                    	<c:forEach items="${projectCallsList}" var="projectCall">
                                         <option value="${projectCall.PROJCALL_CODE}" <c:if test="${projectEdit.PROJ_PRJCall_Code == projectCall.PROJCALL_CODE}">selected</c:if> >${projectCall.PROJCALL_NAME}</option>
@@ -56,13 +56,13 @@
                                </div>
                                
                                <div class="form-group">
-                                   <label for="projectName">Tên đề tài*</label>
+                                   <label for="projectName">Tên đề tài<c:if test="${projectEdit.PROJ_Locked1 != 1}">*</c:if></label>
                                    <form:input path="projectName" class="form-control" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" name="projectName" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_Name}" placeholder="Project Name"></form:input>
    									<form:errors path="projectName" class="alert-danger"></form:errors>
                                </div>
                                
                                <div class="form-group">
-                                   <label>Đơn vị*</label>
+                                   <label>Đơn vị<c:if test="${projectEdit.PROJ_Locked1 != 1}">*</c:if></label>
                                    <form:select path="falcutyAddress" class="form-control" name="falcutyAddress" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}">
                                    	<c:forEach items="${listFaculty}" var="faculty">
                                        	<option value="${faculty.faculty_Code}" <c:if test="${faculty.faculty_Code == projectEdit.PROJ_FacultyCode}">selected</c:if> >${faculty.faculty_Name}</option>
@@ -115,13 +115,13 @@
    									<form:errors path="projectStartDate" class="alert-danger"></form:errors>
                                 </div> --%>
                                 <div class="form-group">
-                                   	<label for="projectStartDate">Thời gian bắt đầu <i class="hint-text"> (Click vào để chọn ngày bắt đầu)</i></label>
+                                   	<label for="projectStartDate">Thời gian bắt đầu <c:if test="${projectEdit.PROJ_Locked1 != 1}"><i class="hint-text"> (Click vào để chọn ngày bắt đầu)</i></c:if></label>
                                    	<form:input path="projectStartDate" class="form-control" readonly="true" name="projectStartDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_StartDate}" placeholder="Project Start Date"></form:input>
    									<form:errors path="projectStartDate" class="alert-danger"></form:errors>
                                 </div>
                                 
                                	<div class="form-group">
-                                   	<label for="projectEndDate">Thời gian hoàn thành <i class="hint-text"> (Click vào để chọn ngày kết thúc)</i></label>
+                                   	<label for="projectEndDate">Thời gian hoàn thành <c:if test="${projectEdit.PROJ_Locked1 != 1}"><i class="hint-text"> (Click vào để chọn ngày kết thúc)</i></c:if></label>
                                    	<form:input path="projectEndDate" class="form-control" readonly="true" name="projectEndDate" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_EndDate}" placeholder="Project End Date"></form:input>
    									<form:errors path="projectEndDate" class="alert-danger"></form:errors>
                                	</div>
@@ -238,13 +238,13 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Chọn lĩnh vực đề tài* <i class="hint-text">(Giữ phím Ctrl và nhấn chuột để chọn nhiều lĩnh vực nghiên cứu)</i>
+                    Chọn lĩnh vực đề tài<c:if test="${projectEdit.PROJ_Locked1 != 1}">* <i class="hint-text">(Giữ phím Ctrl và nhấn chuột để chọn nhiều lĩnh vực nghiên cứu)</i></c:if>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-12">
                                <div class="form-group">
-                                   <select multiple="true" size="5" class="form-control" id="projectResearchFieldCodeList" name="projectResearchFieldCodeList" <c:if test="${projectEdit.PROJ_Locked1 == 1}"> disabled </c:if>>
+                                   <select multiple="true" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" size="5" class="form-control" id="projectResearchFieldCodeList" name="projectResearchFieldCodeList" <c:if test="${projectEdit.PROJ_Locked1 == 1}"> disabled </c:if>>
                                    	<%-- <c:forEach items="${projectResearchFieldList}" var="proj_field">
                                         <option value="${proj_field.PRJRSHF_Code}">${proj_field.PRJRSHF_Name}</option>
                                     </c:forEach> --%>
@@ -321,12 +321,12 @@
 	                                <textarea id="taskContent" class="form-control"></textarea>
 	                           	</div>
 	                           	 <div class="form-group">
-	                                <label for="memberWorkingDays">Số ngày công*</label>
+	                                <label for="memberWorkingDays">Số ngày công<c:if test="${projectEdit.PROJ_Locked1 != 1}">*</c:if></label>
 	                                <input class="form-control" data-validation="custom" data-validation-optional="true" data-validation-regexp="^[0-9]*[1-9][0-9]*$" data-validation-error-msg="Giá trị phải là số nguyên"  id="memberWorkingDays" value="" placeholder="Working days" />
 	                                <div id="error-workingdays"></div>
 	                             </div>
 	                             <div class="form-group">
-	                                <label for="taskBudget">Thành tiền*<i class="hint-text"> (VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></label>
+	                                <label for="taskBudget">Thành tiền<c:if test="${projectEdit.PROJ_Locked1 != 1}">*<i class="hint-text"> (VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></c:if></label>
 	                                <input class="form-control" data-validation="custom" data-validation-optional="true" data-validation-regexp="^[0-9]*[1-9][0-9]*$" data-validation-error-msg="Giá trị phải là số nguyên" id="taskBudget" value = "" placeholder="Fee" />
 	                                <div id="error-budget"></div>
 	                             </div>
@@ -427,7 +427,7 @@
 							       <c:otherwise>
 							          <div class="panel panel-default">
 							             <div class="panel-heading">
-							                 <label for="projectResult">Kinh phí vật tư, vật liệu,… <i class="hint-text">(VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></label>
+							                 <label for="projectResult">Kinh phí vật tư, vật liệu,… <c:if test="${projectEdit.PROJ_Locked1 != 1}"><i class="hint-text">(VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></c:if></label>
 							             </div>
 							             <div class="panel-body">
 							                  <div class="tab-content">
@@ -439,7 +439,7 @@
 							  </c:choose>
 							  <c:if test="${projectEdit.PROJ_Locked1 != 1}">
 							      <div class="form-group">
-							          <label for="projectFileUpload">Upload File thuyết minh đề tài* <i class="hint-text"> (File chỉ cho phép định dạng doc, docx, pdf, xls và xlsx. Kích thước không vượt quá 20MB)</i></label>
+							          <label for="projectFileUpload">Upload File thuyết minh đề tài<c:if test="${projectEdit.PROJ_Locked1 != 1}">* <i class="hint-text"> (File chỉ cho phép định dạng doc, docx, pdf, xls và xlsx. Kích thước không vượt quá 20MB)</i></c:if></label>
 							          <form:input path="projectFileUpload" name="projectFileUpload" type="file" placeholder="Source File" data-validation="extension size" data-validation-allowing="doc,docx,pdf,xls,xlsx" data-validation-error-msg-extension="Định dạng file không đúng" data-validation-error-msg-mime="Định dạng file không đúng" data-validation-max-size="20M" data-validation-error-msg-size="Kích thước file không được vượt quá 20MB"></form:input>
 									  <form:errors path="projectFileUpload" class="alert-danger"></form:errors>
 							      </div>
@@ -450,9 +450,10 @@
 	        </div>
 	        
 	        <div class="panel">
+	        	<div id="send-it"></div>
 	        	<!-- Buttons -->
                	 <c:if test="${projectEdit.PROJ_Locked1 != 1}">
-                 	<button type="submit" class="btn btn-primary">Lưu</button>
+                 	<button type="submit" id="execute-save" class="btn btn-primary">Lưu</button>
                  </c:if>
                  <input type="hidden" value="${projectEdit.PROJ_ID}" name="projectId" id="projectId" />
                  <input type="hidden" value="${projectEdit.PROJ_Code}" name="currentProjectCode" id="currentProjectCode" />
@@ -461,7 +462,7 @@
 				 <%-- <button type="reset" class="btn btn-success" onclick="v_fGeneratePDF(${projectEdit.PROJ_ID})">View PDF</button> --%>
                  <%-- </c:if> --%>
                  <c:if test="${projectEdit.PROJ_Locked1 != 1}">
-                 	<button type="reset" class="btn btn-danger" onclick="v_fSendProject(${projectEdit.PROJ_ID})">Gửi đề xuất đề tài</button>
+                 	<button type="submit" id="execute-send" class="btn btn-danger" >Gửi đề xuất đề tài</button>
                  </c:if>
 	        </div>
             <!-- /.panel -->
@@ -480,6 +481,10 @@ $('.textarea').each( function() {
 });
  
 $(document).ready(function(){
+	// Reset send it
+	$("#send-it").html("");
+	
+	// cancel
 	$('button.cancel').click(function(){
 		window.location = baseUrl+"/cp/list-projects.html";
 	});
@@ -522,6 +527,19 @@ $(document).ready(function(){
 	     }
  	});
 	
+	$("#execute-send").click(function(){
+		if(confirm("Chú ý ! Đề tài sau khi gửi sẽ không thể chỉnh sửa được.")){
+			var sendHtml = "<input type='hidden' value='1' name='sendIt' />";
+			$("#send-it").html(sendHtml);
+			//$("#submit").click();
+			//var sSubmitProjectUrl = baseUrl + "/cp/sendproject/"+iProjectId+".html";
+			//window.location = sSubmitProjectUrl;
+	    }
+	    else{
+	    	$("#send-it").html("");
+	        return false;
+	    }
+	});
 });
 
 function v_fGeneratePDF(iProjectId){
@@ -531,10 +549,13 @@ function v_fGeneratePDF(iProjectId){
 
 function v_fSendProject(iProjectId){
 	if(confirm("Chú ý ! Đề tài sau khi gửi sẽ không thể chỉnh sửa được.")){
-		var sSubmitProjectUrl = baseUrl + "/cp/sendproject/"+iProjectId+".html";
-		window.location = sSubmitProjectUrl;
+		var sendHtml = "<input type='hidden' value='1' name='sendIt' />";
+		$("#send-it").html(sendHtml);
+		//var sSubmitProjectUrl = baseUrl + "/cp/sendproject/"+iProjectId+".html";
+		//window.location = sSubmitProjectUrl;
     }
     else{
+    	$("#send-it").html("");
         return false;
     }
 }
