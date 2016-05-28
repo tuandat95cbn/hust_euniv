@@ -322,12 +322,12 @@
 	                           	</div>
 	                           	 <div class="form-group">
 	                                <label for="memberWorkingDays">Số ngày công*</label>
-	                                <input class="form-control" data-validation="custom" data-validation-optional="true" data-validation-regexp="^(^[1-9][0-9]?)$" data-validation-error-msg="Giá trị phải là số nguyên"  id="memberWorkingDays" value="" placeholder="Working days" />
+	                                <input class="form-control" data-validation="custom" data-validation-optional="true" data-validation-regexp="^[0-9]*[1-9][0-9]*$" data-validation-error-msg="Giá trị phải là số nguyên"  id="memberWorkingDays" value="" placeholder="Working days" />
 	                                <div id="error-workingdays"></div>
 	                             </div>
 	                             <div class="form-group">
 	                                <label for="taskBudget">Thành tiền*<i class="hint-text"> (VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></label>
-	                                <input class="form-control" data-validation="custom" data-validation-optional="true" data-validation-regexp="^(^[1-9][0-9]?)$" data-validation-error-msg="Giá trị phải là số nguyên" id="taskBudget" value = "" placeholder="Fee" />
+	                                <input class="form-control" data-validation="custom" data-validation-optional="true" data-validation-regexp="^[0-9]*[1-9][0-9]*$" data-validation-error-msg="Giá trị phải là số nguyên" id="taskBudget" value = "" placeholder="Fee" />
 	                                <div id="error-budget"></div>
 	                             </div>
 	                        </div>
@@ -420,7 +420,7 @@
 									<c:when test="${projectEdit.PROJ_Locked1 != 1}">
 										<div class="form-group">
 		                              	<label for="projectOtherFees">Kinh phí vật tư, vật liệu,… <i class="hint-text">(VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></label>
-		                              	<form:input path="budgetMaterial" data-validation="custom" data-validation-optional="true" data-validation-regexp="^(^[1-9][0-9]?)$" data-validation-error-msg="Giá trị phải là số nguyên" class="form-control" name="budgetMaterial" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_BudgetMaterial}" placeholder="Other Fees"></form:input>
+		                              	<form:input path="budgetMaterial" data-validation="custom" data-validation-optional="true" data-validation-regexp="^[0-9]*[1-9][0-9]*$" data-validation-error-msg="Giá trị phải là số nguyên" class="form-control" name="budgetMaterial" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_BudgetMaterial}" placeholder="Other Fees"></form:input>
 										<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
 							             </div>
 							       </c:when>
