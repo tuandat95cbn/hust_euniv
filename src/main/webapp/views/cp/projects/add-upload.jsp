@@ -63,8 +63,8 @@
                                     <label>Đơn vị*</label>
                                     <form:select path="falcutyAddress" class="form-control" name="falcutyAddress">
                                     	<c:forEach items="${listFaculty}" var="faculty">
-                                        	<option value="${faculty.faculty_Code}">${faculty.faculty_Name}</option>
-                                      		</c:forEach>
+                                        	<option value="${faculty.faculty_Code}" <c:if test='${ currentUserFaculty != "" && faculty.faculty_Code == currentUserFaculty}'>selected="selected"</c:if> >${faculty.faculty_Name}</option>
+                                      	</c:forEach>
                                     </form:select>
                                     <form:errors path="falcutyAddress" class="alert-danger"></form:errors>
                                 </div>

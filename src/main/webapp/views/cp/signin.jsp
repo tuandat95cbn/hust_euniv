@@ -63,7 +63,7 @@
                             <fieldset>
                             	<c:if test="${1 == failed}">
 							        <div class="has-error">
-							        	<span class='help-block form-error'>Thông tin đăng nhập không chính xác.<br> Vui lòng thử lại !</span>
+							        	<span class='help-block form-error' style="text-align: center;">Thông tin đăng nhập không chính xác.<br> Vui lòng thử lại !</span>
 							        </div>
 							    </c:if>
                                 <div class="form-group">

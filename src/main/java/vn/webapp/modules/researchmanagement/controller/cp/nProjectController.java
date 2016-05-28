@@ -943,23 +943,22 @@ public class nProjectController extends BaseWeb {
 	@RequestMapping(value = "/add-a-newproject", method = RequestMethod.GET)
 	public String addAProject(ModelMap model, HttpSession session) {
 		// Get list of project calls
-		List<mProjectCalls> projectCallsList = projectCallsService
-				.loadProjectCallsList();
+		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
 		// Get list faculty
 		List<mFaculty> listFaculty = facultyService.loadFacultyList();
 		// Get list staffs
 		List<mStaff> staffList = staffService.listStaffs();
 		// Get list member roles
-		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService
-				.getList();
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
 
-		List<ProjectResearchField> projectResearchFields = projectResearchFieldService
-				.list();
-
+		List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
+		String currentStaffName = session.getAttribute("currentstaffName").toString();
+		String currentUserName = (!"".equals(currentStaffName)) ? currentStaffName : session.getAttribute("currentUserName").toString();
+		String currentUserFaculty = session.getAttribute("currentUserFaculty").toString();
 		// Put data back to view
 		model.put("staffList", staffList);
-		model.put("currentUserName", session.getAttribute("currentUserName")
-				.toString());
+		model.put("currentUserName", currentUserName);
+		model.put("currentUserFaculty", currentUserFaculty);
 		model.put("memberRolesList", memberRolesList);
 		model.put("listFaculty", listFaculty);
 		model.put("projectCallsList", projectCallsList);
@@ -972,8 +971,7 @@ public class nProjectController extends BaseWeb {
 
 	private String establishFileNameStoredDataBase(String filename) {
 		Date currentDate = new Date();
-		SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat(
-				"HHmmssddMMyyyy");
+		SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
 		String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
 		return "thuyetminh-" + sCurrentDate + filename;
 
@@ -1585,8 +1583,7 @@ public class nProjectController extends BaseWeb {
 	 * @return
 	 */
 	@RequestMapping("/aprojectdetail/{id}")
-	public String editAProject(ModelMap model,
-			@PathVariable("id") int projectId, HttpSession session) {
+	public String editAProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
 
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
@@ -1594,37 +1591,20 @@ public class nProjectController extends BaseWeb {
 		// threadService.loadAProjectByIdAndUserCode(userRole,userCode,
 		// projectId);
 		Projects project = threadService.loadProjectsById(projectId);
-
-		System.out.println(name() + "::editAProject, userCode = " + userCode
-				+ ", userRole = " + userRole);
 		// Get list of project calls
-		List<mProjectCalls> projectCallsList = projectCallsService
-				.loadProjectCallsList();
+		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
 		// Get list faculty
 		List<mFaculty> listFaculty = facultyService.loadFacultyList();
 		// Get list staffs
 		List<mStaff> staffList = staffService.listStaffs();
 		// Get list member roles
-		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService
-				.getList();
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
 
 		model.put("projects", status);
 		if (project != null) {
-			List<ProjectsProjectResearchField> selectedProjectResearchFields = threadService
-					.loadProjectsProjectResearchFieldListByProjectCode(project
-							.getPROJ_Code());
-			List<ProjectTasks> projectTasks = projectTasksService
-					.loadAProjectTaskByProjectCode(project.getPROJ_Code());
-			List<ProjectResearchField> projectResearchFields = projectResearchFieldService
-					.list();
-
-			System.out.println(name() + "::editAProject, userCode = "
-					+ userCode + ", userRole = " + userRole
-					+ ", projectResearchField.sz = "
-					+ projectResearchFields.size()
-					+ ", selectdeProjectResearchField.sz = "
-					+ selectedProjectResearchFields.size());
-
+			List<ProjectsProjectResearchField> selectedProjectResearchFields = threadService.loadProjectsProjectResearchFieldListByProjectCode(project.getPROJ_Code());
+			List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
+			List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
 			List<List<String>> listResearchFields = new ArrayList<>();
 			for (ProjectResearchField projectResearchField : projectResearchFields) {
 				List<String> tempList = new ArrayList<>();
@@ -1674,8 +1654,7 @@ public class nProjectController extends BaseWeb {
 			model.put("projectId", projectId);
 			model.put("projectTasks", projectTasks);
 			model.put("staffList", staffList);
-			model.put("currentUserName", session
-					.getAttribute("currentUserName").toString());
+			model.put("currentUserName", session.getAttribute("currentUserName").toString());
 			model.put("memberRolesList", memberRolesList);
 			model.put("listFaculty", listFaculty);
 			model.put("projectCallsList", projectCallsList);

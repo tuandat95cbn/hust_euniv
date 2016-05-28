@@ -66,7 +66,7 @@
                                    <form:select path="falcutyAddress" class="form-control" name="falcutyAddress" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}">
                                    	<c:forEach items="${listFaculty}" var="faculty">
                                        	<option value="${faculty.faculty_Code}" <c:if test="${faculty.faculty_Code == projectEdit.PROJ_FacultyCode}">selected</c:if> >${faculty.faculty_Name}</option>
-                                     		</c:forEach>
+                                    </c:forEach>
                                    </form:select>
                                    <form:errors path="falcutyAddress" class="alert-danger"></form:errors>
                                </div>
@@ -244,7 +244,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                                <div class="form-group">
-                                   <select multiple="true" size="5" class="form-control" id="projectResearchFieldCodeList" name="projectResearchFieldCodeList" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}">
+                                   <select multiple="true" size="5" class="form-control" id="projectResearchFieldCodeList" name="projectResearchFieldCodeList" <c:if test="${projectEdit.PROJ_Locked1 == 1}"> disabled </c:if>>
                                    	<%-- <c:forEach items="${projectResearchFieldList}" var="proj_field">
                                         <option value="${proj_field.PRJRSHF_Code}">${proj_field.PRJRSHF_Name}</option>
                                     </c:forEach> --%>
