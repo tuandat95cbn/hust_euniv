@@ -420,7 +420,7 @@
 									<c:when test="${projectEdit.PROJ_Locked1 != 1}">
 										<div class="form-group">
 		                              	<label for="projectOtherFees">Kinh phí vật tư, vật liệu,… <i class="hint-text">(VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></label>
-		                              	<form:input path="budgetMaterial" data-validation="custom" data-validation-optional="true" data-validation-regexp="^[0-9]*[1-9][0-9]*$" data-validation-error-msg="Giá trị phải là số nguyên" class="form-control" name="budgetMaterial" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_BudgetMaterial}" placeholder="Other Fees"></form:input>
+		                              	<form:input path="budgetMaterial" data-validation="custom" data-validation-optional="true" data-validation-regexp="^[0-9]*[1-9][0-9]*$" data-validation-error-msg="Giá trị phải là số nguyên" class="form-control" name="budgetMaterial" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value='${projectEdit.PROJ_BudgetMaterial != 0 ? projectEdit.PROJ_BudgetMaterial : ""}' placeholder="Other Fees"></form:input>
 										<form:errors path="budgetMaterial" class="alert-danger"></form:errors>
 							             </div>
 							       </c:when>
