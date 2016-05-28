@@ -62,7 +62,9 @@
 												</c:otherwise>
 											</c:choose>
 											<br/>
-											<button type="button" id="removeTopic" onclick="v_fRemoveAProject(${project.PROJ_ID});" class="btn btn-danger btn-xs" title="Xóa đề tài">Xoá</button>
+											<c:if test="${project.PROJ_Locked1 == 0}">
+												<button type="button" id="removeTopic" onclick="v_fRemoveAProject(${project.PROJ_ID});" class="btn btn-danger btn-xs" title="Xóa đề tài">Xoá</button>
+											</c:if>
 										</td>
 									</tr>
 								</c:forEach>
