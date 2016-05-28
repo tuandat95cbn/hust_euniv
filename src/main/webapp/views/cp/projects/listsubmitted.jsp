@@ -44,10 +44,10 @@
 									<tr class="gradeX">
 										<c:set var="count" value="${count + 1}" scope="page"/> 
 										<td><c:out value="${count}"/></td>
-										<td><c:out value="${project.PROJ_Name}"/></td>
-										<td><c:out value="${project.PROJ_PRJCall_Code}"/></td>
+										<td><c:out value="${project[0]}"/></td>
+										<td><c:out value="${project[1]}"/></td>
 										<td class="center">
-											<button type="button" onclick="v_fViewDetailASumittedProject(${project.PROJ_ID});" class="btn ${project.PROJ_Locked2 == 1 ? "btn-warning" : "btn-info"} btn-xs" title="${project.PROJ_Locked1 == 1 ? 'Đã nộp' : 'Chỉnh sửa'}">Xem</button>
+											<button type="button" <c:if test='${project[5] == "" || project[5] == null}'>disabled</c:if> onclick="v_fViewDetailASumittedProject(${project[2]});" class="btn ${project[4] == 1 ? "btn-warning" : "btn-primary"} btn-xs" title="${project[3] == 1 ? 'Đã nộp' : 'Chỉnh sửa'}">Xem</button>
 										</td>
 									</tr>
 								</c:forEach>

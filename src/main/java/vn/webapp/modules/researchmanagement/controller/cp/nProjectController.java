@@ -638,23 +638,36 @@ public class nProjectController extends BaseWeb {
 	public String getListSubmittedProjects(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-		String facultyCode = session.getAttribute("currentUserFaculty")
-				.toString();
-		System.out.println(name()
-				+ "::getListSubmittedProjects, facultyCode = " + facultyCode);
+		String facultyCode = session.getAttribute("currentUserFaculty").toString();
 
 		// List<Projects> projectsList =
 		// threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
 		// List<Projects> projectsList =
 		// threadService.loadProjectsListByStaff(userRole, userCode);
-		double t0 = System.currentTimeMillis();
-		List<Projects> projectsList = listProjectsWithFullInformation(userRole,
-				userCode);
-		double t = System.currentTimeMillis() - t0;
-		t = t * 0.001;
-		System.out.println(name() + "::getListSubmittedProjects, time = " + t);
+		List<Projects> projectsList = listProjectsWithFullInformation(userRole, userCode);
+		List<List<String>> listProjects = new ArrayList<>();
+		if(projectsList != null)
+		{
+			for (Projects project : projectsList) {
+				List<String> tempPro = new ArrayList<>();
+				List<DetailCommentSubmittedProjects> detailsCommentsOfSubmittedProjectsByProjectCode = commentsOfSubmittedProjectsService.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(project.getPROJ_Code());
+				
+				tempPro.add(project.getPROJ_Name());
+				tempPro.add(project.getPROJ_PRJCall_Code());
+				tempPro.add(Integer.toString(project.getPROJ_ID()));
+				tempPro.add(Integer.toString(project.getPROJ_Locked1()));
+				tempPro.add(Integer.toString(project.getPROJ_Locked2()));
+				if(detailsCommentsOfSubmittedProjectsByProjectCode != null && detailsCommentsOfSubmittedProjectsByProjectCode.size() > 0){
+					tempPro.add("SHOWED");
+				}else{
+					tempPro.add("");
+				}
+				
+				listProjects.add(tempPro);
+			}
+		}
 		
-		model.put("projectsList", projectsList);
+		model.put("projectsList", listProjects);
 		model.put("projects", status);
 		return "cp.submittedProjectsList";
 	}
@@ -1381,8 +1394,7 @@ public class nProjectController extends BaseWeb {
 	 * @return
 	 */
 	@RequestMapping("/submitedprojectdetail/{id}")
-	public String editASubmittedProject(ModelMap model,
-			@PathVariable("id") int projectId, HttpSession session) {
+	public String editASubmittedProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
 
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
@@ -1394,11 +1406,9 @@ public class nProjectController extends BaseWeb {
 		List<mProjectStatus> statuses = projectStatusService.list();
 		HashMap<String, String> mStatusCode2Name = new HashMap<String, String>();
 		for (mProjectStatus pt : statuses) {
-			mStatusCode2Name.put(pt.getPROJSTAT_Code(),
-					pt.getPROJSTAT_Description());
+			mStatusCode2Name.put(pt.getPROJSTAT_Code(),pt.getPROJSTAT_Description());
 		}
-		project.setPROJ_Status_Code(mStatusCode2Name.get(project
-				.getPROJ_Status_Code()));
+		project.setPROJ_Status_Code(mStatusCode2Name.get(project.getPROJ_Status_Code()));
 
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
@@ -1406,32 +1416,23 @@ public class nProjectController extends BaseWeb {
 			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
 		}
 
-		List<DetailCommentSubmittedProjects> detailCommentSubmittedProjects = commentsOfSubmittedProjectsService
-				.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(project
-						.getPROJ_Code());
+		List<DetailCommentSubmittedProjects> detailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(project.getPROJ_Code());
 		for (DetailCommentSubmittedProjects cm : detailCommentSubmittedProjects) {
-			cm.setCMTSUBPRJ_StaffCode(mStaffCode2Name.get(cm
-					.getCMTSUBPRJ_StaffCode()));
+			cm.setCMTSUBPRJ_StaffCode(mStaffCode2Name.get(cm.getCMTSUBPRJ_StaffCode()));
 		}
 		// Get list of project calls
-		List<mProjectCalls> projectCallsList = projectCallsService
-				.loadProjectCallsList();
+		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
 
 		// Put data back to view
 		model.put("projectCallsList", projectCallsList);
-		model.put("detailCommentSubmittedProjectsList",
-				detailCommentSubmittedProjects);
+		model.put("detailCommentSubmittedProjectsList",detailCommentSubmittedProjects);
 		model.put("projects", status);
 		if (project != null) {
 			// Get summary comment
 			String summaryComment = "";
-			mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService
-					.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(
-							userCode, project.getPROJ_Code());
+			mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, project.getPROJ_Code());
 			if (commentsOfSubmittedProject != null) {
-				summaryComment = (!"".equals(commentsOfSubmittedProject
-						.getCOMPROJ_COMMENT())) ? commentsOfSubmittedProject
-						.getCOMPROJ_COMMENT() : "";
+				summaryComment = (!"".equals(commentsOfSubmittedProject.getCOMPROJ_COMMENT())) ? commentsOfSubmittedProject.getCOMPROJ_COMMENT() : "";
 			}
 
 			// Put journal list and topic category to view

@@ -57,8 +57,16 @@
                                
                                <div class="form-group">
                                    <label for="projectName">Tên đề tài<c:if test="${projectEdit.PROJ_Locked1 != 1}">*</c:if></label>
-                                   <form:input path="projectName" class="form-control" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" name="projectName" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_Name}" placeholder="Project Name"></form:input>
-   									<form:errors path="projectName" class="alert-danger"></form:errors>
+                                   <c:choose>
+                                   		<c:when test="${projectEdit.PROJ_Locked1 == 1}">
+                                   			<textarea class="form-control textarea" disabled>${projectEdit.PROJ_Name}</textarea>
+                                   		</c:when>
+                                   		<c:otherwise>
+                                   			<form:input path="projectName" class="form-control" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" name="projectName" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}" value="${projectEdit.PROJ_Name}" placeholder="Project Name"></form:input>
+   											<form:errors path="projectName" class="alert-danger"></form:errors>
+                                   		</c:otherwise>
+                                   </c:choose>
+                                   	
                                </div>
                                
                                <div class="form-group">
