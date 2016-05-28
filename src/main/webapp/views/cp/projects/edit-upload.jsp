@@ -63,7 +63,7 @@
                                
                                <div class="form-group">
                                    <label>Đơn vị*</label>
-                                   <form:select path="falcutyAddress" class="form-control" name="falcutyAddress">
+                                   <form:select path="falcutyAddress" class="form-control" name="falcutyAddress" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}">
                                    	<c:forEach items="${listFaculty}" var="faculty">
                                        	<option value="${faculty.faculty_Code}" <c:if test="${faculty.faculty_Code == projectEdit.PROJ_FacultyCode}">selected</c:if> >${faculty.faculty_Name}</option>
                                      		</c:forEach>
@@ -244,7 +244,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                                <div class="form-group">
-                                   <select multiple="true" size="5" class="form-control" id="projectResearchFieldCodeList" name="projectResearchFieldCodeList">
+                                   <select multiple="true" size="5" class="form-control" id="projectResearchFieldCodeList" name="projectResearchFieldCodeList" disabled="${projectEdit.PROJ_Locked1 == 1 ? 'true' : ''}">
                                    	<%-- <c:forEach items="${projectResearchFieldList}" var="proj_field">
                                         <option value="${proj_field.PRJRSHF_Code}">${proj_field.PRJRSHF_Name}</option>
                                     </c:forEach> --%>
@@ -427,7 +427,7 @@
 							       <c:otherwise>
 							          <div class="panel panel-default">
 							             <div class="panel-heading">
-							                 <label for="projectResult">Kinh phí vật tư, vật liệu,… (VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</label>
+							                 <label for="projectResult">Kinh phí vật tư, vật liệu,… <i class="hint-text">(VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></label>
 							             </div>
 							             <div class="panel-body">
 							                  <div class="tab-content">
@@ -437,11 +437,13 @@
 							           </div>
 							       </c:otherwise>
 							  </c:choose>
+							  <c:if test="${projectEdit.PROJ_Locked1 != 1}">
 							      <div class="form-group">
 							          <label for="projectFileUpload">Upload File thuyết minh đề tài* <i class="hint-text"> (File chỉ cho phép định dạng doc, docx, pdf, xls và xlsx. Kích thước không vượt quá 20MB)</i></label>
 							          <form:input path="projectFileUpload" name="projectFileUpload" type="file" placeholder="Source File" data-validation="extension size" data-validation-allowing="doc,docx,pdf,xls,xlsx" data-validation-error-msg-extension="Định dạng file không đúng" data-validation-error-msg-mime="Định dạng file không đúng" data-validation-max-size="20M" data-validation-error-msg-size="Kích thước file không được vượt quá 20MB"></form:input>
 									  <form:errors path="projectFileUpload" class="alert-danger"></form:errors>
 							      </div>
+							  </c:if>
 	        				</div>
 	        			</div>
 	        	</div>
