@@ -7,17 +7,33 @@
         <put-attribute name="header" value="/views/cp/widget/header.jsp" />
         <!-- <put-attribute name="mainmenu" value="/views/cp/widget/mainmenu.jsp" /> -->                                       
         <put-attribute name="footer" value="/views/cp/widget/footer.jsp" />        
-    </definition> 
+    </definition>
+
+    <!-- Error -->    
+    <definition name="layout.errorBase" template="/views/cp/layout/errorBase.jsp">           
+    </definition>  
     
+    <!-- 404 -->
+    <definition name="cp.notFound404" extends="layout.errorBase">
+        <put-attribute name="title" value="404 Not found." />                                 
+        <put-attribute name="content" value="/views/cp/404.jsp" />
+    </definition>
+    
+    <definition name="cp.400" extends="layout.errorBase">
+        <put-attribute name="title" value="404 Not found." />                                 
+        <put-attribute name="content" value="/views/cp/400.jsp" />
+    </definition>
+    
+    <!-- 500 -->
+    <definition name="cp.500" extends="layout.errorBase">
+        <put-attribute name="title" value="500 Internal Server Error." />                                 
+        <put-attribute name="content" value="/views/cp/500.jsp" />
+    </definition>
+    
+    <!-- Actions -->    
     <definition name="cp.actions" extends="layout.base">
         <put-attribute name="title" value="Execute actions" />                                 
         <put-attribute name="content" value="/views/cp/actions/actions.jsp" />
-    </definition>
-    
-    <!-- 404 -->
-    <definition name="cp.notFound404" extends="layout.base">
-        <put-attribute name="title" value="404 Not found." />                                 
-        <put-attribute name="content" value="/views/cp/404.jsp" />
     </definition>
     
     <!-- Testing -->
