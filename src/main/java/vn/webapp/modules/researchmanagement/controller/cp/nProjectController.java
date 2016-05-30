@@ -572,7 +572,8 @@ public class nProjectController extends BaseWeb {
 				setFacultyCode.add(facultyCode);
 			}
 		} else {
-			String userFacultyCode = session.getAttribute("facultyCode").toString();
+			String userFacultyCode = session.getAttribute("facultyCode")
+					.toString();
 			setFacultyCode.add(userFacultyCode);
 		}
 
@@ -638,35 +639,40 @@ public class nProjectController extends BaseWeb {
 	public String getListSubmittedProjects(ModelMap model, HttpSession session) {
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-		String facultyCode = session.getAttribute("currentUserFaculty").toString();
+		String facultyCode = session.getAttribute("currentUserFaculty")
+				.toString();
 
 		// List<Projects> projectsList =
 		// threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
 		// List<Projects> projectsList =
 		// threadService.loadProjectsListByStaff(userRole, userCode);
-		List<Projects> projectsList = listProjectsWithFullInformation(userRole, userCode);
+		List<Projects> projectsList = listProjectsWithFullInformation(userRole,
+				userCode);
 		List<List<String>> listProjects = new ArrayList<>();
-		if(projectsList != null)
-		{
+		if (projectsList != null) {
 			for (Projects project : projectsList) {
 				List<String> tempPro = new ArrayList<>();
-				List<DetailCommentSubmittedProjects> detailsCommentsOfSubmittedProjectsByProjectCode = commentsOfSubmittedProjectsService.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(project.getPROJ_Code());
-				
+				List<DetailCommentSubmittedProjects> detailsCommentsOfSubmittedProjectsByProjectCode = commentsOfSubmittedProjectsService
+						.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(project
+								.getPROJ_Code());
+
 				tempPro.add(project.getPROJ_Name());
 				tempPro.add(project.getPROJ_PRJCall_Code());
 				tempPro.add(Integer.toString(project.getPROJ_ID()));
 				tempPro.add(Integer.toString(project.getPROJ_Locked1()));
 				tempPro.add(Integer.toString(project.getPROJ_Locked2()));
-				if(detailsCommentsOfSubmittedProjectsByProjectCode != null && detailsCommentsOfSubmittedProjectsByProjectCode.size() > 0){
+				if (detailsCommentsOfSubmittedProjectsByProjectCode != null
+						&& detailsCommentsOfSubmittedProjectsByProjectCode
+								.size() > 0) {
 					tempPro.add("SHOWED");
-				}else{
+				} else {
 					tempPro.add("");
 				}
-				
+
 				listProjects.add(tempPro);
 			}
 		}
-		
+
 		model.put("projectsList", listProjects);
 		model.put("projects", status);
 		return "cp.submittedProjectsList";
@@ -704,13 +710,12 @@ public class nProjectController extends BaseWeb {
 		List<Projects> projectsList = threadService.loadProjectsListByStaff(
 				userRole, userCode);
 		/*
-		List<mStaff> staffs = staffService.listStaffs();
-		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
-		for (mStaff st : staffs) {
-			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
-		}
-		*/
-		
+		 * List<mStaff> staffs = staffService.listStaffs(); HashMap<String,
+		 * String> mStaffCode2Name = new HashMap<String, String>(); for (mStaff
+		 * st : staffs) { mStaffCode2Name.put(st.getStaff_Code(),
+		 * st.getStaff_Name()); }
+		 */
+
 		HashMap<String, String> mProjectCallCode2Name = new HashMap<String, String>();
 		List<mProjectCalls> projectCalls = projectCallsService
 				.loadProjectCallsList();
@@ -721,12 +726,12 @@ public class nProjectController extends BaseWeb {
 
 		for (Projects p : projectsList) {
 			mStaff st = staffService.loadStaffByUserCode(p.getPROJ_User_Code());
-			//p.setPROJ_User_Code(mStaffCode2Name.get(p.getPROJ_User_Code()));
+			// p.setPROJ_User_Code(mStaffCode2Name.get(p.getPROJ_User_Code()));
 			p.setPROJ_User_Code(st.getStaff_Name());
 			p.setPROJ_PRJCall_Code(mProjectCallCode2Name.get(p
 					.getPROJ_PRJCall_Code()));
 		}
-		
+
 		return projectsList;
 	}
 
@@ -956,18 +961,24 @@ public class nProjectController extends BaseWeb {
 	@RequestMapping(value = "/add-a-newproject", method = RequestMethod.GET)
 	public String addAProject(ModelMap model, HttpSession session) {
 		// Get list of project calls
-		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+		List<mProjectCalls> projectCallsList = projectCallsService
+				.loadProjectCallsList();
 		// Get list faculty
 		List<mFaculty> listFaculty = facultyService.loadFacultyList();
 		// Get list staffs
 		List<mStaff> staffList = staffService.listStaffs();
 		// Get list member roles
-		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService
+				.getList();
 
-		List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
-		String currentStaffName = session.getAttribute("currentstaffName").toString();
-		String currentUserName = (!"".equals(currentStaffName)) ? currentStaffName : session.getAttribute("currentUserName").toString();
-		String currentUserFaculty = session.getAttribute("currentUserFaculty").toString();
+		List<ProjectResearchField> projectResearchFields = projectResearchFieldService
+				.list();
+		String currentStaffName = session.getAttribute("currentstaffName")
+				.toString();
+		String currentUserName = (!"".equals(currentStaffName)) ? currentStaffName
+				: session.getAttribute("currentUserName").toString();
+		String currentUserFaculty = session.getAttribute("currentUserFaculty")
+				.toString();
 		// Put data back to view
 		model.put("staffList", staffList);
 		model.put("currentUserName", currentUserName);
@@ -984,7 +995,8 @@ public class nProjectController extends BaseWeb {
 
 	private String establishFileNameStoredDataBase(String filename) {
 		Date currentDate = new Date();
-		SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
+		SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat(
+				"HHmmssddMMyyyy");
 		String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
 		return "thuyetminh-" + sCurrentDate + filename;
 
@@ -995,8 +1007,10 @@ public class nProjectController extends BaseWeb {
 
 		String uploadDir = "/uploads" + File.separator + userCode
 				+ File.separator + "projects";
-		String realPathtoUploads = request.getServletContext().getRealPath(
-				uploadDir);
+		// String realPathtoUploads =
+		// request.getServletContext().getRealPath(uploadDir);
+		String realPathtoUploads = PROJECT_ROOT_DIR + File.separator + userCode
+				+ File.separator + "projects";
 		File dir = new File(realPathtoUploads);
 		if (!dir.exists()) {
 			dir.mkdirs();
@@ -1005,7 +1019,10 @@ public class nProjectController extends BaseWeb {
 		// Set name file
 		// filename =
 		// establishFileNameStoredDataBase(filename);//"thuyetminh-"+sCurrentDate+filename;
-		String fullfilename = dir.getAbsolutePath() + File.separator + filename;
+		String fullfilename = realPathtoUploads + File.separator + filename;
+		System.out.println(name()
+				+ "::establishFullFileNameForDownload, PROJECT_ROOT_DIR = "
+				+ PROJECT_ROOT_DIR + ", fullfilename = " + fullfilename);
 		return fullfilename;
 	}
 
@@ -1014,18 +1031,27 @@ public class nProjectController extends BaseWeb {
 
 		String uploadDir = "/uploads" + File.separator + userCode
 				+ File.separator + "projects";
-		String realPathtoUploads = request.getServletContext().getRealPath(
-				uploadDir);
+		// String realPathtoUploads =
+		// request.getServletContext().getRealPath(uploadDir);
+		String realPathtoUploads = PROJECT_ROOT_DIR + File.separator + userCode
+				+ File.separator + "projects";
+
 		File dir = new File(realPathtoUploads);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		System.out.println(name()
-				+ "::establishFullFileNameForDownload(filename = " + filename
-				+ ", dir = " + dir.getAbsolutePath());
+		// System.out.println(name()
+		// + "::establishFullFileNameForDownload(filename = " + filename
+		// + ", dir = " + dir.getAbsolutePath());
 		// Set name file
 		// filename = "thuyetminh-"+sCurrentDate+filename;
-		String fullfilename = dir.getAbsolutePath() + File.separator + filename;
+		// String fullfilename = dir.getAbsolutePath() + File.separator +
+		// filename;
+		String fullfilename = realPathtoUploads + File.separator + filename;
+
+		System.out.println(name()
+				+ "::establishFullFileNameForDownload, PROJECT_ROOT_DIR = "
+				+ PROJECT_ROOT_DIR + ", fullfilename = " + fullfilename);
 		return fullfilename;
 	}
 
@@ -1046,7 +1072,7 @@ public class nProjectController extends BaseWeb {
 				.getList();
 		// Get list project research field
 		List<ProjectResearchField> projectResearchFields = projectResearchFieldService
-				.list(); 
+				.list();
 
 		// Put data back to view
 		model.put("staffList", staffList);
@@ -1069,7 +1095,8 @@ public class nProjectController extends BaseWeb {
 			String projectName = projectValid.getProjectName();
 			String startDate = projectValid.getProjectStartDate();
 			String endDate = projectValid.getProjectEndDate();
-			int budgetMaterial = (!"".equals(projectValid.getBudgetMaterial())) ? Integer.parseInt(projectValid.getBudgetMaterial()) : 0;
+			int budgetMaterial = (!"".equals(projectValid.getBudgetMaterial())) ? Integer
+					.parseInt(projectValid.getBudgetMaterial()) : 0;
 			String facultyAdd = projectValid.getFalcutyAddress();
 			String projectContent = projectValid.getProjectContent();
 			String projectResult = projectValid.getProjectResult();
@@ -1394,7 +1421,8 @@ public class nProjectController extends BaseWeb {
 	 * @return
 	 */
 	@RequestMapping("/submitedprojectdetail/{id}")
-	public String editASubmittedProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+	public String editASubmittedProject(ModelMap model,
+			@PathVariable("id") int projectId, HttpSession session) {
 
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
@@ -1406,9 +1434,11 @@ public class nProjectController extends BaseWeb {
 		List<mProjectStatus> statuses = projectStatusService.list();
 		HashMap<String, String> mStatusCode2Name = new HashMap<String, String>();
 		for (mProjectStatus pt : statuses) {
-			mStatusCode2Name.put(pt.getPROJSTAT_Code(),pt.getPROJSTAT_Description());
+			mStatusCode2Name.put(pt.getPROJSTAT_Code(),
+					pt.getPROJSTAT_Description());
 		}
-		project.setPROJ_Status_Code(mStatusCode2Name.get(project.getPROJ_Status_Code()));
+		project.setPROJ_Status_Code(mStatusCode2Name.get(project
+				.getPROJ_Status_Code()));
 
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
@@ -1416,23 +1446,32 @@ public class nProjectController extends BaseWeb {
 			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
 		}
 
-		List<DetailCommentSubmittedProjects> detailCommentSubmittedProjects = commentsOfSubmittedProjectsService.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(project.getPROJ_Code());
+		List<DetailCommentSubmittedProjects> detailCommentSubmittedProjects = commentsOfSubmittedProjectsService
+				.loadListDetailsCommentsOfSubmittedProjectsByProjectCode(project
+						.getPROJ_Code());
 		for (DetailCommentSubmittedProjects cm : detailCommentSubmittedProjects) {
-			cm.setCMTSUBPRJ_StaffCode(mStaffCode2Name.get(cm.getCMTSUBPRJ_StaffCode()));
+			cm.setCMTSUBPRJ_StaffCode(mStaffCode2Name.get(cm
+					.getCMTSUBPRJ_StaffCode()));
 		}
 		// Get list of project calls
-		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+		List<mProjectCalls> projectCallsList = projectCallsService
+				.loadProjectCallsList();
 
 		// Put data back to view
 		model.put("projectCallsList", projectCallsList);
-		model.put("detailCommentSubmittedProjectsList",detailCommentSubmittedProjects);
+		model.put("detailCommentSubmittedProjectsList",
+				detailCommentSubmittedProjects);
 		model.put("projects", status);
 		if (project != null) {
 			// Get summary comment
 			String summaryComment = "";
-			mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(userCode, project.getPROJ_Code());
+			mCommentsOfSubmittedProjects commentsOfSubmittedProject = commentsOfSubmittedProjectsService
+					.loadCommentsOfSubmittedProjectByStaffCodeProjectCode(
+							userCode, project.getPROJ_Code());
 			if (commentsOfSubmittedProject != null) {
-				summaryComment = (!"".equals(commentsOfSubmittedProject.getCOMPROJ_COMMENT())) ? commentsOfSubmittedProject.getCOMPROJ_COMMENT() : "";
+				summaryComment = (!"".equals(commentsOfSubmittedProject
+						.getCOMPROJ_COMMENT())) ? commentsOfSubmittedProject
+						.getCOMPROJ_COMMENT() : "";
 			}
 
 			// Put journal list and topic category to view
@@ -1584,7 +1623,8 @@ public class nProjectController extends BaseWeb {
 	 * @return
 	 */
 	@RequestMapping("/aprojectdetail/{id}")
-	public String editAProject(ModelMap model, @PathVariable("id") int projectId, HttpSession session) {
+	public String editAProject(ModelMap model,
+			@PathVariable("id") int projectId, HttpSession session) {
 
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
@@ -1593,24 +1633,33 @@ public class nProjectController extends BaseWeb {
 		// projectId);
 		Projects project = threadService.loadProjectsById(projectId);
 		// Get list of project calls
-		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+		List<mProjectCalls> projectCallsList = projectCallsService
+				.loadProjectCallsList();
 		// Get list faculty
 		List<mFaculty> listFaculty = facultyService.loadFacultyList();
 		// Get list staffs
 		List<mStaff> staffList = staffService.listStaffs();
 		// Get list member roles
-		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
-		String currentStaffName = session.getAttribute("currentstaffName").toString();
-		String currentUserName = (!"".equals(currentStaffName)) ? currentStaffName : session.getAttribute("currentUserName").toString();
-		String currentUserFaculty = session.getAttribute("currentUserFaculty").toString();
-		
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService
+				.getList();
+		String currentStaffName = session.getAttribute("currentstaffName")
+				.toString();
+		String currentUserName = (!"".equals(currentStaffName)) ? currentStaffName
+				: session.getAttribute("currentUserName").toString();
+		String currentUserFaculty = session.getAttribute("currentUserFaculty")
+				.toString();
+
 		model.put("projects", status);
 		if (project != null) {
-			List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
-			
+			List<ProjectTasks> projectTasks = projectTasksService
+					.loadAProjectTaskByProjectCode(project.getPROJ_Code());
+
 			// Prepare research List
-			List<ProjectsProjectResearchField> selectedProjectResearchFields = threadService.loadProjectsProjectResearchFieldListByProjectCode(project.getPROJ_Code());
-			List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
+			List<ProjectsProjectResearchField> selectedProjectResearchFields = threadService
+					.loadProjectsProjectResearchFieldListByProjectCode(project
+							.getPROJ_Code());
+			List<ProjectResearchField> projectResearchFields = projectResearchFieldService
+					.list();
 			List<List<String>> listResearchFields = new ArrayList<>();
 			for (ProjectResearchField projectResearchField : projectResearchFields) {
 				List<String> tempList = new ArrayList<>();
@@ -1618,7 +1667,9 @@ public class nProjectController extends BaseWeb {
 				tempList.add(projectResearchField.getPRJRSHF_Name());
 				boolean selected = false;
 				for (ProjectsProjectResearchField selectedProjectResearchField : selectedProjectResearchFields) {
-					if (projectResearchField.getPRJRSHF_Code().equals(selectedProjectResearchField.getPRJPRJRSHF_PRJRSHFCode())) {
+					if (projectResearchField.getPRJRSHF_Code().equals(
+							selectedProjectResearchField
+									.getPRJPRJRSHF_PRJRSHFCode())) {
 						selected = true;
 						break;
 					}
@@ -1940,7 +1991,7 @@ public class nProjectController extends BaseWeb {
 
 				// Replace project code
 				sProjectCode = "				";// HAVE NOT generate automatically project
-										// code, use BLANK
+				// code, use BLANK
 				sTemplateContent = FileUtil.sReplaceAll(sTemplateContent,
 						"___PROJECT_CODE___", sProjectCode);
 
@@ -2385,16 +2436,22 @@ public class nProjectController extends BaseWeb {
 	 * @return
 	 */
 	@RequestMapping(value = "/edit-a-project", method = RequestMethod.POST)
-	public String updateAProject(HttpServletRequest request, @Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit, BindingResult result, Map model, HttpSession session) {
+	public String updateAProject(
+			HttpServletRequest request,
+			@Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit,
+			BindingResult result, Map model, HttpSession session) {
 		String userRole = session.getAttribute("currentUserRole").toString();
 		String userCode = session.getAttribute("currentUserCode").toString();
 		int projectEditId = projectFormEdit.getProjectId();
-		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,userCode, projectEditId);
-		if(project != null)
-		{
+		Projects project = threadService.loadAProjectByIdAndUserCode(userRole,
+				userCode, projectEditId);
+		if (project != null) {
 			// Prepare research List
-			List<ProjectsProjectResearchField> selectedProjectResearchFields = threadService.loadProjectsProjectResearchFieldListByProjectCode(project.getPROJ_Code());
-			List<ProjectResearchField> projectResearchFields = projectResearchFieldService.list();
+			List<ProjectsProjectResearchField> selectedProjectResearchFields = threadService
+					.loadProjectsProjectResearchFieldListByProjectCode(project
+							.getPROJ_Code());
+			List<ProjectResearchField> projectResearchFields = projectResearchFieldService
+					.list();
 			List<List<String>> listResearchFields = new ArrayList<>();
 			for (ProjectResearchField projectResearchField : projectResearchFields) {
 				List<String> tempList = new ArrayList<>();
@@ -2402,7 +2459,9 @@ public class nProjectController extends BaseWeb {
 				tempList.add(projectResearchField.getPRJRSHF_Name());
 				boolean selected = false;
 				for (ProjectsProjectResearchField selectedProjectResearchField : selectedProjectResearchFields) {
-					if (projectResearchField.getPRJRSHF_Code().equals(selectedProjectResearchField.getPRJPRJRSHF_PRJRSHFCode())) {
+					if (projectResearchField.getPRJRSHF_Code().equals(
+							selectedProjectResearchField
+									.getPRJPRJRSHF_PRJRSHFCode())) {
 						selected = true;
 						break;
 					}
@@ -2416,16 +2475,19 @@ public class nProjectController extends BaseWeb {
 			}
 			model.put("listResearchFields", listResearchFields);
 		}
-		List<ProjectTasks> projectTasks = projectTasksService.loadAProjectTaskByProjectCode(project.getPROJ_Code());
+		List<ProjectTasks> projectTasks = projectTasksService
+				.loadAProjectTaskByProjectCode(project.getPROJ_Code());
 		// Get list faculty
 		List<mFaculty> listFaculty = facultyService.loadFacultyList();
 		// Get list staffs
 		List<mStaff> staffList = staffService.listStaffs();
 		// Get list of project calls
-		List<mProjectCalls> projectCallsList = projectCallsService.loadProjectCallsList();
+		List<mProjectCalls> projectCallsList = projectCallsService
+				.loadProjectCallsList();
 		// Get list member roles
-		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService.getList();
-		
+		List<ProjectParticipationRoles> memberRolesList = projectParticipationRolesService
+				.getList();
+
 		// Put data back to view
 		model.put("memberRolesList", memberRolesList);
 		model.put("listFaculty", listFaculty);
@@ -2443,7 +2505,9 @@ public class nProjectController extends BaseWeb {
 			String projectContent = projectFormEdit.getProjectContent();
 			String projectMotivation = projectFormEdit.getProjectMotivation();
 			String projectResult = projectFormEdit.getProjectResult();
-			int budgetMaterial = (!"".equals(projectFormEdit.getBudgetMaterial())) ? Integer.parseInt(projectFormEdit.getBudgetMaterial()) : 0;
+			int budgetMaterial = (!"".equals(projectFormEdit
+					.getBudgetMaterial())) ? Integer.parseInt(projectFormEdit
+					.getBudgetMaterial()) : 0;
 			String projectCode = projectCallCode + projectEditId;
 			String startDate = projectFormEdit.getProjectStartDate();
 			String endDate = projectFormEdit.getProjectEndDate();
@@ -2454,82 +2518,111 @@ public class nProjectController extends BaseWeb {
 			boolean bEditSumittedProject = false;
 			String projectResearchFieldCode = "";
 
-			mProjectCalls selectedProjectCall = projectCallsService.loadAProjectCallByCode(projectCallCode);
-			if(project != null){
-				if ("OPEN_FOR_SUBMISSION".equals(selectedProjectCall.getPROJCALL_STATUS())) {
+			mProjectCalls selectedProjectCall = projectCallsService
+					.loadAProjectCallByCode(projectCallCode);
+			if (project != null) {
+				if ("OPEN_FOR_SUBMISSION".equals(selectedProjectCall
+						.getPROJCALL_STATUS())) {
 					try {
 						// Members
-						String[] projectMembers = request.getParameterValues("projectMembers");
-						String[] projectMemberRole = request.getParameterValues("projectMemberRole");
-						String[] projectMemberTasks = request.getParameterValues("projectMemberTasks");
-						String[] projectMemberWorkingDays = request.getParameterValues("projectMemberWorkingDays");
-						String[] projectMemberBudget = request.getParameterValues("projectMemberBudget");
-						String[] projectResearchFieldCodeList = request.getParameterValues("projectResearchFieldCodeList");
-	
+						String[] projectMembers = request
+								.getParameterValues("projectMembers");
+						String[] projectMemberRole = request
+								.getParameterValues("projectMemberRole");
+						String[] projectMemberTasks = request
+								.getParameterValues("projectMemberTasks");
+						String[] projectMemberWorkingDays = request
+								.getParameterValues("projectMemberWorkingDays");
+						String[] projectMemberBudget = request
+								.getParameterValues("projectMemberBudget");
+						String[] projectResearchFieldCodeList = request
+								.getParameterValues("projectResearchFieldCodeList");
+
 						int totalBudget = budgetMaterial;
 						for (int i = 0; i < projectMemberBudget.length; i++) {
-							totalBudget += Integer.valueOf(projectMemberBudget[i]);
+							totalBudget += Integer
+									.valueOf(projectMemberBudget[i]);
 						}
-	
+
 						if (projectMembers.length > 0) {
 							/**
 							 * Uploading file
 							 */
-							MultipartFile paperSourceUploadFile = projectFormEdit.getProjectFileUpload();
-							String fileName = paperSourceUploadFile.getOriginalFilename();
+							MultipartFile paperSourceUploadFile = projectFormEdit
+									.getProjectFileUpload();
+							String fileName = paperSourceUploadFile
+									.getOriginalFilename();
 							String paperSourceUploadFileSrc = "";
 							try {
 								// Creating Date in java with today's date.
 								/*
-								 * Date currentDate = new Date(); SimpleDateFormat
-								 * dateformatyyyyMMdd = new
+								 * Date currentDate = new Date();
+								 * SimpleDateFormat dateformatyyyyMMdd = new
 								 * SimpleDateFormat("HHmmssddMMyyyy"); String
 								 * sCurrentDate =
 								 * dateformatyyyyMMdd.format(currentDate);
 								 */
-	
+
 								byte[] bytes = paperSourceUploadFile.getBytes();
-								String uploadDir = "/uploads" + File.separator+ userCode + File.separator + "projects";
-								String realPathtoUploads = request.getServletContext().getRealPath(uploadDir);
+								String uploadDir = "/uploads" + File.separator
+										+ userCode + File.separator
+										+ "projects";
+								String realPathtoUploads = request
+										.getServletContext().getRealPath(
+												uploadDir);
 								File dir = new File(realPathtoUploads);
 								if (!dir.exists()) {
 									dir.mkdirs();
 								}
-	
+
 								if (!"".equals(fileName)) {
 									// Set name file
 									// fileName =
 									// "thuyetminh-"+sCurrentDate+fileName;
 									// File serverFile = new
-									// File(dir.getAbsolutePath()+ File.separator +
+									// File(dir.getAbsolutePath()+
+									// File.separator +
 									// fileName);
-	
+
 									// delete old file
-									String oldFullFileName = establishFullFileNameForDownload(project.getPROJ_SourceFile(), userCode,request);
+									String oldFullFileName = establishFullFileNameForDownload(
+											project.getPROJ_SourceFile(),
+											userCode, request);
 									File deleteFile = new File(oldFullFileName);
-	
-									fileName = establishFileNameStoredDataBase(fileName);
-									String fullFileName = establishFullFileNameForUpload(fileName, userCode, request);
-									File serverFile = new File(fullFileName);
+									if(deleteFile.exists()){
+										deleteFile.delete();
+									}
 									
+									fileName = establishFileNameStoredDataBase(fileName);
+									String fullFileName = establishFullFileNameForUpload(
+											fileName, userCode, request);
+									File serverFile = new File(fullFileName);
+
 									// Save data into file
-									BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+									BufferedOutputStream stream = new BufferedOutputStream(
+											new FileOutputStream(serverFile));
 									stream.write(bytes);
 									stream.close();
-	
+
 									/*
 									 * already done above // Set name for saving
-									 * into DB if(serverFile.exists()){
-									 * paperSourceUploadFileSrc = fileName;
-									 * 
-									 * String oldFileName =
-									 * project.getPROJ_SourceFile();
-									 * if(!"".equals(oldFileName)){ File oldFile =
-									 * new File(dir.getAbsolutePath()+
-									 * File.separator + oldFileName);
-									 * if(oldFile.exists()) oldFile.delete(); } }
-									 */
-								}else{
+									 * into DB
+									 
+									if (serverFile.exists()) {
+										paperSourceUploadFileSrc = fileName;
+										String oldFileName = project
+												.getPROJ_SourceFile();
+										if (!"".equals(oldFileName)) {
+											File oldFile = new File(
+													dir.getAbsolutePath()
+															+ File.separator
+															+ oldFileName);
+											if (oldFile.exists())
+												oldFile.delete();
+										}
+									}
+									*/
+								} else {
 									fileName = project.getPROJ_SourceFile();
 								}
 							} catch (IOException e) {
@@ -2537,29 +2630,40 @@ public class nProjectController extends BaseWeb {
 							} catch (Exception e) {
 								System.out.println(e.getStackTrace());
 							}
-							// Get sendInfo 
+							// Get sendInfo
 							String sendIt = "";
-							if(request.getParameter("sendIt") != null)
-							{
+							if (request.getParameter("sendIt") != null) {
 								sendIt = request.getParameter("sendIt");
 							}
 							// Editing project info
-							threadService.editAProject(projectEditId, userRole,userCode, projectCallCode, projectName,projectContent, projectMotivation,
-														projectResult, budgetMaterial, projectCode,startDate, endDate, facultyAdd, projectSurvey,projectObjective, 
-														bEditSumittedProject,totalBudget, projectResearchFieldCode,fileName, projectResearchFieldCodeList, sendIt);
+							threadService.editAProject(projectEditId, userRole,
+									userCode, projectCallCode, projectName,
+									projectContent, projectMotivation,
+									projectResult, budgetMaterial, projectCode,
+									startDate, endDate, facultyAdd,
+									projectSurvey, projectObjective,
+									bEditSumittedProject, totalBudget,
+									projectResearchFieldCode, fileName,
+									projectResearchFieldCodeList, sendIt);
 							// Editting tasks info
-							threadService.saveMemberTasks(projectCode,projectMembers, projectMemberRole, projectMemberTasks, projectMemberWorkingDays,projectMemberBudget, currentProjectCode);
-							return "redirect:" + this.baseUrl + "/cp/list-projects.html";
+							threadService.saveMemberTasks(projectCode,
+									projectMembers, projectMemberRole,
+									projectMemberTasks,
+									projectMemberWorkingDays,
+									projectMemberBudget, currentProjectCode);
+							return "redirect:" + this.baseUrl
+									+ "/cp/list-projects.html";
 						}
 					} catch (NullPointerException e) {
 						System.out.println(e.getMessage());
 						System.out.println(e.getStackTrace());
-						model.put("err", "Cần phải thêm thành viên và lĩnh vực vào đề tài.");
+						model.put("err",
+								"Cần phải thêm thành viên và lĩnh vực vào đề tài.");
 					}
 				} else {
 					model.put("err", "Xin lỗi! Đợt gọi đề tài đã bị đóng.");
 				}
-			}else{
+			} else {
 				System.out.println("Can't modify this info.");
 			}
 			return "cp.editAProject";
@@ -2573,7 +2677,10 @@ public class nProjectController extends BaseWeb {
 	 * @return
 	 */
 	@RequestMapping(value = "/edit-a-submittedproject", method = RequestMethod.POST)
-	public String updateASubmittedProject(HttpServletRequest request,@Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit, BindingResult result, Map model, HttpSession session) {
+	public String updateASubmittedProject(
+			HttpServletRequest request,
+			@Valid @ModelAttribute("projectFormEdit") ProjectsValidation projectFormEdit,
+			BindingResult result, Map model, HttpSession session) {
 
 		System.exit(-1);
 		model.put("projects", status);
@@ -2581,8 +2688,10 @@ public class nProjectController extends BaseWeb {
 			return "cp.editAProject";
 		} else {
 			// Prepare data for inserting DB
-			String userRole = session.getAttribute("currentUserRole").toString();
-			String userCode = session.getAttribute("currentUserCode").toString();
+			String userRole = session.getAttribute("currentUserRole")
+					.toString();
+			String userCode = session.getAttribute("currentUserCode")
+					.toString();
 			String projectName = projectFormEdit.getProjectName();
 			String projectCallCode = projectFormEdit.getProjectCallCode();
 			String projectContent = projectFormEdit.getProjectContent();
@@ -2601,10 +2710,15 @@ public class nProjectController extends BaseWeb {
 			int projectMaterialBudget = 0;
 			String[] projectResearchFieldCodeList = null;
 
-			threadService.editAProject(projectEditId, userRole, userCode, projectCallCode, projectName, projectContent, projectMotivation, projectResult, 
-										projectMaterialBudget,projectCode, startDate, endDate, facultyAdd, projectSurvey,
-										projectObjective, bEditSumittedProject, projectBudget,projectResearchFieldCode, "", projectResearchFieldCodeList, "");
-			return "redirect:" + this.baseUrl + "/cp/modify-submitted-projects.html";
+			threadService.editAProject(projectEditId, userRole, userCode,
+					projectCallCode, projectName, projectContent,
+					projectMotivation, projectResult, projectMaterialBudget,
+					projectCode, startDate, endDate, facultyAdd, projectSurvey,
+					projectObjective, bEditSumittedProject, projectBudget,
+					projectResearchFieldCode, "", projectResearchFieldCodeList,
+					"");
+			return "redirect:" + this.baseUrl
+					+ "/cp/modify-submitted-projects.html";
 		}
 	}
 

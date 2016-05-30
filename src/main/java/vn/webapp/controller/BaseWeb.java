@@ -42,6 +42,8 @@ public class BaseWeb {
     public static List<mFunction> mFuncsChildrenPermissionList;
     public static List<mFunction> mFuncsParentsPermissionList;
                             
+    public static final String PROJECT_ROOT_DIR = "C:/euniv-deploy/";
+    
     @Autowired
     private mFuncsPermissionService funcsPermissionService;
     
