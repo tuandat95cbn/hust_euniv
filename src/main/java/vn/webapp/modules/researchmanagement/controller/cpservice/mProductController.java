@@ -39,6 +39,12 @@ public class mProductController extends BaseRest {
 	@Autowired
 	private mProjectStatusService projectStatusService;
     
+	/**
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
     @ResponseBody
     @RequestMapping(value = "products", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
     public String dataTable1(HttpServletRequest  request, HttpSession session) {
@@ -84,6 +90,12 @@ public class mProductController extends BaseRest {
 		return json2;
     }
     
+    /**
+     * 
+     * @param searchParameter
+     * @param productsList
+     * @return
+     */
     private List<mProductsList> getListBasedOnSearchParameter(String searchParameter, List<mProductsList> productsList) {
 		
 		if (null != searchParameter && !searchParameter.equals("")) {

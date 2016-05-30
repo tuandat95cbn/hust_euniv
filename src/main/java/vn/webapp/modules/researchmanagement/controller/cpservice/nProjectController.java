@@ -23,14 +23,21 @@ import vn.webapp.modules.researchdeclarationmanagement.model.mTopicCategory;
 import vn.webapp.modules.researchdeclarationmanagement.service.tProjectCategoryService;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
+import vn.webapp.modules.researchmanagement.model.mJuryRoleOfSubmittedProjects;
+import vn.webapp.modules.researchmanagement.model.mProducts;
+import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 import vn.webapp.modules.researchmanagement.model.mProjectStatus;
 import vn.webapp.modules.researchmanagement.model.mThreads;
 import vn.webapp.modules.researchmanagement.service.mJuryOfAnnouncedProjectCallService;
+import vn.webapp.modules.researchmanagement.service.mJuryRoleOfSubmittedProjectsService;
 import vn.webapp.modules.researchmanagement.service.mProductService;
+import vn.webapp.modules.researchmanagement.service.mProjectCallsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStaffsService;
 import vn.webapp.modules.researchmanagement.service.mProjectStatusService;
 import vn.webapp.modules.researchmanagement.service.nProjectService;
+import vn.webapp.modules.usermanagement.model.mFaculty;
 import vn.webapp.modules.usermanagement.model.mStaff;
+import vn.webapp.modules.usermanagement.service.mFacultyService;
 import vn.webapp.modules.usermanagement.service.mStaffService;
 
 @Controller("cpmServiceProject")
@@ -58,6 +65,15 @@ public class nProjectController extends BaseRest {
 	private nProjectService projectService;
 	
 	@Autowired
+	private mProjectCallsService projectCallsService;
+	
+	@Autowired
+	private mJuryRoleOfSubmittedProjectsService juryRoleOfSubmittedProjectsService;
+	
+	@Autowired
+	private mFacultyService facultyService;
+	
+	@Autowired
 	private mJuryOfAnnouncedProjectCallService juryOfAnnouncedProjectCallService ;
     
 	public String name() {
@@ -74,7 +90,12 @@ public class nProjectController extends BaseRest {
 		return json;
 	}
 	
-	
+	/**
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 */
     @ResponseBody
     @RequestMapping(value = "threads", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
     public String dataTable1(HttpServletRequest  request, HttpSession session ) {
@@ -149,7 +170,139 @@ public class nProjectController extends BaseRest {
 		}
 		return threadsList;
 	}
+    
+    /**
+     * 
+     * @param request
+     * @param session
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "jury-submitted-projects", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
+    public String dataTable2(HttpServletRequest  request, HttpSession session) {
+    	//Fetch the page number from client
+    	Integer pageNumber = 0;
+    	
+    	// Get main user info
+    	String userCode = session.getAttribute("currentUserCode").toString();
+    	String userRole = session.getAttribute("currentUserRole").toString();
+    	
+    	// Get input filter values
+    	String projectCallCode = request.getParameter("projectCallCode");
+    	if (null != request.getParameter("iDisplayStart"))
+    		pageNumber = (Integer.valueOf(request.getParameter("iDisplayStart"))/10)+1;		
+    	
+    	//Fetch search parameter
+    	String searchParameter = request.getParameter("sSearch");
+    	
+    	//Fetch Page display length
+    	Integer iNumberOfItemsOnPage = Integer.valueOf(request.getParameter("iDisplayLength"));
+    	Integer iStartItem = Integer.valueOf(request.getParameter("iDisplayStart"));
+    	
+    	//Create page list data
+    	List<mJurySubmittedProjectsList> projectShow = createPaginationDataProject(userRole, userCode, iStartItem, iNumberOfItemsOnPage, projectCallCode);
+    	
+    	// Total items
+    	int iTotalItems = 10;//productService.countItems(userRole, userCode, sProductStatus, sProductCategory);
+		
+    	//Search functionality: Returns filtered list based on search parameter
+    	//productsList = get2ndListBasedOnSearchParameter(searchParameter, juryOfAnnouncedProjectCallList);
+    	
+    	mJurySubmittedProjectJsonObject jurySubmittedProjectJsonObject = new mJurySubmittedProjectJsonObject();
+		//Set Total display record
+    	jurySubmittedProjectJsonObject.setiTotalDisplayRecords(iTotalItems);
+		//Set Total record
+    	jurySubmittedProjectJsonObject.setiTotalRecords(iTotalItems);
+    	jurySubmittedProjectJsonObject.setAaData(projectShow);
+		
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String json2 = gson.toJson(jurySubmittedProjectJsonObject);
+	
+		return json2;
+    }
  
+    /**
+     * 
+     * @param searchParameter
+     * @param productsList
+     * @return
+     */
+    /*private List<mJuryOfAnnouncedProjectCall> get2ndListBasedOnSearchParameter(String searchParameter, List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList) {
+    	if (null != searchParameter && !searchParameter.equals("")) {
+			List<mJuryOfAnnouncedProjectCall> productsListForSearch = new ArrayList<mJuryOfAnnouncedProjectCall>();
+			searchParameter = searchParameter.toUpperCase();
+			
+			for (mJuryOfAnnouncedProjectCall product : juryOfAnnouncedProjectCallList) {
+				if (product.getName().toUpperCase().indexOf(searchParameter)!= -1 || product.getStatus().toUpperCase().indexOf(searchParameter)!= -1
+						|| product.getStart_date().toUpperCase().indexOf(searchParameter)!= -1 || product.getEnd_date().toUpperCase().indexOf(searchParameter)!= -1
+						) {
+					productsListForSearch.add(product);					
+				}
+				
+			}
+			productsList = productsListForSearch;
+			productsListForSearch = null;
+		}
+		return productsList;
+    }*/
+    
+    private List<mJurySubmittedProjectsList> createPaginationDataProject(String userRole,String userCode, Integer iStartItem, Integer iNumberOfItemsOnPage, String projectCallCode) {
+		// Get list products
+		if(iStartItem == null || iNumberOfItemsOnPage == null){
+			// Set default value
+			iStartItem = 0;
+			iNumberOfItemsOnPage = 10;
+		}
+		
+		List<mJurySubmittedProjectsList> projectShow = new ArrayList<mJurySubmittedProjectsList>();
+
+		
+		// Get project call list
+		List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
+		
+		HashMap<String, String> projectCallHashMap = new HashMap<String, String>();
+		for(int i = 0; i <  projectCallList.size(); i++){
+			projectCallHashMap.put(projectCallList.get(i).getPROJCALL_CODE(),projectCallList.get(i).getPROJCALL_NAME());
+		}
+		
+		// Get staff list
+		List<mStaff> staffList = staffService.listStaffs();
+		
+		HashMap<String, String> staffHashMap = new HashMap<String, String>();
+		for(int i = 0; i < staffList.size(); i++){
+			staffHashMap.put(staffList.get(i).getStaff_Code(), staffList.get(i).getStaff_Name());
+		}
+				
+		//Get jury role of submitted projects
+		List<mJuryRoleOfSubmittedProjects> juryRoleOfSubmittedProjecsList = juryRoleOfSubmittedProjectsService.loadAllJuryRoleOfSubmittedProjects();
+		
+		HashMap<String, String> roleHashMap = new HashMap<String, String>();
+		for(int i = 0; i < juryRoleOfSubmittedProjecsList.size(); i++){
+			roleHashMap.put(juryRoleOfSubmittedProjecsList.get(i).getJUPRJROL_CODE(), juryRoleOfSubmittedProjecsList.get(i).getJUPRJROL_NAME());
+		}
+				
+		//Get jury of announced project call
+		List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList;
+		if(!"".equals(projectCallCode))
+		{
+			juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadListJuryOfAnnouncedProjectCallByProjectCallCode(projectCallCode);
+		}else{
+			juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadAllJuryOfAnnouncedProjectCall();
+		}
+		
+		for(mJuryOfAnnouncedProjectCall juryOfAnnouncedProjectCall : juryOfAnnouncedProjectCallList){
+			mJurySubmittedProjectsList productViewElement = new mJurySubmittedProjectsList();
+			productViewElement.setProjectcall_name(projectCallHashMap.get(juryOfAnnouncedProjectCall.getJUSUPRJ_PRJCALLCODE()));
+			productViewElement.setMember_name(staffHashMap.get(juryOfAnnouncedProjectCall.getJUSUPRJ_STAFFCODE()));
+			productViewElement.setRole(roleHashMap.get(juryOfAnnouncedProjectCall.getJUPSURJ_ROLECODE()));
+			productViewElement.setId(juryOfAnnouncedProjectCall.getJUSUPRJ_ID());
+			
+			projectShow.add(productViewElement);
+		}
+				
+		return projectShow;
+	}
+    
     /**
      * 
      * @param userRole
@@ -160,7 +313,6 @@ public class nProjectController extends BaseRest {
      * @param sProductCategory
      * @return
      */
-
 	private List<mThreadsList> listProjectsMultiCriteria(String userRole,String userCode, Integer iStartItem, Integer iNumberOfItemsOnPage, String sThreadStatus, 
 			String sThreadCategory, String sThreadYear, String sThreadFaculty, String sThreadDepartment, String sThreadStaff) {
 		List<mThreadsList> projects = new ArrayList<mThreadsList>();
