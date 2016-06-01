@@ -1,6 +1,7 @@
 package vn.webapp.modules.researchmanagement.dao;
 
 import java.util.List;
+
 import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;;
 
@@ -53,4 +54,12 @@ public interface mJuryOfAnnouncedProjectCallDAO {
 	 * @return
 	 */
 	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByProjectCallCode(String projectCallCode);
+	
+	
+	/**
+	 * 
+	 * @param projectCallCode
+	 * @return
+	 */
+	public mJuryOfAnnouncedProjectCall loadListJuryOfAnnouncedProjectCallByProjectCallAndStaffCode(String projectCallCode, String staffCode);
 }

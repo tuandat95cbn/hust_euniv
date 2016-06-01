@@ -180,4 +180,28 @@ public class mJuryOfAnnouncedProjectCallDAOImpl extends BaseDao implements mJury
 			close();
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public mJuryOfAnnouncedProjectCall loadListJuryOfAnnouncedProjectCallByProjectCallAndStaffCode(String projectCallCode, String staffCode){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(mJuryOfAnnouncedProjectCall.class);
+			criteria.add(Restrictions.eq("JUSUPRJ_PRJCALLCODE", projectCallCode));
+			criteria.add(Restrictions.eq("JUSUPRJ_STAFFCODE", staffCode));
+			mJuryOfAnnouncedProjectCall juryOfAnnouncedProjectCalls = (mJuryOfAnnouncedProjectCall) criteria.uniqueResult();
+			commit();
+			return juryOfAnnouncedProjectCalls;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
 }

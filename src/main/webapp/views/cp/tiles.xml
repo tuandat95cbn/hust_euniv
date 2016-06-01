@@ -506,6 +506,11 @@
         <put-attribute name="content" value="/views/cp/JuryOfAnnouncedProjectCall/manage.jsp" />
     </definition>
     
+    <definition name="cp.listJuryOfAnnouncedProjectCall" extends="layout.base">
+        <put-attribute name="title" value="List juries of announced project calls " />                                 
+        <put-attribute name="content" value="/views/cp/JuryOfAnnouncedProjectCall/list-manage.jsp" />
+    </definition>
+    
     <!-- Staff jury of submitted project -->    
     <definition name="cp.addStaffJuryOfSubmittedProject" extends="layout.base">
         <put-attribute name="title" value="List staff juries of submitted projects " />                                 

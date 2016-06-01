@@ -163,7 +163,25 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 
 		// Get project call list
 		List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
+		model.put("projectCallList", projectCallList);
+
+		return "cp.addJuryOfAnnouncedProjectCall";
+	}
+
+	/**
+	 * 
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/list-jury-submitted-projects", method = RequestMethod.POST)
+	public String showListJuryOfSubmittedProjects(HttpServletRequest request, ModelMap model, HttpSession session) {
+
+		// Get data
+		String projectCallCode = request.getParameter("JUSUPRJ_PRJCALLCODE");
 		
+		// Get project call list
+		List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
 		HashMap<String, String> projectCallHashMap = new HashMap<String, String>();
 		for(int i = 0; i <  projectCallList.size(); i++){
 			projectCallHashMap.put(projectCallList.get(i).getPROJCALL_CODE(),projectCallList.get(i).getPROJCALL_NAME());
@@ -187,8 +205,13 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 			roleHashMap.put(juryRoleOfSubmittedProjecsList.get(i).getJUPRJROL_CODE(), juryRoleOfSubmittedProjecsList.get(i).getJUPRJROL_NAME());
 		}
 		
+		List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList = null;
 		//Get jury of announced project call
-		List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadAllJuryOfAnnouncedProjectCall();
+		if(!"".equals(projectCallCode)){
+			juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadListJuryOfAnnouncedProjectCallByProjectCallCode(projectCallCode);
+		}else{
+			juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadAllJuryOfAnnouncedProjectCall();
+		}
 		
 		for(int i = 0; i < juryOfAnnouncedProjectCallList.size(); i++){
 			juryOfAnnouncedProjectCallList.get(i).setJUSUPRJ_PRJCALLCODE(projectCallHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUSUPRJ_PRJCALLCODE()));
@@ -196,37 +219,48 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 			juryOfAnnouncedProjectCallList.get(i).setJUPSURJ_ROLECODE(roleHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUPSURJ_ROLECODE()));
 		}
 		
-		model.put("projectCallList", projectCallList);
+		model.put("projectCallCode", projectCallCode);
 		model.put("staffList", staffList);
 		model.put("listFaculty", listFaculty);
 		model.put("juryRoleOfSubmittedProjecsList", juryRoleOfSubmittedProjecsList);
 		model.put("juryOfAnnouncedProjectCallFormAdd", new mJuryOfAnnouncedProjectCallValidation());
 		model.put("juryOfAnnouncedProjectCallList", juryOfAnnouncedProjectCallList);
 					
-		return "cp.addJuryOfAnnouncedProjectCall";
+		return "cp.listJuryOfAnnouncedProjectCall";
 	}
-
 	
-	
+	/**
+	 * 
+	 * @param request
+	 * @param juryOfAnnouncedProjectCallValid
+	 * @param result
+	 * @param model
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping(value = "/save-jury-of-announced-project-call", method = RequestMethod.POST)
 	public String saveJuryOfAnnouncedProjectCall( HttpServletRequest request, @Valid @ModelAttribute("juryOfAnnouncedProjectCallFormAdd") mJuryOfAnnouncedProjectCallValidation juryOfAnnouncedProjectCallValid, BindingResult result, ModelMap model, HttpSession session) {
 		
 		if (result.hasErrors()) {
-			return "cp.addJuryOfAnnouncedProjectCall";
+			return "cp.listJuryOfAnnouncedProjectCall";
 		} else {
 			// Prepare data for inserting DB
 			String JUSUPRJ_STAFFCODE = juryOfAnnouncedProjectCallValid.getJUSUPRJ_STAFFCODE();
-			String JUSUPRJ_PRJCALLCODE = juryOfAnnouncedProjectCallValid.getJUSUPRJ_PRJCALLCODE();
 			String JUPSURJ_ROLECODE = juryOfAnnouncedProjectCallValid.getJUPSURJ_ROLECODE();
-
-			//Save item
-			int iSaveResult = juryOfAnnouncedProjectCallService.saveJuryOfAnnouncedProjectCall(JUSUPRJ_STAFFCODE, JUSUPRJ_PRJCALLCODE, JUPSURJ_ROLECODE);
-			
-			if (iSaveResult > 0) {
-				model.put("code", 1);
-				model.put("success", "Staff with code " + JUSUPRJ_STAFFCODE + " has become a member of examinater for project call of code " + JUSUPRJ_PRJCALLCODE + " as the role of code "+ JUPSURJ_ROLECODE);
+			// Get data
+			String JUSUPRJ_PRJCALLCODE = request.getParameter("JUSUPRJ_PRJCALLCODE");
+			mJuryOfAnnouncedProjectCall oJuryProject = juryOfAnnouncedProjectCallService.loadListJuryOfAnnouncedProjectCallByProjectCallAndStaffCode(JUSUPRJ_PRJCALLCODE, JUSUPRJ_STAFFCODE);
+			if(oJuryProject != null)
+			{
+				model.put("err", "Thành viên này đã tồn tại.");
+			}else{
+				//Save item
+				int iSaveResult = juryOfAnnouncedProjectCallService.saveJuryOfAnnouncedProjectCall(JUSUPRJ_STAFFCODE, JUSUPRJ_PRJCALLCODE, JUPSURJ_ROLECODE);
 				
-				
+				if (iSaveResult > 0) {
+					model.put("code", 1);
+					model.put("success", "Staff with code " + JUSUPRJ_STAFFCODE + " has become a member of examinater for project call of code " + JUSUPRJ_PRJCALLCODE + " as the role of code "+ JUPSURJ_ROLECODE);
+				}
 			}
 			
 			//PREPARING DATA FOR SHOWING
@@ -255,22 +289,28 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 			}
 			
 			//Get jury of announced project call
-			List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadAllJuryOfAnnouncedProjectCall();
+			List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList;
+			if(!"".equals(JUSUPRJ_PRJCALLCODE)){
+				juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadListJuryOfAnnouncedProjectCallByProjectCallCode(JUSUPRJ_PRJCALLCODE);
+			}else{
+				juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadAllJuryOfAnnouncedProjectCall();
+			}
 			
 			for(int i = 0; i < juryOfAnnouncedProjectCallList.size(); i++){
 				juryOfAnnouncedProjectCallList.get(i).setJUSUPRJ_PRJCALLCODE(projectCallHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUSUPRJ_PRJCALLCODE()));
 				juryOfAnnouncedProjectCallList.get(i).setJUSUPRJ_STAFFCODE(staffHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUSUPRJ_STAFFCODE()));
 				juryOfAnnouncedProjectCallList.get(i).setJUPSURJ_ROLECODE(roleHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUPSURJ_ROLECODE()));
 			}
+			
 			List<mFaculty> listFaculty = facultyService.loadFacultyList();
-			model.put("projectCallList", projectCallList);
+			model.put("projectCallCode", JUSUPRJ_PRJCALLCODE);
 			model.put("staffList", staffList);
 			model.put("listFaculty", listFaculty);
 			model.put("juryRoleOfSubmittedProjecsList", juryRoleOfSubmittedProjecsList);
 			model.put("juryOfAnnouncedProjectCallFormAdd", new mJuryOfAnnouncedProjectCallValidation());
 			model.put("juryOfAnnouncedProjectCallList", juryOfAnnouncedProjectCallList);
 						
-			return "cp.addJuryOfAnnouncedProjectCall";
+			return "cp.listJuryOfAnnouncedProjectCall";
 		}
 	}
 	
@@ -282,8 +322,14 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 	 @RequestMapping(value = "/delete-jury-of-announced-project-call/{id}", method = RequestMethod.GET)
 	 public String removeAProjectCall(ModelMap model, @PathVariable("id") int juryOfAnnouncedProjectCallId, HttpSession session) {
 		 
-		 //Delete the selected item
-		 juryOfAnnouncedProjectCallService.deleteJuryOfAnnouncedProjectCall(juryOfAnnouncedProjectCallId);
+		 mJuryOfAnnouncedProjectCall juryOfAnnouncedProjectCall = juryOfAnnouncedProjectCallService.loadAJuryOfAnnouncedProjectCallById(juryOfAnnouncedProjectCallId);
+		 
+		 String projectCallCode = "";
+		 if(juryOfAnnouncedProjectCall != null){
+			 projectCallCode = juryOfAnnouncedProjectCall.getJUSUPRJ_PRJCALLCODE();
+			 //Delete the selected item
+			 juryOfAnnouncedProjectCallService.deleteJuryOfAnnouncedProjectCall(juryOfAnnouncedProjectCallId);
+		 }
 		 	 
 		 //PREPARING DATA FOR SHOWING
 		// Get project call list
@@ -311,7 +357,12 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 		}
 		
 		//Get jury of announced project call
-		List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadAllJuryOfAnnouncedProjectCall();
+		List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList;
+		if(!"".equals(projectCallCode)){
+			juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadListJuryOfAnnouncedProjectCallByProjectCallCode(projectCallCode);
+		}else{
+			juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCallService.loadAllJuryOfAnnouncedProjectCall();
+		}
 		
 		for(int i = 0; i < juryOfAnnouncedProjectCallList.size(); i++){
 			juryOfAnnouncedProjectCallList.get(i).setJUSUPRJ_PRJCALLCODE(projectCallHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUSUPRJ_PRJCALLCODE()));
@@ -319,14 +370,15 @@ public class mJuryOfAnnouncedProjectCallController extends BaseWeb {
 			juryOfAnnouncedProjectCallList.get(i).setJUPSURJ_ROLECODE(roleHashMap.get(juryOfAnnouncedProjectCallList.get(i).getJUPSURJ_ROLECODE()));
 		}
 		List<mFaculty> listFaculty = facultyService.loadFacultyList();
-		model.put("projectCallList", projectCallList);
+		
+		model.put("projectCallCode", (!"".equals(projectCallCode)) ? projectCallCode : projectCallList.get(0).getPROJCALL_CODE());
 		model.put("staffList", staffList);
 		model.put("listFaculty", listFaculty);
 		model.put("juryRoleOfSubmittedProjecsList", juryRoleOfSubmittedProjecsList);
 		model.put("juryOfAnnouncedProjectCallFormAdd", new mJuryOfAnnouncedProjectCallValidation());
 		model.put("juryOfAnnouncedProjectCallList", juryOfAnnouncedProjectCallList);
 					
-		return "cp.addJuryOfAnnouncedProjectCall";
+		return "cp.listJuryOfAnnouncedProjectCall";
 	 }
 	 	
 }

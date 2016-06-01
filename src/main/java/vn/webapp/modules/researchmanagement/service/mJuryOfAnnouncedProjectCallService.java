@@ -67,4 +67,9 @@ public interface mJuryOfAnnouncedProjectCallService {
 	 */
 	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByProjectCallCode(String projectCallCode);
 	
+	/*
+	 * 
+	 */
+	public mJuryOfAnnouncedProjectCall loadListJuryOfAnnouncedProjectCallByProjectCallAndStaffCode(String projectCallCode, String staffCode);
+	
 }

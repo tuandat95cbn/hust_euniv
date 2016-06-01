@@ -161,4 +161,20 @@ public class mJuryOfAnnouncedProjectCallServiceImpl implements mJuryOfAnnouncedP
 			return null;
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	public mJuryOfAnnouncedProjectCall loadListJuryOfAnnouncedProjectCallByProjectCallAndStaffCode(String projectCallCode, String staffCode){
+		try {
+			if(!"".equals(projectCallCode) && !"".equals(staffCode))
+			{
+				return juryOfAnnouncedProjectCallDAO.loadListJuryOfAnnouncedProjectCallByProjectCallAndStaffCode(projectCallCode, staffCode);
+			}
+			return null;
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
 }

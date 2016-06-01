@@ -38,132 +38,29 @@
                     <c:if test="${err != null}">
 	                	<div class="alert alert-warning">${err}</div>
                     </c:if>     
-                    <form:form action="${baseUrl}/cp/save-jury-of-announced-project-call.html" method="POST" commandName="juryOfAnnouncedProjectCallFormAdd" role="form" >
+                    <form action="${baseUrl}/cp/list-jury-submitted-projects.html" method="POST" role="form" >
 	                    <div class="row">
 	                        <div class="col-lg-12">
 	                                <div class="form-group">
 	                                    <label>Đợt gọi đề tài </label>
-	                                    <form:select path="JUSUPRJ_PRJCALLCODE" class="form-control" name="JUSUPRJ_PRJCALLCODE" >
-	                                        <option value="">chọn</option>	                                    	        	                                    	
+	                                    <select path="JUSUPRJ_PRJCALLCODE" class="form-control" name="JUSUPRJ_PRJCALLCODE" >
 	                                    	<c:forEach items="${projectCallList}" var="iProjectCall">
 		                                        <option value="${iProjectCall.PROJCALL_CODE}">${iProjectCall.PROJCALL_NAME}</option>
 	                                       	</c:forEach>
-	                                    </form:select>
-	                                    <form:errors path="JUSUPRJ_PRJCALLCODE" class="alert-danger"></form:errors>
+	                                    </select>
 	                                </div>
-	                        
 	                                <div class="form-group">
-	                                	
-	                                	<select class="form-control" name="faculty" onchange="showDepartment(this);" >
-                                 		<option value="">Chọn Khoa/Viện</option>
-                                 		<c:forEach items="${listFaculty}" var="faculty">
-                                      	<option value="${faculty.faculty_Code}">${faculty.faculty_Name}</option>
-                                    	</c:forEach>
-                                 		</select>
-                                    	<br>
-                                    	<div id="department">
-	                                    	<select class="form-control" name="department">
-												<option value="">Chọn Bộ môn</option>
-	                                    	</select>
-                                    	</div>
-                                    	<br>
-                                    
-	                                    <label >Thành viên</label>
-	                                    <form:select path="JUSUPRJ_STAFFCODE" class="form-control" name="JUSUPRJ_STAFFCODE" id="staff">
-	                                        <option value="">chọn</option>	                                    	                                    
-	                                    	<c:forEach items="${staffList}" var="iStaff">
-		                                        <option value="${iStaff.staff_Code}">${iStaff.staff_Name}</option>
-	                                       	</c:forEach>
-	                                    </form:select>
-	                                    <form:errors path="JUSUPRJ_STAFFCODE" class="alert-danger"></form:errors>
-	                                     
-	                                    <%-- <div class="form-group">
-		                                	<label for="projectMembers">Thành viên</label>
-		                                	<div id="staff">
-		                                	<select class="form-control" id="members">
-		                                	<c:forEach items="${staffList}" var="aStaff">
-		                                    	<option value="${aStaff.staff_Code}">${aStaff.staff_Name}</option>
-		                                   	</c:forEach>
-		                                	</select>
-		                                	</div>
-		                            	</div> --%>
-		                             
-	                                </div>
-	                        
-	                                <div class="form-group">
-	                                    <label for="paperJConfName">Vai trò</label>
-	                                    <form:select path="JUPSURJ_ROLECODE" class="form-control" name="JUPSURJ_ROLECODE">
-	                                        <option value="">chọn</option>	                                    	        	                                    
-	                                    	<c:forEach items="${juryRoleOfSubmittedProjecsList}" var="iRole">
-		                                        <option value="${iRole.JUPRJROL_CODE}">${iRole.JUPRJROL_NAME}</option>
-	                                       	</c:forEach>
-	                                    </form:select>
-	                                    <form:errors path="JUPSURJ_ROLECODE" class="alert-danger"></form:errors>
-	                                </div>
-	                                
-	                                <div class="form-group">
-										<!-- button type="button" id="filter" class="btn btn-primary filter">Lọc</button -->
-		                                <button type="submit" class="btn btn-primary" id="addANewPaper">Lưu</button>
-		                                <!-- <button type="reset" class="btn btn-primary">Clear</button> -->
-		                                <button type="reset" class="btn btn-primary cancel">Hủy</button>
+		                                <button type="submit" class="btn btn-primary" id="addANewPaper">Tiếp</button>
 	                                </div>
 	                        </div>
-	                        
 	                    </div>
 	                    <!-- /.row (nested) -->
-                    </form:form>
+                    </form>
                 </div>
                 <!-- /.panel-body -->
             </div>
             <!-- /.panel -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Danh sách
-                </div>
-                <div class="panel-body">
-                	<%-- <div class="dataTable_wrapper">
-						<table class="table table-striped table-bordered table-hover"
-							id="dataTables-example">
-							<thead>
-								<tr>
-									<th title="Name of project call " > Đợt gọi đề tài </th>
-									<th title="Name of staff ">Thành viên </th>
-									<th title="Name of role ">Vai trò</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach items="${juryOfAnnouncedProjectCallList}" var="jury">
-									<tr class="gradeX">
-										<td><c:out value="${jury.JUSUPRJ_PRJCALLCODE}"/></td>
-										<td><c:out value="${jury.JUSUPRJ_STAFFCODE}"/></td>
-										<td><c:out value="${jury.JUPSURJ_ROLECODE}"/></td>
-										<td class="center">
-											<button type="button" id="removeJuryOfAnnouncedProjectCall" onclick="v_fRemoveJuryOfAnnouncedProjectCall(${jury.JUSUPRJ_ID});" class="btn btn-danger btn-xs" title="Remove">Xoá</button>
-											<br>
-										</td>
-									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
-					</div> --%>
-					
-					<div class="dataTable_wrapper">
-						<table class="table table-striped table-bordered table-hover" id="dataTables-example">
-							<thead>
-								<tr>
-									<th title="Name of project call " > Đợt gọi đề tài </th>
-									<th title="Name of staff ">Thành viên </th>
-									<th title="Name of role ">Vai trò</th>
-									<th></th>
-								</tr>
-							</thead>
-						</table>
-					</div>
-					
-					<!-- /.table-responsive -->
-            	</div>
-            </div>
+            
         </div>
         <!-- /.col-lg-12 -->
     </div>
