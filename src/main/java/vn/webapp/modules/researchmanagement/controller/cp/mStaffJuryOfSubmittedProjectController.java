@@ -158,20 +158,45 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		return json;
 	}
 	
+	/**
+	 * 
+	 * @param model
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping(value = "/assign-jury-submitted-projects", method = RequestMethod.GET)
 	public String addJuryOfSubmittedProjects(ModelMap model, HttpSession session) {
+		// Get current user name and role
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		// Get project call list
+		List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
+		model.put("projectCallList", projectCallList);
+		return "cp.addStaffJuryOfSubmittedProject";
+	}
+	
+	/**
+	 * 
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/list-assign-jury-submitted-projects", method = RequestMethod.POST)
+	public String listJuryOfSubmittedProjects(HttpServletRequest request, ModelMap model, HttpSession session) {
 
 		// Get current user name and role
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-		System.out.println(name() + "::addJuryOfSubmittedProjects"
-				+ ", userCode = " + userCode + ", userRole = " + userRole);
+		String projectCallCode = request.getParameter("PROJCALL_CODE");
+		String projectCallName = projectCallCode;
 		
 		// Get project call list
 		List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
 		HashMap<String, String> mProjectCallCode2Name = new HashMap<String, String>();
 		for(mProjectCalls pc: projectCallList){
-			mProjectCallCode2Name.put(pc.getPROJCALL_CODE(), pc.getPROJCALL_NAME());
+			if(projectCallCode != null && projectCallCode.equals(pc.getPROJCALL_CODE())){
+				projectCallName = pc.getPROJCALL_NAME();
+			}
 		}
 		
 		List<mStaff> staffs = staffService.listStaffs();
@@ -180,93 +205,67 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 			mStaffCode2Name.put(st.getStaff_Code(), st.getStaff_Name());
 		}
 		
-		/*
-		System.out.println("User code : " + userCode);
-		String projectCallCode = "";
-		//Get list of projected calls whose already-assigned present is the current logged-in user
-		List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCallList = juryOfAnnouncedProjectCall.loadListJuryOfAnnouncedProjectCallByPresentCode(userCode);
-		
-		
-		if(juryOfAnnouncedProjectCallList.size() > 0)
-			projectCallCode = juryOfAnnouncedProjectCallList.get(0).getJUSUPRJ_PRJCALLCODE();
-		System.out.println("Size of juryOfAnnouncedProjectCallList : " + juryOfAnnouncedProjectCallList.size() + ", projectCallCode = " + projectCallCode);
-		
-		// Get all projects in project calls whose present is the current present
-		List<Projects> projectList = new ArrayList<Projects>();
-		for(int i = 0; i < juryOfAnnouncedProjectCallList.size(); i++){
-			projectList.addAll( projectService.loadProjectByProjectCallId(juryOfAnnouncedProjectCallList.get(i).getJUSUPRJ_PRJCALLCODE()));
-		}
-		
-		HashMap<String, String> projectHashMap = new HashMap<String, String>();
-		for(int i = 0; i < projectList.size(); i++){
-			projectHashMap.put(projectList.get(i).getPROJ_Code(),projectList.get(i).getPROJ_Name());
-		}
-		
-		System.out.println("Size of projectList : " + projectList.size());
-		
-		// Get staff list
-		List<mStaff> staffList = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAProjecCall(projectCallCode);//staffService.listStaffs();
-		System.out.println(name() + "::addJuryOfSubmittedProjects, staffList = ");
-		for(mStaff st: staffList) System.out.println(st.getStaff_Code());
-		
-		HashMap<String, String> staffHashMap = new HashMap<String, String>();
-		for(int i = 0; i < staffList.size(); i++){
-			staffHashMap.put(staffList.get(i).getStaff_Code(), 
-					staffList.get(i).getStaff_Name());
-		}
-		
-		//Get staff jury of submitted project
-		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProject();
-		System.out.println(name() + "::addJuryOfSubmittedProjects, staffJuryOfSubmittedProjectList = ");
-		for(mStaffJuryOfSubmittedProject sjp: staffJuryOfSubmittedProjectList){
-			System.out.println(sjp.getSTFJUPRJ_CODE() + "\t" + sjp.getSTFJUPRJ_STAFFJURCODE());
-		}
-		
-		for(int i = 0; i < staffJuryOfSubmittedProjectList.size(); i++){
-			staffJuryOfSubmittedProjectList.get(i).setSTFJUPRJ_PRJCODE(projectHashMap.get(staffJuryOfSubmittedProjectList.get(i).getSTFJUPRJ_PRJCODE()));
-			staffJuryOfSubmittedProjectList.get(i).setSTFJUPRJ_STAFFJURCODE(staffHashMap.get(staffJuryOfSubmittedProjectList.get(i).getSTFJUPRJ_STAFFJURCODE()));
-		}
-		*/
-		
-		//List<Projects> projectList = new ArrayList<Projects>();
-		//List<mStaff> staffList = new ArrayList<mStaff>();
-		//List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = new ArrayList<mStaffJuryOfSubmittedProject>();
 		List<mThreads> projects = projectService.listAll();
 		HashMap<String, String> mProjectCode2Name = new HashMap<String, String>();
 		for(mThreads prj: projects){
 			mProjectCode2Name.put(prj.getPROJ_Code(), prj.getPROJ_Name());
 		}
 		
-		model.put("projectList", projects);
-		model.put("staffList", staffs);
-	
-		model.put("staffJuryOfSubmittedProjectFormAdd", new mStaffJuryOfSubmittedProjectValidation());
-		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProject();
-		//System.out.println(name() + "::addJuryOfSubmittedProjects, staffJuryOfSubmittedProjectList.sz = " + staffJuryOfSubmittedProjectList.size());
+		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList;
+		if(!"".equals(projectCallCode)){
+			staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadListStaffJuryOfSubmittedProjectByProjectCallCode(projectCallCode);
+		}else{
+			staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProject();
+		}
 		for(mStaffJuryOfSubmittedProject sjsp: staffJuryOfSubmittedProjectList){
-			//System.out.println(name() + "::addJuryOfSubmittedProjects, set projectName " + 
-		//mProjectCode2Name.get(sjsp.getSTFJUPRJ_PRJCODE()) + " of code " + sjsp.getSTFJUPRJ_PRJCODE());
 			sjsp.setSTFJUPRJ_PRJCODE(mProjectCode2Name.get(sjsp.getSTFJUPRJ_PRJCODE()));
 			sjsp.setSTFJUPRJ_STAFFJURCODE(mStaffCode2Name.get(sjsp.getSTFJUPRJ_STAFFJURCODE()));
 		}
 		
+		// Return to view
+		model.put("projectList", projects);
+		model.put("staffList", staffs);
+		model.put("staffJuryOfSubmittedProjectFormAdd", new mStaffJuryOfSubmittedProjectValidation());
 		model.put("staffJuryOfSubmittedProjectList", staffJuryOfSubmittedProjectList);
 		model.put("projectCallList", projectCallList);
-		return "cp.addStaffJuryOfSubmittedProject";
+		model.put("projectCallCode", projectCallCode);
+		model.put("projectCallName", projectCallName);
+		return "cp.listStaffJuryOfSubmittedProject";
 	}
 
-	
+	/**
+	 * 
+	 * @param request
+	 * @param staffJuryOfSubmittedProjectValid
+	 * @param result
+	 * @param model
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping(value = "/save-staff-jury-of-submitted-project", method = RequestMethod.POST)
 	public String saveJuryOfAnnouncedProjectCall( HttpServletRequest request, @Valid @ModelAttribute("staffJuryOfSubmittedProjectFormAdd") mStaffJuryOfSubmittedProjectValidation staffJuryOfSubmittedProjectValid, BindingResult result, ModelMap model, HttpSession session) {
 		
 		// Get project call list
 		List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
 		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProject();
+		String selectedProjectCallCode = request.getParameter("PROJCALL_CODE");
+		String projectCallCodeFiltering = request.getParameter("projectCallCodeFiltering");
+		String projectCallNameFiltering = projectCallCodeFiltering;
 		
+		if(projectCallList != null)
+		{
+			for (mProjectCalls projectCall : projectCallList) {
+				if(projectCallCodeFiltering != null && projectCallCodeFiltering.equals(projectCall.getPROJCALL_CODE())){
+					projectCallNameFiltering = projectCall.getPROJCALL_NAME();
+				}
+			}
+		}
 		model.put("staffJuryOfSubmittedProjectList", staffJuryOfSubmittedProjectList);
 		model.put("projectCallList", projectCallList);
+		model.put("projectCallCode", projectCallCodeFiltering);
+		model.put("projectCallName", projectCallNameFiltering);
 		if (result.hasErrors()) {
-			return "cp.addStaffJuryOfSubmittedProject";
+			return "cp.listStaffJuryOfSubmittedProject";
 		} else {
 			// Prepare data for inserting DB
 			String STFJUPRJ_STAFFJURCODE = staffJuryOfSubmittedProjectValid.getSTFJUPRJ_STAFFJURCODE();
@@ -283,13 +282,8 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 			
 			// Save data into DB
 			for (String projectCode : projectCodes) {
-				int iSaveResult = staffJuryOfSubmittedProjectService.saveStaffJuryOfSubmittedProject(STFJUPRJ_STAFFJURCODE, projectCode);
+				int iSaveResult = staffJuryOfSubmittedProjectService.saveStaffJuryOfSubmittedProject(STFJUPRJ_STAFFJURCODE, projectCode, selectedProjectCallCode);
 			}
-			
-			// Get current user name and role
-			String userCode = session.getAttribute("currentUserCode").toString();
-			String userRole = session.getAttribute("currentUserRole").toString();
-
 			model.put("staffJuryOfSubmittedProjectFormAdd", new mStaffJuryOfSubmittedProjectValidation());
 			return "redirect:" + this.baseUrl + "/cp/assign-jury-submitted-projects.html";
 		}

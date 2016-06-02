@@ -2,8 +2,10 @@ package vn.webapp.modules.researchmanagement.service;
 
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import vn.webapp.modules.researchmanagement.dao.mStaffJuryOfSubmittedProjectDAO;
 import vn.webapp.modules.researchmanagement.model.mStaffJuryOfSubmittedProject;
 
@@ -52,7 +54,7 @@ public class mStaffJuryOfSubmittedProjectServiceImpl implements mStaffJuryOfSubm
 	 * 
 	 */
 	@Override
-	public int saveStaffJuryOfSubmittedProject(String STFJUPRJ_STAFFJURCODE,String STFJUPRJ_PRJCODE) {
+	public int saveStaffJuryOfSubmittedProject(String STFJUPRJ_STAFFJURCODE,String STFJUPRJ_PRJCODE, String selectedProjectCallCode) {
 		if (STFJUPRJ_STAFFJURCODE.length() >= 1 && STFJUPRJ_PRJCODE.length() >= 1) {
 			
 			mStaffJuryOfSubmittedProject staffJury = staffJuryOfSubmittedProjectDAO.loadAStaffJuryOfSubmittedProjectByStaffAndProjectCode(STFJUPRJ_STAFFJURCODE, STFJUPRJ_PRJCODE);
@@ -64,6 +66,7 @@ public class mStaffJuryOfSubmittedProjectServiceImpl implements mStaffJuryOfSubm
 				staffJury.setSTFJUPRJ_PRJCODE(STFJUPRJ_PRJCODE);
 				staffJury.setSTFJUPRJ_STAFFJURCODE(STFJUPRJ_STAFFJURCODE);
 				staffJury.setSTFJUPRJ_CODE(STFJUPRJ_PRJCODE + "-" + STFJUPRJ_STAFFJURCODE);
+				staffJury.setSTFJUPRJ_PRJCALLCODE(selectedProjectCallCode);
 				int resultSaveStaffJuryOfSubmittedProject = staffJuryOfSubmittedProjectDAO.saveStaffJuryOfSubmittedProject(staffJury);
 				return resultSaveStaffJuryOfSubmittedProject;
 			}
@@ -100,4 +103,19 @@ public class mStaffJuryOfSubmittedProjectServiceImpl implements mStaffJuryOfSubm
 		return staffJuryOfSubmittedProjectDAO.deleteStaffJuryOfSubmittedProject(staffJuryOfSubmittedProject);
 	}
 	
+	/**
+	 * 
+	 */
+	@Override
+	public List<mStaffJuryOfSubmittedProject> loadListStaffJuryOfSubmittedProjectByProjectCallCode(String projectCallCode){
+		try {
+			if(!"".equals(projectCallCode)){
+				return staffJuryOfSubmittedProjectDAO.loadListStaffJuryOfSubmittedProjectByProjectCallCode(projectCallCode);
+			}
+			return null;
+		} catch (Exception e) {
+			System.out.println("Exception: " + e.getMessage());
+			return null;
+		}
+	}
 }

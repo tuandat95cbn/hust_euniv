@@ -423,7 +423,7 @@ public class nProjectController extends BaseRest {
 		{
 			// Get all projects in project calls whose present is the current present
 			List<Projects> projectList = projectService.loadProjectByProjectCallId(sProjectCallCode);
-			sReturn = "<select size='20' multiple class='form-control' path='STFJUPRJ_PRJCODE' name='STFJUPRJ_PRJCODE' id='STFJUPRJ_PRJCODE'>";
+			sReturn = "<select size='20' data-validation='required' data-validation-error-msg='Trường thông tin này là bắt buộc' multiple class='form-control' path='STFJUPRJ_PRJCODE' name='STFJUPRJ_PRJCODE' id='STFJUPRJ_PRJCODE'>";
 			if(projectList != null){
 				for(Projects project : projectList)
 				{
@@ -447,7 +447,7 @@ public class nProjectController extends BaseRest {
 		{
 			// Get all projects in project calls whose present is the current present
 			List<mJuryOfAnnouncedProjectCall> juryOfAnnouncedProjectCall = juryOfAnnouncedProjectCallService.loadListJuryOfAnnouncedProjectCallByProjectCallCode(sProjectCallCode);
-			sReturn = "<select class='form-control' path='STFJUPRJ_STAFFJURCODE' name='STFJUPRJ_STAFFJURCODE' id='STFJUPRJ_STAFFJURCODE'>";
+			sReturn = "<select class='form-control' data-validation='required' data-validation-error-msg='Trường thông tin này là bắt buộc' path='STFJUPRJ_STAFFJURCODE' name='STFJUPRJ_STAFFJURCODE' id='STFJUPRJ_STAFFJURCODE'>";
 			if(juryOfAnnouncedProjectCall != null){
 				for(mJuryOfAnnouncedProjectCall iteam : juryOfAnnouncedProjectCall)
 				{

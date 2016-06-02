@@ -70,7 +70,7 @@
                                     	<br>
                                     
 	                                    <label >Thành viên*</label>
-	                                    <form:select path="JUSUPRJ_STAFFCODE" class="form-control" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" name="JUSUPRJ_STAFFCODE">
+	                                    <form:select path="JUSUPRJ_STAFFCODE" class="form-control" data-validation="required" id="staff" data-validation-error-msg="Trường thông tin này là bắt buộc" name="JUSUPRJ_STAFFCODE">
 	                                        <option value="">chọn</option>	                                    	                                    
 	                                    	<c:forEach items="${staffList}" var="iStaff">
 		                                        <option value="${iStaff.staff_Code}">${iStaff.staff_Name}</option>
@@ -281,6 +281,8 @@
 						$("#staff").html( html );
 					}
 				});
+		}else{
+			$("#staff").html("");
 		}
 	}
 	

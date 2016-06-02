@@ -20,6 +20,8 @@ public class mStaffJuryOfSubmittedProject implements Serializable{
 	private String STFJUPRJ_PRJCODE;
 	
 	private String STFJUPRJ_CODE;
+	
+	private String STFJUPRJ_PRJCALLCODE;
 
 	public int getSTFJUPRJ_ID() {
 		return STFJUPRJ_ID;
@@ -53,5 +55,12 @@ public class mStaffJuryOfSubmittedProject implements Serializable{
 		STFJUPRJ_CODE = sTFJUPRJ_CODE;
 	}
 
+	public String getSTFJUPRJ_PRJCALLCODE() {
+		return STFJUPRJ_PRJCALLCODE;
+	}
+
+	public void setSTFJUPRJ_PRJCALLCODE(String sTFJUPRJ_PRJCALLCODE) {
+		STFJUPRJ_PRJCALLCODE = sTFJUPRJ_PRJCALLCODE;
+	}
 	
   }

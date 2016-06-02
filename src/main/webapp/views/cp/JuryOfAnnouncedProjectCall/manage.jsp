@@ -29,15 +29,6 @@
                     Thêm mới một thành viên cho hội đồng tuyển chọn đợt gọi đề tài 
                 </div>
                 <div class="panel-body">
-                	<c:if test="${status != null}">
-	                	<div class="alert alert-success">
-	                	
-	                        ${status}. <a href="<c:url value="${baseUrl}/cp/add-a-jury-member-for-an-announced-project-call.html"/>" class="alert-link">Trở lại</a>.
-	                    </div>
-                    </c:if>
-                    <c:if test="${err != null}">
-	                	<div class="alert alert-warning">${err}</div>
-                    </c:if>     
                     <form action="${baseUrl}/cp/list-jury-submitted-projects.html" method="POST" role="form" >
 	                    <div class="row">
 	                        <div class="col-lg-12">

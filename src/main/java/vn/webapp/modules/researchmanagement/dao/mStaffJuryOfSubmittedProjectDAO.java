@@ -1,6 +1,7 @@
 package vn.webapp.modules.researchmanagement.dao;
 
 import java.util.List;
+
 import vn.webapp.modules.researchmanagement.model.mStaffJuryOfSubmittedProject;
 
 
@@ -54,4 +55,11 @@ public interface mStaffJuryOfSubmittedProjectDAO {
 	 * @return
 	 */
 	public mStaffJuryOfSubmittedProject loadAStaffJuryOfSubmittedProjectByStaffAndProjectCode(String STFJUPRJ_STAFFJURCODE, String STFJUPRJ_PROJCODE);
+	
+	/**
+	 * 
+	 * @param projectCallCode
+	 * @return
+	 */
+	public List<mStaffJuryOfSubmittedProject> loadListStaffJuryOfSubmittedProjectByProjectCallCode(String projectCallCode);
 }

@@ -31,7 +31,7 @@ public interface mStaffJuryOfSubmittedProjectService {
 	 * @param STFJUPRJ_PRJCODE
 	 * @return
 	 */
-	public int saveStaffJuryOfSubmittedProject(String STFJUPRJ_STAFFJURCODE,String STFJUPRJ_PRJCODE);
+	public int saveStaffJuryOfSubmittedProject(String STFJUPRJ_STAFFJURCODE,String STFJUPRJ_PRJCODE, String selectedProjectCallCode);
 
 	/**
 	 * Editing a staff jury of submitted project  (editing a record in table: tblstaffjurysubmittedprojects )
@@ -47,4 +47,11 @@ public interface mStaffJuryOfSubmittedProjectService {
 	 * @return
 	 */
 	public int deleteStaffJuryOfSubmittedProject(int STFJUPRJ_ID);
+	
+	/**
+	 * 
+	 * @param projectCallCode
+	 * @return
+	 */
+	public List<mStaffJuryOfSubmittedProject> loadListStaffJuryOfSubmittedProjectByProjectCallCode(String projectCallCode);
 }

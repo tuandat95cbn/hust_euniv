@@ -48,9 +48,11 @@ public class mStaffJuryOfSubmittedProjectDAOImpl extends BaseDao implements mSta
 			close();
 		}		
 	}
+	
 	/**
 	 * 
 	 */
+	@Override
 	public List<mStaffJuryOfSubmittedProject> loadListStaffJuryOfSubmittedProjectByStaffCode(String STFJUPRJ_STAFFJURCODE){
 		try {
 			begin();
@@ -70,6 +72,9 @@ public class mStaffJuryOfSubmittedProjectDAOImpl extends BaseDao implements mSta
 		}		
 	}
 	
+	/**
+	 * 
+	 */
 	public List<mStaffJuryOfSubmittedProject> loadListStaffJuryOfSubmittedProjectByProjectCode(String STFJUPRJ_PROJCODE){
 		try {
 			begin();
@@ -197,5 +202,28 @@ public class mStaffJuryOfSubmittedProjectDAOImpl extends BaseDao implements mSta
 			flush();
 			close();
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<mStaffJuryOfSubmittedProject> loadListStaffJuryOfSubmittedProjectByProjectCallCode(String projectCallCode){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(mStaffJuryOfSubmittedProject.class, "staffJuriesOfSubmittedProject");
+			criteria.add(Restrictions.eq("STFJUPRJ_PRJCALLCODE", projectCallCode));
+			List<mStaffJuryOfSubmittedProject> staffJuries = criteria.list();
+			commit();
+			return staffJuries;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}		
 	}
 }

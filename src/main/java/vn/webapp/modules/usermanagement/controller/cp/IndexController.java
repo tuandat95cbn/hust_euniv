@@ -25,21 +25,6 @@ import vn.webapp.modules.usermanagement.service.mUserService;
 @Controller("cpIndex")
 @RequestMapping(value = {"/cp"})
 public class IndexController {
-	
-	public int iMANAGEUSERS = 0;
-    public int iMANAGEPAPERS = 0;
-    public int iMANAGETOPICS = 0;
-    public int iMANAGEPATENTS = 0;
-    public int iMANAGESUMMARY = 0;
-    public int iMANAGEPRODUCTS = 0;
-	public int iMANAGEPROJECTCALLS = 0;
-	public int iPROJECTSIGNUP = 0;
-	public int iADDJURYSUBMITTEDPROJECTS = 0;
-	public int iASSIGNJURYSUBMITTEDPROJECTS = 0;
-	public int iMODIFYSUBMITTEDPROJECTS = 0;
-	public int iREVIEWSUBMITTEDPROJECTS = 0;
-	
-	
 	@Autowired
     private mUserService userService;
     
