@@ -98,9 +98,11 @@ public class mStaffJuryOfSubmittedProjectServiceImpl implements mStaffJuryOfSubm
 	 * 
 	 */
 	public int deleteStaffJuryOfSubmittedProject(int STFJUPRJ_ID){
-		mStaffJuryOfSubmittedProject staffJuryOfSubmittedProject = staffJuryOfSubmittedProjectDAO.loadAStaffJuryOfSubmittedProjectById(STFJUPRJ_ID);
-
-		return staffJuryOfSubmittedProjectDAO.deleteStaffJuryOfSubmittedProject(staffJuryOfSubmittedProject);
+		if(STFJUPRJ_ID > 0){
+			mStaffJuryOfSubmittedProject staffJuryOfSubmittedProject = staffJuryOfSubmittedProjectDAO.loadAStaffJuryOfSubmittedProjectById(STFJUPRJ_ID);
+			return staffJuryOfSubmittedProjectDAO.deleteStaffJuryOfSubmittedProject(staffJuryOfSubmittedProject);
+		}
+		return 0;
 	}
 	
 	/**

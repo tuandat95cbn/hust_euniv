@@ -17,6 +17,13 @@ public interface mFuncsPermissionService {
 	 * @return
 	 */
 	public List<mFuncsPermission> loadFunctionsPermissionByUserList(String sUserCode);
+	
+	/**
+	 * 
+	 * @param sUserCode
+	 * @return
+	 */
+	public mFuncsPermission loadFunctionsPermissionByCodeAndUser(String sFuncCode, String sUserCode);
     
 	/**
 	 * 
@@ -36,5 +43,13 @@ public interface mFuncsPermissionService {
 	 * @return
 	 */
 	public List<mFunction> loadFunctionsChildHierachyList();
+	
+	/**
+	 * 
+	 * @param sFuncCode
+	 * @param sUserCode
+	 * @return
+	 */
+	public int saveFunctionsPermission(String sFuncCode, String sUserCode);
    
 }

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import vn.webapp.modules.researchmanagement.model.mStaffJuryOfSubmittedProject;
 import vn.webapp.modules.usermanagement.dao.mDepartmentDAO;
 import vn.webapp.modules.usermanagement.dao.mFuncsPermissionDAO;
 import vn.webapp.modules.usermanagement.dao.mFunctionsDAO;
@@ -46,6 +47,19 @@ public class mFuncsPermissionServiceImpl implements mFuncsPermissionService {
     public List<mFuncsPermission> loadFunctionsPermissionByUserList(String sUserCode) {
         try {
             return funcsPermissionDAO.loadFunctionsPermissionByUserList(sUserCode);
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public mFuncsPermission loadFunctionsPermissionByCodeAndUser(String sFuncCode, String sUserCode){
+        try {
+            return funcsPermissionDAO.loadFunctionsPermissionByCodeAndUser(sFuncCode, sUserCode);
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
             return null;
@@ -96,4 +110,21 @@ public class mFuncsPermissionServiceImpl implements mFuncsPermissionService {
         }
     }
 
+    /**
+     * 
+     */
+    @Override
+    public int saveFunctionsPermission(String sFuncCode, String sUserCode){
+		if (!"".equals(sFuncCode) && !"".equals(sUserCode)) {
+			mFuncsPermission oFunc = new mFuncsPermission();
+			String sCode = sUserCode+"_"+sFuncCode;
+			oFunc.setUSERFUNC_CODE(sCode);
+			oFunc.setUSERFUNC_USERCODE(sUserCode);
+			oFunc.setUSERFUNC_FUNCCODE(sFuncCode);
+			
+			return funcsPermissionDAO.saveAFunction(oFunc);
+		}
+		return 0;
+	}
+    
 }

@@ -43,23 +43,17 @@
 	                        <div class="col-lg-12">
 	                        	<div class="form-group">
 			                        <label>Đợt gọi Đề tài </label>
-			                        
-			                        <select class="form-control" readonly name="PROJCALL_CODE" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" onchange="showProjectsOfThisCall(this); showStaffsOfThisCall(this);">
-			                            <!-- <option value="">Chọn</option> -->	                                    	        	                                    	
-			                        	<c:forEach items="${projectCallList}" var="iProjectCall">
-			                            <option value="${iProjectCall.PROJCALL_CODE}">${iProjectCall.PROJCALL_NAME}</option>
-			                           	</c:forEach>
-			                        <select>
-			                        
-			                        <input type="hidden" value="${projectCallCode}" name="projectCallCodeFiltering" />
+			                        <select type="text" class="form-control" readonly name="PROJCALL_CODE" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc">
+			                        	<option value="${projectCall.PROJCALL_CODE}"><c:out value="${projectCall.PROJCALL_NAME}" /></option>
+			                        </select>
 			                    </div>
                                 <div class="form-group">
                                     <label >Thành viên</label>
                                     <div id="staff-list">
-	                                    <select path="STFJUPRJ_STAFFJURCODE" class="form-control" name="STFJUPRJ_STAFFJURCODE" id="STFJUPRJ_STAFFJURCODE">
-	                                        <option value="">Chọn</option>	    
+	                                    <select path="STFJUPRJ_STAFFJURCODE" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" class="form-control" name="STFJUPRJ_STAFFJURCODE" id="STFJUPRJ_STAFFJURCODE">
+	                                        <option value="">Chọn</option>	 
 	                                        <c:forEach items = "${staffList}" var="staff">
-	                                        <option value="${staff.staff_Code}">${staff.staff_Name}</option>
+	                                        	<option value="${staff.staff_Code}">${staff.staff_Name}</option>
 	                                        </c:forEach>                                	        	                                    	
 	                                    </select>
                                     </div>
@@ -68,10 +62,9 @@
                                 <div class="form-group">
                                     <label>Đề tài </label>
                                     <div id="project-list">
-	                                    <select path="STFJUPRJ_PRJCODE" class="form-control" name="STFJUPRJ_PRJCODE" id="STFJUPRJ_PRJCODE">
-	                                        <option value="">Chọn</option>	 
+	                                    <select path="STFJUPRJ_PRJCODE" size="10" multiple="true" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" class="form-control" name="STFJUPRJ_PRJCODE" id="STFJUPRJ_PRJCODE">
 	                                        <c:forEach items="${projectList}" var="project">
-	                                        <option value="${project.PROJ_Code}">${project.PROJ_Name}</option>
+	                                        	<option value="${project.PROJ_Code}">${project.PROJ_Name}</option>
 	                                        </c:forEach>                                   	        	                                    	
 	                                    </select>
                                     </div>

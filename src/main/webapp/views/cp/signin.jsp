@@ -17,6 +17,8 @@
 
     <title>Hệ thống hỗ trợ quản lý Khoa học và Công nghệ, ĐHBK Hà Nội</title>
 
+	<link rel="Shortcut Icon" href="<c:url value="/assets/img/icon.ico"/>" />
+
     <!-- Bootstrap Core CSS -->
     <link href="<c:url value="/assets/libs/bootstrap/dist/css/bootstrap.min.css" />" rel="stylesheet" type="text/css" media="all" />
 
