@@ -73,14 +73,19 @@ public class mFacultyController extends BaseWeb {
 		return sReturn;
 	}
 	
+	public String name(){
+		return "mFacultyController";
+	}
 	@ResponseBody
 	@RequestMapping(value = "/getsinglestaffs", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
 	public String getSingleStaff(@RequestParam(value = "sDepartmentCode", defaultValue = "0") String sDepartmentCode) {
 		String sReturn = "";
+		System.out.println(name() + "::getSingleStaff, departmentCode = " + sDepartmentCode);
 		// Get department lists
 		if(!sDepartmentCode.equals(""))
 		{
 			List<mStaff> listStaff = staffService.listStaffsByDepartment(sDepartmentCode);
+			System.out.println(name() + "::getSingleStaff, listStaff = " + listStaff.size());
 			if(listStaff != null){
 				sReturn = "<select class='form-control' name='members' id='members'>";
 				for(mStaff staff : listStaff)

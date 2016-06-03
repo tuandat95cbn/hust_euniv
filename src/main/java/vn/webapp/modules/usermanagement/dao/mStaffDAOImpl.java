@@ -82,8 +82,13 @@ public class mStaffDAOImpl extends BaseDao implements mStaffDAO{
      * @param String
      * @return object
      */
+    
+    public String name(){
+    	return "mStaffDAOImpl";
+    }
     @Override
     public List<mStaff> listStaffsByDepartment(String departmentCode){
+    	//System.out.println(name() + "::listStaffsByDepartment, departmentCode = " + departmentCode);
     	try {
     		begin();
             Criteria criteria = getSession().createCriteria(mStaff.class);

@@ -70,13 +70,18 @@
                                     	<br>
                                     
 	                                    <label >Thành viên*</label>
+	                                    
+                                    	
 	                                    <form:select path="JUSUPRJ_STAFFCODE" class="form-control" data-validation="required" id="staff" data-validation-error-msg="Trường thông tin này là bắt buộc" name="JUSUPRJ_STAFFCODE">
 	                                        <option value="">chọn</option>	                                    	                                    
+	                                    	<%-- 
 	                                    	<c:forEach items="${staffList}" var="iStaff">
 		                                        <option value="${iStaff.staff_Code}">${iStaff.staff_Name}</option>
 	                                       	</c:forEach>
+	                                       	 --%>
 	                                    </form:select>
 	                                    <form:errors path="JUSUPRJ_STAFFCODE" class="alert-danger"></form:errors>
+	                                    
 	                                </div>
 	                        
 	                                <div class="form-group">
@@ -236,6 +241,7 @@
 	
 	function showDepartment(sFaculty)
 	{
+		//alert('showDepartment ' + sFaculty);
 		var sGeneratingUrl = "${baseUrl}/cpservice/getdepartments.html";
 		var sFacultyCode = sFaculty.options[sFaculty.selectedIndex].value;  
 		if (sFacultyCode.length > 0 ) { 
@@ -277,7 +283,8 @@
 					beforeSend: function () { 
 						//$('#staff').html('<img src="loader.gif" alt="" width="24" height="24">');
 					},
-					success: function(html) {    
+					success: function(html) {   
+						//alert(html);
 						$("#staff").html( html );
 					}
 				});

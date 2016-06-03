@@ -15,7 +15,7 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Thêm một thành viên cho hội đồng phản biện đề tài</h1>
+            <h1 class="page-header">Chọn đợt gọi đề tài</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -24,7 +24,7 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Thêm một thành viên cho hội đồng phản biện đề tài
+                    
                 </div>
                 <div class="panel-body">
                     
