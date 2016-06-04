@@ -125,7 +125,9 @@
 						<div class="col-lg-6">
 							<div class="form-group">
 								<button type="button" id="filter" onclick="v_fSubmitFilter()" class="btn btn-primary filter">Chọn</button>
+								<!-- 
 								<button type="submit" class="btn btn-primary">Kết xuất Excel</button>
+								 -->
 							</div>
 						</div>
 					</div>

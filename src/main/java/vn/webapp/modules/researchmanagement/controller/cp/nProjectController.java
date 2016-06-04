@@ -734,6 +734,35 @@ public class nProjectController extends BaseWeb {
 
 		return projectsList;
 	}
+	public List<mThreads> listProjectsWithFullInformation() {
+		// List<Projects> projectsList =
+		// threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
+		List<mThreads> projectsList = threadService.listAll();
+		/*
+		 * List<mStaff> staffs = staffService.listStaffs(); HashMap<String,
+		 * String> mStaffCode2Name = new HashMap<String, String>(); for (mStaff
+		 * st : staffs) { mStaffCode2Name.put(st.getStaff_Code(),
+		 * st.getStaff_Name()); }
+		 */
+
+		HashMap<String, String> mProjectCallCode2Name = new HashMap<String, String>();
+		List<mProjectCalls> projectCalls = projectCallsService
+				.loadProjectCallsList();
+		for (mProjectCalls pc : projectCalls) {
+			mProjectCallCode2Name.put(pc.getPROJCALL_CODE(),
+					pc.getPROJCALL_NAME());
+		}
+
+		for (mThreads p : projectsList) {
+			mStaff st = staffService.loadStaffByUserCode(p.getPROJ_User_Code());
+			// p.setPROJ_User_Code(mStaffCode2Name.get(p.getPROJ_User_Code()));
+			p.setPROJ_User_Code(st.getStaff_Name());
+			p.setPROJ_PRJCall_Code(mProjectCallCode2Name.get(p
+					.getPROJ_PRJCall_Code()));
+		}
+
+		return projectsList;
+	}
 
 	@RequestMapping(value = "/collect-comments", method = RequestMethod.GET)
 	public String getProjectsForShowingComments(ModelMap model,
@@ -743,9 +772,9 @@ public class nProjectController extends BaseWeb {
 
 		// List<Projects> projectsList =
 		// threadService.loadSubmittedProjectsListByStaff(userRole, userCode);
-		List<Projects> projectsList = listProjectsWithFullInformation(userRole,
-				userCode);
-
+		//List<Projects> projectsList = listProjectsWithFullInformation(userRole,	userCode);
+		List<mThreads> projectsList = listProjectsWithFullInformation();
+		
 		model.put("projectsList", projectsList);
 		model.put("projects", status);
 		return "cp.listcomments";
@@ -2812,7 +2841,7 @@ public class nProjectController extends BaseWeb {
 								.getPROJ_Code());
 
 				// if(!"".equals(commentsOfSubmittedProject.getCOMPROJ_CODE())){
-				if (commentsOfSubmittedProjects != null) {
+				if (commentsOfSubmittedProjects != null && commentsOfSubmittedProjects.size() > 0) {
 					System.out
 							.println(name()
 									+ "::updateAProjectComment, commentsOfSubmittedProjects.sz = "
