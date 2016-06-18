@@ -47,6 +47,13 @@ public interface mPaperDAO {
     
     /**
      * 
+     * @param paperId
+     * @return
+     */
+    public mPapers loadAPaperById(int paperId);
+    
+    /**
+     * 
      * @param paper
      */
     public void editAPaper(mPapers paper);

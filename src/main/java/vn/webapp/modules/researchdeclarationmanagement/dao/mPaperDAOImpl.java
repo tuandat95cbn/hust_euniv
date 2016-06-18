@@ -159,6 +159,29 @@ public class mPaperDAOImpl extends BaseDao implements mPaperDAO{
     }
     
     /**
+     * 
+     */
+    @Override
+    public mPapers loadAPaperById(int paperId){
+    	try {
+            begin();
+            Criteria criteria = getSession().createCriteria(mPapers.class);
+            criteria.add(Restrictions.eq("PDECL_ID", paperId));
+            mPapers paper = (mPapers) criteria.uniqueResult();
+            commit();
+            return paper;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            rollback();
+            close();
+            return null;
+        } finally {
+            flush();
+            close();
+        }
+    }
+    
+    /**
      * Edit a paper
      * @param object
      * @return int

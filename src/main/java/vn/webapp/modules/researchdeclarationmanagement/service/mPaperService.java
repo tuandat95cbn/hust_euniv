@@ -45,8 +45,8 @@ public interface mPaperService {
      * @param paperSourceUploadFile
      * @return
      */
-    public int saveAPaper(String currentUserName, String paperCatCode, String paperPubName, String paperJConfName, String paperISSN, int paperPubConHours, 
-    						int paperAutConHours, int paperYear, String paperJIndexCode, String paperVolumn, String paperAuthors, String paperReportingAcademicDate, String paperSourceUploadFile);
+    public int saveAPaper(String currentUserName, String paperCatCode, String paperPubName, String paperJConfName, String paperISSN, int paperPubConHours, int paperAutConHours, 
+    						int paperYear, String paperJIndexCode, String paperVolumn, String paperAuthors, String paperReportingAcademicDate, String paperSourceUploadFile, String[] projectMembers);
     
     /**
      * 
@@ -71,9 +71,8 @@ public interface mPaperService {
      * @param paperReportingAcademicDate
      * @param paperSourceUploadFile
      */
-    public void editAPaper(String userRole, String userCode, int paperId, String paperCate, String publicationName, String journalName, 
-							String ISSN, int publicConvertedHours, int authorConvertedHours, int paperYear, 
-							String volumn, String authors, String journalIndex, String paperReportingAcademicDate, String paperSourceUploadFile );
+    public void editAPaper(String userRole, String userCode, int paperId, String paperCate, String publicationName, String journalName, String ISSN, int publicConvertedHours, 
+    						int authorConvertedHours, int paperYear, String volumn, String authors, String journalIndex, String paperReportingAcademicDate, String paperSourceUploadFile, String[] projectMembers );
     
     /**
      * 

@@ -14,6 +14,7 @@ public class mPapers implements Serializable{
 	@Id
     @GeneratedValue
     private int PDECL_ID;
+	private String PDECL_Code;
     private String PDECL_PaperCategory_Code;
     private String PDECL_User_Code;
     private String PDECL_PublicationName;
@@ -31,6 +32,14 @@ public class mPapers implements Serializable{
     @ManyToOne
     @JoinColumn(name="PDECL_PaperCategory_Code", referencedColumnName = "PCAT_Code", insertable = false, updatable = false)
     public mPaperCategory paperCategory;
+
+	public String getPDECL_Code() {
+		return PDECL_Code;
+	}
+
+	public void setPDECL_Code(String pDECL_Code) {
+		PDECL_Code = pDECL_Code;
+	}
 
 	public int getPDECL_ID() {
 		return PDECL_ID;

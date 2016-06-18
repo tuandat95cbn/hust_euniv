@@ -2,10 +2,14 @@ package vn.webapp.modules.researchdeclarationmanagement.service;
 
 import java.io.File;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import vn.webapp.modules.researchdeclarationmanagement.dao.PaperStaffsDAO;
 import vn.webapp.modules.researchdeclarationmanagement.dao.mPaperDAO;
+import vn.webapp.modules.researchdeclarationmanagement.model.PaperStaffs;
 import vn.webapp.modules.researchdeclarationmanagement.model.mPapers;
 import vn.webapp.modules.usermanagement.dao.mUserDAO;
 import vn.webapp.modules.usermanagement.model.mUsers;
@@ -17,6 +21,9 @@ public class mPaperServiceImpl implements mPaperService{
 
     @Autowired
     private mUserDAO userDAO;
+    
+    @Autowired
+    private PaperStaffsDAO paperStaffsDAO;
     
     /**
      * Get a list Papers by username
@@ -82,13 +89,14 @@ public class mPaperServiceImpl implements mPaperService{
      */
     @Override
     public int saveAPaper(String currentUserName, String paperCatCode, String paperPubName, String paperJConfName, String paperISSN, int paperPubConHours, 
-    						int paperAutConHours, int paperYear, String paperJIndexCode, String paperVolumn, String paperAuthors, String paperReportingAcademicDate, String paperSourceUploadFile)
+    						int paperAutConHours, int paperYear, String paperJIndexCode, String paperVolumn, String paperAuthors, String paperReportingAcademicDate, String paperSourceUploadFile, String[] projectMembers)
     {
     	mUsers user = userDAO.getByUsername(currentUserName);
     	if(user.getUser_Code()  != null){
     		mPapers paper = new mPapers();
             paper.setPDECL_PaperCategory_Code(paperCatCode);
             paper.setPDECL_User_Code(user.getUser_Code());
+            paper.setPDECL_Code("DEFAULT_CODE");
             paper.setPDECL_PublicationName(paperPubName);
             paper.setPDECL_JournalConferenceName(paperJConfName);
             paper.setPDECL_Volumn(paperVolumn);
@@ -101,6 +109,23 @@ public class mPaperServiceImpl implements mPaperService{
             paper.setPDECL_ReportingAcademicDate(paperReportingAcademicDate);
             paper.setPDECL_SourceFile(paperSourceUploadFile);
             int i_SaveAPaper = paperDAO.saveAPaper(paper);
+            
+            if(i_SaveAPaper > 0 && projectMembers.length > 0){
+            	String PPSTF_PaperCode = user.getUser_Code()+i_SaveAPaper;
+            	String PPSTF_Code = "";
+            	paper.setPDECL_Code(PPSTF_PaperCode);
+            	paperDAO.editAPaper(paper);
+            	
+            	PaperStaffs paperStaffs = new PaperStaffs();
+	            for (String projectMember : projectMembers) {
+	            	PPSTF_Code = projectMember+PPSTF_PaperCode;
+	            	paperStaffs.setPPSTF_Code(PPSTF_Code);
+	            	paperStaffs.setPPSTF_PaperCode(PPSTF_PaperCode);
+	            	paperStaffs.setPPSTF_StaffCode(projectMember);
+		    	    paperStaffsDAO.saveAPaperStaff(paperStaffs);
+		    	}
+            }
+            
             return i_SaveAPaper;
     	}
         return 0;
@@ -130,9 +155,8 @@ public class mPaperServiceImpl implements mPaperService{
      * @return null
      */
     @Override
-    public void editAPaper(String userRole, String userCode, int paperId, String paperCate, String publicationName, String journalName, 
-    						String ISSN, int publicConvertedHours, int authorConvertedHours, int paperYear, 
-    						String volumn, String authors, String journalIndex, String paperReportingAcademicDate, String paperSourceUploadFile ){
+    public void editAPaper(String userRole, String userCode, int paperId, String paperCate, String publicationName, String journalName, String ISSN, int publicConvertedHours, int authorConvertedHours, int paperYear, 
+    						String volumn, String authors, String journalIndex, String paperReportingAcademicDate, String paperSourceUploadFile, String[] projectMembers  ){
     	mPapers paper = paperDAO.loadAPaperByIdAndUserCode(userRole, userCode, paperId);
     	if(paper != null){
 	    	paper.setPDECL_ID(paperId);;
@@ -161,6 +185,26 @@ public class mPaperServiceImpl implements mPaperService{
 		   		paper.setPDECL_SourceFile(paperSourceUploadFile);
 	    	}
 	    	paperDAO.editAPaper(paper);
+	    	
+	    	if(projectMembers.length > 0){
+	    		String PPSTF_PaperCode = paper.getPDECL_Code();
+	    		String PPSTF_Code = "";
+	    		List<PaperStaffs> oldPaperStaffsList = paperStaffsDAO.loadPaperListByPaperCode(PPSTF_PaperCode);
+	    		if(oldPaperStaffsList != null && oldPaperStaffsList.size() > 0)
+	    		{
+	    			for (PaperStaffs paperStaff : oldPaperStaffsList) {
+	    				paperStaffsDAO.removeAPaperStaff(paperStaff);
+					}
+	    		}
+		    	PaperStaffs paperStaffs = new PaperStaffs();
+	            for (String projectMember : projectMembers) {
+	            	PPSTF_Code = projectMember+PPSTF_PaperCode;
+	            	paperStaffs.setPPSTF_Code(PPSTF_Code);
+	            	paperStaffs.setPPSTF_PaperCode(PPSTF_PaperCode);
+	            	paperStaffs.setPPSTF_StaffCode(projectMember);
+		    	    paperStaffsDAO.saveAPaperStaff(paperStaffs);
+		    	}
+	    	}
     	}
     }
     

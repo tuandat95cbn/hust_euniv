@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +36,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import vn.webapp.controller.BaseWeb;
+import vn.webapp.modules.researchdeclarationmanagement.model.PaperStaffs;
 import vn.webapp.modules.researchdeclarationmanagement.model.mAcademicYear;
 import vn.webapp.modules.researchdeclarationmanagement.model.mJournal;
 import vn.webapp.modules.researchdeclarationmanagement.model.mPaperCategory;
 import vn.webapp.modules.researchdeclarationmanagement.model.mPapers;
 import vn.webapp.modules.researchdeclarationmanagement.model.mPapersCategoryHourBudget;
+import vn.webapp.modules.researchdeclarationmanagement.service.PaperStaffsService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mAcademicYearService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mJournalService;
 import vn.webapp.modules.researchdeclarationmanagement.service.mPaperCategoryHourBudgetService;
@@ -48,8 +51,10 @@ import vn.webapp.modules.researchdeclarationmanagement.service.mPaperService;
 import vn.webapp.modules.researchdeclarationmanagement.validation.mPaperExcellValidation;
 import vn.webapp.modules.researchdeclarationmanagement.validation.mPaperValidation;
 import vn.webapp.modules.usermanagement.model.mDepartment;
+import vn.webapp.modules.usermanagement.model.mFaculty;
 import vn.webapp.modules.usermanagement.model.mStaff;
 import vn.webapp.modules.usermanagement.service.mDepartmentService;
+import vn.webapp.modules.usermanagement.service.mFacultyService;
 import vn.webapp.modules.usermanagement.service.mStaffService;
 import vn.webapp.modules.usermanagement.service.mUserService;
 
@@ -81,6 +86,12 @@ public class mPaperController extends BaseWeb {
     
     @Autowired
     private mUserService userService;
+    
+    @Autowired
+    private PaperStaffsService paperStaffsService;
+    
+    @Autowired
+    private mFacultyService facultyService;
     
     static final String status = "active";
     
@@ -118,6 +129,8 @@ public class mPaperController extends BaseWeb {
 	   List<mPaperCategory> paperCategory = paperCategoryService.list();
 	   List<mJournal> journalList = journalService.list();
 	   List<mPapersCategoryHourBudget> papersCategoryHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgets();
+	   List<mFaculty> listFaculty = facultyService.loadFacultyList();
+	   List<mStaff> staffList = staffService.listStaffs();
 	   
 	   // Get list reportingYear
 	   List<mAcademicYear> patentReportingAcademicDateList = academicYearService.list();
@@ -129,6 +142,8 @@ public class mPaperController extends BaseWeb {
 	   model.put("patentReportingAcademicDateList", patentReportingAcademicDateList);
 	   model.put("paperConvertedHours", paperConvertedHours);
 	   model.put("paperCategory", paperCategory);
+	   model.put("paperCategory", paperCategory);
+	   model.put("listFaculty", listFaculty);
 	   model.put("journalList", journalList);
 	   model.put("paperFormAdd", new mPaperValidation());
 	   model.put("papers", status);
@@ -181,9 +196,12 @@ public class mPaperController extends BaseWeb {
 	   List<mPaperCategory> paperCategory = paperCategoryService.list();
 	   List<mJournal> journalList = journalService.list();
 	   List<mPapersCategoryHourBudget> papersCategoryHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgets();
+	   
 	   // Get list reportingYear
 	   List<mAcademicYear> patentReportingAcademicDateList = academicYearService.list();
 	   String paperConvertedHours = this.setJsonByListPaperCategory(papersCategoryHourBudget, patentReportingAcademicDateList);
+	   List<mFaculty> listFaculty = facultyService.loadFacultyList();
+	   List<mStaff> staffList = staffService.listStaffs();
 	   
 	   /*
 	    * Put data back to view
@@ -191,6 +209,8 @@ public class mPaperController extends BaseWeb {
 	   model.put("patentReportingAcademicDateList", patentReportingAcademicDateList);
 	   model.put("paperConvertedHours", paperConvertedHours);
 	   model.put("paperCategory", paperCategory);
+	   model.put("listFaculty", listFaculty);
+	   model.put("staffList", staffList);
 	   model.put("journalList", journalList);
 	   model.put("papers", status);
 	   if(result.hasErrors()) {
@@ -213,68 +233,73 @@ public class mPaperController extends BaseWeb {
     	    	 numberOfAuthors--;
     	     }
     	   }
-    	   /**
-    	    * Uploading file
-    	    */
-    	   MultipartFile paperSourceUploadFile = paperValid.getPaperFileUpload();
-    	   String fileName = paperSourceUploadFile.getOriginalFilename();
-    	   String paperSourceUploadFileSrc = "";
-    	   try {
-    		   //Creating Date in java with today's date.
-    		   Date currentDate = new Date();
-    		   //change date into string yyyyMMdd format example "20110914"
-    		   SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
-    		   String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
-    			   
-	    	   byte[] bytes = paperSourceUploadFile.getBytes();
-	    	   String path = request.getServletContext().getRealPath("uploads");
-	    	   System.out.println("PaperController::saveAPaper, path = " + path);
-	    	   File dir = new File(path+ "/papers");
-	           if (!dir.exists()){
-	        	   dir.mkdirs();
+    	   String[] projectMembers = request.getParameterValues("projectMembers");
+    	   if(projectMembers != null && projectMembers.length > 0){
+	    	   /**
+	    	    * Uploading file
+	    	    */
+	    	   MultipartFile paperSourceUploadFile = paperValid.getPaperFileUpload();
+	    	   String fileName = paperSourceUploadFile.getOriginalFilename();
+	    	   String paperSourceUploadFileSrc = "";
+	    	   try {
+	    		   //Creating Date in java with today's date.
+	    		   Date currentDate = new Date();
+	    		   //change date into string yyyyMMdd format example "20110914"
+	    		   SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
+	    		   String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+	    			   
+		    	   byte[] bytes = paperSourceUploadFile.getBytes();
+		    	   String path = request.getServletContext().getRealPath("uploads");
+		    	   File dir = new File(path+ "/papers");
+		    	   System.out.println(dir.getAbsolutePath());
+		           if (!dir.exists()){
+		        	   dir.mkdirs();
+		           }
+		           
+	               // Create a file
+		           String currentUserName 	= session.getAttribute("currentUserName").toString();
+		           fileName = currentUserName + "_" + sCurrentDate + "_" + fileName; 
+	               File serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
+	               //if(serverFile.exists()){
+	            	   paperSourceUploadFileSrc = dir.getAbsolutePath()+ File.separator + fileName;
+	               //}else{
+	               //}
+	               // Save data into file
+	               BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+	               stream.write(bytes);
+	               stream.close();
+	               
+		           /**
+		            * Preparing data for adding into DB
+		            */
+		    	   
+		    	   String paperPubName 		= paperValid.getPaperPubName();
+		    	   String paperJConfName 	= paperValid.getPaperJConfName();
+		    	   String paperISSN 		= paperValid.getPaperISSN();
+		    	   String paperJIndexCode 	= paperCate.getPCAT_Journal();
+		    	   
+		    	   int paperPubConHours 	= paperValid.getPaperPubConHours();
+		    	   if(papersCateHourBudget != null && !"".equals(papersCateHourBudget.getPCAHOBUD_Hour()))
+		    	   {
+		    		   paperPubConHours = papersCateHourBudget.getPCAHOBUD_Hour();
+		    	   }
+		    	   int paperAutConHours 	= (!numberOfAuthors.equals(0)) ? (int) Math.round(paperPubConHours/numberOfAuthors) : 0;
+		    	   int paperYear 			= paperValid.getPaperYear();
+		    	   String paperVolumn 		= paperValid.getPaperVolumn();
+		    	   
+		    	   int i_InsertAPaper = paperService.saveAPaper(currentUserName, paperCatCode, paperPubName, paperJConfName, paperISSN, paperPubConHours, paperAutConHours, 
+		    			   											paperYear, paperJIndexCode, paperVolumn, paperAuthors, paperReportingAcademicDate, paperSourceUploadFileSrc, projectMembers);
+		    	   if(i_InsertAPaper > 0){
+		    		   //model.put("status", "Successfully saved a paper: ");
+		    		   return "redirect:" + this.baseUrl + "/cp/papers.html";
+		    	   }
+	    	   }catch (Exception e) {
+	    		   System.out.println(e.getStackTrace());
+	    		   model.put("status", "You failed to upload " + fileName + " => " + e.getMessage());
 	           }
-	           
-               // Create a file
-	           String currentUserName 	= session.getAttribute("currentUserName").toString();
-	           fileName = currentUserName + "_" + sCurrentDate + "_" + fileName; 
-               File serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
-               //if(serverFile.exists()){
-            	   paperSourceUploadFileSrc = dir.getAbsolutePath()+ File.separator + fileName;
-               //}else{
-            	   System.out.println("PaperController::saveAPaper, filename = " + fileName + 
-            			   ", paperSourceUploadFilrSrc = " + paperSourceUploadFileSrc);
-               //}
-               // Save data into file
-               BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-               stream.write(bytes);
-               stream.close();
-               
-	           /**
-	            * Preparing data for adding into DB
-	            */
-	    	   
-	    	   String paperPubName 		= paperValid.getPaperPubName();
-	    	   String paperJConfName 	= paperValid.getPaperJConfName();
-	    	   String paperISSN 		= paperValid.getPaperISSN();
-	    	   String paperJIndexCode 	= paperCate.getPCAT_Journal();
-	    	   
-	    	   int paperPubConHours 	= (!"".equals(papersCateHourBudget.getPCAHOBUD_Hour())) ? papersCateHourBudget.getPCAHOBUD_Hour() : paperValid.getPaperPubConHours();
-	    	   int paperAutConHours 	= (!numberOfAuthors.equals(0)) ? (int) Math.round(paperPubConHours/numberOfAuthors) : 0;
-	    	   int paperYear 			= paperValid.getPaperYear();
-	    	   String paperVolumn 			= paperValid.getPaperVolumn();
-	    	   
-	    	   int i_InsertAPaper = paperService.saveAPaper(currentUserName, paperCatCode, paperPubName, paperJConfName, paperISSN, paperPubConHours, paperAutConHours, 
-	    			   											paperYear, paperJIndexCode, paperVolumn, paperAuthors, paperReportingAcademicDate, paperSourceUploadFileSrc);
-	    	   
-	    	   System.out.println("PaperController::saveAPaper, i_InsertAPaper = " + i_InsertAPaper + ", sourceFile = " + paperSourceUploadFileSrc);
-
-	    	   if(i_InsertAPaper > 0){
-	    		   //model.put("status", "Successfully saved a paper: ");
-	    		   return "redirect:" + this.baseUrl + "/cp/papers.html";
-	    	   }
-    	   }catch (Exception e) {
-    		   model.put("status", "You failed to upload " + fileName + " => " + e.getMessage());
-           }
+    	   }else{
+    		   model.put("err", "Cần phải thêm tác giả của bài báo.");
+    	   }
            return "cp.addAPaper";
        }
    }
@@ -334,21 +359,26 @@ public class mPaperController extends BaseWeb {
 	   
 	   // Get list reportingYear
 	   List<mAcademicYear> patentReportingAcademicDateList = academicYearService.list();
-	   
+	   List<mFaculty> listFaculty = facultyService.loadFacultyList();
+	   List<mStaff> staffList = staffService.listStaffs();
 	   /*
 	    * Put data back to view
 	    */
 	   model.put("patentReportingAcademicDateList", patentReportingAcademicDateList);
 	   model.put("papers", status);
+	   model.put("listFaculty", listFaculty);
+	   model.put("staffList", staffList);
 	   String userRole = session.getAttribute("currentUserRole").toString();
 	   String userCode = session.getAttribute("currentUserCode").toString();
 	   mPapers papers = paperService.loadAPaperByIdAndUserCode(userRole, userCode, paperId);
 	   if(papers != null)
 	   {
+		   List<PaperStaffs> listPaperStaffs = paperStaffsService.loadPaperListByPaperCode(papers.getPDECL_Code());
 		   List<mPaperCategory> paperCategory = paperCategoryService.list();
 		   List<mJournal> journalList = journalService.list();
 		   List<mPapersCategoryHourBudget> papersCategoryHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgets();
 		   String paperConvertedHours = this.setJsonByListPaperCategory(papersCategoryHourBudget, patentReportingAcademicDateList);
+		   String fileUploadName = papers.getPDECL_SourceFile();
 		   /*
 		    * Put journal list and paper category to view
 		    */
@@ -356,7 +386,8 @@ public class mPaperController extends BaseWeb {
 		   model.put("paperCategory", paperCategory);
 		   model.put("journalList", journalList);
 		   model.put("paperFormEdit", new mPaperValidation());
-		   
+		   model.put("isFileSourceExists", (!"".equals(fileUploadName) ? 1 : 0));
+		   model.put("listPaperStaffs", listPaperStaffs);
 		   model.put("paperCate", papers.getPDECL_PaperCategory_Code());
 		   model.put("publicationName", papers.getPDECL_PublicationName());
 		   model.put("journalName", papers.getPDECL_JournalConferenceName());
@@ -381,13 +412,22 @@ public class mPaperController extends BaseWeb {
     */
    @RequestMapping(value = "/edit-a-paper", method = RequestMethod.POST)
    public String updateAPaper(HttpServletRequest request, @Valid @ModelAttribute("paperFormEdit") mPaperValidation paperFormEdit, BindingResult result, Map model, HttpSession session) {
-	   
+	   String userRole = session.getAttribute("currentUserRole").toString();
+   	   String userCode = session.getAttribute("currentUserCode").toString();
 	   List<mPaperCategory> paperCategories = paperCategoryService.list();
 	   List<mJournal> journalList = journalService.list();
 	   List<mPapersCategoryHourBudget> papersCategoryHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgets();
 	   // Get list reportingYear
 	   List<mAcademicYear> patentReportingAcademicDateList = academicYearService.list();
 	   String paperConvertedHours = this.setJsonByListPaperCategory(papersCategoryHourBudget, patentReportingAcademicDateList);
+	   List<mFaculty> listFaculty = facultyService.loadFacultyList();
+	   List<mStaff> staffList = staffService.listStaffs();
+	   int paperId = paperFormEdit.getPaperId();
+	   mPapers paper = paperService.loadAPaperByIdAndUserCode(userRole, userCode, paperId);
+	   List<PaperStaffs> listPaperStaffs = new ArrayList();
+	   if(paper != null){
+		   listPaperStaffs = paperStaffsService.loadPaperListByPaperCode(paper.getPDECL_Code());
+	   }
 	   
 	   /*
 	    * Put data back to view
@@ -395,6 +435,9 @@ public class mPaperController extends BaseWeb {
 	   model.put("patentReportingAcademicDateList", patentReportingAcademicDateList);
 	   model.put("paperConvertedHours", paperConvertedHours);
 	   model.put("paperCategory", paperCategories);
+	   model.put("listPaperStaffs", listPaperStaffs);
+	   model.put("listFaculty", listFaculty);
+	   model.put("staffList", staffList);
 	   model.put("journalList", journalList);
 	   model.put("papers", status);
 	   // Add the saved validationForm to the model  
@@ -420,76 +463,82 @@ public class mPaperController extends BaseWeb {
 	   	   MultipartFile paperSourceUploadFile = paperFormEdit.getPaperFileUpload();
 	   	   String fileName = paperSourceUploadFile.getOriginalFilename();
 	   	   String paperSourceUploadFileSrc = "";
-	   	   String userRole = session.getAttribute("currentUserRole").toString();
-	   	   String userCode = session.getAttribute("currentUserCode").toString();
 	   	   String paperCate = paperFormEdit.getPaperCatCode();
 	   	   try {
-	   		   	//	Creating Date in java with today's date.
-	   		   	Date currentDate = new Date();
-	   		   	//change date into string yyyyMMdd format example "20110914"
-	   		   	SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
-	   		   	String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
-    		   
-	    	   	byte[] bytes = paperSourceUploadFile.getBytes();
-	    	   	String path = request.getServletContext().getRealPath("uploads");
-	    	   	System.out.println("PaperController::editAPaper, path = " + path);
-	    	   	File dir = new File(path+ "/papers");
-	           	if (!dir.exists()){
-	        	   dir.mkdirs();
-	           	}
-	           	
-	           	if(!fileName.equals("")){
-	        	   // Create a file
-	           	   String currentUserName 	= session.getAttribute("currentUserName").toString();
-	 	           fileName = currentUserName + "_" + sCurrentDate + "_" + fileName; 
-		           File serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
-		           // Save data into file
-		           BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-		           stream.write(bytes);
-		           stream.close();
+	   		   String[] projectMembers = request.getParameterValues("projectMembers");
+	    	   if(projectMembers != null && projectMembers.length > 0){
+		   		   	//	Creating Date in java with today's date.
+		   		   	Date currentDate = new Date();
+		   		   	//change date into string yyyyMMdd format example "20110914"
+		   		   	SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat("HHmmssddMMyyyy");
+		   		   	String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+	    		   
+		    	   	byte[] bytes = paperSourceUploadFile.getBytes();
+		    	   	String path = request.getServletContext().getRealPath("uploads");
+		    	   	System.out.println("PaperController::editAPaper, path = " + path);
+		    	   	File dir = new File(path+ "/papers");
+		           	if (!dir.exists()){
+		        	   dir.mkdirs();
+		           	}
+		           	
+		           	if(!fileName.equals("")){
+		        	   // Create a file
+		           	   String currentUserName 	= session.getAttribute("currentUserName").toString();
+		 	           fileName = currentUserName + "_" + sCurrentDate + "_" + fileName; 
+			           File serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
+			           // Save data into file
+			           BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+			           stream.write(bytes);
+			           stream.close();
+			           
+			           
+			           serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
+			           
+			           //if(serverFile.exists()){
+		           	   		paperSourceUploadFileSrc = dir.getAbsolutePath()+ File.separator + fileName;
+			           //}else{
+			        	   //System.out.println("PaperController::editAPaper, fileName = " + fileName + ", serverFile not exists");
+			           //}
+		           	}
 		           
-		           
-		           serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
-		           
-		           //if(serverFile.exists()){
-	           	   		paperSourceUploadFileSrc = dir.getAbsolutePath()+ File.separator + fileName;
-		           //}else{
-		        	   //System.out.println("PaperController::editAPaper, fileName = " + fileName + ", serverFile not exists");
-		           //}
-	           	}
-	           
-	           	System.out.println("PaperController::editAPaper, paperCourseUpLoadFileSrc = " + paperSourceUploadFileSrc);
-	           	
-	    	  	/**
-	    	  	 * Prepare data for inserting DB
-	    	  	 */
-		   	  	mPaperCategory paperCategory = paperCategoryService.getPaperCateByCode(paperCate);
-		   	  	mPapersCategoryHourBudget papersCateHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgetByCategoryAndYear(paperCate, paperFormEdit.getPatentReportingAcademicDate());
-		   	  	String authors = paperFormEdit.getPaperAuthorList();
-	   	   		String[] paperAuthorsList 	= authors.trim().split("\\,");
-	   	   		Integer numberOfAuthors 		= paperAuthorsList.length;
-	   	   		for(int i=0; i<paperAuthorsList.length; i++){
-		   		   if(paperAuthorsList[i].equals("")){
-		   			   numberOfAuthors--;
-		   		   }
-	   	   		}
-	   	   
-	   	   		String publicationName = paperFormEdit.getPaperPubName();
-	   	   		String journalName = paperFormEdit.getPaperJConfName();
-	   	   		String ISSN = paperFormEdit.getPaperISSN();
-	   	   		String paperReportingAcademicDate = paperFormEdit.getPatentReportingAcademicDate();
-	   	   		int publicConvertedHours = (!"".equals(papersCateHourBudget.getPCAHOBUD_Hour())) ? papersCateHourBudget.getPCAHOBUD_Hour() : paperFormEdit.getPaperPubConHours();
-	   	   		int authorConvertedHours = (!numberOfAuthors.equals(0)) ? (int) Math.round(publicConvertedHours/numberOfAuthors) : 0;
-	   	   		int paperYear = paperFormEdit.getPaperYear();
-	   	   		String volumn = paperFormEdit.getPaperVolumn();
-	    	  
-	   	   		String journalIndex = paperCategory.getPCAT_Journal();
-	   	   		int paperId = paperFormEdit.getPaperId();
-
-	   	   		paperService.editAPaper(userRole, userCode, paperId, paperCate, publicationName, 
-	   	   								journalName, ISSN, publicConvertedHours, authorConvertedHours, paperYear, volumn, 
-	   	   								authors, journalIndex, paperReportingAcademicDate, paperSourceUploadFileSrc);
-	   	   		return "redirect:" + this.baseUrl + "/cp/papers.html";
+		           	System.out.println("PaperController::editAPaper, paperCourseUpLoadFileSrc = " + paperSourceUploadFileSrc);
+		           	
+		    	  	/**
+		    	  	 * Prepare data for inserting DB
+		    	  	 */
+			   	  	mPaperCategory paperCategory = paperCategoryService.getPaperCateByCode(paperCate);
+			   	  	mPapersCategoryHourBudget papersCateHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgetByCategoryAndYear(paperCate, paperFormEdit.getPatentReportingAcademicDate());
+			   	  	String authors = paperFormEdit.getPaperAuthorList();
+		   	   		String[] paperAuthorsList 	= authors.trim().split("\\,");
+		   	   		Integer numberOfAuthors 		= paperAuthorsList.length;
+		   	   		for(int i=0; i<paperAuthorsList.length; i++){
+			   		   if(paperAuthorsList[i].equals("")){
+			   			   numberOfAuthors--;
+			   		   }
+		   	   		}
+		   	   
+		   	   		String publicationName = paperFormEdit.getPaperPubName();
+		   	   		String journalName = paperFormEdit.getPaperJConfName();
+		   	   		String ISSN = paperFormEdit.getPaperISSN();
+		   	   		String paperReportingAcademicDate = paperFormEdit.getPatentReportingAcademicDate();
+		   	   		
+		   	   		int publicConvertedHours = paperFormEdit.getPaperPubConHours();
+		   	   		if(papersCateHourBudget != null && !"".equals(papersCateHourBudget.getPCAHOBUD_Hour()))
+		   	   		{
+		   	   			 publicConvertedHours = papersCateHourBudget.getPCAHOBUD_Hour();
+		   	   		}
+		   	   		int authorConvertedHours = (!numberOfAuthors.equals(0)) ? (int) Math.round(publicConvertedHours/numberOfAuthors) : 0;
+		   	   		int paperYear = paperFormEdit.getPaperYear();
+		   	   		String volumn = paperFormEdit.getPaperVolumn();
+		   	   		String journalIndex = paperCategory.getPCAT_Journal();
+		   	   		
+		   	   		paperService.editAPaper(userRole, userCode, paperId, paperCate, publicationName, 
+		   	   								journalName, ISSN, publicConvertedHours, authorConvertedHours, paperYear, volumn, 
+		   	   								authors, journalIndex, paperReportingAcademicDate, paperSourceUploadFileSrc, projectMembers);
+		   	   		return "redirect:" + this.baseUrl + "/cp/papers.html";
+	    	   }else{
+	    		   model.put("err", "Cần phải thêm tác giả của bài báo.");
+	    	   }
 	   	   }catch (Exception e) {
    		   		model.put("status", "You failed to upload " + fileName + " => " + e.getMessage());
 	   	   }
