@@ -199,8 +199,13 @@ public class mUserController extends BaseWeb {
 	   String userRole = session.getAttribute("currentUserRole").toString();
 	   String currentUserFacultyCode = session.getAttribute("currentUserFaculty").toString();
 	   // Add the saved validationForm to the model
+	   
+	   
 	   List<mFaculty> facultyList = this.getFacultyByUserRole(userRole, currentUserFacultyCode);
 	   List<mDepartment> departmentList = this.getDepartmentByUserRole(userRole, currentUserFacultyCode);
+	   
+	   System.out.println(name() + "::editAUser, facultyCode = " + currentUserFacultyCode + ", departmentList = " + departmentList.size());
+	   
 	   List<mFuncsPermission> mCurrentUserFuncsPermissionList = funcsPermissionService.loadFunctionsPermissionByUserList(user.get("userCode"));
 	   HashMap<List<String>, Integer> listShowedPermission = this.getUserPermissionList(user.get("userCode"));
 	   
@@ -458,7 +463,8 @@ public class mUserController extends BaseWeb {
  public List<mDepartment> getDepartmentByUserRole(String userRole, String currentUserFacultyCode)
  {
 	  List<mDepartment> departmentList = new ArrayList<mDepartment>();
-	  if(userRole.equals(mUserController.SUPER_ADMIN) || currentUserFacultyCode.equals(null)){
+	  if(userRole.equals(mUserController.SUPER_ADMIN) || currentUserFacultyCode.equals(null) || 
+			  userRole.equals(mUserController.ROLE_ADMIN)){
 		   departmentList = departmentService.loadDepartmentList();
 	   }else{
 		   departmentList = departmentService.loadDepartmentListByFaculty(currentUserFacultyCode);

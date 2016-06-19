@@ -193,6 +193,7 @@ function showDepartment(sFaculty)
 	var sGeneratingUrl = "${baseUrl}/cpservice/loaddepartments.html";
 	var sFacultyCode = sFaculty.options[sFaculty.selectedIndex].value;  
 	console.log(sFacultyCode);
+	//alert('showDepartment, facultyCode = ' + sFacultyCode);
 	if (sFacultyCode.length > 0 ) { 
 		 $.ajax({
 				type: "POST",
