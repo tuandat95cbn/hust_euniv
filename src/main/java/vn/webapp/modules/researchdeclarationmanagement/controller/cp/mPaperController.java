@@ -659,6 +659,13 @@ public class mPaperController extends BaseWeb {
 	   if(paper != null){
 		   paperService.removeAPaper(paperId);
 		   List<mPapers> papersList = paperService.loadPaperListByStaff(userRole, userCode);
+		   List<PaperStaffs> listPaperStaffs = paperStaffsService.loadPaperListByPaperCode(paper.getPDECL_Code());
+		   if(listPaperStaffs != null)
+		   {
+			   for (PaperStaffs paperStaffs : listPaperStaffs) {
+				   paperStaffsService.removeAPaperStaff(paperStaffs);
+			   }
+		   }
 		   model.put("papersList", papersList);
 		   return "cp.papers";
 	   }

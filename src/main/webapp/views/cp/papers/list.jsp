@@ -79,7 +79,7 @@
 					                                <a href="<c:url value="${baseUrl}/cp/download-paper/${paper.PDECL_ID}.html"/>" title="Download file xác thực" class="btn btn-success btn-xs">Download</a>
 					                            </c:when>
 					                            <c:otherwise>
-					                                <!-- <button title="File download không tồn tại" class="btn btn-success btn-xs disabled">Download</button> -->
+					                                <a href="#" title="Download file xác thực" class="btn btn-success btn-xs" disabled="disabled">Download</a>
 					                            </c:otherwise>
 					                        </c:choose>
 										</td>
