@@ -109,8 +109,8 @@
 	                                    <form:errors path="paperJIndexCode" class="alert-danger"></form:errors>
 	                                </div>  -->
 	                                <div class="form-group">
-	                                    <label for="paperPubConHours">Số giờ chuyển đổi*</label>
-	                                    <form:input path="paperPubConHours" class="form-control" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc"  name="paperPubConHours"  placeholder="Publilcation Converted Hours"></form:input>
+	                                    <!-- <label for="paperPubConHours">Số giờ chuyển đổi*</label> -->
+	                                    <form:input path="paperPubConHours" style="visibility:hidden" value = "100" class="form-control" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc"  name="paperPubConHours"  placeholder="Publilcation Converted Hours"></form:input>
 	    								<form:errors path="paperPubConHours" class="alert-danger"></form:errors>
 	                                </div>
 	                        </div>

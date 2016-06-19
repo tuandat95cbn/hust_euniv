@@ -28,8 +28,27 @@ public class mPapers implements Serializable{
     private String PDECL_AuthorList;
     private String PDECL_ReportingAcademicDate;
     private String PDECL_SourceFile;
+    private String PDECL_ApproveStatus;
+    private String PDECL_Approve_UserCode;
     
-    @ManyToOne
+    
+    public String getPDECL_ApproveStatus() {
+		return PDECL_ApproveStatus;
+	}
+
+	public void setPDECL_ApproveStatus(String pDECL_ApproveStatus) {
+		PDECL_ApproveStatus = pDECL_ApproveStatus;
+	}
+
+	public String getPDECL_Approve_UserCode() {
+		return PDECL_Approve_UserCode;
+	}
+
+	public void setPDECL_Approve_UserCode(String pDECL_Approve_UserCode) {
+		PDECL_Approve_UserCode = pDECL_Approve_UserCode;
+	}
+
+	@ManyToOne
     @JoinColumn(name="PDECL_PaperCategory_Code", referencedColumnName = "PCAT_Code", insertable = false, updatable = false)
     public mPaperCategory paperCategory;
 

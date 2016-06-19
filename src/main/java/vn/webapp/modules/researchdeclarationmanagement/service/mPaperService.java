@@ -46,7 +46,8 @@ public interface mPaperService {
      * @return
      */
     public int saveAPaper(String currentUserName, String paperCatCode, String paperPubName, String paperJConfName, String paperISSN, int paperPubConHours, int paperAutConHours, 
-    						int paperYear, String paperJIndexCode, String paperVolumn, String paperAuthors, String paperReportingAcademicDate, String paperSourceUploadFile, String[] projectMembers);
+    						int paperYear, String paperJIndexCode, String paperVolumn, String paperAuthors, 
+    						String paperReportingAcademicDate, String paperSourceUploadFile, String[] projectMembers, String ApproveStatus);
     
     /**
      * 

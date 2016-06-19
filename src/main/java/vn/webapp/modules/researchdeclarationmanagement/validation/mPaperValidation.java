@@ -43,7 +43,7 @@ public class mPaperValidation {
     
     @NotNull
     @NumberFormat(style = Style.NUMBER)
-    @Min(1)
+    @Min(0)
     private int paperPubConHours;
     
     /*@NotNull

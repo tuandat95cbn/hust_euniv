@@ -99,6 +99,9 @@ public class mPaperController extends BaseWeb {
      * Size of a byte buffer to read/write file
      */
     private static final int BUFFER_SIZE = 4096;
+    public static final String APPROVE_STATUS_PENDING = "PENDING";
+    public static final String APPROVE_STATUS_APPROVED = "APPROVED";
+    public static final String APPROVE_STATUS_REJECT = "REJECT";
     
     /**
     * Show list all papers
@@ -188,11 +191,78 @@ public class mPaperController extends BaseWeb {
     * @param session
     * @return String
     */
+    public String name(){
+    	return "mPaperController";
+    }
+	private String establishFileNameStoredDataBase(String filename) {
+		Date currentDate = new Date();
+		SimpleDateFormat dateformatyyyyMMdd = new SimpleDateFormat(
+				"HHmmssddMMyyyy");
+		String sCurrentDate = dateformatyyyyMMdd.format(currentDate);
+		return "thuyetminh-" + sCurrentDate + filename;
+
+	}
+
+	private String establishFullFileNameForUpload(String filename,
+			String userCode, HttpServletRequest request) {
+
+		//String uploadDir = "/uploads" + File.separator + userCode + File.separator + "papers";
+		// String realPathtoUploads =
+		// request.getServletContext().getRealPath(uploadDir);
+		String realPathtoUploads = PROJECT_ROOT_DIR + File.separator + userCode
+				+ File.separator + "papers";
+		File dir = new File(realPathtoUploads);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		// Set name file
+		// filename =
+		// establishFileNameStoredDataBase(filename);//"thuyetminh-"+sCurrentDate+filename;
+		String fullfilename = realPathtoUploads + File.separator + filename;
+		System.out.println(name()
+				+ "::establishFullFileNameForDownload, PROJECT_ROOT_DIR = "
+				+ PROJECT_ROOT_DIR + ", fullfilename = " + fullfilename);
+		return fullfilename;
+	}
+
+	private String establishFullFileNameForDownload(String filename,
+			String userCode, HttpServletRequest request) {
+
+		//String uploadDir = "/uploads" + File.separator + userCode + File.separator + "projects";
+		// String realPathtoUploads =
+		// request.getServletContext().getRealPath(uploadDir);
+		String realPathtoUploads = PROJECT_ROOT_DIR + File.separator + userCode
+				+ File.separator + "papers";
+
+		File dir = new File(realPathtoUploads);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		// System.out.println(name()
+		// + "::establishFullFileNameForDownload(filename = " + filename
+		// + ", dir = " + dir.getAbsolutePath());
+		// Set name file
+		// filename = "thuyetminh-"+sCurrentDate+filename;
+		// String fullfilename = dir.getAbsolutePath() + File.separator +
+		// filename;
+		String fullfilename = realPathtoUploads + File.separator + filename;
+
+		System.out.println(name()
+				+ "::establishFullFileNameForDownload, PROJECT_ROOT_DIR = "
+				+ PROJECT_ROOT_DIR + ", fullfilename = " + fullfilename);
+		return fullfilename;
+	}
+   
    @RequestMapping(value="save-a-paper", method=RequestMethod.POST)
    public String saveAnUser(HttpServletRequest request, @Valid @ModelAttribute("paperFormAdd") mPaperValidation paperValid, BindingResult result,  Map model, HttpSession session) {
 	   /*
 	    * Get list of paper category and journalList
 	    */
+	   
+	   String userCode = session.getAttribute("currentUserCode")
+				.toString();
+	   
 	   List<mPaperCategory> paperCategory = paperCategoryService.list();
 	   List<mJournal> journalList = journalService.list();
 	   List<mPapersCategoryHourBudget> papersCategoryHourBudget = paperCategoryHourBudgetService.loadPaperCategoryHourBudgets();
@@ -242,6 +312,8 @@ public class mPaperController extends BaseWeb {
 	    	   String fileName = paperSourceUploadFile.getOriginalFilename();
 	    	   String paperSourceUploadFileSrc = "";
 	    	   try {
+	    		   byte[] bytes = paperSourceUploadFile.getBytes();
+	    		   /*
 	    		   //Creating Date in java with today's date.
 	    		   Date currentDate = new Date();
 	    		   //change date into string yyyyMMdd format example "20110914"
@@ -252,23 +324,48 @@ public class mPaperController extends BaseWeb {
 		    	   String path = request.getServletContext().getRealPath("uploads");
 		    	   File dir = new File(path+ "/papers");
 		    	   System.out.println(dir.getAbsolutePath());
+		    	   
 		           if (!dir.exists()){
 		        	   dir.mkdirs();
 		           }
-		           
+		           */
+		           String uploadDir = "/uploads" + File.separator
+							+ userCode + File.separator + "papers";
+					String realPathtoUploads = request
+							.getServletContext().getRealPath(uploadDir);
+					File dir = new File(realPathtoUploads);
+					if (!dir.exists()) {
+						dir.mkdirs();
+					}
+					/*
 	               // Create a file
 		           String currentUserName 	= session.getAttribute("currentUserName").toString();
 		           fileName = currentUserName + "_" + sCurrentDate + "_" + fileName; 
+		           
 	               File serverFile = new File(dir.getAbsolutePath()+ File.separator + fileName);
 	               //if(serverFile.exists()){
 	            	   paperSourceUploadFileSrc = dir.getAbsolutePath()+ File.separator + fileName;
 	               //}else{
 	               //}
+	            	  */ 
+	            	   fileName = establishFileNameStoredDataBase(fileName);
+						String fullfilename = establishFullFileNameForUpload(
+								fileName, userCode, request);
+
+						File serverFile = new File(fullfilename);
+						System.out
+								.println(name()
+										+ "::saveAPaper, upload file with fileName (stored in DataBase) = "
+										+ fileName + ", fullfilename = "
+										+ fullfilename);
+						
 	               // Save data into file
 	               BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
 	               stream.write(bytes);
 	               stream.close();
-	               
+	               if (serverFile.exists()) {
+						paperSourceUploadFileSrc = fileName;
+					}
 		           /**
 		            * Preparing data for adding into DB
 		            */
@@ -287,8 +384,10 @@ public class mPaperController extends BaseWeb {
 		    	   int paperYear 			= paperValid.getPaperYear();
 		    	   String paperVolumn 		= paperValid.getPaperVolumn();
 		    	   
-		    	   int i_InsertAPaper = paperService.saveAPaper(currentUserName, paperCatCode, paperPubName, paperJConfName, paperISSN, paperPubConHours, paperAutConHours, 
-		    			   											paperYear, paperJIndexCode, paperVolumn, paperAuthors, paperReportingAcademicDate, paperSourceUploadFileSrc, projectMembers);
+		    	   int i_InsertAPaper = paperService.saveAPaper(userCode, paperCatCode, paperPubName, paperJConfName, paperISSN, paperPubConHours, paperAutConHours, 
+		    			   											paperYear, paperJIndexCode, paperVolumn, paperAuthors, 
+		    			   											paperReportingAcademicDate, paperSourceUploadFileSrc, projectMembers,
+		    			   											mPaperController.APPROVE_STATUS_PENDING);
 		    	   if(i_InsertAPaper > 0){
 		    		   //model.put("status", "Successfully saved a paper: ");
 		    		   return "redirect:" + this.baseUrl + "/cp/papers.html";
@@ -580,7 +679,12 @@ public class mPaperController extends BaseWeb {
 	   if(paper.getPDECL_SourceFile() != null){
 		   ServletContext context = request.getServletContext();
 		   
-		   File downloadFile = new File(paper.getPDECL_SourceFile());
+		   System.out.println(name() + "::downloadPaper, SourceFile = " + paper.getPDECL_SourceFile());
+		   String fullfilename = establishFullFileNameForDownload(paper.getPDECL_SourceFile(), userCode, request);
+		   System.out.println(name() + "::downloadPaper, SourceFile = " + paper.getPDECL_SourceFile() + ", fullfilname = " + fullfilename);
+		   //File downloadFile = new File(paper.getPDECL_SourceFile());
+		   File downloadFile = new File(fullfilename);
+		   
 		   if(downloadFile.exists()){
 		       FileInputStream inputStream = new FileInputStream(downloadFile);
 		       

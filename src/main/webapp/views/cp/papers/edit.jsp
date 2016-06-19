@@ -120,8 +120,8 @@
                                 </div> -->
                                 
                                 <div class="form-group">
-                                    <label for="paperPubConHours">Số giờ chuyển đổi*</label>
-                                    <form:input path="paperPubConHours" value="${publicConvertedHours}" class="form-control" name="paperPubConHours" disabled="true" placeholder="Publilcation Converted Hours"></form:input>
+                                    <!-- <label for="paperPubConHours">Số giờ chuyển đổi*</label> -->
+                                    <form:input path="paperPubConHours" style="visibility:hidden" value="100" class="form-control" name="paperPubConHours" disabled="true" placeholder="Publilcation Converted Hours"></form:input>
     								<form:errors path="paperPubConHours" class="alert-danger"></form:errors>
                                 </div>
                         </div>

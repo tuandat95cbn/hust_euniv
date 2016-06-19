@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import vn.webapp.modules.researchdeclarationmanagement.controller.cp.mPaperController;
 import vn.webapp.modules.researchdeclarationmanagement.dao.PaperStaffsDAO;
 import vn.webapp.modules.researchdeclarationmanagement.dao.mPaperDAO;
 import vn.webapp.modules.researchdeclarationmanagement.model.PaperStaffs;
@@ -89,7 +90,8 @@ public class mPaperServiceImpl implements mPaperService{
      */
     @Override
     public int saveAPaper(String currentUserName, String paperCatCode, String paperPubName, String paperJConfName, String paperISSN, int paperPubConHours, 
-    						int paperAutConHours, int paperYear, String paperJIndexCode, String paperVolumn, String paperAuthors, String paperReportingAcademicDate, String paperSourceUploadFile, String[] projectMembers)
+    						int paperAutConHours, int paperYear, String paperJIndexCode, String paperVolumn, String paperAuthors, 
+    						String paperReportingAcademicDate, String paperSourceUploadFile, String[] projectMembers, String ApproveStatus)
     {
     	mUsers user = userDAO.getByUsername(currentUserName);
     	if(user.getUser_Code()  != null){
@@ -108,6 +110,8 @@ public class mPaperServiceImpl implements mPaperService{
             paper.setPDECL_AuthorList(paperAuthors);
             paper.setPDECL_ReportingAcademicDate(paperReportingAcademicDate);
             paper.setPDECL_SourceFile(paperSourceUploadFile);
+            paper.setPDECL_ApproveStatus(ApproveStatus);
+            
             int i_SaveAPaper = paperDAO.saveAPaper(paper);
             
             if(i_SaveAPaper > 0 && projectMembers.length > 0){
