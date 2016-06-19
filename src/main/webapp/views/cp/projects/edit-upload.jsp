@@ -203,11 +203,7 @@
                                 <textarea path="projectContent"  name="projectContent" id="projectContent" class="form-control textarea">${projectEdit.PROJ_Content}</textarea>
                                 <form:errors path="projectContent" class="alert-danger"></form:errors>
                            	</div>
-                           	<div class="form-group">
-                                  <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
-                                  <textarea path="projectResult"  name="projectResult" id="projectResult" class="form-control textarea">${projectEdit.PROJ_Result}</textarea>
- 									<form:errors path="projectResult" class="alert-danger"></form:errors>
-                             	</div>
+                           	
 					    </c:when>    
 					    <c:otherwise>
 					        <div class="panel panel-default">
@@ -424,6 +420,28 @@
 	        	<div class="panel-body">
 		             	<div class="row">
 		             		<div class="col-lg-12">
+		             		<c:choose>
+		             			<c:when test="${projectEdit.PROJ_Locked1 != 1}">
+		             				<div class="form-group">
+                                  		<label for="projectResult">Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
+                                  		<textarea path="projectResult"  name="projectResult" id="projectResult" class="form-control textarea">${projectEdit.PROJ_Result}</textarea>
+ 									<form:errors path="projectResult" class="alert-danger"></form:errors>
+                            		</div>
+                            	</c:when>
+                            	<c:otherwise>
+							          <div class="panel panel-default">
+							             <div class="panel-heading">
+							                 <label for="projectResult">Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
+							             </div>
+							             <div class="panel-body">
+							                  <div class="tab-content">
+							                     <div class="tab-pane fade in active">${projectEdit.PROJ_Result}</div>
+							                  </div>
+							              </div>
+							           </div>
+							       </c:otherwise>
+                            </c:choose>
+                             	
 								<c:choose>
 									<c:when test="${projectEdit.PROJ_Locked1 != 1}">
 										<div class="form-group">

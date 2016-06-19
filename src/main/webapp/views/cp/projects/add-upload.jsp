@@ -132,11 +132,7 @@
 	                                <form:textarea path="projectContent"  name="projectContent" class="form-control textarea hidden"/>
 	                                <form:errors path="projectContent" class="alert-danger"></form:errors>
                             	 </div>
-                                 <div class="form-group">
-                                    <label for="projectResult">10. Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
-                                    <form:textarea path="projectResult" name="projectResult" value="" class="form-control textarea hidden" />
-   									<form:errors path="projectResult" class="alert-danger"></form:errors>
-                               	 </div>
+                                 
 		                	</div>
 		                </div>
 	                </div>
@@ -281,6 +277,13 @@
 	             	<div class="panel-body">
 		             	<div class="row">
 		             		<div class="col-lg-12">
+		             		
+		             		<div class="form-group">
+                                    <label for="projectResult">Sản phẩm, chuyển giao kết quả nghiên cứu và đia chỉ ứng dụng</label>
+                                    <form:textarea path="projectResult" name="projectResult" value="" class="form-control textarea" />
+   									<form:errors path="projectResult" class="alert-danger"></form:errors>
+                            </div>
+                               	 
 			             	<div class="form-group">
                             	<label for="budgetMaterial">Kinh phí vật tư, vật liệu,… <i class="hint-text">(VNĐ - chỉ nhập các chữ số, không nhập dấu chấm, phảy)</i></label>
                             	<form:input path="budgetMaterial" value="" data-validation="custom" data-validation-optional="true" data-validation-regexp="^[0-9]*[1-9][0-9]*$" data-validation-error-msg="Giá trị phải là số nguyên"  class="form-control" name="budgetMaterial" placeholder="Other Fees"></form:input>

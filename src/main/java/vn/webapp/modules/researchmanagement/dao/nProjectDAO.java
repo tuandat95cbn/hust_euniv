@@ -209,6 +209,8 @@ public interface nProjectDAO {
 	 */
 	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code);
 	
+	public List<Projects> loadProjectByProjectCallAndFaculty(String projectCallCode, String facutyCode);
+	
 	/**
 	 * 
 	 * @param PROJ_Code

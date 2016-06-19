@@ -606,6 +606,7 @@ public class nProjectController extends BaseWeb {
 
 		List<mThreads> projectsList = new ArrayList<mThreads>();
 		for (mThreads t : allProjectsList) {
+			System.out.println(name() + "::getListProjectsStatistics consider project for filter " + t.getPROJ_Code());
 			if (setProjectCallCode.contains(t.getPROJ_PRJCall_Code())
 					&& setStatusCode.contains(t.getPROJ_Status_Code())
 					&& setFacultyCode.contains(t.getPROJ_FacultyCode())

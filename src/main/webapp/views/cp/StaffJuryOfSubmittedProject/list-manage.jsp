@@ -42,13 +42,20 @@
 	                    <div class="row">
 	                        <div class="col-lg-12">
 	                        	<div class="form-group">
-			                        <label>Đợt gọi Đề tài </label>
-			                        <select type="text" class="form-control" readonly name="PROJCALL_CODE" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc">
+			                        <label>Đợt gọi Đề tài: ${projectCall.PROJCALL_NAME} </label>
+			                        <select type="text" class="form-control" style="visibility:hidden" readonly name="PROJCALL_CODE" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc">
 			                        	<option value="${projectCall.PROJCALL_CODE}"><c:out value="${projectCall.PROJCALL_NAME}" /></option>
 			                        </select>
 			                    </div>
+			                    <div class="form-group">
+			                        <label>Hội đồng xét duyệt Đề tài: ${jury.JURPRJ_Name} </label>
+			                        <select type="text" class="form-control" style="visibility:hidden" readonly name="JURY_CODE" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc">
+			                        	<option value="${jury.JURPRJ_Code}"><c:out value="${jury.JURPRJ_Name}" /></option>
+			                        </select>
+			                    </div>
+			                    
                                 <div class="form-group">
-                                    <label >Thành viên</label>
+                                    <label >Chọn Thành viên phản biện</label>
                                     <div id="staff-list">
 	                                    <select path="STFJUPRJ_STAFFJURCODE" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" class="form-control" name="STFJUPRJ_STAFFJURCODE" id="STFJUPRJ_STAFFJURCODE">
 	                                        <option value="">Chọn</option>	 
@@ -60,7 +67,7 @@
                                     <form:errors path="STFJUPRJ_STAFFJURCODE" class="alert-danger"></form:errors>
                                 </div>
                                 <div class="form-group">
-                                    <label>Đề tài </label>
+                                    <label>Chọn Đề tài (Nhấn giữ phím Ctrl và dùng chuột click để chọn nhiều đề tài)</label>
                                     <div id="project-list">
 	                                    <select path="STFJUPRJ_PRJCODE" size="10" multiple="true" data-validation="required" data-validation-error-msg="Trường thông tin này là bắt buộc" class="form-control" name="STFJUPRJ_PRJCODE" id="STFJUPRJ_PRJCODE">
 	                                        <c:forEach items="${projectList}" var="project">
@@ -91,21 +98,22 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Danh sách thành viên
+                    Danh sách phân công phản biện đề tài
                 </div>
                 <div class="panel-body">
-                	
+                	<%-- 
                     <div class="form-group">
-                        <label>Đợt gọi Đề tài </label>
+                        <label>Đợt gọi Đề tài</label>
                         <input class="form-control" disabled="true"  value="${projectCallName}" ></input>
                     </div>
+                     --%>
                     <div class="dataTable_wrapper">
 						<table class="table table-striped table-bordered table-hover"
 							id="dataTables-example">
 							<thead>
 								<tr>
 									<th title="Name of project call " > Đề tài </th>
-									<th title="Name of staff ">Thành viên </th>
+									<th title="Name of staff ">Thành viên phản biện</th>
 									<th>Edit</th>
 								</tr>
 							</thead>

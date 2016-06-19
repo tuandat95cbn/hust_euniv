@@ -212,7 +212,7 @@ public class mProjectCallsController extends BaseWeb {
 	 public String updateAProjectCall(HttpServletRequest request, @Valid @ModelAttribute("projectCallFormEdit") mProjectCallsValidation projectCallValid, BindingResult result, Map model, HttpSession session) {
 		
 		// Get topic's category
-			List<mTopicCategory> topicCategory = tProjectCategoryService.list();
+		List<mTopicCategory> topicCategory = tProjectCategoryService.list();
 
 		String userCode = (String)session.getAttribute("currentUserCode");
 		

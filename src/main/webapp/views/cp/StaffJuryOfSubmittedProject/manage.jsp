@@ -33,13 +33,24 @@
 	                    <div class="row">
 	                        <div class="col-lg-12">
 		                        <div class="form-group">
+			                       <%-- 
 			                        <label>Đợt gọi Đề tài </label>
 			                        <select class="form-control" name="PROJCALL_CODE">
 			                        	<c:forEach items="${projectCallList}" var="iProjectCall">
 			                            <option value="${iProjectCall.PROJCALL_CODE}">${iProjectCall.PROJCALL_NAME}</option>
 			                           	</c:forEach>
 			                        <select>
+			                        --%> 
 			                    </div>
+			                    <div class = "form-group">
+	                                	<label>Hội đồng xét duyệt đề tài</label>
+	                                	<select path="JURPRJ_Code" class = "form-control" name="JURPRJ_Code">
+	                                		<c:forEach items="${juries}" var="jury">
+	                                			<option value="${jury.JURPRJ_Code}">${jury.JURPRJ_Name}</option>
+	                                		</c:forEach>
+	                                	</select>
+	                                </div>
+			                    
                                 <div class="form-group">                                	
 	                            <button type="submit" class="btn btn-primary">Tiếp</button>
                                 </div>

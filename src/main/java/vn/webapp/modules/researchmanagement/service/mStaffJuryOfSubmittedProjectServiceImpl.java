@@ -54,7 +54,8 @@ public class mStaffJuryOfSubmittedProjectServiceImpl implements mStaffJuryOfSubm
 	 * 
 	 */
 	@Override
-	public int saveStaffJuryOfSubmittedProject(String STFJUPRJ_STAFFJURCODE,String STFJUPRJ_PRJCODE, String selectedProjectCallCode) {
+	public int saveStaffJuryOfSubmittedProject(String STFJUPRJ_STAFFJURCODE,String STFJUPRJ_PRJCODE, 
+			String selectedProjectCallCode, String STFJUPRJ_JURY_CODE) {
 		if (STFJUPRJ_STAFFJURCODE.length() >= 1 && STFJUPRJ_PRJCODE.length() >= 1) {
 			
 			mStaffJuryOfSubmittedProject staffJury = staffJuryOfSubmittedProjectDAO.loadAStaffJuryOfSubmittedProjectByStaffAndProjectCode(STFJUPRJ_STAFFJURCODE, STFJUPRJ_PRJCODE);
@@ -67,6 +68,7 @@ public class mStaffJuryOfSubmittedProjectServiceImpl implements mStaffJuryOfSubm
 				staffJury.setSTFJUPRJ_STAFFJURCODE(STFJUPRJ_STAFFJURCODE);
 				staffJury.setSTFJUPRJ_CODE(STFJUPRJ_PRJCODE + "-" + STFJUPRJ_STAFFJURCODE);
 				staffJury.setSTFJUPRJ_PRJCALLCODE(selectedProjectCallCode);
+				staffJury.setSTFJUPRJ_JURY_CODE(STFJUPRJ_JURY_CODE);
 				int resultSaveStaffJuryOfSubmittedProject = staffJuryOfSubmittedProjectDAO.saveStaffJuryOfSubmittedProject(staffJury);
 				return resultSaveStaffJuryOfSubmittedProject;
 			}

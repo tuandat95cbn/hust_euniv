@@ -64,6 +64,23 @@
         <put-attribute name="content" value="/views/cp/user/list.jsp" />
     </definition>
 
+    <!-- JuryResearchProject Module -->
+    <definition name="cp.juryOfResearchProjectManagement" extends="layout.base">
+        <put-attribute name="title" value="Show list of juries" />                                 
+        <put-attribute name="content" value="/views/cp/JuryResearchProject/list.jsp" />
+    </definition>
+
+    <definition name="cp.addAJuryOfResearchProject" extends="layout.base">
+        <put-attribute name="title" value="Add a Jury of research project" />                                 
+        <put-attribute name="content" value="/views/cp/JuryResearchProject/add.jsp" />
+    </definition>
+    
+    <definition name="cp.editAJuryResearchProject" extends="layout.base">
+        <put-attribute name="title" value="Edit a Jury of research project" />                                 
+        <put-attribute name="content" value="/views/cp/JuryResearchProject/edit.jsp" />
+    </definition>
+
+
     <definition name="cp.generateProjectCodeParams" extends="layout.base">
         <put-attribute name="title" value="Create an user" />                                 
         <put-attribute name="content" value="/views/cp/projects/generate-project-code-params.jsp" />

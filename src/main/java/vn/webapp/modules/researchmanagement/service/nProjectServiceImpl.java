@@ -195,14 +195,17 @@ public class nProjectServiceImpl implements nProjectService {
 	 */
 	@Override
 	public Projects loadProjectsById(int projectId){
-		try {
+		//try {
 			return projectDAO.loadProjectById(projectId);
-		} catch (Exception e) {
-			System.out.println("Exception: " + e.getMessage());
-			return null;
-		}
+		//} catch (Exception e) {
+		//	System.out.println("Exception: " + e.getMessage());
+		//	return null;
+		//}
 	}
 
+	public List<Projects> loadProjectByProjectCallAndFaculty(String projectCallCode, String facutyCode){
+		return projectDAO.loadProjectByProjectCallAndFaculty(projectCallCode, facutyCode);
+	}
 	/**
 	 * Get a list Topics by year and user
 	 * 
@@ -1052,6 +1055,7 @@ public class nProjectServiceImpl implements nProjectService {
 				project.setPROJ_SourceFile(sourceFileUpload);
 				if(!"".equals(sendIt)){
 					project.setPROJ_Locked1(1);
+					project.setPROJ_Status_Code("SUBMIT");
 				}
 			}
 			threadDAO.editAProject(project);

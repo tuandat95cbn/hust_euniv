@@ -19,6 +19,16 @@ public class mStaffJuryOfSubmittedProject implements Serializable{
 	
 	private String STFJUPRJ_PRJCODE;
 	
+	private String STFJUPRJ_JURY_CODE;
+	
+	public String getSTFJUPRJ_JURY_CODE() {
+		return STFJUPRJ_JURY_CODE;
+	}
+
+	public void setSTFJUPRJ_JURY_CODE(String sTFJUPRJ_JURY_CODE) {
+		STFJUPRJ_JURY_CODE = sTFJUPRJ_JURY_CODE;
+	}
+
 	private String STFJUPRJ_CODE;
 	
 	private String STFJUPRJ_PRJCALLCODE;

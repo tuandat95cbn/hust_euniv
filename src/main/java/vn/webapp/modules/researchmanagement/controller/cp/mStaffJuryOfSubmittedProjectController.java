@@ -36,6 +36,7 @@ import vn.webapp.libraries.DateUtil;
 
 //For project
 import vn.webapp.modules.researchmanagement.model.mThreads;
+import vn.webapp.modules.researchmanagement.service.mJuryResearchProjectService;
 import vn.webapp.modules.researchmanagement.service.mProjectCallsService;
 import vn.webapp.modules.researchmanagement.service.nProjectService;
 
@@ -43,7 +44,7 @@ import vn.webapp.modules.researchmanagement.service.nProjectService;
 import vn.webapp.modules.researchmanagement.service.mStaffJuryOfSubmittedProjectService;
 import vn.webapp.modules.researchmanagement.model.mStaffJuryOfSubmittedProject;
 import vn.webapp.modules.researchmanagement.validation.mStaffJuryOfSubmittedProjectValidation;
-
+import vn.webapp.modules.usermanagement.controller.cp.mUserController;
 import vn.webapp.modules.usermanagement.model.mFuncsPermission;
 //For staff
 import vn.webapp.modules.usermanagement.model.mStaff;
@@ -54,7 +55,7 @@ import vn.webapp.modules.usermanagement.service.mStaffService;
 import vn.webapp.modules.researchmanagement.service.mJuryOfAnnouncedProjectCallService;
 import vn.webapp.modules.researchmanagement.model.Projects;
 import vn.webapp.modules.researchmanagement.model.mJuryOfAnnouncedProjectCall;
-
+import vn.webapp.modules.researchmanagement.model.mJuryResearchProject;
 //For project call
 import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 
@@ -64,6 +65,9 @@ import vn.webapp.modules.researchmanagement.model.mProjectCalls;
 @RequestMapping(value = { "/cp" })
 public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 
+	@Autowired
+	private mJuryResearchProjectService juryResearchProjectService;
+	
 	@Autowired
 	private mStaffService staffService;
 	
@@ -174,9 +178,20 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		// Get current user name and role
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
+		
 		// Get project call list
 		List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
+		List<mJuryResearchProject> juries = null;
+		
+		if(userRole.equals(mUserController.SUPER_ADMIN) || userRole.equals(mUserController.ROLE_ADMIN))
+			juries = juryResearchProjectService.listAllJuries();
+		else
+			juries = juryResearchProjectService.listAllJuriesByUserCode(userCode);
+		
 		model.put("projectCallList", projectCallList);
+		
+		model.put("juries", juries);
+		
 		return "cp.addStaffJuryOfSubmittedProject";
 	}
 	
@@ -192,9 +207,23 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		// Get current user name and role
 		String userCode = session.getAttribute("currentUserCode").toString();
 		String userRole = session.getAttribute("currentUserRole").toString();
-		String projectCallCode = request.getParameter("PROJCALL_CODE");
+		String facultyCode = (String)session.getAttribute("facultyCode");
+		
+		System.out.println(name() + "::listJuryOfSubmittedProjects, userCode = " + userCode + ", userRole = " + 
+		userRole + ", facultyCode = " + facultyCode);
+		
+		String juryCode = request.getParameter("JURPRJ_Code");
+		mJuryResearchProject jury = juryResearchProjectService.listAJuryByCode(juryCode);
+		String juryName = jury.getJURPRJ_Name();
+		
+		String projectCallCode = jury.getJURPRJ_PROJCall_Code(); 
 		String projectCallName = projectCallCode;
 
+		System.out.println(name() + "::listJuryOfSubmittedProjects, userCode = " + userCode + ", userRole = " +
+		userRole + ", juryCode = " + juryCode + ", projectCallCode = " + projectCallCode + ", projectCallName = " + projectCallName);
+		mProjectCalls projectCall = projectCallsService.loadAProjectCallByCode(projectCallCode);
+		
+		/*
 		// Get project call list
 		//List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
 		mProjectCalls projectCall = projectCallsService.loadAProjectCallByCode(projectCallCode);
@@ -207,8 +236,11 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 				projectCallName = pc.getPROJCALL_NAME();
 			}
 		}
+		*/
 		
-		List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAProjecCall(projectCallCode);
+		//List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAProjecCall(projectCallCode);
+		List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAJuryResearchProjec(juryCode);
+		
 		
 		List<mStaff> staffs = staffService.listStaffs();
 		HashMap<String, String> mStaffCode2Name = new HashMap<String, String>();
@@ -217,7 +249,12 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		}
 		
 		//List<mThreads> projects = projectService.listAll();
-		List<Projects> projects = projectService.loadProjectByProjectCallId(projectCallCode);
+		List<Projects> projects = null;
+		if(userRole.equals(mUserController.SUPER_ADMIN) || userRole.equals(mUserController.ROLE_ADMIN))
+			projects = projectService.loadProjectByProjectCallId(projectCallCode);
+		else
+			projects = projectService.loadProjectByProjectCallAndFaculty(projectCallCode, facultyCode);
+		
 		
 		HashMap<String, String> mProjectCode2Name = new HashMap<String, String>();
 		for(Projects prj: projects){
@@ -245,6 +282,8 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		model.put("projectCall", projectCall);
 		model.put("projectCallCode", projectCallCode);
 		model.put("projectCallName", projectCallName);
+		model.put("jury", jury);
+		
 		return "cp.listStaffJuryOfSubmittedProject";
 	}
 
@@ -261,9 +300,21 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 	public String saveJuryOfAnnouncedProjectCall( HttpServletRequest request, @Valid @ModelAttribute("staffJuryOfSubmittedProjectFormAdd") mStaffJuryOfSubmittedProjectValidation staffJuryOfSubmittedProjectValid, 
 													BindingResult result, ModelMap model, HttpSession session) {
 		
+		String userCode = session.getAttribute("currentUserCode").toString();
+		String userRole = session.getAttribute("currentUserRole").toString();
+		String facultyCode = (String)session.getAttribute("facultyCode");
+		
+		System.out.println(name() + "::saveJuryOfAnnouncedProjectCall, userCode = " + userCode + ", userRole = " + 
+		userRole + ", facultyCode = " + facultyCode);
+
+		
 		// Get project call list
 		List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
 		String selectedProjectCallCode = request.getParameter("PROJCALL_CODE");
+		String juryCode = request.getParameter("JURY_CODE");
+		System.out.println(name() + "::saveJuryOfAnnouncedProjectCall, juryCode = " + juryCode);
+		mJuryResearchProject jury = juryResearchProjectService.listAJuryByCode(juryCode);
+		
 		String projectCallNameFiltering = selectedProjectCallCode;
 		
 		if(projectCallList != null)
@@ -274,8 +325,16 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 				}
 			}
 		}
-		List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAProjecCall(selectedProjectCallCode);
-		List<Projects> projects = projectService.loadProjectByProjectCallId(selectedProjectCallCode);
+		//List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAProjecCall(selectedProjectCallCode);
+		List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAJuryResearchProjec(juryCode);
+
+		List<Projects> projects = null;
+		if(userRole.equals(mUserController.SUPER_ADMIN) || userRole.equals(mUserController.ROLE_ADMIN))
+			projects = projectService.loadProjectByProjectCallId(selectedProjectCallCode);
+		else
+			projects = projectService.loadProjectByProjectCallAndFaculty(selectedProjectCallCode, facultyCode);
+		
+		
 		mProjectCalls projectCall = projectCallsService.loadAProjectCallByCode(selectedProjectCallCode);
 		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = getStaffJuryOfSubmittedProjectList(projects, selectedProjectCallCode);
 		model.put("staffJuryOfSubmittedProjectList", staffJuryOfSubmittedProjectList);
@@ -302,7 +361,8 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 			
 			// Save data into DB
 			for (String projectCode : projectCodes) {
-				staffJuryOfSubmittedProjectService.saveStaffJuryOfSubmittedProject(STFJUPRJ_STAFFJURCODE, projectCode, selectedProjectCallCode);
+				staffJuryOfSubmittedProjectService.saveStaffJuryOfSubmittedProject(STFJUPRJ_STAFFJURCODE, projectCode, 
+						selectedProjectCallCode, juryCode);
 			}
 
 			mFuncsPermission funcsPermission = funcsPermissionService.loadFunctionsPermissionByCodeAndUser("DETAILS-COMMENT-SUBMITTED-PROJECTS", STFJUPRJ_STAFFJURCODE);
@@ -315,6 +375,8 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 			staffJuryOfSubmittedProjectList = getStaffJuryOfSubmittedProjectList(projects, selectedProjectCallCode);
 			model.put("staffJuryOfSubmittedProjectList", staffJuryOfSubmittedProjectList);
 			model.put("staffJuryOfSubmittedProjectFormAdd", new mStaffJuryOfSubmittedProjectValidation());
+			model.put("jury", jury);
+			
 			return "cp.listStaffJuryOfSubmittedProject";
 		}
 	}
@@ -358,17 +420,32 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 	 * @return
 	 */
 	 @RequestMapping(value = "/delete-staff-jury-of-submitted-project/{id}", method = RequestMethod.GET)
-	 public String removeAProjectCall(ModelMap model, @PathVariable("id") int staffJuryOfSubmittedProjectId, HttpSession session) {
+	 public String removeAStaffJurySubmittedProject(ModelMap model, @PathVariable("id") int staffJuryOfSubmittedProjectId, HttpSession session) {
 		 
 		 if(staffJuryOfSubmittedProjectId > 0){
 			// Get current user name and role
 			String userCode = session.getAttribute("currentUserCode").toString();
 			String userRole = session.getAttribute("currentUserRole").toString();
+			String facultyCode = (String)session.getAttribute("facultyCode");
 		
 			mStaffJuryOfSubmittedProject staffJurySubmittedProject = staffJuryOfSubmittedProjectService.loadAStaffJuryOfSubmittedProjectById(staffJuryOfSubmittedProjectId);
+			String juryCode = staffJurySubmittedProject.getSTFJUPRJ_JURY_CODE();
+			
+			System.out.println(name() + "::removeAStaffJurySubmittedProject, userCode = " + userCode + ", juryCode = " + juryCode);
+
+			mJuryResearchProject jury = juryResearchProjectService.listAJuryByCode(juryCode);
+			
 			if(staffJurySubmittedProject != null){
 				String projectCallCode = staffJurySubmittedProject.getSTFJUPRJ_PRJCALLCODE();
-				List<Projects> projects = projectService.loadProjectByProjectCallId(projectCallCode);
+				
+				//List<Projects> projects = projectService.loadProjectByProjectCallId(projectCallCode);
+				
+				List<Projects> projects = null;
+				if(userRole.equals(mUserController.SUPER_ADMIN) || userRole.equals(mUserController.ROLE_ADMIN))
+					projects = projectService.loadProjectByProjectCallId(projectCallCode);
+				else
+					projects = projectService.loadProjectByProjectCallAndFaculty(projectCallCode, facultyCode);
+				
 				mProjectCalls projectCall = projectCallsService.loadAProjectCallByCode(projectCallCode);
 				List<mProjectCalls> projectCallList = projectCallsService.loadProjectCallsList();
 				String projectCallName = projectCallCode;
@@ -385,8 +462,11 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 				//Delete the selected item
 				staffJuryOfSubmittedProjectService.deleteStaffJuryOfSubmittedProject(staffJuryOfSubmittedProjectId);
 				List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = getStaffJuryOfSubmittedProjectList(projects, projectCallCode);
-				List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAProjecCall(projectCallCode);
 				
+				//List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAProjecCall(projectCallCode);
+				List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAJuryResearchProjec(juryCode);
+				
+				model.put("jury", jury);
 				model.put("staffList", juries);
 				model.put("projectList", projects);
 				model.put("projectCall", projectCall);

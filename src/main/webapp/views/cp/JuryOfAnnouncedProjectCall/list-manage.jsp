@@ -48,11 +48,18 @@
 	                    <div class="row">
 	                        <div class="col-lg-12">
 	                                <div class="form-group">
-	                                    <label>Đợt gọi đề tài </label>
-	                                    <input class="form-control" disabled="true"  value="${projectCallCode}" ></input>
-	                                    <form:hidden path="JUSUPRJ_PRJCALLCODE" class="form-control" name="JUSUPRJ_PRJCALLCODE" value="${projectCallCode}" ></form:hidden>
+	                                    <label>Đợt gọi đề tài: ${projectCall.PROJCALL_NAME} </label>
+	                                    <input class="form-control" disabled="true"  style="visibility:hidden" value="${projectCall.PROJCALL_CODE}" ></input>
+	                                    <form:hidden path="JUSUPRJ_PRJCALLCODE" class="form-control" name="JUSUPRJ_PRJCALLCODE" value="${projectCall.PROJCALL_CODE}" ></form:hidden>
 	                                    <form:errors path="JUSUPRJ_PRJCALLCODE" class="alert-danger"></form:errors>
 	                                </div>
+	                        		<div class="form-group">
+	                                    <label>Hội đồng xét duyệt đề tài: ${jury.JURPRJ_Name}</label>
+	                                    <input class="form-control" disabled="true" style="visibility:hidden"  value="${jury.JURPRJ_Code}" ></input>
+	                                    <form:hidden path="JUSUPRJ_JURYRESEARCHPROJECTCODE" class="form-control" name="JUSUPRJ_JURYRESEARCHPROJECTCODE" value="${jury.JURPRJ_Code}" ></form:hidden>
+	                                    <form:errors path="JUSUPRJ_JURYRESEARCHPROJECTCODE" class="alert-danger"></form:errors>
+	                                </div>
+	                        
 	                        
 	                                <div class="form-group">
 	                                	<select class="form-control" name="faculty" onchange="showDepartment(this);" >

@@ -2,6 +2,7 @@ package vn.webapp.modules.researchmanagement.service;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class mJuryOfAnnouncedProjectCallServiceImpl implements mJuryOfAnnouncedP
 	 * 
 	 */
 	@Override
-	public int saveJuryOfAnnouncedProjectCall(String JUSUPRJ_STAFFCODE,String JUSUPRJ_PRJCALLCODE,String JUPSURJ_ROLECODE) {
+	public int saveJuryOfAnnouncedProjectCall(String JUSUPRJ_STAFFCODE,String JUSUPRJ_PRJCALLCODE, String JUPSURJ_ROLECODE, String JUSUPRJ_JURYRESEARCHPROJECTCODE) {
 		if (JUSUPRJ_STAFFCODE.length() >= 1 && JUSUPRJ_PRJCALLCODE.length() >= 1 && JUPSURJ_ROLECODE.length() >= 1) {
 			
 			mJuryOfAnnouncedProjectCall jury = new mJuryOfAnnouncedProjectCall();
@@ -74,11 +75,12 @@ public class mJuryOfAnnouncedProjectCallServiceImpl implements mJuryOfAnnouncedP
 			jury.setJUSUPRJ_STAFFCODE(JUSUPRJ_STAFFCODE);
 			jury.setJUSUPRJ_PRJCALLCODE(JUSUPRJ_PRJCALLCODE);
 			jury.setJUPSURJ_ROLECODE(JUPSURJ_ROLECODE);
+			jury.setJUSUPRJ_JURYRESEARCHPROJECTCODE(JUSUPRJ_JURYRESEARCHPROJECTCODE);
 			
-			System.out.println("Service");
-			System.out.println("Staff code : " + JUSUPRJ_STAFFCODE);
-			System.out.println("Project call code : " + JUSUPRJ_PRJCALLCODE);
-			System.out.println("Role code : " + JUPSURJ_ROLECODE);
+			//System.out.println("Service");
+			//System.out.println("Staff code : " + JUSUPRJ_STAFFCODE);
+			//System.out.println("Project call code : " + JUSUPRJ_PRJCALLCODE);
+			//System.out.println("Role code : " + JUPSURJ_ROLECODE);
 
 			int resultSaveJuryOfAnnouncedProjectCall = juryOfAnnouncedProjectCallDAO.saveJuryOfAnnouncedProjectCall(jury);
 			
@@ -127,6 +129,19 @@ public class mJuryOfAnnouncedProjectCallServiceImpl implements mJuryOfAnnouncedP
 	/**
 	 * 
 	 */
+	public List<mStaff> loadStaffsOfJuryOfAJuryResearchProjec(String juryCode){
+		List<mJuryOfAnnouncedProjectCall> juries = loadListJuryOfAnnouncedProjectCallByJuryCode(juryCode);
+		List<mStaff> staffs = new ArrayList<mStaff>();
+		List<mStaff> allStaffs = staffDAO.listStaffs();
+		HashMap<String, mStaff> mCode2Staff = new HashMap<String, mStaff>();
+		for(mStaff st: allStaffs)
+			mCode2Staff.put(st.getStaff_Code(), st);
+		for(mJuryOfAnnouncedProjectCall jury: juries){
+			if(jury.getJUSUPRJ_JURYRESEARCHPROJECTCODE().equals(juryCode))
+				staffs.add(mCode2Staff.get(jury.getJUSUPRJ_STAFFCODE()));
+		}
+		return staffs;
+	}
 	public List<mStaff> loadStaffsOfJuryOfAProjecCall(String projectCallCode){
 		List<mStaff> staffs = new ArrayList<mStaff>();
 		List<mStaff> allStaffs = staffDAO.listStaffs();
@@ -149,6 +164,10 @@ public class mJuryOfAnnouncedProjectCallServiceImpl implements mJuryOfAnnouncedP
 	/**
 	 * 
 	 */
+	
+	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByJuryCode(String juryCode){
+		return juryOfAnnouncedProjectCallDAO.loadListJuryOfAnnouncedProjectCallByJuryCode(juryCode);
+	}
 	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByProjectCallCode(String projectCallCode){
 		try {
 			if(!"".equals(projectCallCode))

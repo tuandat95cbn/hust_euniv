@@ -34,7 +34,7 @@ public interface mJuryOfAnnouncedProjectCallService {
 	 * @param JUPSURJ_ROLECODE
 	 * @return
 	 */
-	public int saveJuryOfAnnouncedProjectCall(String JUSUPRJ_STAFFCODE,String JUSUPRJ_PRJCALLCODE,String JUPSURJ_ROLECODE);
+	public int saveJuryOfAnnouncedProjectCall(String JUSUPRJ_STAFFCODE,String JUSUPRJ_PRJCALLCODE,String JUPSURJ_ROLECODE, String JUSUPRJ_JURYRESEARCHPROJECTCODE);
 
 	/**
 	 * Editing a jury of announced project call (editing a record in table: tbljurysubmittedprojects )
@@ -60,12 +60,16 @@ public interface mJuryOfAnnouncedProjectCallService {
 	 */
 	public List<mStaff> loadStaffsOfJuryOfAProjecCall(String projectCallCode);
 	
+	public List<mStaff> loadStaffsOfJuryOfAJuryResearchProjec(String juryCode);
+	
 	/**
 	 * 
 	 * @param projectCallCode
 	 * @return
 	 */
 	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByProjectCallCode(String projectCallCode);
+	
+	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByJuryCode(String juryCode);
 	
 	/*
 	 * 

@@ -1,6 +1,7 @@
 package vn.webapp.modules.researchmanagement.model;
 
 import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,7 +16,15 @@ public class mJuryOfAnnouncedProjectCall implements Serializable{
     @GeneratedValue
     private int JUSUPRJ_ID;
 	private String JUSUPRJ_STAFFCODE;
-    private String JUSUPRJ_PRJCALLCODE;
+	private String JUSUPRJ_JURYRESEARCHPROJECTCODE;
+    public String getJUSUPRJ_JURYRESEARCHPROJECTCODE() {
+		return JUSUPRJ_JURYRESEARCHPROJECTCODE;
+	}
+	public void setJUSUPRJ_JURYRESEARCHPROJECTCODE(
+			String jUSUPRJ_JURYRESEARCHPROJECTCODE) {
+		JUSUPRJ_JURYRESEARCHPROJECTCODE = jUSUPRJ_JURYRESEARCHPROJECTCODE;
+	}
+	private String JUSUPRJ_PRJCALLCODE;
     private String JUPSURJ_ROLECODE;
 	public int getJUSUPRJ_ID() {
 		return JUSUPRJ_ID;

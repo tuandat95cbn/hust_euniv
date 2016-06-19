@@ -735,6 +735,27 @@ public class nProjectDAOImpl extends BaseDao implements nProjectDAO {
 	/**
 	 * 
 	 */
+	public List<Projects> loadProjectByProjectCallAndFaculty(String projectCallCode, String facultyCode){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(Projects.class);
+			criteria.add(Restrictions.eq("PROJ_PRJCall_Code", projectCallCode));
+			criteria.add(Restrictions.eq("PROJ_FacultyCode", facultyCode));
+			
+			List<Projects> projectList = criteria.list();
+			commit();
+			return projectList;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+		
+	}
 	@Override
 	public List<Projects> loadProjectByProjectCallId(String PROJ_PRJCall_Code){
 		try {

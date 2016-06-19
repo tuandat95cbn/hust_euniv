@@ -161,6 +161,25 @@ public class mJuryOfAnnouncedProjectCallDAOImpl extends BaseDao implements mJury
 	/**
 	 * 
 	 */
+	
+	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByJuryCode(String juryCode){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(mJuryOfAnnouncedProjectCall.class);
+			criteria.add(Restrictions.eq("JUSUPRJ_JURYRESEARCHPROJECTCODE", juryCode));
+			List<mJuryOfAnnouncedProjectCall> projectCallList = criteria.list();
+			commit();
+			return projectCallList;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
 	@Override
 	public List<mJuryOfAnnouncedProjectCall> loadListJuryOfAnnouncedProjectCallByProjectCallCode(String projectCallCode){
 		try {
