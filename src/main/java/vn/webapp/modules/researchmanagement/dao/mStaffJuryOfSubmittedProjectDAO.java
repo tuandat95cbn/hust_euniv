@@ -13,6 +13,8 @@ public interface mStaffJuryOfSubmittedProjectDAO {
 	 */
 	public List<mStaffJuryOfSubmittedProject> loadAllStaffJuryOfSubmittedProject();
 	
+	public List<mStaffJuryOfSubmittedProject> loadAllStaffJuryOfSubmittedProjectByJuryCode(String juryCode);
+	
 	/**
 	 * Loading staff juries of all submitted projects by staff code (getting all records from table : tbljurysubmittedprojectroles)
 	 * @return

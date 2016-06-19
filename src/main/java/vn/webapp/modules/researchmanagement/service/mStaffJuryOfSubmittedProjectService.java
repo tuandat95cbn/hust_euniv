@@ -1,6 +1,7 @@
 package vn.webapp.modules.researchmanagement.service;
 
 import java.util.List;
+
 import vn.webapp.modules.researchmanagement.model.mStaffJuryOfSubmittedProject;
 
 public interface mStaffJuryOfSubmittedProjectService {
@@ -10,6 +11,8 @@ public interface mStaffJuryOfSubmittedProjectService {
 	 * @return : List of objects of JuryOfAnnouncedProjectCall
 	 */
 	public List<mStaffJuryOfSubmittedProject> loadAllStaffJuryOfSubmittedProject();
+	
+	public List<mStaffJuryOfSubmittedProject> loadAllStaffJuryOfSubmittedProjectByJuryCode(String juryCode);
 	
 	/**
 	 * 

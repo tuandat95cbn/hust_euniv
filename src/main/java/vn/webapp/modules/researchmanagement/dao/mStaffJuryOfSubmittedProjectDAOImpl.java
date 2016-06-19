@@ -48,7 +48,26 @@ public class mStaffJuryOfSubmittedProjectDAOImpl extends BaseDao implements mSta
 			close();
 		}		
 	}
-	
+	public List<mStaffJuryOfSubmittedProject> loadAllStaffJuryOfSubmittedProjectByJuryCode(String juryCode){
+		try {
+			begin();
+			Criteria criteria = getSession().createCriteria(mStaffJuryOfSubmittedProject.class, "staffJuriesOfSubmittedProject");
+			
+			criteria.add(Restrictions.eq("STFJUPRJ_JURY_CODE",juryCode));
+			
+			List<mStaffJuryOfSubmittedProject> staffJuries = criteria.list();
+			commit();
+			return staffJuries;
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			rollback();
+			close();
+			return null;
+		} finally {
+			flush();
+			close();
+		}
+	}
 	/**
 	 * 
 	 */

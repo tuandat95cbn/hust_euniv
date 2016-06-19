@@ -26,7 +26,9 @@ public class mStaffJuryOfSubmittedProjectServiceImpl implements mStaffJuryOfSubm
 			return null;
 		}
 	}
-	
+	public List<mStaffJuryOfSubmittedProject> loadAllStaffJuryOfSubmittedProjectByJuryCode(String juryCode){
+		return staffJuryOfSubmittedProjectDAO.loadAllStaffJuryOfSubmittedProjectByJuryCode(juryCode);
+	}
 	/**
 	 * 
 	 */

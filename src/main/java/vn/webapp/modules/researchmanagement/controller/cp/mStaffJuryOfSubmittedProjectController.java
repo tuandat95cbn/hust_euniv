@@ -262,8 +262,11 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		}
 		
 		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList;
-		if(!"".equals(projectCallCode)){
-			staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadListStaffJuryOfSubmittedProjectByProjectCallCode(projectCallCode);
+		//if(!"".equals(projectCallCode)){
+		if(!"".equals(juryCode)){
+			//staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadListStaffJuryOfSubmittedProjectByProjectCallCode(projectCallCode);
+			staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProjectByJuryCode(juryCode);
+			
 		}else{
 			staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProject();
 		}
@@ -336,13 +339,17 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 		
 		
 		mProjectCalls projectCall = projectCallsService.loadAProjectCallByCode(selectedProjectCallCode);
-		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = getStaffJuryOfSubmittedProjectList(projects, selectedProjectCallCode);
+		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = getStaffJuryOfSubmittedProjectList(projects, juryCode);
+		//List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProjectByJuryCode(juryCode);
+		System.out.println(name() + "::saveJuryOfAnnouncedProjectCall, juryCode = " + juryCode + ", staffJury.sz = " + staffJuryOfSubmittedProjectList.size());
+		
 		model.put("staffJuryOfSubmittedProjectList", staffJuryOfSubmittedProjectList);
 		model.put("projectList", projects);
 		model.put("staffList", juries);
 		model.put("projectCall", projectCall);
 		model.put("projectCallCode", selectedProjectCallCode);
 		model.put("projectCallName", projectCallNameFiltering);
+		
 		if (result.hasErrors()) {
 			return "cp.listStaffJuryOfSubmittedProject";
 		} else {
@@ -372,7 +379,8 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 				funcsPermissionService.saveFunctionsPermission("DETAILS-COMMENT-SUBMITTED-PROJECTS", STFJUPRJ_STAFFJURCODE);
 			}
 			
-			staffJuryOfSubmittedProjectList = getStaffJuryOfSubmittedProjectList(projects, selectedProjectCallCode);
+			//staffJuryOfSubmittedProjectList = getStaffJuryOfSubmittedProjectList(projects, selectedProjectCallCode);
+			staffJuryOfSubmittedProjectList = getStaffJuryOfSubmittedProjectList(projects, juryCode);
 			model.put("staffJuryOfSubmittedProjectList", staffJuryOfSubmittedProjectList);
 			model.put("staffJuryOfSubmittedProjectFormAdd", new mStaffJuryOfSubmittedProjectValidation());
 			model.put("jury", jury);
@@ -387,10 +395,13 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 	 * @param projectCallCode
 	 * @return
 	 */
-	List<mStaffJuryOfSubmittedProject> getStaffJuryOfSubmittedProjectList(List<Projects> projects, String projectCallCode){
+	//List<mStaffJuryOfSubmittedProject> getStaffJuryOfSubmittedProjectList(List<Projects> projects, String projectCallCode){
+	List<mStaffJuryOfSubmittedProject> getStaffJuryOfSubmittedProjectList(List<Projects> projects, String juryCode){
 		List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList;
-		if(!"".equals(projectCallCode)){
-			staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadListStaffJuryOfSubmittedProjectByProjectCallCode(projectCallCode);
+		//if(!"".equals(projectCallCode)){
+		if(!juryCode.equals("")){
+			//staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadListStaffJuryOfSubmittedProjectByProjectCallCode(projectCallCode);
+			staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProjectByJuryCode(juryCode);
 		}else{
 			staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProject();
 		}
@@ -461,8 +472,9 @@ public class mStaffJuryOfSubmittedProjectController extends BaseWeb {
 				
 				//Delete the selected item
 				staffJuryOfSubmittedProjectService.deleteStaffJuryOfSubmittedProject(staffJuryOfSubmittedProjectId);
-				List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = getStaffJuryOfSubmittedProjectList(projects, projectCallCode);
-				
+				List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = getStaffJuryOfSubmittedProjectList(projects, juryCode);
+				//List<mStaffJuryOfSubmittedProject> staffJuryOfSubmittedProjectList = staffJuryOfSubmittedProjectService.loadAllStaffJuryOfSubmittedProjectByJuryCode(juryCode);
+				System.out.println(name() + "::removeAStaffJurySubmittedProject, juryCode = " + juryCode + ", staffJury.sz = " + staffJuryOfSubmittedProjectList.size());
 				//List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAProjecCall(projectCallCode);
 				List<mStaff> juries = juryOfAnnouncedProjectCall.loadStaffsOfJuryOfAJuryResearchProjec(juryCode);
 				
